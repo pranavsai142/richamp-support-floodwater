@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /home/pranav_sai_uri_edu/projects/richamp-support-floodwater/
 logfile=${0}.log
 targetScript="richamp_scale_and_subset.scr"
 jobCheckIntervalSeconds=15
@@ -7,7 +8,7 @@ for ending in submit start finish error ; do
 done
 #
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] $0: Submitting $targetScript $logfile" > $targetScript.submit | tee --append $logfile
-sbatch richamp-support/$targetScript $logfile 2>>jobErr >jobID
+sbatch $targetScript $logfile 2>>jobErr >jobID
 # check to see if the sbatch command succeeded; you can also add a retry
 # but maybe not necessary
 if [[ $? == 0 ]]; then

@@ -19,22 +19,23 @@ echo "\"start\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_J
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has started." >> $logfile
 
 # load run.properties file into associative array and extract relevant properties
-declare -A properties
-RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
-SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
-source $SCRIPTDIR/properties.sh
-loadProperties $RUNPROPERTIES
-tc_forcing=${properties['forcing.tropicalcyclone']}
-ENSTORM=${properties['asgs.enstorm']} # It's possible this is already set at the system level, but this doesn't hurt
-forcing=${properties['forcing.backgroundmet']}
+#declare -A properties
+#RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
+#SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
+#source $SCRIPTDIR/properties.sh
+#loadProperties $RUNPROPERTIES
+tc_forcing=$RICHAMP_TC_FORCING
+ENSTORM=forecast # It's possible this is already set at the system level, but this doesn't hurt
+forcing=GFS
 if [ $tc_forcing == "on" ]; then
    forcing=NHC
 fi
 
 # call Matlab scripts to trim depth data to RICHAMP region of interest and to generate a simple max inundation plot
-indir=$PWD/  # Matlab script expects trailing slashes
-outdir=$PWD/
-postprocessdir=$SCRIPTDIR/output/richamp-support
+indir=$RICHAMP_INDIR/
+#indir=/project/pi_iginis_uri_edu/pranav_sai_uri_edu/ecflow_output/ricv1/forecast_ensemble/forecast_base/ADCIRC/simulation/  # Matlab script expects trailing slashes
+outdir=./
+postprocessdir=/home/pranav_sai_uri_edu/projects/richamp-support-floodwater
 nc_rough=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
 module load matlab/r2021b
 matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
@@ -42,8 +43,8 @@ matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_
 # move files to a consistent location for dashboarding team 
 water_output=RICHAMP_fort63.nc
 max_inund_plot=RICHAMP_max_inundation.png
-output_dir=/work/pi_iginis_uri_edu/RICHAMP/pp_files/$ENSTORM
-cp $water_output $max_inund_plot $RUNPROPERTIES $output_dir
+output_dir=/project/pi_iginis_uri_edu/RICHAMP/pp_files/$ENSTORM
+cp $water_output $max_inund_plot $output_dir
 
 # wait for the post_init script to finish; this allows that job to safely run alongside the forecast
 job_string=$(cat $postinitScript.start)

@@ -20,21 +20,19 @@ echo "\"start\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_J
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has started." >> $logfile
 
 # load run.properties file into associative array and extract relevant properties
-declare -A properties
-RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
-SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
-source $SCRIPTDIR/properties.sh
-loadProperties $RUNPROPERTIES
-tc_forcing=${properties['forcing.tropicalcyclone']}
-ENSTORM=${properties['asgs.enstorm']} # It's possible this is already set at the system level, but this doesn't hurt
-RSSSITE=${properties['forcing.tropicalcyclone.forecast.rsssite']} # Ditto
-FDIR=${properties['forcing.tropicalcyclone.forecast.path.fdir']} # Ditto
-ADVISDIR=${properties['asgs.path.advisdir']} # Ditto
-t_start_raw=${properties['RunStartTime']}
-t_end_raw=${properties['RunEndTime']}
-t_start=${t_start_raw:0:4}-${t_start_raw:4:2}-${t_start_raw:6:2}" "${t_start_raw:8:2}:${t_start_raw:10:2}00  # convert from yyyymmddHH to yyyy-mm-dd HH:MM
-t_end=${t_end_raw:0:4}-${t_end_raw:4:2}-${t_end_raw:6:2}" "${t_end_raw:8:2}:${t_end_raw:10:2}00  # convert from yyyymmddHH to yyyy-mm-dd HH:MM
-postprocessdir=$SCRIPTDIR/output/richamp-support
+#declare -A properties
+#RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
+#SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
+#source $SCRIPTDIR/properties.sh
+#loadProperties $RUNPROPERTIES
+tc_forcing=$RICHAMP_TC_FORCING
+ENSTORM=forecast # It's possible this is already set at the system level, but this doesn't hurt
+#RSSSITE=${properties['forcing.tropicalcyclone.forecast.rsssite']} # Ditto
+#FDIR=${properties['forcing.tropicalcyclone.forecast.path.fdir']} # Ditto
+#ADVISDIR=${properties['asgs.path.advisdir']} # Ditto
+#indir=/project/pi_iginis_uri_edu/pranav_sai_uri_edu/ecflow_output/ricv1/forecast_ensemble/forecast_base/ADCIRC/simulation
+indir=$RICHAMP_INDIR
+postprocessdir=/home/pranav_sai_uri_edu/projects/richamp-support-floodwater
 
 # if TROPICALCYCLONE=on, call MetGet to get winds
 # if all commented code were to be uncommented, the logic becomes: if TROPICALCYCLONE=on, call URI parametric model and MetGet to get winds; attempt to blend them, but fall back to one or the other if necessary
@@ -61,9 +59,28 @@ if [ $tc_forcing == "on" ]; then
 #   fi
 fi
 
+python3 $postprocessdir/generateRunProperties.py --tc $tc_forcing --indir $indir
+while read line; do 
+	if [[ $line =~ "metgetstart" ]]; then
+	  t_start=$line
+	elif [[ $line =~ "metgetend" ]]; then
+          t_end=$line
+        fi
+done < run.properties
+echo "$t_start"
+echo "$t_end"
+start=${t_start:13:17}
+end=${t_end:11:17}
+echo "$start"
+echo "$end"
 # call MetGet again for precipitation
 precip_filename=RICHAMP_rain
-python3 $postprocessdir/get_metget_data.py --domain gfs 0.25 -72 41 -71 43 --start "$t_start" --end "$t_end" --timestep 3600 --output $precip_filename --multiple_forecasts --format hec-netcdf --variable rain
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $precip_filename --multiple-forecasts --format hec-netcdf --variable rain
+
+wind_back_filename=gfs_forecast
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_back_filename --multiple-forecasts --format owi-ascii --variable wind_pressure
+wind_back=$wind_back_filename\_00.wnd
+wind_format="owi-ascii"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
 output=RICHAMP_wind
@@ -73,16 +90,10 @@ z0_interp_name=$postprocessdir/z0_interp
 threads=3 # $threads + wasync = the number in the header after -c
 sigma=1000
 radius=3000
-if [ $tc_forcing == "off" ]; then
-   wind_back=fort.222
-   wind_format="owi-ascii"
-fi
-if [[ -r ${z0_interp_name}.pickle ]]; then
-   z0_sv=''
-else
-   z0_sv='-z0sv'
-fi
+z0_sv=""
+#z0_sv='-z0sv'
 scale_logic=up-down
+echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 if [ $wind_format == "owi-ascii" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "wnd" ]; then
@@ -94,18 +105,20 @@ fi
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
 precip_output=$precip_filename.nc
-output_dir=/work/pi_iginis_uri_edu/RICHAMP/pp_files/$ENSTORM
-cp $wind_output $precip_output $output_dir
-if [ $tc_forcing == "on" ]; then
+output_dir=/project/pi_iginis_uri_edu/RICHAMP/pp_files/$ENSTORM
+run_properties=run.properties
+cp $wind_output $precip_output $run_properties $output_dir
+if [ $tc_forcing == "True" ]; then
    shapefile1='Track.shp'
    shapefile2='Track.shx'
    shapefile3='Track.dbf'
-   if [ $RSSSITE == "filesystem" ]; then
-      advisory=$FDIR/index-at.xml
-   else
-      advisory=$ADVISDIR/index-at.xml
-   fi
-   cp $shapefile1 $shapefile2 $shapefile3 $advisory $output_dir
+   #if [ $RSSSITE == "filesystem" ]; then
+   #   advisory=$FDIR/index-at.xml
+   #else
+   #   advisory=$ADVISDIR/index-at.xml
+   #fi
+   #cp $shapefile1 $shapefile2 $shapefile3 $advisory $output_dir
+   cp $indir/*.trk $output_dir
 fi
 
 echo "\"finish\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.finish # <-OVERWRITE

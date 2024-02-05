@@ -272,6 +272,7 @@ class OwiAsciiWind:
             elif line[65:67] == 'DT' and num_dt == 1:
                 dt_2 = datetime.datetime.strptime(line[68:80], '%Y%m%d%H%M')
                 break
+        print("start_date, end_date", start_date, end_date, flush=True)
         time_step = dt_2 - dt_1
         return int((end_date - start_date) / time_step + 1)
 
@@ -828,6 +829,7 @@ def main():
     else:
         print("INFO: Loading directional z0 interpolant...", flush=True)
         with open(args.z0name + '.pickle', 'rb') as file:
+            print(args.z0name)
             z0_directional_interpolant = pickle.load(file)
 
     # Define subdomains for multiprocessing

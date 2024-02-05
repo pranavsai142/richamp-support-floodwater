@@ -1,0 +1,14 @@
+*.json
+RICHAMP*
+*.pre
+*.wnd
+jobErr
+jobID
+*.finish
+*.start
+*.submit
+*.log
+run.properties
+*.err
+*.out
+

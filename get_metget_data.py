@@ -216,6 +216,7 @@ def download_metget_data(data_id, endpoint, apikey, sleeptime, max_wait):
         return
 
 
+    
 def main():
     import socket
     import json
@@ -240,16 +241,10 @@ def main():
         action="append",
     )
     p.add_argument(
-        "--start",
-        help="Start time",
-        type=datetime.fromisoformat,
-        metavar="YYYY-MM-DD hh:mm",
+            "--tc", help="Tropical storm forcing", type=bool
     )
     p.add_argument(
-        "--end",
-        help="End time",
-        type=datetime.fromisoformat,
-        metavar="YYYY-MM-DD hh:mm",
+        "--indir", help="ADCIRC run directory, used for generating run properties file", type=str
     )
     p.add_argument(
         "--timestep", help="Time step of winds in seconds", metavar="dt", type=int
@@ -332,11 +327,8 @@ def main():
 
     # ...Check for required arguments
     if not args.request:
-        if not args.start:
-            print("[ERROR]: Must provide '--start'")
-            exit(1)
-        if not args.end:
-            print("[ERROR]: Must provide '--end'")
+        if not args.rundir:
+            print("[ERROR]: Must provice '--indir'")
             exit(1)
         if not args.timestep:
             print("[ERROR]: Must provice '--timestep'")
@@ -361,6 +353,23 @@ def main():
             print("ERROR: Invalid variable selected")
             exit(1)
 
+        startFound = False
+        endFound = False
+        tcFound = !args.tc
+        with open(indir + "/adcirc_simulation.1") as f:
+            for line in f:
+                if "SIMULATION_START" in line:
+                    start = line [:-16][:-1]
+                elif "SIMULATION_END" in line:
+                    end = line [:-16][:-1] 
+                elif "—advisory" in line:
+                    storm = line[line.index("storm") + 6: line.index("—advisory") - 1]
+                    advisory = line[line.index("—advisory") + 11: line.index("--basin") - 1]
+                    year = line[line.index("--year") + 8: line.index("--end") - 1]
+                if(startFound and endFound and tcFound):
+                    break
+            print("start, end, storm, advisory, year", start, end, storm, advisory, year, flush=True)
+
         request_from = getpass.getuser() + "." + socket.gethostname()
         request_data = {
             "version": "0.0.1",
@@ -369,8 +378,8 @@ def main():
             "backfill": True,
             "nowcast": args.analysis,
             "multiple_forecasts": args.multiple_forecasts,
-            "start_date": str(args.start),
-            "end_date": str(args.end),
+            "start_date": start,
+            "end_date": end,
             "format": args.format,
             "data_type": args.variable,
             "time_step": args.timestep,

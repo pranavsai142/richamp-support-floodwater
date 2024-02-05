@@ -1,0 +1,6 @@
+&diag_nml
+    scale_rmw=1.0
+    scale_mw=0.8
+    co_tsp=0.70
+    gust_fac=0.93
+/
