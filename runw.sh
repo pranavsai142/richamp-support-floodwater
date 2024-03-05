@@ -15,6 +15,6 @@ export FI_PROVIDER=verbs
 module purge
 module load matlab/r2021a
 matlab -nodisplay -nosplash -nodesktop -singleCompThread -r "run('read_RICHAMP_wind.m');exit;"
-
+cp -r *_OUT $RICHAMP_OUTDIR
 
 

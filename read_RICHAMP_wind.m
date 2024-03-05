@@ -6,7 +6,7 @@ satn='subset'
 inp=getenv("RICHAMP_INDIR")+"/"; idir=inp{1};
 E=importdata('RTF_RI.txt');EE=E.data
 %% make scen name and output dir
-k = strfind(idir,'/');scen=idir((k(end-2)+1):(k(end-1)-1));   odir=[scen '_OUT/Wind' '/']; status = mkdir(odir); 
+k = strfind(idir,'/');scen=idir((k(end-2)+1):(k(end-1)-1));   odir=['forecast_OUT/Wind' '/']; status = mkdir(odir); 
 if(status==0)
     mkdir(odir)
 end
@@ -14,7 +14,7 @@ end
 wnc=('RICHAMP_wind.nc');
 tref=datenum(1990,1,1);
 
-infile=[idir wnc]
+infile=[wnc]
 lfn=length(infile);
 ftime=infile(lfn-12:lfn-3)
 time0=ncread([infile],'/Main/time');

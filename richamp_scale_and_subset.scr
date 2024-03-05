@@ -7,7 +7,7 @@
 #SBATCH -p uri-cpu
 #SBATCH -c 1
 #SBATCH --mem=8G
-#SBATCH -t 01:00:00
+#SBATCH -t 08:00:00
 ##SBATCH --reservation=richamp
 ##SBATCH --partition=uri-richamp
 
@@ -25,11 +25,11 @@ echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has star
 #source $SCRIPTDIR/properties.sh
 #loadProperties $RUNPROPERTIES
 tc_forcing=$RICHAMP_TC_FORCING
-ENSTORM=forecast # It's possible this is already set at the system level, but this doesn't hurt
 forcing=GFS
 if [ $tc_forcing == "on" ]; then
    forcing=NHC
 fi
+ENSTORM=forecast
 
 # call Matlab scripts to trim depth data to RICHAMP region of interest and to generate a simple max inundation plot
 indir=$RICHAMP_INDIR/
@@ -43,7 +43,7 @@ matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_
 # move files to a consistent location for dashboarding team 
 water_output=RICHAMP_fort63.nc
 max_inund_plot=RICHAMP_max_inundation.png
-output_dir=/project/pi_iginis_uri_edu/RICHAMP/pp_files/$ENSTORM
+output_dir=$RICHAMP_OUTDIR
 cp $water_output $max_inund_plot $output_dir
 
 # wait for the post_init script to finish; this allows that job to safely run alongside the forecast

@@ -42,16 +42,16 @@ def main():
     metgetend = metgetend.strftime(("%Y-%m-%d %H:%M"))
     print("start, end, storm, advisory, year", start, end, storm, advisory, year, flush=True)
     with open("run.properties", "w") as f:
-        f.write("start: " + start + "\n")
-        f.write("end: " + end + "\n")
+        f.write("forecastValidStart : " + start + "\n")
+        f.write("forecastValidEnd : " + end + "\n")
         f.write("rawstart: " + rawstart + "\n")
         f.write("rawend: " + rawend + "\n")
         f.write("metgetstart: " + metgetstart + "\n")
         f.write("metgetend: " + metgetend + "\n")
         if(args.tc):
-            f.write("storm: " + storm + "\n")
-            f.write("advisory: " + advisory + "\n")
-            f.write("year: " + year + "\n")
+            f.write("stormnumber : " + storm + "\n")
+            f.write("advisory : " + advisory + "\n")
+            f.write("year : " + year + "\n")
         f.close()
 
 if __name__ == "__main__":
