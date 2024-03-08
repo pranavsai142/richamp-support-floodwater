@@ -101,7 +101,7 @@ if [ $wind_format == "owi-ascii" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 fi
 
-python3 $postproccessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
+python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
