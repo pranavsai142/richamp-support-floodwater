@@ -2,7 +2,7 @@ clear; clc; nfig=0; close all;
  inp=getenv("RICHAMP_INDIR")+"/"; idir0=inp{1};
 E=importdata('RTF_RI.txt');EE=E.data
 %% make scen name and output dir
-k = strfind(idir0,'/');scen=idir0((k(end-2)+1):(k(end-1)-1));   odir=[scen '_OUT' '/']; status = mkdir(odir); 
+k = strfind(idir0,'/');scen=idir0((k(end-2)+1):(k(end-1)-1));   odir=['graphs' '/']; status = mkdir(odir); 
 if(status==0)
     mkdir(odir)
 end

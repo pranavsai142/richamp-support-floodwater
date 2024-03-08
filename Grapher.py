@@ -1,3 +1,4 @@
+import os
 import json
 import math
 import numpy as np
@@ -105,22 +106,24 @@ class Grapher:
         
 
     def generateGraphs(self):
+        script_dir = os.path.dirname(__file__)
+        results_dir = os.path.join(script_dir, 'graphs/')
+
+        if not os.path.isdir(results_dir):
+            os.makedirs(results_dir)
         numberOfStations = len(self.nosTimes)
         fig, ax = plt.subplots()
         ax.scatter(self.floodwaterStationsLongitudes, self.floodwaterStationsLatitudes, label="ricv1")
-        if(self.graphObs):
-            ax.scatter(self.nosLongitudes, self.nosLatitudes, label="Buoy")
+        ax.scatter(self.nosLongitudes, self.nosLatitudes, label="Buoy")
         ax.legend(loc="lower right")
 
         for index, stationLabel in enumerate(self.stationLabels):
-            if(self.graphObs):
-                ax.annotate(stationLabel, (self.nosLongitudes[index], self.nosLatitudes[index]))
-            else:
-                ax.annotate(self.floodwaterStationsNodeLabels[index], (self.floodwaterStationsLongitudes[index], self.floodwaterStationsLatitudes[index]))
+            ax.annotate(stationLabel, (self.nosLongitudes[index], self.nosLatitudes[index]))
             
         plt.title("nos station points and closest gfs, adcirc (asgs, floodwater) in mesh plotted")
         plt.xlabel("longitude")
         plt.ylabel("latitude")
+        plt.savefig(results_dir + 'closest_points.png')
         # Plot wind speed over time
         for index in range(numberOfStations):
             fig, ax = plt.subplots()
@@ -128,10 +131,7 @@ class Grapher:
             if(self.graphObs):
                 ax.scatter(self.nosTimes[index], self.nosWindSpeeds[index], marker=".", label="Buoy")
             ax.legend(loc="lower right")
-            if(self.graphObs):
-                plt.title(self.stationLabels[index] + " station observational vs forecast wind speed")
-            else:
-                plt.title(self.floodwaterStationsNodeLabels[index] + " station observational vs forecast wind speed")
+            plt.title(self.stationLabels[index] + " station observational vs forecast wind speed")
             plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
             plt.ylabel("wind speed (m/s)")
-        plt.show()
+            plt.savefig(results_dir + self.stationLabels[index] + '_wind.png')

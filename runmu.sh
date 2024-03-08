@@ -15,6 +15,6 @@ export FI_PROVIDER=verbs
 module purge
 module load matlab/r2021a
 matlab -nodisplay -nosplash -nodesktop -singleCompThread -r "run('Plot_Eonly_asgs.m');exit;"
-cp -r *_OUT $RICHAMP_OUTDIR
+cp -r graphs $RICHAMP_OUTDIR
 
 
