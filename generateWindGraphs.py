@@ -19,16 +19,16 @@ def main():
     args.epsg = 4326
     print("Generating Wind Graphs!")
     print("Loading NetCDF file!")
-    NOS_ADCIRC_WIND_DATA_FILE_NAME = args.wind + ".json"
+    ADCIRC_WIND_DATA_FILE_NAME = args.wind + ".json"
     ADCIRC_WIND_FORT_74 = args.wind
-    NOS_STATIONS_FILE_NAME = args.stations
-    NOS_WIND_FILE_NAME = args.wind + ".obs.json"
-    (startDateObject, endDateObject) = FortReader(ADCIRC_WIND_FORT_74).generateWindDataForStations(NOS_ADCIRC_WIND_DATA_FILE_NAME)
+    STATIONS_FILE_NAME = args.stations
+    OBS_WIND_FILE_NAME = args.wind + ".obs.json"
+    (startDateObject, endDateObject) = FortReader(ADCIRC_WIND_FORT_74, STATIONS_FILE_NAME, ADCIRC_WIND_DATA_FILE_NAME).generateWindDataForStations(NOS_ADCIRC_WIND_DATA_FILE_NAME)
     print("Parsed start and end date from netCDF, " + startDateObject, endDateObject)
     print("Get observational", args.obs)
-    GetBuoyWind(NOS_STATIONS_FILE_NAME=NOS_STATIONS_FILE_NAME, NOS_WIND_FILE_NAME=NOS_WIND_FILE_NAME, startDateObject=startDateObject, endDateObject=endDateObject)
+    GetBuoyWind(STATIONS_FILE_NAME=STATIONS_FILE_NAME, OBS_WIND_FILE_NAME=OBS_WIND_FILE_NAME, startDateObject=startDateObject, endDateObject=endDateObject)
     print("Graphing!")
-    Grapher(graphObs=args.obs, NOS_WIND_DATA_FILE_NAME=NOS_WIND_FILE_NAME, NOS_STATIONS_FILE_NAME=NOS_STATIONS_FILE_NAME, ADCIRC_WIND_DATA_FILE_NAME=NOS_ADCIRC_WIND_DATA_FILE_NAME).generateGraphs()
+    Grapher(graphObs=args.obs, OBS_WIND_FILE_NAME=OBS_WIND_FILE_NAME, STATIONS_FILE_NAME=STATIONS_FILE_NAME, ADCIRC_WIND_DATA_FILE_NAME=ADCIRC_WIND_DATA_FILE_NAME).generateGraphs()
 
 if __name__ == "__main__":
     main()

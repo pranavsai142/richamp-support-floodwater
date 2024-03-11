@@ -33,7 +33,7 @@ class Grapher:
     #     WIND_PROFILE_EXPONENT = 0.11
     #     return windVelocity * ((10.0/altitude)**WIND_PROFILE_EXPONENT)
     
-    def __init__(self, graphObs=False, ADCIRC_WIND_DATA_FILE_NAME="", NOS_WIND_DATA_FILE_NAME="", NOS_STATIONS_FILE_NAME=""):
+    def __init__(self, graphObs=False, ADCIRC_WIND_DATA_FILE_NAME="", OBS_WIND_FILE_NAME="", STATIONS_FILE_NAME=""):
         with open(ADCIRC_WIND_DATA_FILE_NAME) as outfile:
             floodwaterStationsWindData = json.load(outfile)
         

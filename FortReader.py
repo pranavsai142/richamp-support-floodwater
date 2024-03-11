@@ -32,13 +32,13 @@ from datetime import datetime, timedelta
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
 
 class FortReader:
-    def __init__(self, FORT_74_FILE_NAME):
+    def __init__(self, FORT_74_FILE_NAME, NOS_STATIONS_FILE_NAME, ADCIRC_WIND_DATA_FILE_NAME):
         self.FORT_74_FILE_NAME = FORT_74_FILE_NAME
-        self.NOS_STATIONS_FILE_NAME = "NOS_Stations.json"
-        self.NOS_STATION_TO_NODE_DISTANCES_FILE_NAME = "NOS_Station_To_Node_Distances.json"
-        self.NOS_ADCIRC_NODES_FILE_NAME = "NOS_ADCIRC_Nodes.json"
-        self.NOS_ADCIRC_WIND_DATA_FILE_NAME = "NOS_ADCIRC_Wind_Data.json"
-        self.NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "ADCIRC_Nodes_Wind_Data.json"
+        self.NOS_STATIONS_FILE_NAME = NOS_STATIONS_FILE_NAME
+        self.NOS_STATION_TO_NODE_DISTANCES_FILE_NAME = "RICHAMP_Station_To_Node_Distances.json"
+        self.NOS_ADCIRC_NODES_FILE_NAME = "RICHAMP_ADCIRC_Nodes.json"
+        self.NOS_ADCIRC_WIND_DATA_FILE_NAME = ADCIRC_WIND_DATA_FILE_NAME
+        self.NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "RICHAMP_Nodes_Wind_Data.json"
         
     def generateWindDataForStations(self, NOS_ADCIRC_WIND_DATA_FILE_NAME):
         self.NOS_ADCIRC_WIND_DATA_FILE_NAME = NOS_ADCIRC_WIND_DATA_FILE_NAME
