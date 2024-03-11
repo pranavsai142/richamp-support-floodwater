@@ -9,12 +9,8 @@ from datetime import datetime, timedelta
 import json
 from Encoders import NumpyEncoder
         
-NOS_STATIONS_FILE_NAME = "NOS_Stations.json"
-# NOS_WIND_FILE_NAME = "NOS_DEB_Wind.json"
-NOS_WIND_FILE_NAME = "NOS_Wind.json"
-
 class GetBuoyWind:
-	def __init__(self, STATIONS_FILE_NAME=STATIONS_FILE_NAME, OBS_WIND_FILE_NAME=OBS_WIND_FILE_NAME, startDateObject="", endDateObject=""):
+	def __init__(self, STATIONS_FILE_NAME="", OBS_WIND_FILE_NAME="", startDateObject="", endDateObject=""):
 		print(type(startDateObject))
 		print(startDateObject)
 		with open(STATIONS_FILE_NAME) as stations_file:
