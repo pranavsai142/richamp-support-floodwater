@@ -1,3 +1,5 @@
+graphs
+__pycache__
 *_OUT
 *.pickle
 *.json

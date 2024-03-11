@@ -37,11 +37,10 @@ class FortReader:
         self.NOS_STATIONS_FILE_NAME = NOS_STATIONS_FILE_NAME
         self.NOS_STATION_TO_NODE_DISTANCES_FILE_NAME = "RICHAMP_Station_To_Node_Distances.json"
         self.NOS_ADCIRC_NODES_FILE_NAME = "RICHAMP_ADCIRC_Nodes.json"
-        self.NOS_ADCIRC_WIND_DATA_FILE_NAME = ADCIRC_WIND_DATA_FILE_NAME
+        self.ADCIRC_WIND_DATA_FILE_NAME = ADCIRC_WIND_DATA_FILE_NAME
         self.NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "RICHAMP_Nodes_Wind_Data.json"
         
-    def generateWindDataForStations(self, NOS_ADCIRC_WIND_DATA_FILE_NAME):
-        self.NOS_ADCIRC_WIND_DATA_FILE_NAME = NOS_ADCIRC_WIND_DATA_FILE_NAME
+    def generateWindDataForStations(self):
         print(self.FORT_74_FILE_NAME)
         windDataset = nc.Dataset(self.FORT_74_FILE_NAME)
         windMetadata = windDataset.__dict__
@@ -101,7 +100,7 @@ class FortReader:
         stationToNodeDistancesDict = {}
 
         # Set to true to recreate station to node distances calculations dictionary
-        initializeStationToNodeDistancesDict = False
+        initializeStationToNodeDistancesDict = False 
         if(initializeStationToNodeDistancesDict):
             for stationKey in stationsDict["NOS"].keys():
                 stationToNodeDistancesDict[stationKey] = {}
@@ -173,7 +172,7 @@ class FortReader:
                 adcircWindData[nodeIndex]["windsX"] = windsX
                 adcircWindData[nodeIndex]["windsY"] = windsY
     
-            with open(self.NOS_ADCIRC_WIND_DATA_FILE_NAME, "w") as outfile:
+            with open(self.ADCIRC_WIND_DATA_FILE_NAME, "w") as outfile:
                 json.dump(adcircWindData, outfile)
     
         initializeAdcircNodesWindDataDict = False
