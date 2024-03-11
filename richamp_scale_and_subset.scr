@@ -40,8 +40,6 @@ nc_rough=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
 module load matlab/r2021b
 #matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
 
-python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $RICHAMP_INDIR/fort.74.nc --obs $GRAPH_OBS_WIND
-
 # move files to a consistent location for dashboarding team 
 water_output=RICHAMP_fort63.nc
 max_inund_plot=RICHAMP_max_inundation.png

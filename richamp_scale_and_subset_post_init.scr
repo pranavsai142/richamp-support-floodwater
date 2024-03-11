@@ -74,12 +74,12 @@ echo "$start"
 echo "$end"
 # call MetGet again for precipitation
 precip_filename=RICHAMP_rain
-#metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $precip_filename --multiple-forecasts --format hec-netcdf --variable rain
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $precip_filename --multiple-forecasts --format owi-netcdf --variable rain
 
-wind_back_filename=gfs_forecast
-#metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_back_filename --multiple-forecasts --format owi-ascii --variable wind_pressure
-wind_back=$wind_back_filename\_00.wnd
-wind_format="owi-ascii"
+wind_back_filename=gfs_wind
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_back_filename --multiple-forecasts --format owi-netcdf --variable wind_pressure
+wind_back=$wind_back_filename.nc
+wind_format="owi-netcdf"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
 output=RICHAMP_wind
@@ -95,13 +95,17 @@ scale_logic=up-down
 #echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #if [ $wind_format == "owi-ascii" ]; then
    #python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+if [$wind_format == "owi-netcdf"]; then
+   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "wnd" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "blend" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-#fi
+fi
 
 #python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
+
+python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $wind_back --obs $GRAPH_OBS_WIND
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
