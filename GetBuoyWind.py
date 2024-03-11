@@ -17,7 +17,7 @@ class GetBuoyWind:
 	def __init__(self, STATIONS_FILE_NAME=STATIONS_FILE_NAME, OBS_WIND_FILE_NAME=OBS_WIND_FILE_NAME, startDateObject="", endDateObject=""):
 		print(type(startDateObject))
 		print(startDateObject)
-		with open(NOS_STATIONS_FILE_NAME) as stations_file:
+		with open(STATIONS_FILE_NAME) as stations_file:
 			stationsDict = json.load(stations_file)
 
 		# stationIds = [8413320, 8443970, 8447435, 8449130, 8447930, 8452660, 8510560, 8418150, 8419870, 8454049, 8454000, 8461490, 8411060, 8531680, 8534720, 8452944]
@@ -108,5 +108,5 @@ class GetBuoyWind:
 				badStations.append(badStations.append(stationDict))
 		
 		# print(windDict)
-		with open(NOS_WIND_FILE_NAME, "w") as outfile:
+		with open(OBS_WIND_FILE_NAME, "w") as outfile:
 			json.dump(windDict, outfile, cls=NumpyEncoder)

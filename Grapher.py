@@ -40,10 +40,10 @@ class Grapher:
         self.graphObs=graphObs
         
         if(self.graphObs):
-            with open(NOS_WIND_DATA_FILE_NAME) as outfile:
+            with open(OBS_WIND_FILE_NAME) as outfile:
                 self.obsWindData = json.load(outfile)
     
-            with open(NOS_STATIONS_FILE_NAME) as outfile:
+            with open(STATIONS_FILE_NAME) as outfile:
                 self.obsStationsData = json.load(outfile)["NOS"]
             
         self.floodwaterStationsLatitudes = []
