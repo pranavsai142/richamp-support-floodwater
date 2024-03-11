@@ -74,10 +74,10 @@ echo "$start"
 echo "$end"
 # call MetGet again for precipitation
 precip_filename=RICHAMP_rain
-#metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $precip_filename --multiple-forecasts --format hec-netcdf --variable rain
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $precip_filename --multiple-forecasts --format hec-netcdf --variable rain
 
 wind_back_filename=gfs_forecast
-#metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_back_filename --multiple-forecasts --format owi-ascii --variable wind_pressure
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_back_filename --multiple-forecasts --format owi-ascii --variable wind_pressure
 wind_back=$wind_back_filename\_00.wnd
 wind_format="owi-ascii"
 
@@ -93,17 +93,15 @@ z0_sv=""
 #z0_sv='-z0sv'
 scale_logic=up-down
 echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-#if [ $wind_format == "owi-ascii" ]; then
-   #python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+if [ $wind_format == "owi-ascii" ]; then
+   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "wnd" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "blend" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-#fi
+fi
 
-module purge
-module load matlab/r2021a
-matlab -nodisplay -nosplash -nodesktop -singleCompThread -r "run('read_RICHAMP_wind.m');exit;"
+python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
@@ -111,7 +109,7 @@ precip_output=$precip_filename.nc
 output_dir=$RICHAMP_OUTDIR
 run_properties=run.properties
 cp $wind_output $precip_output $run_properties $output_dir
-#cp -r *_OUT $output_dir
+cp -r graphs $output_dir
 if [ $tc_forcing == "True" ]; then
    shapefile1='Track.shp'
    shapefile2='Track.shx'
