@@ -159,7 +159,7 @@ class Grapher:
                 stationName = self.stationLabels[index]
             else:
                 stationName = self.floodwaterStationsNodeLabels[index]
-            plt.title(self.stationName + " station forecasted rain")
+            plt.title(stationName + " station forecasted rain")
             plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
             plt.ylabel("rain accumlation over 1 hr (mm)")
             plt.savefig(graph_directory + stationName + '_rain.png')
