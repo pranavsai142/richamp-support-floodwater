@@ -74,10 +74,10 @@ echo "$start"
 echo "$end"
 # call MetGet again for precipitation
 rain_filename=RICHAMP_rain
-metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $precip_filename --multiple-forecasts --format generic-netcdf --variable rain
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
 
 wind_filename=gfs_wind
-metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_back_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
+metget build --domain gfs 0.25 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
 wind_format="generic-netcdf"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
