@@ -16,3 +16,5 @@ run.properties
 *.err
 *.out
 
+/wind_temp
+.DS_Store

@@ -30,6 +30,213 @@ from datetime import datetime, timedelta
 # NOS_ADCIRC_NODES_FILE_NAME = "NOS_Floodwater_Nodes.json"
 # NOS_ADCIRC_WIND_DATA_FILE_NAME = "NOS_Floodwater_Wind_Data.json"
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
+class GFSReader:
+    def __init__(self, GFS_WIND_FILE="", GFS_RAIN_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE="", GFS_RAIN_DATA_FILE=""):
+        temp_directory = "wind_temp/"
+        self.GFS_WIND_FILE = GFS_WIND_FILE
+        self.GFS_RAIN_FILE = GFS_RAIN_FILE
+        self.STATIONS_FILE = STATIONS_FILE
+        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "GFS_Station_To_Node_Distances.json"
+        self.GFS_NODES_FILE = temp_directory + "GFS_Nodes.json"
+        self.GFS_WIND_DATA_FILE = GFS_WIND_DATA_FILE
+        self.GFS_RAIN_DATA_FILE = GFS_RAIN_DATA_FILE
+        self.GFS_NODES_WIND_DATA_FILE = temp_directory + "GFS_Nodes_Wind_Data.json"
+        
+    def extractLatitudeIndex(self, nodeIndex):
+        return int(nodeIndex[1: nodeIndex.find(",")])
+    def extractLongitudeIndex(self, nodeIndex):
+        return int(nodeIndex[nodeIndex.find(",") + 1: nodeIndex.find(")")])
+    
+    def generateWindDataForStations(self):
+        print(self.GFS_WIND_FILE)
+        windDataset = nc.Dataset(self.GFS_WIND_FILE)
+        windMetadata = windDataset.__dict__
+        print(windMetadata)
+        print(windDataset.variables)
+        print(windDataset.variables["time"].units)
+
+        rainDataset = nc.Dataset(self.GFS_RAIN_FILE)
+        rainMetadata = rainDataset.__dict__
+        print(rainMetadata)
+        print(rainDataset.variables)
+        print(rainDataset.variables["time"].units)
+
+        windDatasetTimeDescription = windDataset.variables["time"].units
+        coldStartDateText = windDatasetTimeDescription[14: 24] + "T" + windDatasetTimeDescription[25:]
+        coldStartDate = datetime.fromisoformat(coldStartDateText)
+        print("coldStartDate", coldStartDate)
+
+        minT = windDataset.variables["time"][0].data
+        maxT = windDataset.variables["time"][-1].data
+        print(minT)
+        print(maxT)
+
+        print("deltaT of data")
+        windDeltaT = timedelta(minutes=maxT - minT)
+        print(windDeltaT)
+
+        print("number of timesteps")
+        timesteps = len(windDataset.variables["time"][:])
+        print(timesteps)
+
+        times = []
+        for index in range(timesteps):
+            time = coldStartDate + timedelta(minutes=float(windDataset.variables["time"][index].data))
+            times.append(time.timestamp())
+
+        print("start of wind data (seconds since coldstart)")
+        startDate = coldStartDate + timedelta(minutes=float(minT))
+        endDate = coldStartDate + timedelta(minutes=float(maxT))
+        print("startDate", startDate)
+        print("endDate", endDate)
+
+        # GFS Data is grid based system
+        print("min max latitude and longitude")
+        minLatitude = windDataset.variables["lat"][0].data
+        minLongitude = windDataset.variables["lon"][0].data
+        maxLatitude = windDataset.variables["lat"][-1].data
+        maxLongitude = windDataset.variables["lon"][-1].data
+
+        print("minLatitude", minLatitude)
+        print("minLongitude", minLongitude)
+        print("maxLatitude", maxLatitude)
+        print("maxLongitude", maxLongitude)
+
+        deltaLatitude = maxLatitude - minLatitude
+        deltaLongitude = maxLongitude - minLongitude
+
+        print("deltaLatitude", deltaLatitude)
+        print("deltaLongitude", deltaLongitude)
+
+        deltaNodesLatitude = len(windDataset.variables["lat"][:])
+        deltaNodesLongitude = len(windDataset.variables["lon"][:])
+
+        print("deltaNodesLatitude", deltaNodesLatitude)
+        print("deltaNodesLongitude", deltaNodesLongitude)
+
+        print("Wind at t=0, point(0, 0)")
+        windX000 = windDataset.variables["wind_u"][0][0][0]
+        windY000 = windDataset.variables["wind_v"][0][0][0]
+        print("windX000", windX000)
+        print("windY000", windY000)
+
+        # Find node indexes that are closest to NOS_Stations
+        with open(self.STATIONS_FILE) as stations_file:
+            stationsDict = json.load(stations_file)
+    
+        stationToNodeDistancesDict = {}
+
+        # Set to true to recreate station to node distances calculations dictionary
+        initializeStationToNodeDistancesDict = True
+        if(initializeStationToNodeDistancesDict):
+            for stationKey in stationsDict["NOS"].keys():
+                stationToNodeDistancesDict[stationKey] = {}
+
+            for longitudeIndex in range(deltaNodesLongitude):
+                for latitudeIndex in range(deltaNodesLatitude):
+                    node = (float(windDataset.variables["lat"][latitudeIndex].data), float(windDataset.variables["lon"][longitudeIndex].data))
+                    nodeIndex = str((latitudeIndex, longitudeIndex))
+                    if(node[0] <= 90 and node[0] >= -90):
+                        for stationKey in stationsDict["NOS"].keys():
+                            stationDict = stationsDict["NOS"][stationKey]
+                            stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
+                            distance = haversine.haversine(stationCoordinates, node)
+                            if(len(stationToNodeDistancesDict[stationKey].keys()) == 0):
+                                stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
+                                stationToNodeDistancesDict[stationKey]["distance"] = distance
+                            elif(stationToNodeDistancesDict[stationKey]["distance"] > distance):
+                                stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
+                                stationToNodeDistancesDict[stationKey]["distance"] = distance
+                    else:
+                        badNodes.append(nodeIndex)
+                        print("bad node", nodeIndex, node)
+        
+            print("stationToNodeDistancesDict", stationToNodeDistancesDict)
+
+            with open(self.STATION_TO_NODE_DISTANCES_FILE, "w") as outfile:
+                json.dump(stationToNodeDistancesDict, outfile)
+
+        with open(self.STATION_TO_NODE_DISTANCES_FILE) as outfile:
+            stationToNodeDistancesDict = json.load(outfile)
+  
+        gfsNodes = {"NOS": {}}
+    
+        initializeGFSNodesDict = True
+        if(initializeGFSNodesDict):
+            for stationKey in stationToNodeDistancesDict.keys():
+                stationToNodeDistanceDict = stationToNodeDistancesDict[stationKey]
+                nodeIndex = stationToNodeDistanceDict["nodeIndex"]
+                gfsNodes["NOS"][nodeIndex] = {}
+                gfsNodes["NOS"][nodeIndex]["latitude"] = float(windDataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
+                gfsNodes["NOS"][nodeIndex]["longitude"] = float(windDataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
+                gfsNodes["NOS"][nodeIndex]["stationKey"] = stationKey
+                
+            with open(self.GFS_NODES_FILE, "w") as outfile:
+                json.dump(gfsNodes, outfile)
+
+        with open(self.GFS_NODES_FILE) as outfile:
+            gfsNodes = json.load(outfile)
+
+        initializeGFSWindDataDict = True
+        if(initializeGFSWindDataDict):
+            gfsWindData = {}
+            for nodeIndex in gfsNodes["NOS"].keys():
+#                 print("getting wind data for node", nodeIndex)
+                gfsWindData[nodeIndex] = {}
+                gfsWindData[nodeIndex]["latitude"] = float(windDataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
+                gfsWindData[nodeIndex]["longitude"] = float(windDataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
+                gfsWindData[nodeIndex]["stationKey"] = gfsNodes["NOS"][nodeIndex]["stationKey"]
+                gfsWindData[nodeIndex]["times"] = times
+                windsX = []
+                windsY = []
+                for index in range(timesteps):
+                    windsX.append(float(windDataset.variables["wind_u"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)]))
+                    windsY.append(float(windDataset.variables["wind_v"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)]))
+                gfsWindData[nodeIndex]["windsX"] = windsX
+                gfsWindData[nodeIndex]["windsY"] = windsY
+    
+            with open(self.GFS_WIND_DATA_FILE, "w") as outfile:
+                json.dump(gfsWindData, outfile)
+                
+        initializeGFSRainDataDict = True
+        if(initializeGFSRainDataDict):
+            gfsRainData = {}
+            for nodeIndex in gfsNodes["NOS"].keys():
+                gfsRainData[nodeIndex] = {}
+                gfsRainData[nodeIndex]["latitude"] = float(rainDataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
+                gfsRainData[nodeIndex]["longitude"] = float(rainDataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
+                gfsRainData[nodeIndex]["stationKey"] = gfsNodes["NOS"][nodeIndex]["stationKey"]
+                gfsRainData[nodeIndex]["times"] = times
+                rains = []
+                for index in range(timesteps):
+                    rains.append(float(rainDataset.variables["rain"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)]))
+                gfsRainData[nodeIndex]["rains"] = rains
+        
+            with open(self.GFS_RAIN_DATA_FILE, "w") as outfile:
+                json.dump(gfsRainData, outfile)
+            
+        initializeGFSNodesWindDataDict = False
+        if(initializeGFSNodesWindDataDict):
+            gfsNodesWindData = {}
+            for longitudeIndex in range(deltaNodesLongitude):
+                for latitudeIndex in range(deltaNodesLatitude):
+                    nodeIndex = str((latitudeIndex, longitudeIndex))
+                    gfsNodesWindData[nodeIndex] = {}
+                    gfsNodesWindData[nodeIndex]["latitude"] = float(windDataset.variables["lat"][latitudeIndex].data)
+                    gfsNodesWindData[nodeIndex]["longitude"] = float(windDataset.variables["lon"][longitudeIndex].data)
+                    gfsNodesWindData[nodeIndex]["times"] = times
+                    windsX = []
+                    windsY = []
+                    for index in range(timesteps):
+                        windsX.append(float(windDataset.variables["wind_u"][index][longitudeIndex][latitudeIndex]))
+                        windsY.append(float(windDataset.variables["wind_v"][index][longitudeIndex][latitudeIndex]))
+                    gfsNodesWindData[nodeIndex]["windsX"] = windsX
+                    gfsNodesWindData[nodeIndex]["windsY"] = windsY
+    
+            with open(self.GFS_NODES_WIND_DATA_FILE, "w") as outfile:
+                json.dump(adcircNodesWindData, outfile)
+        
+        return (startDate, endDate)
 
 class FortReader:
     def __init__(self, FORT_74_FILE_NAME, NOS_STATIONS_FILE_NAME, ADCIRC_WIND_DATA_FILE_NAME):

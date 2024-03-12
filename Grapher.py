@@ -33,18 +33,23 @@ class Grapher:
     #     WIND_PROFILE_EXPONENT = 0.11
     #     return windVelocity * ((10.0/altitude)**WIND_PROFILE_EXPONENT)
     
-    def __init__(self, graphObs=False, ADCIRC_WIND_DATA_FILE_NAME="", OBS_WIND_FILE_NAME="", STATIONS_FILE_NAME=""):
-        with open(ADCIRC_WIND_DATA_FILE_NAME) as outfile:
+    def __init__(self, graphObs=False, graphRain=False, WIND_DATA_FILE="", RAIN_DATA_FILE="", OBS_WIND_FILE="", STATIONS_FILE=""):
+        with open(WIND_DATA_FILE) as outfile:
             floodwaterStationsWindData = json.load(outfile)
         
+        with open(STATIONS_FILE) as outfile:
+            self.obsStationsData = json.load(outfile)["NOS"]
+        
         self.graphObs=graphObs
+        self.graphRain=graphRain
         
         if(self.graphObs):
-            with open(OBS_WIND_FILE_NAME) as outfile:
+            with open(OBS_WIND_FILE) as outfile:
                 self.obsWindData = json.load(outfile)
-    
-            with open(STATIONS_FILE_NAME) as outfile:
-                self.obsStationsData = json.load(outfile)["NOS"]
+                
+        if(self.graphRain):
+            with open(RAIN_DATA_FILE) as outfile:
+                floodwaterStationsRainData = json.load(outfile)
             
         self.floodwaterStationsLatitudes = []
         self.floodwaterStationsLongitudes = []
@@ -52,6 +57,7 @@ class Grapher:
         self.floodwaterStationsTimes = []
         self.floodwaterStationsWindDirections = []
         self.floodwaterStationsWindSpeeds = []
+        self.floodwaterStationsRains = []
         self.nosLatitudes = []
         self.nosLongitudes = []
         self.stationLabels = []
@@ -71,6 +77,7 @@ class Grapher:
                 floodwaterStationTimes = []
                 floodwaterStationWindDirections = []
                 floodwaterStationWindSpeeds = []
+                floodwaterStationRains = []
                 for index in range(len(floodwaterStationsWindData[nodeIndex]["times"])):
                     if(self.startDate == None):
                         self.startDate = datetime.fromtimestamp(int(floodwaterStationsWindData[nodeIndex]["times"][index]))
@@ -81,10 +88,12 @@ class Grapher:
                     floodwaterWindDirection = self.vectorDirection(floodwaterWindX, floodwaterWindY)
                     floodwaterStationWindDirections.append(floodwaterWindDirection)
                     floodwaterStationWindSpeeds.append(floodwaterWindSpeed)
+                    floodwaterStationRains.append(floodwaterStationsRainData[nodeIndex]["rains"][index])
         
                 self.floodwaterStationsTimes.append(floodwaterStationTimes)
                 self.floodwaterStationsWindDirections.append(floodwaterStationWindDirections)
                 self.floodwaterStationsWindSpeeds.append(floodwaterStationWindSpeeds)
+                self.floodwaterStationsRains.append(floodwaterStationRains)
                 if(self.graphObs):
                     self.stationLabels.append(self.obsStationsData[stationKey]["name"])
                     self.nosLatitudes.append(float(self.obsStationsData[stationKey]["latitude"]))
@@ -106,12 +115,10 @@ class Grapher:
         
 
     def generateGraphs(self):
-        script_dir = os.path.dirname(__file__)
-        results_dir = os.path.join(script_dir, 'graphs/')
+        graph_directory = "graphs/"
 
-        if not os.path.isdir(results_dir):
-            os.makedirs(results_dir)
         numberOfStations = len(self.nosTimes)
+        print("numberOfStations", numberOfStations)
         fig, ax = plt.subplots()
         ax.scatter(self.floodwaterStationsLongitudes, self.floodwaterStationsLatitudes, label="ricv1")
         ax.scatter(self.nosLongitudes, self.nosLatitudes, label="Buoy")
@@ -119,11 +126,12 @@ class Grapher:
 
         for index, stationLabel in enumerate(self.stationLabels):
             ax.annotate(stationLabel, (self.nosLongitudes[index], self.nosLatitudes[index]))
+            ax.annotate(self.floodwaterStationsNodeLabels[index], (self.floodwaterStationsLongitudes[index], self.floodwaterStationsLatitudes[index]))
             
         plt.title("nos station points and closest gfs, adcirc (asgs, floodwater) in mesh plotted")
         plt.xlabel("longitude")
         plt.ylabel("latitude")
-        plt.savefig(results_dir + 'closest_points.png')
+        plt.savefig(graph_directory + 'closest_points.png')
         # Plot wind speed over time
         for index in range(numberOfStations):
             fig, ax = plt.subplots()
@@ -134,4 +142,14 @@ class Grapher:
             plt.title(self.stationLabels[index] + " station observational vs forecast wind speed")
             plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
             plt.ylabel("wind speed (m/s)")
-            plt.savefig(results_dir + self.stationLabels[index] + '_wind.png')
+            plt.savefig(graph_directory + self.stationLabels[index] + '_wind.png')
+            
+        for index in range(numberOfStations):
+            fig, ax = plt.subplots()
+            ax.scatter(self.floodwaterStationsTimes[index], self.floodwaterStationsRains[index], marker=".", label="GFS")
+            ax.legend(loc="upper right")
+            plt.title(self.stationLabels[index] + " station forecasted rain")
+            plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
+            plt.ylabel("rain accumlation over 1 hr (mm)")
+            plt.savefig(graph_directory + self.stationLabels[index] + '_rain.png')
+        quit()
