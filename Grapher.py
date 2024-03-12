@@ -116,8 +116,11 @@ class Grapher:
 
     def generateGraphs(self):
         graph_directory = "graphs/"
-
-        numberOfStations = len(self.nosTimes)
+        
+        if(self.graphObs)
+            numberOfStations = len(self.nosTimes)
+        else:
+            numberOfStations = len(self.floodwaterStationsTimes)
         print("numberOfStations", numberOfStations)
         fig, ax = plt.subplots()
         ax.scatter(self.floodwaterStationsLongitudes, self.floodwaterStationsLatitudes, label="ricv1")
