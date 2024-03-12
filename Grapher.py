@@ -117,7 +117,7 @@ class Grapher:
     def generateGraphs(self):
         graph_directory = "graphs/"
         
-        if(self.graphObs)
+        if(self.graphObs):
             numberOfStations = len(self.nosTimes)
         else:
             numberOfStations = len(self.floodwaterStationsTimes)

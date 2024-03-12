@@ -16,8 +16,9 @@ def main():
     p.add_argument(
         "--rain", help="Rain netcdf file", type=str
     )
+    #TODO: Fix rhia
     p.add_argument(
-        "--obs", help="Graph observational data", type=bool
+        "--obs", type=bool, help="Graph observational data"
     )
     args = p.parse_args()
     args.epsg = 4326
