@@ -142,17 +142,25 @@ class Grapher:
             if(self.graphObs):
                 ax.scatter(self.nosTimes[index], self.nosWindSpeeds[index], marker=".", label="Buoy")
             ax.legend(loc="lower right")
-            plt.title(self.stationLabels[index] + " station observational vs forecast wind speed")
+            if(self.graphObs):
+                stationName = self.stationLabels[index]
+            else:
+                stationName = self.floodwaterStationsNodeLabels[index]
+            plt.title(stationName + " station observational vs forecast wind speed")
             plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
             plt.ylabel("wind speed (m/s)")
-            plt.savefig(graph_directory + self.stationLabels[index] + '_wind.png')
+            plt.savefig(graph_directory + stationName + '_wind.png')
             
         for index in range(numberOfStations):
             fig, ax = plt.subplots()
             ax.scatter(self.floodwaterStationsTimes[index], self.floodwaterStationsRains[index], marker=".", label="GFS")
             ax.legend(loc="upper right")
-            plt.title(self.stationLabels[index] + " station forecasted rain")
+            if(self.graphObs):
+                stationName = self.stationLabels[index]
+            else:
+                stationName = self.floodwaterStationsNodeLabels[index]
+            plt.title(self.stationName + " station forecasted rain")
             plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
             plt.ylabel("rain accumlation over 1 hr (mm)")
-            plt.savefig(graph_directory + self.stationLabels[index] + '_rain.png')
+            plt.savefig(graph_directory + stationName + '_rain.png')
         quit()
