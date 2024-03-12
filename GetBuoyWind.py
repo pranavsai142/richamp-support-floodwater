@@ -52,8 +52,8 @@ class GetBuoyWind:
 		#	 sensorFilename = stationDict["id"] + "_sensor"
 			try:
 		#	 Once mat files are downloaded once, comment out this line to stop querying the API
-# 				urlretrieve(url, matFilename)
-# 				urlretrieve(heightURL, heightFilename)
+				urlretrieve(url, matFilename)
+				urlretrieve(heightURL, heightFilename)
 		#	 	urlretrieve(sensorURL, sensorFilename)
 				data = scipy.io.loadmat(matFilename)
 				unixTimes = data["IOOS_Wind"]["time"][0][0].flatten()
