@@ -104,8 +104,8 @@ fi
 
 #python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
 
-echo python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $wind_filename.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
-python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $wind_filename.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
+echo python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
+python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc

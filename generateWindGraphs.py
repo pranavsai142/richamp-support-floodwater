@@ -1,4 +1,4 @@
-from FortReader import FortReader, GFSReader
+from FortReader import FortReader, GFSReader, PostReader
 from Grapher import Grapher
 from GetBuoyWind import GetBuoyWind
 import datetime
@@ -33,19 +33,21 @@ def main():
         os.makedirs(graphs_directory)
         
     print("Loading NetCDF file!")
-    GFS_WIND_FILE = args.wind
+    POST_WIND_FILE = args.wind
     GFS_RAIN_FILE = args.rain
-    GFS_WIND_DATA_FILE = temp_directory + "gfs_wind_data_file" + ".json"
+    POST_WIND_DATA_FILE = temp_directory + "post_wind_data_file" + ".json"
     GFS_RAIN_DATA_FILE = temp_directory + "gfs_rain_data_file" + ".json"
     STATIONS_FILE = args.stations
     OBS_WIND_FILE = temp_directory + "obs_wind_data_file" + ".json"
 #     (startDateObject, endDateObject) = FortReader(ADCIRC_WIND_FORT_74, STATIONS_FILE_NAME, ADCIRC_WIND_DATA_FILE_NAME).generateWindDataForStations()
-    (startDateObject, endDateObject) = GFSReader(GFS_WIND_FILE=GFS_WIND_FILE, GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateWindDataForStations()
+#     (startDateObject, endDateObject) = GFSReader(GFS_WIND_FILE=GFS_WIND_FILE, GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateWindDataForStations()
+    (startDateObject, endDateObject) = PostReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
+
     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     print("Get observational", args.obs)
     GetBuoyWind(STATIONS_FILE=STATIONS_FILE, OBS_WIND_FILE=OBS_WIND_FILE, startDateObject=startDateObject, endDateObject=endDateObject)
     print("Graphing!")
-    Grapher(graphObs=args.obs, graphRain=True, OBS_WIND_FILE=OBS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=GFS_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
+    Grapher(graphObs=args.obs, graphRain=False, WIND_TYPE="POST", OBS_WIND_FILE=OBS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=POST_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
 
 if __name__ == "__main__":
     main()

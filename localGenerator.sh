@@ -1,1 +1,1 @@
-python generateWindGraphs.py --stations /Volumes/ssd/ObservationalWind/NOS_Stations.json --wind /Volumes/ssd/ObservationalWind/test_generic.nc --rain /Volumes/ssd/ObservationalWind/testrain_generic.nc --obs True
+python generateWindGraphs.py --stations OBS_STATIONS.json --wind RICHAMP_wind.nc --rain RICHAMP_rain.nc --obs True

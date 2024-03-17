@@ -33,7 +33,7 @@ class Grapher:
     #     WIND_PROFILE_EXPONENT = 0.11
     #     return windVelocity * ((10.0/altitude)**WIND_PROFILE_EXPONENT)
     
-    def __init__(self, graphObs=False, graphRain=False, WIND_DATA_FILE="", RAIN_DATA_FILE="", OBS_WIND_FILE="", STATIONS_FILE=""):
+    def __init__(self, graphObs=False, graphRain=False, WIND_TYPE="", WIND_DATA_FILE="", RAIN_DATA_FILE="", OBS_WIND_FILE="", STATIONS_FILE=""):
         with open(WIND_DATA_FILE) as outfile:
             floodwaterStationsWindData = json.load(outfile)
         
@@ -42,6 +42,7 @@ class Grapher:
         
         self.graphObs=graphObs
         self.graphRain=graphRain
+        self.WIND_TYPE = WIND_TYPE
         
         if(self.graphObs):
             with open(OBS_WIND_FILE) as outfile:
@@ -72,8 +73,8 @@ class Grapher:
                 self.floodwaterStationsNodeLabels.append(nodeIndex)
                 self.floodwaterStationsLatitudes.append(floodwaterStationsWindData[nodeIndex]["latitude"])
                 self.floodwaterStationsLongitudes.append(floodwaterStationsWindData[nodeIndex]["longitude"])
-                self.floodwaterStationWindsX = floodwaterStationsWindData[nodeIndex]["windsX"]
-                self.floodwaterStationWindsY = floodwaterStationsWindData[nodeIndex]["windsY"]
+#                 self.floodwaterStationWindsX = floodwaterStationsWindData[nodeIndex]["windsX"]
+#                 self.floodwaterStationWindsY = floodwaterStationsWindData[nodeIndex]["windsY"]
                 floodwaterStationTimes = []
                 floodwaterStationWindDirections = []
                 floodwaterStationWindSpeeds = []
@@ -82,13 +83,18 @@ class Grapher:
                     if(self.startDate == None):
                         self.startDate = datetime.fromtimestamp(int(floodwaterStationsWindData[nodeIndex]["times"][index]))
                     floodwaterStationTimes.append(self.unixTimeToDeltaHours(floodwaterStationsWindData[nodeIndex]["times"][index]))
-                    floodwaterWindX = floodwaterStationsWindData[nodeIndex]["windsX"][index]
-                    floodwaterWindY = floodwaterStationsWindData[nodeIndex]["windsY"][index]
-                    floodwaterWindSpeed = self.vectorSpeed(floodwaterWindX, floodwaterWindY)
-                    floodwaterWindDirection = self.vectorDirection(floodwaterWindX, floodwaterWindY)
+                    if(self.WIND_TYPE == "GFS" or self.WIND_TYPE == "FORT"):
+                        floodwaterWindX = floodwaterStationsWindData[nodeIndex]["windsX"][index]
+                        floodwaterWindY = floodwaterStationsWindData[nodeIndex]["windsY"][index]
+                        floodwaterWindSpeed = self.vectorSpeed(floodwaterWindX, floodwaterWindY)
+                        floodwaterWindDirection = self.vectorDirection(floodwaterWindX, floodwaterWindY)
+                    elif(self.WIND_TYPE == "POST"):
+                        floodwaterWindSpeed = floodwaterStationsWindData[nodeIndex]["speeds"][index]
+                        floodwaterWindDirection = floodwaterStationsWindData[nodeIndex]["directions"][index]
                     floodwaterStationWindDirections.append(floodwaterWindDirection)
                     floodwaterStationWindSpeeds.append(floodwaterWindSpeed)
-                    floodwaterStationRains.append(floodwaterStationsRainData[nodeIndex]["rains"][index])
+                    if(self.graphRain):
+                        floodwaterStationRains.append(floodwaterStationsRainData[nodeIndex]["rains"][index])
         
                 self.floodwaterStationsTimes.append(floodwaterStationTimes)
                 self.floodwaterStationsWindDirections.append(floodwaterStationWindDirections)
@@ -151,16 +157,17 @@ class Grapher:
             plt.ylabel("wind speed (m/s)")
             plt.savefig(graph_directory + stationName + '_wind.png')
             
-        for index in range(numberOfStations):
-            fig, ax = plt.subplots()
-            ax.scatter(self.floodwaterStationsTimes[index], self.floodwaterStationsRains[index], marker=".", label="GFS")
-            ax.legend(loc="upper right")
-            if(self.graphObs):
-                stationName = self.stationLabels[index]
-            else:
-                stationName = self.floodwaterStationsNodeLabels[index]
-            plt.title(stationName + " station forecasted rain")
-            plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
-            plt.ylabel("rain accumlation over 1 hr (mm)")
-            plt.savefig(graph_directory + stationName + '_rain.png')
+        if(self.graphRain):
+            for index in range(numberOfStations):
+                fig, ax = plt.subplots()
+                ax.scatter(self.floodwaterStationsTimes[index], self.floodwaterStationsRains[index], marker=".", label="GFS")
+                ax.legend(loc="upper right")
+                if(self.graphObs):
+                    stationName = self.stationLabels[index]
+                else:
+                    stationName = self.floodwaterStationsNodeLabels[index]
+                plt.title(stationName + " station forecasted rain")
+                plt.xlabel("Hours since " + self.startDate.strftime(self.DATE_FORMAT))
+                plt.ylabel("rain accumlation over 1 hr (mm)")
+                plt.savefig(graph_directory + stationName + '_rain.png')
         quit()
