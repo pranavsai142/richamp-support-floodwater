@@ -1,8 +1,9 @@
 graphs
+wind_temp
 __pycache__
 *_OUT
 *.pickle
-*.json
+filelist.json
 RICHAMP*
 *.pre
 *.wnd
@@ -15,6 +16,4 @@ jobID
 run.properties
 *.err
 *.out
-
-/wind_temp
 .DS_Store

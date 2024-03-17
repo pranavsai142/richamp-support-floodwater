@@ -1,0 +1,100 @@
+{
+  "NOS": {
+    "79": {
+      "id": "8447930",
+      "source": "NOS",
+      "name": "Woods Hole, MA",
+      "latitude": "41.5233",
+      "longitude": "-70.6717",
+      "altitude": "999\n"
+    },
+    "82": {
+      "id": "8454000",
+      "source": "NOS",
+      "name": "Providence, RI",
+      "latitude": "41.8068",
+      "longitude": "-71.3988",
+      "altitude": "21.0\n"
+    },
+    "83": {
+      "id": "8452660",
+      "source": "NOS",
+      "name": "Newport, RI",
+      "latitude": "41.5",
+      "longitude": "-71.3",
+      "altitude": "10.6\n"
+    },
+    "84": {
+      "id": "8461490",
+      "source": "NOS",
+      "name": "New London, CT",
+      "latitude": "41.355",
+      "longitude": "-72.0867",
+      "altitude": "999\n"
+    },
+    "85": {
+      "id": "8467150",
+      "source": "NOS",
+      "name": "Bridgeport, CT",
+      "latitude": "41.15728",
+      "longitude": "-73.17822",
+      "altitude": "12\n"
+    },
+    "86": {
+      "id": "8510560",
+      "source": "NOS",
+      "name": "Montauk, NY",
+      "latitude": "41.05",
+      "longitude": "-71.96666",
+      "altitude": "2\n"
+    },
+    "93": {
+      "id": "8446121",
+      "source": "NOS",
+      "name": "Provincetown, MA",
+      "latitude": "42.05",
+      "longitude": "-70.18167",
+      "altitude": "999\n"
+    },
+    "95": {
+      "id": "8446493",
+      "source": "NOS",
+      "name": "Plymouth Harbor, MA",
+      "latitude": "41.96",
+      "longitude": "-70.66167",
+      "altitude": "999\n"
+    },
+    "96": {
+      "id": "8440452",
+      "source": "NOS",
+      "name": "Plum Island, MA",
+      "latitude": "42.81667",
+      "longitude": "-70.82",
+      "altitude": "999\n"
+    },
+    "99": {
+      "id": "8465705",
+      "source": "NOS",
+      "name": "New Haven, CT",
+      "latitude": "41.28333333",
+      "longitude": "-72.90833333",
+      "altitude": "11\n"
+    },
+    "101": {
+      "id": "8454049",
+      "source": "NOS",
+      "name": "Quonset Pt, RI",
+      "latitude": "41.58667",
+      "longitude": "-71.40500",
+      "altitude": "9.13\n"
+    },
+    "102": {
+      "id": "8452944",
+      "source": "NOS",
+      "name": "Conimicut Light, RI",
+      "latitude": "41.71666667",
+      "longitude": "-71.34333333",
+      "altitude": "2\n"
+    }
+  }
+}
