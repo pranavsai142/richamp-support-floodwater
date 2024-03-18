@@ -303,24 +303,28 @@ class OwiNetcdf:
     def __init__(self, filename):
         self.__nc = netCDF4.Dataset(filename, "r")
         self.__grid = self.__get_grid()
+        datasetTimeDescription = self.__nc.variables["time"].units
+        coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
+        coldStartDate = datetime.fromisoformat(coldStartDateText)
+        print("coldStartDate", coldStartDate)
+        self.base_date = coldStartDate
 
     def grid(self):
         return self.__grid
 
     def __get_grid(self):
-        lon = self.__nc["Main"].variables["lon"][0, :]
-        lat = self.__nc["Main"].variables["lat"][:, 0]
+        lon = self.__nc.variables["lon"][0, :]
+        lat = self.__nc.variables["lat"][:, 0]
         return WindGrid(lon, lat)
 
     def num_times(self):
-        return self.__nc["Main"].variables["time"].size
+        return self.__nc.variables["time"].size
 
     def get(self, idx):
-        base_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
-        m_added = int(self.__nc["Main"].variables["time"][idx])
-        idx_date = base_date + datetime.timedelta(minutes=m_added)
-        uvel = self.__nc["Main"].variables["U10"][:][:][idx]
-        vvel = self.__nc["Main"].variables["V10"][:][:][idx]
+        m_added = int(self.__nc.variables["time"][idx])
+        idx_date = self.base_date + datetime.timedelta(minutes=m_added)
+        uvel = self.__nc.variables["wind_u"][:][:][idx]
+        vvel = self.__nc.variables["wind_v"][:][:][idx]
         return WindData(idx_date, self.__grid, uvel, vvel)
 
     def close(self):
