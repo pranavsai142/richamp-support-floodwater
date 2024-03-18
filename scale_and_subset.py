@@ -305,7 +305,7 @@ class OwiNetcdf:
         self.__grid = self.__get_grid()
         datasetTimeDescription = self.__nc.variables["time"].units
         coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
-        coldStartDate = datetime.fromisoformat(coldStartDateText)
+        coldStartDate = datetime.datetime.fromisoformat(coldStartDateText)
         print("coldStartDate", coldStartDate)
         self.base_date = coldStartDate
 
@@ -313,8 +313,8 @@ class OwiNetcdf:
         return self.__grid
 
     def __get_grid(self):
-        lon = self.__nc.variables["lon"][0, :]
-        lat = self.__nc.variables["lat"][:, 0]
+        lon = self.__nc.variables["lon"][:]
+        lat = self.__nc.variables["lat"][:]
         return WindGrid(lon, lat)
 
     def num_times(self):
