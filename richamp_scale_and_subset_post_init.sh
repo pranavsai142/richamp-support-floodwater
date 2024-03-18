@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/pranav_sai_uri_edu/projects/richamp-support-floodwater/
+cd $POSTHOME 
 logfile=${0}.log
 targetScript="richamp_scale_and_subset_post_init.scr"
 for ending in submit start finish error ; do

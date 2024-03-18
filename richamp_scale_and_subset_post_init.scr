@@ -4,7 +4,7 @@
 #SBATCH --output=uri_post_init.out
 #SBATCH --error=uri_post_init.err
 ##SBATCH -p lowpri
-#SBATCH -p uri-cpu
+#SBATCH -p queue1
 #SBATCH -c 4
 #SBATCH --mem=16G
 #SBATCH -t 08:00:00
@@ -31,7 +31,7 @@ tc_forcing=$RICHAMP_TC_FORCING
 #ADVISDIR=${properties['asgs.path.advisdir']} # Ditto
 #indir=/project/pi_iginis_uri_edu/pranav_sai_uri_edu/ecflow_output/ricv1/forecast_ensemble/forecast_base/ADCIRC/simulation
 indir=$RICHAMP_INDIR
-postprocessdir=/home/pranav_sai_uri_edu/projects/richamp-support-floodwater
+postprocessdir=$POSTHOME
 
 # if TROPICALCYCLONE=on, call MetGet to get winds
 # if all commented code were to be uncommented, the logic becomes: if TROPICALCYCLONE=on, call URI parametric model and MetGet to get winds; attempt to blend them, but fall back to one or the other if necessary

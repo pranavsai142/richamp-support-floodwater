@@ -35,7 +35,7 @@ ENSTORM=forecast
 indir=$RICHAMP_INDIR/
 #indir=/project/pi_iginis_uri_edu/pranav_sai_uri_edu/ecflow_output/ricv1/forecast_ensemble/forecast_base/ADCIRC/simulation/  # Matlab script expects trailing slashes
 outdir=./
-postprocessdir=/home/pranav_sai_uri_edu/projects/richamp-support-floodwater
+postprocessdir=$POSTHOME
 nc_rough=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
 module load matlab/r2021b
 matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
