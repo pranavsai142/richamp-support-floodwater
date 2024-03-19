@@ -109,10 +109,10 @@ python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
-precip_output=$precip_filename.nc
+rain_output=$rain_filename.nc
 output_dir=$RICHAMP_OUTDIR
 run_properties=run.properties
-cp $wind_output $precip_output $run_properties $output_dir
+cp $wind_output $rain_output $run_properties $output_dir
 cp -r graphs $output_dir
 if [ $tc_forcing == "True" ]; then
    shapefile1='Track.shp'
