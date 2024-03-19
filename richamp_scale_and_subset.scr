@@ -40,6 +40,10 @@ nc_rough=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
 module load matlab/r2021b
 matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
 
+module purge
+module load matlab/r2021a
+matlab -nodisplay -nosplash -nodesktop -singleCompThread -r "run('Plot_Eonly_asgs.m');exit;"
+
 # move files to a consistent location for dashboarding team 
 water_output=RICHAMP_fort63.nc
 max_inund_plot=RICHAMP_max_inundation.png

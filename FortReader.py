@@ -362,7 +362,7 @@ class PostReader:
         stationToNodeDistancesDict = {}
 
         # Set to true to recreate station to node distances calculations dictionary
-        initializeStationToNodeDistancesDict = False
+        initializeStationToNodeDistancesDict = True
         if(initializeStationToNodeDistancesDict):
             for stationKey in stationsDict["NOS"].keys():
                 stationToNodeDistancesDict[stationKey] = {}
@@ -396,7 +396,7 @@ class PostReader:
   
         nodes = {"NOS": {}}
     
-        initializeNodesDict = False
+        initializeNodesDict = True
         if(initializeNodesDict):
             for stationKey in stationToNodeDistancesDict.keys():
                 stationToNodeDistanceDict = stationToNodeDistancesDict[stationKey]
@@ -412,7 +412,7 @@ class PostReader:
         with open(self.POST_NODES_FILE) as outfile:
             nodes = json.load(outfile)
 
-        initializeWindDataDict = False
+        initializeWindDataDict = True
         if(initializeWindDataDict):
             windData = {}
             for nodeIndex in nodes["NOS"].keys():
