@@ -2,6 +2,7 @@ import netCDF4 as nc
 import haversine
 import json
 from datetime import datetime, timedelta
+import os
 
 
 # Here I will write about the fort files
@@ -30,6 +31,240 @@ from datetime import datetime, timedelta
 # NOS_ADCIRC_NODES_FILE_NAME = "NOS_Floodwater_Nodes.json"
 # NOS_ADCIRC_WIND_DATA_FILE_NAME = "NOS_Floodwater_Wind_Data.json"
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
+class WaveReader:
+    def __init__(
+        self,
+        WAVE_SWH_FILE="",
+        WAVE_MWD_FILE="",
+        WAVE_MWP_FILE="",
+        WAVE_PWP_FILE="",
+        WAVE_RAD_FILE="",
+        STATIONS_FILE="", 
+        WAVE_SWH_DATA_FILE="",
+        WAVE_MWD_DATA_FILE="",
+        WAVE_MWP_DATA_FILE="",
+        WAVE_PWP_DATA_FILE="",
+        WAVE_RAD_DATA_FILE=""):
+        temp_directory = "wave_temp/"
+        self.WAVE_SWH_FILE=WAVE_SWH_FILE
+        self.WAVE_MWD_FILE=WAVE_MWD_FILE
+        self.WAVE_MWP_FILE=WAVE_MWP_FILE
+        self.WAVE_PWP_FILE=WAVE_PWP_FILE
+        self.WAVE_RAD_FILE=WAVE_RAD_FILE
+        self.STATIONS_FILE=STATIONS_FILE
+        self.WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE
+        self.WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE
+        self.WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE
+        self.WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE
+        self.WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE
+        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Wave_Station_To_Node_Distances.json"
+        self.NODES_FILE = temp_directory + "Wave_Nodes.json"
+    
+    def extractLatitudeIndex(self, nodeIndex):
+        return int(nodeIndex[1: nodeIndex.find(",")])
+    def extractLongitudeIndex(self, nodeIndex):
+        return int(nodeIndex[nodeIndex.find(",") + 1: nodeIndex.find(")")]) 
+             
+    def getNetcdfProperties(self, NETCDF_FILE, dataType):
+        dataset = nc.Dataset(NETCDF_FILE)
+        metadata = dataset.__dict__
+
+        datasetTimeDescription = dataset.variables["time"].units
+        coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
+        coldStartDate = datetime.fromisoformat(coldStartDateText)
+#         print("coldStartDate", coldStartDate)
+
+        minT = float(dataset.variables["time"][0].data)
+        maxT = float(dataset.variables["time"][-1].data)
+#         print(minT)
+#         print(maxT)
+
+#         print("deltaT of data")
+        windDeltaT = timedelta(seconds=maxT - minT)
+ #        print(windDeltaT)
+
+#         print("number of timesteps")
+        timesteps = len(dataset.variables["time"][:])
+#         print(timesteps)
+
+        times = []
+        for index in range(timesteps):
+            time = coldStartDate + timedelta(seconds=float(dataset.variables["time"][index].data))
+            times.append(time.timestamp())
+
+#         print("start of data (seconds since coldstart)")
+        startDate = coldStartDate + timedelta(seconds=float(minT))
+        endDate = coldStartDate + timedelta(seconds=float(maxT))
+#         print("startDate", startDate)
+#         print("endDate", endDate)
+        
+        # Grid origin is top right? Maybe not, Node based system!
+        # y is latitude, x is longitude
+        node0 = (float(dataset.variables["y"][0].data), float(dataset.variables["x"][0].data))
+#         print("node0 (lat, long)", node0)
+
+        numberOfNodes = dataset.variables["x"].shape[0]
+
+#         print("number of nodes", numberOfNodes)
+        
+        if (dataType == "swh"):
+            print("significant wave height at node200000")
+        
+            swhX0 = dataset.variables["swan_HS"][0][200000]
+
+            print("swhX0", swhX0)
+        if (dataType == "mwd"):
+            print("mean wave direction at node200000")
+        
+            mwdX0 = dataset.variables["swan_DIR"][0][200000]
+
+            print("mwdX0", mwdX0)
+        if (dataType == "mwp"):
+            print("mean wave period at node200000")
+        
+            mwpX0 = dataset.variables["swan_TMM10"][0][200000]
+
+            print("mwpX0", mwpX0)
+        if (dataType == "pwp"):
+            print("peak wave period at node200000")
+        
+            tpsX0 = dataset.variables["swan_TPS"][0][200000]
+
+            print("tpsX0", tpsX0)
+        if (dataType == "rad"):
+            print("radiation stress gradient at node200000")
+        
+            radX0 = dataset.variables["radstress_x"][0][200000]
+            radY0 = dataset.variables["radstress_y"][0][200000]
+
+            print("radX0", radX0)
+            print("radY0", radY0)
+        
+        return dataset, times
+    
+        
+    def initializeClosestNodes(self, dataset):
+        # Find node indexes that are closest to NOS_Stations
+        with open(self.STATIONS_FILE) as stations_file:
+            stationsDict = json.load(stations_file)
+
+        stationToNodeDistancesDict = {}
+        for stationKey in stationsDict["NOS"].keys():
+            stationToNodeDistancesDict[stationKey] = {}
+        # recreate station to node distances calculations dictionary
+        numberOfNodes = dataset.variables["x"].shape[0]
+        for nodeIndex in range(numberOfNodes):
+    #     There are nodes in the gulf of mexico between node 400000 - 500000 for rivc1 map
+    #     for nodeIndex in range(100000):
+    #         nodeIndex = nodeIndex + 400000
+            node = (float(dataset.variables["y"][nodeIndex].data), float(dataset.variables["x"][nodeIndex].data))
+            if(node[0] <= 90 and node[0] >= -90):
+                for stationKey in stationsDict["NOS"].keys():
+                    stationDict = stationsDict["NOS"][stationKey]
+                    stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
+                    distance = haversine.haversine(stationCoordinates, node)
+                    if(len(stationToNodeDistancesDict[stationKey].keys()) == 0):
+                        stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
+                        stationToNodeDistancesDict[stationKey]["distance"] = distance
+                    elif(stationToNodeDistancesDict[stationKey]["distance"] > distance):
+                        stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
+                        stationToNodeDistancesDict[stationKey]["distance"] = distance
+            else:
+                badNodes.append(nodeIndex)
+                print("bad node", nodeIndex, node)
+
+        #     Print progress
+            if(nodeIndex % 50000 == 0):
+                print("on node", nodeIndex, node)
+
+        print("stationToNodeDistancesDict", stationToNodeDistancesDict)
+
+        with open(self.STATION_TO_NODE_DISTANCES_FILE, "w") as outfile:
+            json.dump(stationToNodeDistancesDict, outfile)
+                
+        with open(self.STATION_TO_NODE_DISTANCES_FILE) as outfile:
+            stationToNodeDistancesDict = json.load(outfile)
+        
+        nodes = {"NOS": {}}
+    
+        for stationKey in stationToNodeDistancesDict.keys():
+            stationToNodeDistanceDict = stationToNodeDistancesDict[stationKey]
+            nodeIndex = stationToNodeDistanceDict["nodeIndex"]
+            nodes["NOS"][nodeIndex] = {}
+            nodes["NOS"][nodeIndex]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
+            nodes["NOS"][nodeIndex]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
+            nodes["NOS"][nodeIndex]["stationKey"] = stationKey
+            
+        with open(self.NODES_FILE, "w") as outfile:
+            json.dump(nodes, outfile)
+    
+    def generateDataFiles(self, dataset, dataType, times, DATA_FILE):
+    
+        with open(self.NODES_FILE) as outfile:
+            nodes = json.load(outfile)
+            
+        data = {}
+        for nodeIndex in nodes["NOS"].keys():
+#                 print("getting wind data for node", nodeIndex)
+            data[nodeIndex] = {}
+            data[nodeIndex]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
+            data[nodeIndex]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
+            data[nodeIndex]["stationKey"] = nodes["NOS"][nodeIndex]["stationKey"]
+            data[nodeIndex]["times"] = times
+            values = []
+            valuesX = []
+            valuesY = []
+            for index in range(len(times)):
+                if(dataType == "swh"):
+                    values.append(float(dataset.variables["swan_HS"][index][int(nodeIndex)]))
+                elif(dataType == "mwd"):
+                    values.append(float(dataset.variables["swan_DIR"][index][int(nodeIndex)]))
+                elif(dataType == "mwp"):
+                    values.append(float(dataset.variables["swan_TMM10"][index][int(nodeIndex)]))
+                elif(dataType == "pwp"):
+                    values.append(float(dataset.variables["swan_TPS"][index][int(nodeIndex)]))
+                elif(dataType == "rad"):
+                    radStressX = valuesX.append(float(dataset.variables["radstress_x"][index][int(nodeIndex)]))
+                    radStressY = valuesY.append(float(dataset.variables["radstress_y"][index][int(nodeIndex)]))
+
+            if(dataType == "rad"):
+                data[nodeIndex]["radstressX"] = valuesX
+                data[nodeIndex]["radstressY"] = valuesY
+            else:
+                data[nodeIndex][dataType] = values
+    
+        with open(DATA_FILE, "w") as outfile:
+            json.dump(data, outfile)
+            
+    def generateWaveDataForStations(self):
+        print("Wave files")
+        print(self.WAVE_SWH_FILE)
+        print(self.WAVE_MWD_FILE)
+        print(self.WAVE_MWP_FILE)
+        print(self.WAVE_PWP_FILE)
+        print(self.WAVE_RAD_FILE)
+        swhDataset, timesSWH = self.getNetcdfProperties(self.WAVE_SWH_FILE, "swh")
+        mwdDataset, timesMWD = self.getNetcdfProperties(self.WAVE_MWD_FILE, "mwd")
+        mwpDataset, timesMWP = self.getNetcdfProperties(self.WAVE_MWP_FILE, "mwp")
+        pwpDataset, timesPWP = self.getNetcdfProperties(self.WAVE_PWP_FILE, "pwp")
+        radDataset, timesRAD = self.getNetcdfProperties(self.WAVE_RAD_FILE, "rad")
+        
+        timesEqual = False
+        if(timesSWH == timesMWD == timesMWP == timesPWP == timesRAD):
+            timesEqual = True
+        
+        if(timesEqual):
+            initializeClosestWaveNodes = False
+            if(initializeClosestWaveNodes):
+                self.initializeClosestNodes(swhDataset)
+            self.generateDataFiles(swhDataset, "swh", timesSWH, self.WAVE_SWH_DATA_FILE)
+            self.generateDataFiles(mwdDataset, "mwd", timesMWD, self.WAVE_MWD_DATA_FILE)
+            self.generateDataFiles(mwpDataset, "mwp", timesMWP, self.WAVE_MWP_DATA_FILE)
+            self.generateDataFiles(pwpDataset, "pwp", timesPWP, self.WAVE_PWP_DATA_FILE)
+            self.generateDataFiles(radDataset, "rad", timesRAD, self.WAVE_RAD_DATA_FILE)
+            return (timesSWH[0], timesSWH[-1])
+
+
 class PostReader:
     def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE=""):
         temp_directory = "wind_temp/"
