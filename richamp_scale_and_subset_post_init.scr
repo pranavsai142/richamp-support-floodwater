@@ -102,10 +102,19 @@ if [ $wind_format == "generic-netcdf" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 fi
 
+graphAdcirc = ""
+graphGFS = ""
+graphRain = ""
+graphPost = ""
+graphObs = ""
+graphWaves = ""
 #python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
-
-echo python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
-python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
+# Use this form of conditional to create call to generateGraphs script.
+# python generateGraphs.py --stations OBS_STATIONS.json --adcircExists true --wind /data/RICV1_Unity_Dec15_fort.74.nc
+if [ $GRAPH_ADCIRC == "True"]; then
+    graphAdcirc = "--adcircExists true --wind " + $wind_filename
+# echo python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
+# python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc

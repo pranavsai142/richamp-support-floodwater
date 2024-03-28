@@ -10,7 +10,7 @@ import json
 from Encoders import NumpyEncoder
 		
 class GetBuoyWind:
-	def __init__(self, STATIONS_FILE="", OBS_WIND_FILE="", startDateObject="", endDateObject=""):
+	def __init__(self, STATIONS_FILE="", OBS_WIND_DATA_FILE="", startDateObject="", endDateObject=""):
 		
 		temp_directory = "wind_temp/"
 		print(type(startDateObject))
@@ -106,5 +106,5 @@ class GetBuoyWind:
 				badStations.append(badStations.append(stationDict))
 		
 		# print(windDict)
-		with open(OBS_WIND_FILE, "w") as outfile:
+		with open(OBS_WIND_DATA_FILE, "w") as outfile:
 			json.dump(windDict, outfile, cls=NumpyEncoder)

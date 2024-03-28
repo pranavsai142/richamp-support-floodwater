@@ -31,6 +31,14 @@
       "latitude": "41.71666667",
       "longitude": "-71.34333333",
       "altitude": "2\n"
+    },
+    "47": {
+      "id": "0",
+      "source": "NOS",
+      "name": "Block Island, RI",
+      "latitude": "40.967",
+      "longitude": "-71.126",
+      "altitude": "999\n"
     }
   }
 }
