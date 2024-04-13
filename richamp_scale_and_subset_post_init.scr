@@ -19,17 +19,9 @@ logfile=$1  # first parameter passed from richamp_scale_and_subset_post_init.sh
 echo "\"start\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.start # <-OVERWRITE
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has started." >> $logfile
 
+# Clear working directories
 rm -rf graphs properties wind_temp wave_temp
-# load run.properties file into associative array and extract relevant properties
-#declare -A properties
-#RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
-#SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
-#source $SCRIPTDIR/properties.sh
-#loadProperties $RUNPROPERTIES
-#RSSSITE=${properties['forcing.tropicalcyclone.forecast.rsssite']} # Ditto
-#FDIR=${properties['forcing.tropicalcyclone.forecast.path.fdir']} # Ditto
-#ADVISDIR=${properties['asgs.path.advisdir']} # Ditto
-#indir=/project/pi_iginis_uri_edu/pranav_sai_uri_edu/ecflow_output/ricv1/forecast_ensemble/forecast_base/ADCIRC/simulation
+
 indir=$RICHAMP_INDIR
 postprocessdir=$POSTHOME
 
@@ -48,12 +40,15 @@ start=${t_start:13:17}
 end=${t_end:11:17}
 echo "$start"
 echo "$end"
-# call MetGet again for precipitation
+
+# call MetGet for precipitation
 rain_filename=RICHAMP_rain
 #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
+metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
+
 
 wind_filename=gfs_wind
-#metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
+metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
 wind_format="generic-netcdf"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
@@ -70,13 +65,13 @@ scale_logic=up-down
 echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #if [ $wind_format == "owi-ascii" ]; then
    #python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-#if [ $wind_format == "generic-netcdf" ]; then
-   #python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename.nc -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+if [ $wind_format == "generic-netcdf" ]; then
+   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename.nc -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "wnd" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "blend" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-#fi
+fi
 
 graphAdcirc=""
 graphGfs=""
@@ -84,9 +79,7 @@ graphRain=""
 graphPost=""
 graphObs=""
 graphWaves=""
-#python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
-# Use this form of conditional to create call to generateGraphs script.
-# python generateGraphs.py --stations OBS_STATIONS.json --adcircExists true --wind /data/RICV1_Unity_Dec15_fort.74.nc
+
 if [[ $GRAPH_ADCIRC == "True" ]]; then
     graphAdcirc="--adcircExists true --wind $RICHAMP_INDIR/fort.74.nc"
 fi
@@ -107,8 +100,6 @@ if [[ $GRAPH_WAVES == "True" ]]; then
 fi
 echo python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves
 python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves
-# echo python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
-# python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
 
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
