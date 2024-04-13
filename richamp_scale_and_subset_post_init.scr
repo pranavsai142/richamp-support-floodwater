@@ -88,22 +88,22 @@ graphWaves=""
 # Use this form of conditional to create call to generateGraphs script.
 # python generateGraphs.py --stations OBS_STATIONS.json --adcircExists true --wind /data/RICV1_Unity_Dec15_fort.74.nc
 if [[ $GRAPH_ADCIRC == "True" ]]; then
-    graphAdcirc="--adcircExists true --wind " + $RICHAMP_INDIR/fort.74.nc
+    graphAdcirc="--adcircExists true --wind $RICHAMP_INDIR/fort.74.nc"
 fi
 if [[ $GRAPH_GFS == "True" ]]; then
-    graphGfs="--gfsExists true --wind " + $wind_filename.nc
+    graphGfs="--gfsExists true --wind $wind_filename.nc"
 fi
 if [[ $GRAPH_RAIN == "True" ]]; then
-    graphRain="--rainExists true --rain " + ±$rain_filename.nc
+    graphRain="--rainExists true --rain $rain_filename.nc"
 fi
 if [[ $GRAPH_POST == "True" ]]; then
-    graphPost="--postExists true --wind " + $output.nc
+    graphPost="--postExists true --wind $output.nc"
 fi
 if [[ $GRAPH_OBS == "True" ]]; then
     graphObs="--obsExists true"
 fi
 if [[ $GRAPH_WAVES == "True" ]]; then
-    graphWaves="--wavesExists true --waveswh " + $RICHAMP_INDIR/swan_HS.63.nc
+    graphWaves="--wavesExists true --waveswh $RICHAMP_INDIR/swan_HS.63.nc"
 fi
 echo python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves
 python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves
