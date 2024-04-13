@@ -25,7 +25,6 @@ echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has star
 #SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
 #source $SCRIPTDIR/properties.sh
 #loadProperties $RUNPROPERTIES
-tc_forcing=$RICHAMP_TC_FORCING
 #RSSSITE=${properties['forcing.tropicalcyclone.forecast.rsssite']} # Ditto
 #FDIR=${properties['forcing.tropicalcyclone.forecast.path.fdir']} # Ditto
 #ADVISDIR=${properties['asgs.path.advisdir']} # Ditto
@@ -33,32 +32,8 @@ tc_forcing=$RICHAMP_TC_FORCING
 indir=$RICHAMP_INDIR
 postprocessdir=$POSTHOME
 
-# if TROPICALCYCLONE=on, call MetGet to get winds
-# if all commented code were to be uncommented, the logic becomes: if TROPICALCYCLONE=on, call URI parametric model and MetGet to get winds; attempt to blend them, but fall back to one or the other if necessary
-if [ $tc_forcing == "on" ]; then
-#   # run URI parametric model
-   track_only=1 # set to 0 and uncomment the rest of the code in this block to run with the parametric model
-   module load matlab/r2021b
-   matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
-#   ln -s $postprocessdir/diag_parm.nml diag_parm.nml
-#   $postprocessdir/windgfdl
-#   wind_param=richamp.wnd
-#   wind_inp=Wind_Inp.txt
-   # call MetGet
-   wind_back_filename=gfs_forecast
-   python3 $postprocessdir/get_metget_data.py --domain gfs 0.25 -72 41 -71 43 --start "$t_start" --end "$t_end" --timestep 3600 --output $wind_back_filename --multiple_forecasts --format owi-ascii --variable wind_pressure
-   wind_back=$wind_back_filename\_00.wnd
-#   # determine wind format based on available files
-#   if [[ ! -r "$wind_param" || ! -r "$wind_inp" ]] && [[ -r "$wind_back" ]]; then
-      wind_format="owi-ascii"
-#   elif [[ -r "$wind_param" && -r "$wind_inp" ]] && [[ ! -r "$wind_back" ]]; then
-#      wind_format="wnd"
-#   elif [[ -r "$wind_param" && -r "$wind_inp" ]] && [[ -r "$wind_back" ]]; then
-#      wind_format="blend"
-#   fi
-fi
 
-python3 $postprocessdir/generateRunProperties.py --tc $tc_forcing --indir $indir
+python3 $postprocessdir/generateRunProperties.py --indir $indir
 while read line; do 
 	if [[ $line =~ "metgetstart" ]]; then
 	  t_start=$line
@@ -120,9 +95,8 @@ if [ $GRAPH_ADCIRC == "True"]; then
 wind_output=$output.nc
 rain_output=$rain_filename.nc
 output_dir=$RICHAMP_OUTDIR
-run_properties=run.properties
 cp $wind_output $rain_output $run_properties $output_dir
-cp -r graphs $output_dir
+cp -r graphs properties $output_dir
 if [ $tc_forcing == "True" ]; then
    shapefile1='Track.shp'
    shapefile2='Track.shx'

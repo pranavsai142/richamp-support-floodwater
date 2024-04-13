@@ -92,9 +92,9 @@ class Reader:
                 mapValueY = []
                 for longitudeIndex in range(0, deltaNodesLongitude, spaceSparseness):
                     for latitudeIndex in range(0, deltaNodesLatitude, spaceSparseness):
-                        node = (float(dataset.variables["lat"][latitudeIndex].data), float(dataset.variables["lon"][longitudeIndex].data))
                         nodeIndex = str((latitudeIndex, longitudeIndex))
                         if(not mapPointsInitialized):
+                            node = (float(dataset.variables["lat"][latitudeIndex].data), float(dataset.variables["lon"][longitudeIndex].data))
                             mapPoints.append(nodeIndex)
                             mapPointsLatitudes.append(node[0])
                             mapPointsLongitudes.append(node[1])
@@ -120,8 +120,8 @@ class Reader:
                 #     There are nodes in the gulf of mexico between node 400000 - 500000 for rivc1 map
                 #     for nodeIndex in range(100000):
                 #         nodeIndex = nodeIndex + 400000
-                    node = (float(dataset.variables["y"][nodeIndex].data), float(dataset.variables["x"][nodeIndex].data))
                     if(not mapPointsInitialized):
+                        node = (float(dataset.variables["y"][nodeIndex].data), float(dataset.variables["x"][nodeIndex].data))
                         mapPoints.append(nodeIndex)
                         mapPointsLatitudes.append(node[0])
                         mapPointsLongitudes.append(node[1])
@@ -686,8 +686,8 @@ class PostWindReader:
             thresholdDistance = 0.05
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = False
-        spaceSparseness = 100
-        timeSparseness = 50
+        spaceSparseness = 50
+        timeSparseness = 5
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         else:

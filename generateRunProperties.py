@@ -1,11 +1,9 @@
 import argparse
+from urllib.request import urlretrieve
 from datetime import datetime
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate run properties")
-    p.add_argument(
-            "--tc", help="Tropical storm forcing", type=bool
-    )
     p.add_argument(
         "--indir", help="ADCIRC run directory, used for generating run properties file", type=str
     )
@@ -13,7 +11,7 @@ def main():
     args.epsg = 4326
     startFound = False
     endFound = False
-    tcFound = not args.tc
+    tcFound = False
     storm = ""
     advisory = ""
     year = ""
@@ -30,6 +28,8 @@ def main():
                 advisory = line[line.index("--advisory") + 11: line.index("--basin") - 1]
                 year = line[line.index("--year") + 7: line.index("--end") - 1]
                 tcFound = True
+            elif " _______________________________________________________________________________" in line:
+                break
             if(startFound and endFound and tcFound):
                 break
     start = datetime.strptime(rawstart, "%y-%m-%d %H:%M")
@@ -41,7 +41,7 @@ def main():
     metgetend = datetime.strptime(rawend, "%y-%m-%d %H:%M")
     metgetend = metgetend.strftime(("%Y-%m-%d %H:%M"))
     print("start, end, storm, advisory, year", start, end, storm, advisory, year, flush=True)
-    with open("run.properties", "w") as f:
+    with open("properties/run.properties", "w") as f:
         f.write("forecastValidStart : " + start + "\n")
         f.write("forecastValidEnd : " + end + "\n")
         f.write("rawstart: " + rawstart + "\n")
@@ -53,6 +53,10 @@ def main():
             f.write("advisory : " + advisory + "\n")
             f.write("year : " + year + "\n")
         f.close()
+    if(tcFound):
+        url = "http://www.nhc.noaa.gov/gis/forecast/archive/al" + storm + year + "_5day_001.zip"
+        urlretrieve(url, "properties/al" + storm + year + "_5day_001.zip")
+    
 
 if __name__ == "__main__":
     main()

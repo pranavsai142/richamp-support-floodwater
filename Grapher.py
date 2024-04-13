@@ -46,6 +46,8 @@ class Grapher:
         self.waveStartDate = None
         self.rainStartDate = None
         
+        self.windType = ""
+        
         if("OBS" in dataToGraph):
             self.obsExists = True
         if("POST" in dataToGraph or "GFS" in dataToGraph or "FORT" in dataToGraph):
@@ -132,15 +134,15 @@ class Grapher:
             with open(dataToGraph["OBS"]) as outfile:
                 obsDataset = json.load(outfile)
         if("POST" in dataToGraph):  
-            windType = "POST"
+            self.windType = "POST"
             with open(dataToGraph["POST"]) as outfile:
                 windDataset = json.load(outfile)
         if("GFS" in dataToGraph):
-            windType = "GFS"
+            self.windType = "GFS"
             with open(dataToGraph["GFS"]) as outfile:
                 windDataset = json.load(outfile)
         if("FORT" in dataToGraph):
-            windType = "FORT"
+            self.windType = "FORT"
             with open(dataToGraph["FORT"]) as outfile:
                 windDataset = json.load(outfile)
                   
@@ -152,7 +154,7 @@ class Grapher:
                     self.mapWindPointsLatitudes = windDataset["map_data"]["map_pointsLatitudes"]
                     self.mapWindPointsLongitudes = windDataset["map_data"]["map_pointsLongitude"]
                     self.mapWindTimes = windDataset["map_data"]["map_times"]
-                    if(windType == "GFS" or windType == "FORT"):
+                    if(self.windType == "GFS" or self.windType == "FORT"):
                         mapWindsX = windDataset["map_data"]["map_windsX"]
                         mapWindsY = windDataset["map_data"]["map_windsY"]
                         for index in range(len(self.mapWindTimes)):
@@ -163,7 +165,7 @@ class Grapher:
                                 pointDirections.append(self.vectorDirection(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex]))
                             self.mapSpeeds.append(pointSpeeds)
                             self.mapDirections.append(pointDirections)
-                    elif(windType == "POST"):
+                    elif(self.windType == "POST"):
                         self.mapSpeeds = windDataset["map_data"]["map_speeds"]
                         self.mapDirections = windDataset["map_data"]["map_directions"]
                 else:
@@ -185,12 +187,12 @@ class Grapher:
                                 self.windStartDate = datetime.fromtimestamp(int(windDataset[nodeIndex]["times"][index]))
                             if(not windTimestampsInitialized):
                                 self.windTimes.append(self.unixTimeToDeltaHours(windDataset[nodeIndex]["times"][index], self.windStartDate))
-                            if(windType == "GFS" or windType == "FORT"):
+                            if(self.windType == "GFS" or self.windType == "FORT"):
                                 windX = windDataset[nodeIndex]["windsX"][index]
                                 windY = windDataset[nodeIndex]["windsY"][index]
                                 windSpeed = self.vectorSpeed(windX, windY)
                                 windDirection = self.vectorDirection(windX, windY)
-                            elif(windType == "POST"):
+                            elif(self.windType == "POST"):
                                 windSpeed = windDataset[nodeIndex]["speeds"][index]
                                 windDirection = windDataset[nodeIndex]["directions"][index]
                             datapointDirections.append(windDirection)
@@ -385,7 +387,12 @@ class Grapher:
     #             print(self.endSpeeds)
                 img = mpimg.imread('subsetFlipped.png')
                 plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
-                plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
+                if(self.windType == "FORT"):
+                    plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
+                elif(self.windType == "POST"):
+                    plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
+                elif(self.windType == "GFS"):
+                    plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
                 plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
                 plt.title("Wind Speed")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index])))
