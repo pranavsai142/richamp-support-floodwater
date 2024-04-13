@@ -107,6 +107,11 @@ class Grapher:
         self.rainLabels = []
         self.rainTimes = []
         
+        self.mapRainPoints = []
+        self.mapRainPointsLatitudes = []
+        self.mapRainPointsLongitudes = []
+        self.mapRains = []
+        
         self.datapointsRains = []
         
         self.waveLongitudes = []
@@ -226,25 +231,31 @@ class Grapher:
                 
             rainTimestampsInitialized = False
             for nodeIndex in rainDataset.keys():
-                stationKey = rainDataset[nodeIndex]["stationKey"]
-                self.rainLabels.append(nodeIndex)
-                self.rainLatitudes.append(rainDataset[nodeIndex]["latitude"])
-                self.rainLongitudes.append(rainDataset[nodeIndex]["longitude"])
+                if(nodeIndex == "map_data"):
+                    self.mapRainPoints = rainDataset["map_data"]["map_points"]
+                    self.mapRainPointsLatitudes = rainDataset["map_data"]["map_pointsLatitudes"]
+                    self.mapRainPointsLongitudes = rainDataset["map_data"]["map_pointsLongitude"]
+                    self.mapRains = rainDataset["map_data"]["map_rain"]
+                else:
+                    stationKey = rainDataset[nodeIndex]["stationKey"]
+                    self.rainLabels.append(nodeIndex)
+                    self.rainLatitudes.append(rainDataset[nodeIndex]["latitude"])
+                    self.rainLongitudes.append(rainDataset[nodeIndex]["longitude"])
                 
-                if(not obsLabelsInitialized):
-                    self.obsLabels.append(self.obsMetadata[stationKey]["name"])
-                    self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
-                    self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
+                    if(not obsLabelsInitialized):
+                        self.obsLabels.append(self.obsMetadata[stationKey]["name"])
+                        self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
+                        self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
 
-                datapointRains = []
-                for index in range(len(rainDataset[nodeIndex]["times"])):
-                    if(self.rainStartDate == None):
-                        self.rainStartDate = datetime.fromtimestamp(int(rainDataset[nodeIndex]["times"][index]))
-                    if(not rainTimestampsInitialized):
-                        self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[nodeIndex]["times"][index], self.rainStartDate))
-                    datapointRains.append(rainDataset[nodeIndex]["rain"][index])
-                rainTimestampsInitialized = True
-                self.datapointsRains.append(datapointRains)
+                    datapointRains = []
+                    for index in range(len(rainDataset[nodeIndex]["times"])):
+                        if(self.rainStartDate == None):
+                            self.rainStartDate = datetime.fromtimestamp(int(rainDataset[nodeIndex]["times"][index]))
+                        if(not rainTimestampsInitialized):
+                            self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[nodeIndex]["times"][index], self.rainStartDate))
+                        datapointRains.append(rainDataset[nodeIndex]["rain"][index])
+                    rainTimestampsInitialized = True
+                    self.datapointsRains.append(datapointRains)
             obsLabelsInitialized = True
                         
         if(self.wavesExists):
