@@ -15,6 +15,10 @@ def main():
     storm = ""
     advisory = ""
     year = ""
+
+    properties_directory = "properties/"
+    if not os.path.exists(properties_directory):
+        os.makedirs(properties_directory)
     with open(args.indir + "/adcirc_simulation.1") as f:
         for line in f:
             if "SIMULATION_START" in line:
@@ -55,7 +59,7 @@ def main():
         f.close()
     if(tcFound):
         url = "http://www.nhc.noaa.gov/gis/forecast/archive/al" + storm + year + "_5day_001.zip"
-        urlretrieve(url, "properties/al" + storm + year + "_5day_001.zip")
+        urlretrieve(url, properties + "al" + storm + year + "_5day_001.zip")
     
 
 if __name__ == "__main__":
