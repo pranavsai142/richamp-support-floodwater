@@ -233,7 +233,7 @@ class Grapher:
             rainTimestampsInitialized = False
             for nodeIndex in rainDataset.keys():
                 if(nodeIndex == "map_data"):
-                    self.mapRain Times = rainDataset["map_data"]["map_times"]
+                    self.mapRainTimes = rainDataset["map_data"]["map_times"]
                     self.mapRainPoints = rainDataset["map_data"]["map_points"]
                     self.mapRainPointsLatitudes = rainDataset["map_data"]["map_pointsLatitudes"]
                     self.mapRainPointsLongitudes = rainDataset["map_data"]["map_pointsLongitude"]
