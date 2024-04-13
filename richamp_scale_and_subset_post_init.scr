@@ -39,7 +39,7 @@ while read line; do
 	  t_start=$line
 	elif [[ $line =~ "metgetend" ]]; then
           t_end=$line
-        fi
+    fi
 done < run.properties
 echo "$t_start"
 echo "$t_end"
@@ -77,17 +77,34 @@ if [ $wind_format == "generic-netcdf" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 fi
 
-graphAdcirc = ""
-graphGFS = ""
-graphRain = ""
-graphPost = ""
-graphObs = ""
-graphWaves = ""
+graphAdcirc=""
+graphGfs=""
+graphRain=""
+graphPost=""
+graphObs=""
+graphWaves=""
 #python3 $postprocessdir/generateWindGraphs.py --stations $WIND_STATIONS --wind $output.nc --obs $GRAPH_OBS_WIND
 # Use this form of conditional to create call to generateGraphs script.
 # python generateGraphs.py --stations OBS_STATIONS.json --adcircExists true --wind /data/RICV1_Unity_Dec15_fort.74.nc
 if [ $GRAPH_ADCIRC == "True"]; then
-    graphAdcirc = "--adcircExists true --wind " + $wind_filename
+    graphAdcirc="--adcircExists true --wind " + $RICHAMP_INDIR/fort.74.nc
+fi
+if [ $GRAPH_GFS == "True"]; then
+    graphGfs="--gfsExists true --wind " + $wind_filename.nc
+fi
+if [ $GRAPH_RAIN == "True"]; then
+    graphRain="--rainExists true --rain " + ±$rain_filename.nc
+fi
+if [ $GRAPH_POST == "True"]; then
+    graphPost="--postExists true --wind " + $output.nc
+fi
+if [ $GRAPH_OBS == "True"]; then
+    graphObs="--obsExists true"
+fi
+if [ $GRAPH_WAVES == "True"]; then
+    graphWaves="--wavesExists true --waveswh " + $RICHAMP_INDIR/swan_HS.63.nc
+fi
+python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves
 # echo python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
 # python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS --wind $output.nc --rain $rain_filename.nc --obs $GRAPH_OBS_WIND
 
@@ -97,18 +114,7 @@ rain_output=$rain_filename.nc
 output_dir=$RICHAMP_OUTDIR
 cp $wind_output $rain_output $run_properties $output_dir
 cp -r graphs properties $output_dir
-if [ $tc_forcing == "True" ]; then
-   shapefile1='Track.shp'
-   shapefile2='Track.shx'
-   shapefile3='Track.dbf'
-   #if [ $RSSSITE == "filesystem" ]; then
-   #   advisory=$FDIR/index-at.xml
-   #else
-   #   advisory=$ADVISDIR/index-at.xml
-   #fi
-   #cp $shapefile1 $shapefile2 $shapefile3 $advisory $output_dir
-   cp $indir/*.trk $output_dir
-fi
+cp $indir/*.trk $output_dir
 
 echo "\"finish\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.finish # <-OVERWRITE
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has finished." >> $logfile
