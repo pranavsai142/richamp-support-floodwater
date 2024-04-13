@@ -59,8 +59,9 @@ def main():
             f.write("year : " + year + "\n")
         f.close()
     if(tcFound):
-        url = "http://www.nhc.noaa.gov/gis/forecast/archive/al" + storm + year + "_5day_001.zip"
-        urlretrieve(url, properties_directory + "al" + storm + year + "_5day_001.zip")
+        filename = "al" + storm + year + "_5day_" + advisory + ".zip"
+        url = "http://www.nhc.noaa.gov/gis/forecast/archive/" + filename
+        urlretrieve(url, properties_directory + filename)
     
 
 if __name__ == "__main__":
