@@ -19,6 +19,7 @@ logfile=$1  # first parameter passed from richamp_scale_and_subset_post_init.sh
 echo "\"start\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.start # <-OVERWRITE
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has started." >> $logfile
 
+rm -rf graphs properties wind_temp wave_temp
 # load run.properties file into associative array and extract relevant properties
 #declare -A properties
 #RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
