@@ -443,55 +443,6 @@ class Reader:
     
         with open(DATA_FILE, "w") as outfile:
             json.dump(data, outfile)
-            
-    def generateDataFilesWithEndDateValues(self, dataset, dataType, times, spaceSparseness, timeSparseness, DATA_FILE):
-    
-        with open(self.NODES_FILE) as outfile:
-            nodes = json.load(outfile)
-            
-        data = {}
-        
-        data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
-        
-        print("Reading data", dataType)
-        for nodeIndex in nodes["NOS"].keys():
-#             print("getting wind data for node", nodeIndex)
-            data[nodeIndex] = {}
-            data[nodeIndex]["stationKey"] = nodes["NOS"][nodeIndex]["stationKey"]
-            data[nodeIndex]["times"] = times
-            if(self.format == "GFS" or self.format == "POST"):
-                data[nodeIndex]["latitude"] = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
-                data[nodeIndex]["longitude"] = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
-            elif(self.format == "FORT"):
-                data[nodeIndex]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
-                data[nodeIndex]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
-
-            values = []
-            valuesX = []
-            valuesY = []
-            for index in range(len(times)):
-                value = self.getValue(index, nodeIndex, dataType, dataset)
-                if(type(value) is float):
-                    values.append(value)
-                else:
-                    valuesX.append(value[0])
-                    valuesY.append(value[1])
-
-#           Write values
-            if(dataType == "rad"):
-                data[nodeIndex]["radstressX"] = valuesX
-                data[nodeIndex]["radstressY"] = valuesY
-            elif(dataType == "gfs" or dataType == "fort"):
-                data[nodeIndex]["windsX"] = valuesX
-                data[nodeIndex]["windsY"] = valuesY
-            elif(dataType == "post"):
-                data[nodeIndex]["speeds"] = valuesX
-                data[nodeIndex]["directions"] = valuesY
-            else:
-                data[nodeIndex][dataType] = values
-    
-        with open(DATA_FILE, "w") as outfile:
-            json.dump(data, outfile)  
         
     def generateDataFilesWithInterpolation(self, dataset, dataType, times, spaceSparseness, timeSparseness, DATA_FILE):
         
@@ -602,7 +553,7 @@ class GFSRainReader:
         if(initializeClosestRainNodes):
             thresholdDistance = 20
             self.reader.initializeClosestNodes(rainDataset, thresholdDistance)
-        interpolateValues = False
+        interpolateValues = True
         spaceSparseness = 1
         timeSparseness = 5
         if(interpolateValues):
@@ -636,7 +587,7 @@ class GFSWindReader:
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "gfs", timesWind, spaceSparseness, timeSparseness, self.GFS_WIND_DATA_FILE)
         else:
-            self.reader.generateDataFilesWithEndDateValues(windDataset, "gfs", timesWind, spaceSparseness, timeSparseness, self.GFS_WIND_DATA_FILE)
+            self.reader.generateDataFiles(windDataset, "gfs", timesWind, spaceSparseness, timeSparseness, self.GFS_WIND_DATA_FILE)
         return (datetime.fromtimestamp(timesWind[0]), datetime.fromtimestamp(timesWind[-1]))
             
 class Fort74Reader:
@@ -654,7 +605,7 @@ class Fort74Reader:
         print("Wind file")
         print(self.ADCIRC_WIND_FILE)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.ADCIRC_WIND_FILE, "fort")
-        initializeClosestWindNodes = False
+        initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
             thresholdDistance = 0.1
             self.reader.initializeClosestNodes(thresholdDistance)
@@ -681,17 +632,17 @@ class PostWindReader:
         print("Wind file")
         print(self.POST_WIND_FILE)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
-        initializeClosestWindNodes = False
+        initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
             thresholdDistance = 0.05
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
-        interpolateValues = False
+        interpolateValues = True
         spaceSparseness = 50
         timeSparseness = 5
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         else:
-            self.reader.generateDataFilesWithEndDateValues(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
+            self.reader.generateDataFiles(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         return (datetime.fromtimestamp(timesWind[0]), datetime.fromtimestamp(timesWind[-1]))
    
 
@@ -742,11 +693,11 @@ class WaveReader:
         if(timesEqual):
                 spaceSparseness = 500
                 timeSparseness  = 5
-                initializeClosestWaveNodes = False
+                initializeClosestWaveNodes = True
                 if(initializeClosestWaveNodes):
                     thresholdDistance = 0.1
                     self.reader.initializeClosestNodes(swhDataset, thresholdDistance)
-                interpolateValues = False
+                interpolateValues = True
                 if(interpolateValues):
                     self.reader.generateDataFilesWithInterpolation(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)
 #                     self.reader.generateDataFilesWithInterpolation(mwdDataset, "mwd", timesSWH, self.WAVE_MWD_DATA_FILE)
@@ -754,8 +705,7 @@ class WaveReader:
 #                     self.reader.generateDataFilesWithInterpolation(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
 #                     self.reader.generateDataFilesWithInterpolation(radDataset, "rad", timesSWH, self.WAVE_RAD_DATA_FILE)
                 else:
-
-                    self.reader.generateDataFilesWithEndDateValues(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)
+                    self.reader.generateDataFiles(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)
 #                     self.reader.generateDataFiles(mwdDataset, "mwd", timesSWH, self.WAVE_MWD_DATA_FILE)
 #                     self.reader.generateDataFiles(mwpDataset, "mwp", timesSWH, self.WAVE_MWP_DATA_FILE)
 #                     self.reader.generateDataFiles(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
