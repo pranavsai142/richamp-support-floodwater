@@ -440,11 +440,11 @@ class Grapher:
                 plt.savefig(graph_directory + 'map_rain_' + str(index) + '.png')
                 plt.close()
             with imageio.get_writer(graph_directory + 'rain.gif', mode='I') as writer:
-                for index in range(len(self.mapWaveTimes)):
+                for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
                     image = imageio.imread(graph_directory + filename)
                     writer.append_data(image)
-                for index in range(len(self.mapWaveTimes)):
+                for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
         if(len(self.mapWaveTimes) > 0):
