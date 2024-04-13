@@ -108,6 +108,7 @@ class Grapher:
         self.rainTimes = []
         
         self.mapRainPoints = []
+        self.mapRainTimes = []
         self.mapRainPointsLatitudes = []
         self.mapRainPointsLongitudes = []
         self.mapRains = []
@@ -232,6 +233,7 @@ class Grapher:
             rainTimestampsInitialized = False
             for nodeIndex in rainDataset.keys():
                 if(nodeIndex == "map_data"):
+                    self.mapRain Times = rainDataset["map_data"]["map_times"]
                     self.mapRainPoints = rainDataset["map_data"]["map_points"]
                     self.mapRainPointsLatitudes = rainDataset["map_data"]["map_pointsLatitudes"]
                     self.mapRainPointsLongitudes = rainDataset["map_data"]["map_pointsLongitude"]
@@ -419,6 +421,31 @@ class Grapher:
                     writer.append_data(image)
                 for index in range(len(self.mapWindTimes)):
                     filename = "map_wind_" + str(index) + ".png"
+                    os.remove(graph_directory + filename)
+        if(len(self.mapRainTimes) > 0):
+            for index in range(len(self.mapRainTimes)):
+                fig, ax = plt.subplots()
+    #             print(self.endWavePointsLongitudes)
+    #             print(self.endWavePointsLatitudes)
+    #             print(self.endSWH)
+                img = mpimg.imread('subsetFlipped.png')
+                plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
+                plt.scatter(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, c=self.mapRains[index], alpha=0.3, label="Forecast", marker=".", s=3600)
+                plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
+                plt.title("Rain")
+                plt.xlabel(datetime.fromtimestamp(int(self.mapRainTimes[index])))
+    #             plt.gca().invert_yaxis()
+                plt.clim(0,3)
+                plt.colorbar(label="Millimeters Per Hour")
+                plt.savefig(graph_directory + 'map_rain_' + str(index) + '.png')
+                plt.close()
+            with imageio.get_writer(graph_directory + 'rain.gif', mode='I') as writer:
+                for index in range(len(self.mapWaveTimes)):
+                    filename = "map_rain_" + str(index) + ".png"
+                    image = imageio.imread(graph_directory + filename)
+                    writer.append_data(image)
+                for index in range(len(self.mapWaveTimes)):
+                    filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
         if(len(self.mapWaveTimes) > 0):
             for index in range(len(self.mapWaveTimes)):
