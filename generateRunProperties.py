@@ -53,7 +53,7 @@ def main():
         f.write("rawend: " + rawend + "\n")
         f.write("metgetstart: " + metgetstart + "\n")
         f.write("metgetend: " + metgetend + "\n")
-        if(args.tc):
+        if(tcFound):
             f.write("stormnumber : " + storm + "\n")
             f.write("advisory : " + advisory + "\n")
             f.write("year : " + year + "\n")
