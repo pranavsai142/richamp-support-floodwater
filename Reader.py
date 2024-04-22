@@ -72,7 +72,35 @@ class Reader:
             valueY = float(dataset.variables["radstress_y"][index][int(nodeIndex)])
             return(valueX, valueY)
         
-    def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
+        
+    def getValues(self, index, spaceSparseness, dataType, dataset):
+        if(dataType == "post"):
+            valuesX = dataset.variables["spd"][index][::spaceSparseness][::spaceSparseness]
+            valuesY = dataset.variables["dir"][index][::spaceSparseness][::spaceSparseness]
+            return(valuesX, valuesY)
+        elif(dataType == "gfs"):
+            valueX = float(dataset.variables["wind_u"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+            valueY = float(dataset.variables["wind_v"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+            return(valueX, valueY)
+        elif(dataType == "rain"):
+            return float(dataset.variables["rain"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+        elif(dataType == "fort"):
+            valueX = dataset.variables["windx"][index][int(nodeIndex)]
+            valueY = dataset.variables["windy"][index][int(nodeIndex)]
+        elif(dataType == "swh"):
+            return float(dataset.variables["swan_HS"][index][int(nodeIndex)])
+        elif(dataType == "mwd"):
+            return float(dataset.variables["swan_DIR"][index][int(nodeIndex)])
+        elif(dataType == "mwp"):
+           return float(dataset.variables["swan_TMM10"][index][int(nodeIndex)])
+        elif(dataType == "pwp"):
+            return float(dataset.variables["swan_TPS"][index][int(nodeIndex)])
+        elif(dataType == "rad"):
+            valueX = float(dataset.variables["radstress_x"][index][int(nodeIndex)])
+            valueY = float(dataset.variables["radstress_y"][index][int(nodeIndex)])
+            return(valueX, valueY)
+            
+    def getMap(self, dataset, dataType, times, spaceSparseness, data):
         print("getting map", dataType)
         mapTimes = []
         mapValuesX = []
@@ -85,29 +113,37 @@ class Reader:
         if(self.format == "GFS" or self.format == "POST"):
             deltaNodesLatitude = len(dataset.variables["lat"][:])
             deltaNodesLongitude = len(dataset.variables["lon"][:])
-            for index in range(0, len(times), timeSparseness):
+            for index in range(0, len(times)):
                 mapTimes.append(times[index])
                 mapValue = []
                 mapValueX = []
                 mapValueY = []
+                mapValue = self.getValues(index, spaceSparseness, dataType, dataset)
+                if(len(mapValue) == 1):
+                    mapValues.append(mapValue)
+                else:
+                    mapValuesX.append(mapValue[0])
+                    mapValuesY.append(mapValue[1])
                 for longitudeIndex in range(0, deltaNodesLongitude, spaceSparseness):
                     for latitudeIndex in range(0, deltaNodesLatitude, spaceSparseness):
                         nodeIndex = str((latitudeIndex, longitudeIndex))
+                        print("processing map:", nodeIndex, index)
                         if(not mapPointsInitialized):
                             node = (float(dataset.variables["lat"][latitudeIndex].data), float(dataset.variables["lon"][longitudeIndex].data))
                             mapPoints.append(nodeIndex)
                             mapPointsLatitudes.append(node[0])
                             mapPointsLongitudes.append(node[1])
-                        pointValue = self.getValue(index, nodeIndex, dataType, dataset)
-                        if(type(pointValue) is float):
-                            mapValue.append(pointValue)
-                        else:
-                            mapValueX.append(pointValue[0])
-                            mapValueY.append(pointValue[1])
+#                         pointValue = self.getValue(index, nodeIndex, dataType, dataset)
+#                         if(type(pointValue) is float):
+#                             mapValue.append(pointValue)
+#                         else:
+#                             mapValueX.append(pointValue[0])
+#                             mapValueY.append(pointValue[1])
                 mapPointsInitialized = True
-                mapValues.append(mapValue)
-                mapValuesX.append(mapValueX)
-                mapValuesY.append(mapValueY)
+                break
+#                 mapValues.append(mapValue)
+#                 mapValuesX.append(mapValueX)
+#                 mapValuesY.append(mapValueY)
             
         elif(self.format == "FORT"):
             numberOfNodes = dataset.variables["x"].shape[0]
@@ -116,6 +152,12 @@ class Reader:
                 mapValue = []
                 mapValueX = []
                 mapValueY = []
+                mapValue = self.getValues(index, spaceSparseness, dataType, dataset)
+                if(len(mapValue) == 1):
+                    mapValues.append(mapValue)
+                else:
+                    mapValuesX.append(mapValue[0])
+                    mapValuesY.append(mapValue[1])
                 for nodeIndex in range(0, numberOfNodes, spaceSparseness):
                 #     There are nodes in the gulf of mexico between node 400000 - 500000 for rivc1 map
                 #     for nodeIndex in range(100000):
@@ -125,16 +167,8 @@ class Reader:
                         mapPoints.append(nodeIndex)
                         mapPointsLatitudes.append(node[0])
                         mapPointsLongitudes.append(node[1])
-                    pointValue = self.getValue(index, nodeIndex, dataType, dataset)
-                    if(type(pointValue) is float):
-                        mapValue.append(pointValue)
-                    else:
-                        mapValueX.append(pointValue[0])
-                        mapValueY.append(pointValue[1])
                 mapPointsInitialized = True
-                mapValues.append(mapValue)
-                mapValuesX.append(mapValueX)
-                mapValuesY.append(mapValueY)
+                break
         
         data["map_data"] = {}
         data["map_data"]["map_times"] = mapTimes
@@ -452,7 +486,7 @@ class Reader:
             stationsDict = json.load(stations_file)
             
         data = {}
-        data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
+        data = self.getMap(dataset, dataType, times, spaceSparseness, data)
                 
         print("Interpolating", dataType)
         points = []
@@ -478,6 +512,7 @@ class Reader:
                 valuesX = []
                 valuesY = []
                 for index in range(len(times)):
+                    print("getttingTime")
                     value = self.getValue(index, closestNode, dataType, dataset)
                     if(type(value) is float):
                         values.append(value)
@@ -629,21 +664,23 @@ class PostWindReader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.POST_NODES_FILE, format="POST")
     
     def generateWindDataForStations(self):
+        print("start, ", datetime.now())
         print("Wind file")
         print(self.POST_WIND_FILE)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
-        initializeClosestWindNodes = True
+        initializeClosestWindNodes = False
         if(initializeClosestWindNodes):
             thresholdDistance = 0.05
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
         spaceSparseness = 50
-        timeSparseness = 5
+        timeSparseness = 1
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         return (datetime.fromtimestamp(timesWind[0]), datetime.fromtimestamp(timesWind[-1]))
+        print("end, ", datetime.now())
    
 
 class WaveReader:

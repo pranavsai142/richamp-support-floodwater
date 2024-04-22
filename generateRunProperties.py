@@ -2,6 +2,7 @@ import os
 import argparse
 from urllib.request import urlretrieve
 from datetime import datetime
+from zipfile import ZipFile
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate run properties")
@@ -17,7 +18,7 @@ def main():
     advisory = ""
     year = ""
 
-    properties_directory = "properties/"
+    properties_directory = "tracks/"
     if not os.path.exists(properties_directory):
         os.makedirs(properties_directory)
     with open(args.indir + "/adcirc_simulation.1") as f:
@@ -46,7 +47,7 @@ def main():
     metgetend = datetime.strptime(rawend, "%y-%m-%d %H:%M")
     metgetend = metgetend.strftime(("%Y-%m-%d %H:%M"))
     print("start, end, storm, advisory, year", start, end, storm, advisory, year, flush=True)
-    with open("properties/run.properties", "w") as f:
+    with open(properties_directory + "run.properties", "w") as f:
         f.write("forecastValidStart : " + start + "\n")
         f.write("forecastValidEnd : " + end + "\n")
         f.write("rawstart: " + rawstart + "\n")
@@ -62,6 +63,26 @@ def main():
         filename = "al" + storm + year + "_5day_" + advisory + ".zip"
         url = "http://www.nhc.noaa.gov/gis/forecast/archive/" + filename
         urlretrieve(url, properties_directory + filename)
+
+    # loading the temp.zip and creating a zip object 
+    with ZipFile(properties_directory + filename, 'r') as zObject: 
+  
+        # Extracting all the members of the zip  
+        # into a specific location. 
+        zObject.extractall( 
+            path=properties_directory) 
+        files = os.listdir(properties_directory)
+        for file in files:
+            fileExtension = file[file.index("."):]
+            if "lin" in file:
+                os.rename(file, properties_directory + "track" + fileExtension)
+            if "pgn" in file:
+                os.rename(file, properties_directory + "cone" + fileExtension)
+            if "pts" in file:
+                os.rename(file, properties_directory + "points" + fileExtension)
+            if "ww_wwlin" in file:
+                os.remove(file)
+                
     
 
 if __name__ == "__main__":
