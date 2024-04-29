@@ -104,8 +104,13 @@ python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
 rain_output=$rain_filename.nc
+if [[ $GRAPH_WAVES == "True" ]]; then
+    wave_output=$RICHAMP_INDIR/swan_HS.63.nc
+fi
 output_dir=$RICHAMP_OUTDIR
-cp $wind_output $rain_output $run_properties $output_dir
+cp $wind_output $rain_output $wave_output $run_properties $output_dir
+#rename wave file
+mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 cp -r graphs properties $output_dir
 #cp $indir/*.trk $output_dir
 

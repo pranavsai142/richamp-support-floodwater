@@ -55,9 +55,12 @@ def main():
         f.write("metgetstart: " + metgetstart + "\n")
         f.write("metgetend: " + metgetend + "\n")
         if(tcFound):
+            f.write("stormtype : nhc\n")
             f.write("stormnumber : " + storm + "\n")
             f.write("advisory : " + advisory + "\n")
             f.write("year : " + year + "\n")
+        else:
+            f.write("stormtype : gfs\n")
         f.close()
     if(tcFound):
         filename = "al" + storm + year + "_5day_" + advisory + ".zip"
