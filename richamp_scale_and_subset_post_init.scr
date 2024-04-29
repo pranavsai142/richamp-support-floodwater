@@ -33,7 +33,7 @@ while read line; do
 	elif [[ $line =~ "metgetend" ]]; then
           t_end=$line
     fi
-done < run.properties
+done < properties/run.properties
 echo "$t_start"
 echo "$t_end"
 start=${t_start:13:17}
@@ -107,7 +107,7 @@ rain_output=$rain_filename.nc
 output_dir=$RICHAMP_OUTDIR
 cp $wind_output $rain_output $run_properties $output_dir
 cp -r graphs properties $output_dir
-cp $indir/*.trk $output_dir
+#cp $indir/*.trk $output_dir
 
 echo "\"finish\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.finish # <-OVERWRITE
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has finished." >> $logfile
