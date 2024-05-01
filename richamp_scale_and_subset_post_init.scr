@@ -28,16 +28,16 @@ postprocessdir=$POSTHOME
 
 python3 $postprocessdir/generateRunProperties.py --indir $indir
 while read line; do 
-	if [[ $line =~ "metgetstart" ]]; then
+	if [[ $line =~ "rawstart" ]]; then
 	  t_start=$line
-	elif [[ $line =~ "metgetend" ]]; then
+	elif [[ $line =~ "rawend" ]]; then
           t_end=$line
     fi
 done < properties/run.properties
 echo "$t_start"
 echo "$t_end"
-start=${t_start:13:17}
-end=${t_end:11:17}
+start=${t_start:10:17}
+end=${t_end:8:17}
 echo "$start"
 echo "$end"
 

@@ -18,7 +18,7 @@ def main():
     advisory = ""
     year = ""
 
-    properties_directory = "tracks/"
+    properties_directory = "properties/"
     if not os.path.exists(properties_directory):
         os.makedirs(properties_directory)
     with open(args.indir + "/adcirc_simulation.1") as f:
@@ -26,6 +26,7 @@ def main():
             if "SIMULATION_START" in line:
                 simulationStartIndex = line.index("SIMULATION_START")
                 rawstart = line[simulationStartIndex + 18: simulationStartIndex + 34]
+                print(rawstart)
                 startFound = True
             elif "SIMULATION_END" in line:
                 simulationEndIndex = line.index("SIMULATION_END")
@@ -40,22 +41,16 @@ def main():
                 break
             if(startFound and endFound and tcFound):
                 break
-    start = datetime.strptime(rawstart, "%y-%m-%d %H:%M")
+    start = datetime.strptime(rawstart, "%Y-%m-%d %H:%M")
     start = start.strftime("%Y%m%d%H%M%S")
-    end = datetime.strptime(rawend, "%y-%m-%d %H:%M")
+    end = datetime.strptime(rawend, "%Y-%m-%d %H:%M")
     end = end.strftime("%Y%m%d%H%M%S")
-    metgetstart = datetime.strptime(rawstart, "%y-%m-%d %H:%M")
-    metgetstart = metgetstart.strftime("%Y-%m-%d %H:%M")
-    metgetend = datetime.strptime(rawend, "%y-%m-%d %H:%M")
-    metgetend = metgetend.strftime(("%Y-%m-%d %H:%M"))
     print("start, end, storm, advisory, year", start, end, storm, advisory, year, flush=True)
     with open(properties_directory + "run.properties", "w") as f:
         f.write("forecastValidStart : " + start + "\n")
         f.write("forecastValidEnd : " + end + "\n")
         f.write("rawstart: " + rawstart + "\n")
         f.write("rawend: " + rawend + "\n")
-        f.write("metgetstart: " + metgetstart + "\n")
-        f.write("metgetend: " + metgetend + "\n")
         if(tcFound):
             f.write("stormtype : nhc\n")
             f.write("stormnumber : " + storm + "\n")
@@ -69,24 +64,24 @@ def main():
         url = "http://www.nhc.noaa.gov/gis/forecast/archive/" + filename
         urlretrieve(url, properties_directory + filename)
 
-    # loading the temp.zip and creating a zip object 
-    with ZipFile(properties_directory + filename, 'r') as zObject: 
+        # loading the temp.zip and creating a zip object 
+        with ZipFile(properties_directory + filename, 'r') as zObject: 
   
-        # Extracting all the members of the zip  
-        # into a specific location. 
-        zObject.extractall( 
-            path=properties_directory) 
-        files = os.listdir(properties_directory)
-        for file in files:
-            fileExtension = file[file.index("."):]
-            if "lin" in file:
-                os.rename(file, properties_directory + "track" + fileExtension)
-            if "pgn" in file:
-                os.rename(file, properties_directory + "cone" + fileExtension)
-            if "pts" in file:
-                os.rename(file, properties_directory + "points" + fileExtension)
-            if "ww_wwlin" in file:
-                os.remove(file)
+            # Extracting all the members of the zip  
+            # into a specific location. 
+            zObject.extractall( 
+                path=properties_directory) 
+            files = os.listdir(properties_directory)
+            for file in files:
+                fileExtension = file[file.index("."):]
+                if "lin" in file:
+                    os.rename(file, properties_directory + "track" + fileExtension)
+                if "pgn" in file:
+                    os.rename(file, properties_directory + "cone" + fileExtension)
+                if "pts" in file:
+                    os.rename(file, properties_directory + "points" + fileExtension)
+                if "ww_wwlin" in file:
+                    os.remove(file)
                 
     
 
