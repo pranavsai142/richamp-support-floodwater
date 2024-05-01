@@ -1,4 +1,4 @@
-gimport os
+import os
 import argparse
 from urllib.request import urlretrieve
 from datetime import datetime
