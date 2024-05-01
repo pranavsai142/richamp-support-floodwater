@@ -79,25 +79,25 @@ class Reader:
             valuesY = dataset.variables["dir"][index][::spaceSparseness][::spaceSparseness]
             return(valuesX, valuesY)
         elif(dataType == "gfs"):
-            valueX = float(dataset.variables["wind_u"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-            valueY = float(dataset.variables["wind_v"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+            valueX = dataset.variables["wind_u"][index][::spaceSparseness][::spaceSparseness]
+            valueY = dataset.variables["wind_v"][index][::spaceSparseness][::spaceSparseness]
             return(valueX, valueY)
         elif(dataType == "rain"):
-            return float(dataset.variables["rain"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+            return dataset.variables["rain"][index][::spaceSparseness][::spaceSparseness]
         elif(dataType == "fort"):
-            valueX = dataset.variables["windx"][index][int(nodeIndex)]
-            valueY = dataset.variables["windy"][index][int(nodeIndex)]
+            valueX = dataset.variables["windx"][index][::spaceSparseness]
+            valueY = dataset.variables["windy"][index][::spaceSparseness]
         elif(dataType == "swh"):
-            return float(dataset.variables["swan_HS"][index][int(nodeIndex)])
+            return dataset.variables["swan_HS"][index][::spaceSparseness]
         elif(dataType == "mwd"):
-            return float(dataset.variables["swan_DIR"][index][int(nodeIndex)])
+            return dataset.variables["swan_DIR"][index][::spaceSparseness]
         elif(dataType == "mwp"):
-           return float(dataset.variables["swan_TMM10"][index][int(nodeIndex)])
+           return dataset.variables["swan_TMM10"][index][::spaceSparseness]
         elif(dataType == "pwp"):
-            return float(dataset.variables["swan_TPS"][index][int(nodeIndex)])
+            return dataset.variables["swan_TPS"][index][::spaceSparseness]
         elif(dataType == "rad"):
-            valueX = float(dataset.variables["radstress_x"][index][int(nodeIndex)])
-            valueY = float(dataset.variables["radstress_y"][index][int(nodeIndex)])
+            valueX = dataset.variables["radstress_x"][index][::spaceSparseness]
+            valueY = dataset.variables["radstress_y"][index][::spaceSparseness]
             return(valueX, valueY)
             
     def getMap(self, dataset, dataType, times, spaceSparseness, data):
