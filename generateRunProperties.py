@@ -1,4 +1,4 @@
-import os
+gimport os
 import argparse
 from urllib.request import urlretrieve
 from datetime import datetime
@@ -25,11 +25,11 @@ def main():
         for line in f:
             if "SIMULATION_START" in line:
                 simulationStartIndex = line.index("SIMULATION_START")
-                rawstart = line[simulationStartIndex + 18: simulationStartIndex + 33]
+                rawstart = line[simulationStartIndex + 18: simulationStartIndex + 34]
                 startFound = True
             elif "SIMULATION_END" in line:
                 simulationEndIndex = line.index("SIMULATION_END")
-                rawend = line[simulationEndIndex + 16: simulationEndIndex + 31]
+                rawend = line[simulationEndIndex + 16: simulationEndIndex + 32]
                 endFound = True
             elif "get_advisory_time.py" in line:
                 storm = line[line.index("storm") + 6: line.index("--advisory") - 1]
