@@ -14,7 +14,11 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true --waverad /Volumes/ssd/downloads/wave_data/rads.64.nc --waveswh /Volumes/ssd/downloads/wave_data/swan_HS.63.nc --wavemwd /Volumes/ssd/downloads/wave_data/swan_DIR.63.nc --wavemwp /Volumes/ssd/downloads/wave_data/swan_TMM10.63.nc --wavepwp /Volumes/ssd/downloads/wave_data/swan_TPS.63.nc
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true
 #python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true --waverad /Volumes/ssd/downloads/wave_data/rads.64.nc --waveswh /Volumes/ssd/downloads/wave_data/swan_HS.63.nc --wavemwd /Volumes/ssd/downloads/wave_data/swan_DIR.63.nc --wavemwp /Volumes/ssd/downloads/wave_data/swan_TMM10.63.nc --wavepwp /Volumes/ssd/downloads/wave_data/swan_TPS.63.nc
-python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/adcirc_gfs_analysis_wind_pressure_2024051400-2024051900.nc --obsExists true --rainExists true --rain ../ObservationalWind/adcirc_gfs_analysis_rain_2024051400-2024051900.nc
+# python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/adcirc_gfs_analysis_wind_pressure_2024051400-2024051900.nc --obsExists true --rainExists true --rain ../ObservationalWind/adcirc_gfs_analysis_rain_2024051400-2024051900.nc
+
+# python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
+python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind ../ObservationalWind/RICHAMP_wind.nc --rain ../ObservationalWind/RICHAMP_rain.nc
+
 
 # testing end value maps
 

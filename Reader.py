@@ -175,6 +175,55 @@ class Reader:
                     values.append(data[index][int(nodeIndex)])
                 pointsValues.append(values)
             return pointsValues
+            
+            
+    def getValuesGrid(self, spaceSparseness, timeSparseness, dataType, dataset):
+        if(dataType == "post"):
+            valuesX = []
+            valuesY = []
+            dataX = dataset.variables["spd"][::][::][::]
+            dataY = dataset.variables["dir"][::][::][::]
+            for index in range(0, len(dataX), timeSparseness):
+                lineX = []
+                lineY = []
+                for latitudeIndex in range(0, len(dataX[index]), spaceSparseness):
+                    pointX = []
+                    pointY = []
+                    for longitudeIndex in range(0, len(dataX[index][latitudeIndex]), spaceSparseness):
+                        pointX.append(float(dataX[index][latitudeIndex][longitudeIndex]))
+                        pointY.append(float(dataY[index][latitudeIndex][longitudeIndex]))
+                    lineX.append(pointX)
+                    lineY.append(pointY)
+                valuesX.append(lineX)
+                valuesY.append(lineY)   
+            return (valuesX, valuesY)
+        elif(dataType == "gfs"):
+            dataX = dataset.variables["wind_u"][::][::][::]
+            dataY = dataset.variables["wind_v"][::][::][::]
+            return (dataX, dataY)
+        elif(dataType == "rain"):
+            data = dataset.variables["rain"][::][::][::]
+            return data
+        elif(dataType == "fort"):
+            dataX = dataset.variables["windx"][::][::][::]
+            dataY = dataset.variables["windy"][::][::][::]
+            return (dataX, dataY)
+        elif(dataType == "swh"):
+            data = dataset.variables["swan_HS"][::][::][::]
+            return data
+        elif(dataType == "mwd"):
+            data = dataset.variables["swan_DIR"][::][::][::]
+            return data
+        elif(dataType == "mwp"):
+            data = dataset.variables["swan_TMM10"][::][::][::]
+            return data
+        elif(dataType == "pwp"):
+            data = dataset.variables["swan_TPS"][::][::][::]
+            return data
+        elif(dataType == "rad"):
+            dataX = dataset.variables["radstress_x"][::][::][::]
+            dataY = dataset.variables["radstress_y"][::][::][::]
+            return (dataX, dataY)
                  
     def getValues(self, spaceSparseness, timeSparseness, dataType, dataset):
         if(dataType == "post"):
@@ -282,6 +331,23 @@ class Reader:
         pointsLatitudes = pointsLatitudes[::spaceSparseness]
         pointsLongitudes = pointsLongitudes[::spaceSparseness]
         return (pointsLatitudes, pointsLongitudes), nodesIndex
+        
+    def getCoordinatesGrid(self, spaceSparseness, dataset):
+        nodesIndex = []
+        points = []
+        if(self.format == "GFS" or self.format == "POST"):
+            latitudes = dataset.variables["lat"][::spaceSparseness]
+            longitudes = dataset.variables["lon"][::spaceSparseness]
+            for latitudeIndex in range(len(latitudes)):
+                for longitudeIndex in range(len(longitudes)):
+                    nodesIndex.append(str((latitudeIndex, longitudeIndex)))
+                    
+        elif(self.format == "FORT"):
+            latitudes = dataset.variables["y"][::]
+            longitudes = dataset.variables["x"][::]
+            for index in range(len(latitudes)):
+                nodesIndex.append(str(index))
+        return (latitudes, longitudes), nodesIndex
    
     def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
         print("getting map", dataType)
@@ -292,17 +358,21 @@ class Reader:
         mapNodes = []
         mapNodesLatitudes = []
         mapNodesLongitudes = []
-
-        value = self.getValues(spaceSparseness, timeSparseness, dataType, dataset)
+        
+        if(self.format == "GFS" or self.format == "POST"):
+            value = self.getValuesGrid(spaceSparseness, timeSparseness, dataType, dataset)
+            nodes, nodesIndex = self.getCoordinatesGrid(spaceSparseness, dataset)
+        elif(self.format == "FORT"):
+            value = self.getValues(spaceSparseness, timeSparseness, dataType, dataset)
+            nodes, nodesIndex = self.getCoordinates(spaceSparseness, dataset)
         if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
             mapValuesX = value[0]
             mapValuesY = value[1]
         else:
             mapValues = value
-        nodes, nodesIndex = self.getCoordinates(spaceSparseness, dataset)
-        mapNodesLatitudes.extend(nodes[0])
-        mapNodesLongitudes.extend(nodes[1])
-        mapNodes.extend(nodesIndex)
+        mapNodesLatitudes = nodes[0]
+        mapNodesLongitudes = nodes[1]
+        mapNodes = nodesIndex
 #         print(len(points))
         
         data["map_data"] = {}
@@ -846,7 +916,7 @@ class PostWindReader:
             thresholdDistance = 0.05
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
-        spaceSparseness = 500
+        spaceSparseness = 10
         timeSparseness = 1
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
