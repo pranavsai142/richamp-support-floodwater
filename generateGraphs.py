@@ -121,24 +121,24 @@ def main():
         WAVE_PWP_DATA_FILE = wave_temp_directory + "wave_pwp_data_file" + ".json"
         WAVE_RAD_DATA_FILE = wave_temp_directory + "wave_rad_data_file" + ".json"
         STATIONS_FILE = args.stations
-#         (startDateObject, endDateObject) = WaveReader(
-#             WAVE_SWH_FILE=WAVE_SWH_FILE,
-#             WAVE_MWD_FILE=WAVE_MWD_FILE,
-#             WAVE_MWP_FILE=WAVE_MWP_FILE,
-#             WAVE_PWP_FILE=WAVE_PWP_FILE,
-#             WAVE_RAD_FILE=WAVE_RAD_FILE,
-#             STATIONS_FILE=STATIONS_FILE, 
-#             WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
-#             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
-#             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
-#             WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
-#             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE).generateWaveDataForStations()
+        (startDateObject, endDateObject) = WaveReader(
+            WAVE_SWH_FILE=WAVE_SWH_FILE,
+            WAVE_MWD_FILE=WAVE_MWD_FILE,
+            WAVE_MWP_FILE=WAVE_MWP_FILE,
+            WAVE_PWP_FILE=WAVE_PWP_FILE,
+            WAVE_RAD_FILE=WAVE_RAD_FILE,
+            STATIONS_FILE=STATIONS_FILE, 
+            WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
+            WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
+            WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
+            WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
+            WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE).generateWaveDataForStations()
         
         dataToGraph["SWH"] = WAVE_SWH_DATA_FILE
-#         dataToGraph["MWD"] = WAVE_MWD_DATA_FILE
-#         dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
-#         dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
-#         dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
+        dataToGraph["MWD"] = WAVE_MWD_DATA_FILE
+        dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
+        dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
+        dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
 # 
 #     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     Grapher(dataToGraph=dataToGraph, STATIONS_FILE=STATIONS_FILE).generateGraphs()

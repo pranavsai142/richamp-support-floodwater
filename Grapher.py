@@ -4,6 +4,8 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+from matplotlib.cm import ScalarMappable
+from matplotlib.tri import Triangulation
 from datetime import datetime
 import imageio
 
@@ -36,7 +38,7 @@ class Grapher:
     #     return windVelocity * ((10.0/altitude)**WIND_PROFILE_EXPONENT)
 
     def __init__(self, dataToGraph={}, STATIONS_FILE=""):
-        print("hi")
+        print("Initializing grapher")
         self.obsExists = False
         self.windExists = False
         self.wavesExists = False
@@ -92,6 +94,7 @@ class Grapher:
         self.windLabels = []
         self.windTimes = []
         
+        self.maxWind = 20
         self.mapWindPoints = []
         self.mapWindPointsLatitudes = []
         self.mapWindPointsLongitudes = []
@@ -107,6 +110,7 @@ class Grapher:
         self.rainLabels = []
         self.rainTimes = []
         
+        self.maxRain = 15
         self.mapRainPoints = []
         self.mapRainTimes = []
         self.mapRainPointsLatitudes = []
@@ -127,6 +131,7 @@ class Grapher:
         self.datapointsRADMag = []
         self.datapointsRADDir = []
         
+        self.maxSWH = 3
         self.mapWavePoints = []
         self.mapWavePointsLatitude = []
         self.mapWavePointsLongitude = []
@@ -167,7 +172,10 @@ class Grapher:
                             pointSpeeds = []
                             pointDirections = []
                             for nodeIndex in range(len(mapWindsX[index])):
-                                pointSpeeds.append(self.vectorSpeed(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex]))
+                                pointSpeed = self.vectorSpeed(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex])
+                                if(pointSpeed > self.maxWind):
+                                    self.maxWind = pointSpeed
+                                pointSpeeds.append(pointSpeed)
                                 pointDirections.append(self.vectorDirection(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex]))
                             self.mapSpeeds.append(pointSpeeds)
                             self.mapDirections.append(pointDirections)
@@ -238,6 +246,11 @@ class Grapher:
                     self.mapRainPointsLatitudes = rainDataset["map_data"]["map_pointsLatitudes"]
                     self.mapRainPointsLongitudes = rainDataset["map_data"]["map_pointsLongitude"]
                     self.mapRains = rainDataset["map_data"]["map_rain"]
+                    for index in range(len(self.mapRainTimes)):
+                        for nodeIndex in range(len(self.mapRains[index])):
+                                pointRain = self.mapRains[index][nodeIndex]
+                                if(pointRain > self.maxRain):
+                                    self.maxRain = pointRain
                 else:
                     stationKey = rainDataset[nodeIndex]["stationKey"]
                     self.rainLabels.append(nodeIndex)
@@ -301,11 +314,16 @@ class Grapher:
             waveTimestampsInitialized = False
             for nodeIndex in iteratorDataset.keys():
                 if(nodeIndex == "map_data"):
-                    self.mapWaveTimes = windDataset["map_data"]["map_times"]
+                    self.mapWaveTimes = swhDataset["map_data"]["map_times"]
                     self.mapWavePoints = swhDataset["map_data"]["map_points"]
                     self.mapWavePointsLatitudes = swhDataset["map_data"]["map_pointsLatitudes"]
                     self.mapWavePointsLongitudes = swhDataset["map_data"]["map_pointsLongitude"]
                     self.mapSWH = swhDataset["map_data"]["map_swh"]
+                    for index in range(len(self.mapWaveTimes)):
+                        for nodeIndex in range(len(self.mapSWH[index])):
+                            pointSWH = self.mapSWH[index][nodeIndex]
+                            if(pointSWH > self.maxSWH):
+                                self.maxSWH = pointSWH
                 else:
                     stationKey = iteratorDataset[nodeIndex]["stationKey"]
                     self.waveLabels.append(nodeIndex)
@@ -366,6 +384,7 @@ class Grapher:
             numberOfDatapoints = len(self.rainLabels)
         print("numberOfDatapoints", numberOfDatapoints)
         fig, ax = plt.subplots()
+        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH)
         
         ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
         if(self.windExists):
@@ -391,27 +410,40 @@ class Grapher:
         plt.savefig(graph_directory + 'closest_points.png')
         plt.close()
         
-        
+        img = mpimg.imread('subsetFlipped.png')
         if(len(self.mapWindTimes) > 0):
+            vmin = 0
+            vmax = math.ceil(self.maxWind)
+            levels = 100
+            level_boundaries = np.linspace(vmin, vmax, levels + 1)
             for index in range(len(self.mapWindTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWindPointsLongitudes)
     #             print(self.endWindPointsLatitudes)
     #             print(self.endSpeeds)
-                img = mpimg.imread('subsetFlipped.png')
                 plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
                 if(self.windType == "FORT"):
-                    plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
+#                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
+                    contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 elif(self.windType == "POST"):
-                    plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
+#                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
+                    contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 elif(self.windType == "GFS"):
-                    plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
+#                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
+                    contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+#                     contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], alpha=0.5)
                 plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
                 plt.title("Wind Speed")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index])))
     #             graphs up to 10 m/s, ~20 knots
-                plt.clim(0,20)
-                plt.colorbar(label="Meters/Second")
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=level_boundaries,
+                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    label="Meters/Second",
+                    ax=plt.gca()
+                )
                 plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
                 plt.close()
             with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
@@ -423,20 +455,30 @@ class Grapher:
                     filename = "map_wind_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
         if(len(self.mapRainTimes) > 0):
+            vmin = 0
+#             vmax = math.ceil(self.maxRain)
+            vmax = 20
+            levels = 100
+            level_boundaries = np.linspace(vmin, vmax, levels + 1)
             for index in range(len(self.mapRainTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                img = mpimg.imread('subsetFlipped.png')
                 plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
-                plt.scatter(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, c=self.mapRains[index], alpha=0.3, label="Forecast", marker=".", s=3600)
+                contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
                 plt.title("Rain")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapRainTimes[index])))
     #             plt.gca().invert_yaxis()
-                plt.clim(0,3)
-                plt.colorbar(label="Millimeters Per Hour")
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=level_boundaries,
+                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    label="Millimeters/Hour",
+                    ax=plt.gca()
+                )
                 plt.savefig(graph_directory + 'map_rain_' + str(index) + '.png')
                 plt.close()
             with imageio.get_writer(graph_directory + 'rain.gif', mode='I') as writer:
@@ -448,20 +490,29 @@ class Grapher:
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
         if(len(self.mapWaveTimes) > 0):
+            vmin = 0
+            vmax = math.ceil(self.maxWave)
+            levels = 100
+            level_boundaries = np.linspace(vmin, vmax, levels + 1)
             for index in range(len(self.mapWaveTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                img = mpimg.imread('subsetFlipped.png')
                 plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
-                plt.scatter(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, c=self.mapSWH[index], alpha=0.5, label="Forecast", marker=".")
+                contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
                 plt.title("Significant Wave Height")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index])))
     #             plt.gca().invert_yaxis()
-                plt.clim(0,3)
-                plt.colorbar(label="Meters")
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=level_boundaries,
+                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    label="Meters",
+                    ax=plt.gca()
+                )                
                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
                 plt.close()
             with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
