@@ -298,8 +298,34 @@ class OwiAsciiWind:
             vvel[lat_idx][lon_idx] = float(self.__lines[line_idx][low_idx:high_idx])
         return WindData(idx_date, self.__grid, uvel, vvel)
 
-
 class OwiNetcdf:
+    def __init__(self, filename):
+        self.__nc = netCDF4.Dataset(filename, "r")
+        self.__grid = self.__get_grid()
+
+    def grid(self):
+        return self.__grid
+
+    def __get_grid(self):
+        lon = self.__nc["Main"].variables["lon"][0, :]
+        lat = self.__nc["Main"].variables["lat"][:, 0]
+        return WindGrid(lon, lat)
+
+    def num_times(self):
+        return self.__nc["Main"].variables["time"].size
+
+    def get(self, idx):
+        base_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
+        m_added = int(self.__nc["Main"].variables["time"][idx])
+        idx_date = base_date + datetime.timedelta(minutes=m_added)
+        uvel = self.__nc["Main"].variables["U10"][:][:][idx]
+        vvel = self.__nc["Main"].variables["V10"][:][:][idx]
+        return WindData(idx_date, self.__grid, uvel, vvel)
+
+    def close(self):
+        self.__nc.close()
+        
+class GenericNetcdf:
     def __init__(self, filename):
         self.__nc = netCDF4.Dataset(filename, "r")
         self.__grid = self.__get_grid()
@@ -419,8 +445,13 @@ def dir_met_to_and_from_math(direction):
 
 
 def direction_from_uv(u_vel, v_vel):
+    print(u_vel[0][0], v_vel[0][0])
     with numpy.errstate(divide="ignore"):  # Don't warn for divide by 0
         dir_math = numpy.rad2deg(numpy.arctan(numpy.divide(v_vel, u_vel)))
+        print(dir_math)
+#         NaN values fix 
+#         https://stackoverflow.com/questions/11620914/how-do-i-remove-nan-values-from-a-numpy-array
+        dir_math[numpy.isnan(dir_math)] = 0.0
     # arctan only returns values from -pi/2 to pi/2. We need values from 0 to 2*pi.
     dir_math[u_vel < 0] = dir_math[u_vel < 0] + 180  # Quadrants 2 & 3
     dir_math[dir_math < 0] = dir_math[dir_math < 0] + 360  # Quadrant 4
@@ -514,7 +545,7 @@ def roughness_adjust(subd_inputs):
     # Constant z0 values directly from the appropriate roughness file are now used over water
     input_wind, input_wback, wfmt, wbackfmt, z0_wr, z0_wbackr, z0_hr, z0_directional_interpolant, sl, \
         lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0 = subd_inputs
-    if (wfmt == "owi-ascii") | (wfmt == "generic-netcdf"):
+    if (wfmt == "owi-ascii") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
         z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
     elif wfmt == "wnd":
         z0_wr_w_grid = z0_wr
@@ -545,6 +576,9 @@ def roughness_adjust(subd_inputs):
     z0_hr_grid = WindGrid(z0_hr.lon(), z0_hr.lat())
     wind_hr_grid = wind_to_z0_res(wind_w_grid, z0_hr)
     dir_hr_grid = direction_from_uv(wind_hr_grid.u_velocity(), wind_hr_grid.v_velocity())
+    print(dir_hr_grid[0][0])
+#     print()
+#     print(z0_hr_grid.lat()[0][0], z0_hr_grid.lon()[0][0], dir_hr_grid[0][0])
     z0_hr_directional = z0_directional_interpolant((z0_hr_grid.lat(), z0_hr_grid.lon(), dir_hr_grid))
     if sl == "adcirc":
         wind_out = adcirc_scaling(wind_hr_grid, z0_wr_hr_grid.land_rough(), z0_hr_directional)
@@ -716,7 +750,7 @@ def is_valid(args):
         print("ERROR: wfmt and wbackfmt cannot match. Please try again.", flush=True)
     elif args.sl != "adcirc" and args.sl != "up-down":
         print("ERROR: Unsupported scaling logic. Please try again.", flush=True)
-    elif args.wfmt != "owi-ascii" and args.wfmt != "generic-netcdf" and args.wfmt != "wnd":
+    elif args.wfmt != "owi-ascii" and args.wfmt != "generic-netcdf" and args.wfmt != "owi-netcdf" and args.wfmt != "wnd":
         print("ERROR: Unsupported wind format. Please try again.", flush=True)
     elif args.wback is not None and args.wbackfmt != "owi-ascii" and args.wbackfmt != "generic-netcdf":
         print("ERROR: Unsupported background wind format. Please try again.", flush=True)
@@ -724,10 +758,10 @@ def is_valid(args):
         print("ERROR: wfmt must be wnd if wback is provided. Please try again.", flush=True)
     elif args.wbackfmt is None and args.wback is not None:
         print("ERROR: wbackfmt is required if wback is provided. Please try again.", flush=True)
-    elif args.wr is None and (args.wfmt == "owi-ascii" or args.wfmt == "generic-netcdf"):
+    elif args.wr is None and (args.wfmt == "owi-ascii" or args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf"):
         print("ERROR: wr is required when wfmt is owi-ascii or generic-netcdf. Please try again.", flush=True)
-    elif args.wbackr is None and (args.wbackfmt == "owi-ascii" or args.wbackfmt == "generic-netcdf"):
-        print("ERROR: wbackr is required when wbackfmt is owi-ascii or generic-netcdf. Please try again.", flush=True)
+    elif args.wbackr is None and (args.wbackfmt == "owi-ascii" or args.wbackfmt == "generic-netcdf" or args.wbackfmt == "owi-netcdf"):
+        print("ERROR: wbackr is required when wbackfmt is owi-ascii, owi-netcdf or generic-netcdf. Please try again.", flush=True)
     elif args.winp is None and args.wfmt == "wnd":
         print("ERROR: winp is required if wfmt is wnd. Please try again.", flush=True)
     else:
@@ -754,15 +788,15 @@ def build_parser():
     parser.add_argument("-wback", metavar="wind_background", type=str,
                         help="Background wind to be blended with the wind file; if included, w and wback will be blended", required=False)
     parser.add_argument("-wbackfmt", metavar="wback_format", type=str,
-                        help="Format of the input background wind file. Supported values: owi-ascii, generic-netcdf. Required if wback is provided.", required=False)
+                        help="Format of the input background wind file. Supported values: owi-ascii, owi-netcdf, generic-netcdf. Required if wback is provided.", required=False)
     parser.add_argument("-wbackr", metavar="wback_roughness", type=str,
-                        help="Wind-resolution land roughness file; required if wbackfmt is owi-ascii or generic-netcdf", required=False)
+                        help="Wind-resolution land roughness file; required if wbackfmt is owi-ascii, owi-netcdf or generic-netcdf", required=False)
     parser.add_argument("-wfmt", metavar="w_format", type=str,
-                        help="Format of the input wind file. Supported values: owi-ascii, generic-netcdf, wnd. If wback is provided, this must be wnd.", required=True)
+                        help="Format of the input wind file. Supported values: owi-ascii, owi-netcdf, generic-netcdf, wnd. If wback is provided, this must be wnd.", required=True)
     parser.add_argument("-winp", metavar="wind_inp", type=str,
                         help="Wind_Inp.txt metadata file; required if wfmt is wnd", required=False)
     parser.add_argument("-wr", metavar="wind_roughness", type=str,
-                        help="Wind-resolution land roughness file; required if wfmt is owi-ascii or generic-netcdf", required=False)
+                        help="Wind-resolution land roughness file; required if wfmt is owi-ascii, owi-netcdf or generic-netcdf", required=False)
     parser.add_argument("-z0sv", help="Add this flag to generate and save off a directional z0 interpolant; do this in advance to save time during regular runs",
                         action='store_true', required=False, default=False)
     parser.add_argument("-z0name", metavar="z0_name", type=str,
@@ -787,6 +821,9 @@ def main():
         owi_ascii = OwiAsciiWind(lines)
         num_times = owi_ascii.num_times()
     elif args.wfmt == "generic-netcdf":
+        owi_netcdf = GenericNetcdf(args.w)
+        num_times = owi_netcdf.num_times()
+    elif args.wfmt == "owi-netcdf":
         owi_netcdf = OwiNetcdf(args.w)
         num_times = owi_netcdf.num_times()
     elif args.wfmt == "wnd":
@@ -802,6 +839,8 @@ def main():
         win_file.close()
         owi_ascii = OwiAsciiWind(lines)
     elif args.wbackfmt == "generic-netcdf":
+        owi_netcdf = GenericNetcdf(args.wback)
+    elif args.wbackfmt == "owi-netcdf":
         owi_netcdf = OwiNetcdf(args.wback)
 
     # If blending, generate interpolants used for every time slice
@@ -810,13 +849,13 @@ def main():
         rmw_interpolant, time_rmw_date_0 = generate_rmw_interpolant()
 
     # Define roughness grids
-    if (args.wfmt == "owi-ascii") | (args.wfmt == "generic-netcdf"):
+    if (args.wfmt == "owi-ascii") | (args.wfmt == "generic-netcdf") | (args.wfmt == "owi-netcdf"):
         wr_lon, wr_lat, wr_land_rough = Roughness.get(args.wr)
         z0_wr = Roughness(wr_lon, wr_lat, wr_land_rough)
     elif args.wfmt == "wnd":
         z0_wnd = 0.0033
         wr_land_rough = numpy.zeros((metadata.num_lats(), metadata.num_lons())) + z0_wnd  # z0_wr defined below, after wnd grid is available
-    if (args.wbackfmt == "owi-ascii") | (args.wbackfmt == "generic-netcdf"):
+    if (args.wbackfmt == "owi-ascii") | (args.wbackfmt == "generic-netcdf") | (args.wbackfmt == "owi-netcdf"):
         wbackr_lon, wbackr_lat, wbackr_land_rough = Roughness.get(args.wbackr)
         z0_wbackr = Roughness(wbackr_lon, wbackr_lat, wbackr_land_rough)
     hr_lon, hr_lat, hr_land_rough = Roughness.get(args.hr)
@@ -853,7 +892,7 @@ def main():
             # Generate inputs for roughness_adjust
             if args.wfmt == "owi-ascii":
                 input_wind = owi_ascii.get(time_index)
-            elif args.wfmt == "generic-netcdf":
+            elif args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf":
                 input_wind = owi_netcdf.get(time_index)
             elif args.wfmt == "wnd":
                 input_wind = wnd.get(time_index)
@@ -862,7 +901,7 @@ def main():
             if args.wback is not None:
                 if args.wbackfmt == 'owi-ascii':
                     input_wback = owi_ascii.get(time_index)
-                elif args.wbackfmt == 'generic-netcdf':
+                elif args.wbackfmt == 'generic-netcdf' or args.wbackfmt == "owi-netcdf":
                     input_wback = owi_netcdf.get(time_index)
                 for i in range(0, args.t):
                     subd_inputs[i] = [input_wind, input_wback, args.wfmt, args.wbackfmt, z0_wr, z0_wbackr, subd_z0_hr[i], subd_z0_directional_interpolant[i],

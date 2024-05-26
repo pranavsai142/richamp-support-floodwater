@@ -2,6 +2,14 @@
 
 # python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w gfs_wind.nc -wfmt "generic-netcdf" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000 -t 3 -wasync
 
+# python scale_and_subset_josh.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/scenario_wind/adjusted_m38_222.txt -wfmt "owi-ascii" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000 -t 3 -wasync
+
+python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/scenario_wind/adjusted_m38.nc -wfmt "owi-netcdf" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000
+
+# python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/gfs_wind_owi_ascii_2023120818-2023121318_00.wnd -wfmt "owi-ascii" -wr gfs-roughness.nc -z0name generated_z0_interp -r 3000 -sigma 1000 -t 3 -wasync
+
+# python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/scenario_wind/adjusted_m38_222.txt -wfmt "owi-ascii" -wr gfs-roughness.nc -z0sv -r 3000 -sigma 1000 -t 3 -wasync
+
 # Wave
 # python generateWindGraphs.py --stations OBS_STATIONS.json --waverad /Volumes/ssd/downloads/wave_data/rads.64.nc --waveswh /Volumes/ssd/downloads/wave_data/swan_HS.63.nc --wavemwd /Volumes/ssd/downloads/wave_data/swan_DIR.63.nc --wavemwp /Volumes/ssd/downloads/wave_data/swan_TMM10.63.nc --wavepwp /Volumes/ssd/downloads/wave_data/swan_TPS.63.nc
 
@@ -17,7 +25,7 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/adcirc_gfs_analysis_wind_pressure_2024051400-2024051900.nc --obsExists true --rainExists true --rain ../ObservationalWind/adcirc_gfs_analysis_rain_2024051400-2024051900.nc
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
-python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind ../ObservationalWind/RICHAMP_wind.nc --rain ../ObservationalWind/RICHAMP_rain.nc
+# python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind ../ObservationalWind/RICHAMP_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
 
 
 # testing end value maps

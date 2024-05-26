@@ -51,6 +51,11 @@ wind_filename=gfs_wind
 metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
 wind_format="generic-netcdf"
 
+# Redefine wind format to manually set owi-ascii
+# Uncomment below lines of code to override metget data fetch
+#wind_filename=scenario_wind_1.wnd
+#wind_format="owi-ascii"
+
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
 output=RICHAMP_wind
 highres_roughness=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
@@ -62,10 +67,10 @@ radius=3000
 z0_sv=""
 #z0_sv='-z0sv'
 scale_logic=up-down
-echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-#if [ $wind_format == "owi-ascii" ]; then
-   #python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_back -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-if [ $wind_format == "generic-netcdf" ]; then
+echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+if [ $wind_format == "owi-ascii" ]; then
+   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+elif [ $wind_format == "generic-netcdf" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename.nc -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "wnd" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
@@ -104,13 +109,14 @@ python3 $postprocessdir/generateGraphs.py --stations $WIND_STATIONS $graphAdcirc
 # move files to a consistent location for dashboarding team 
 wind_output=$output.nc
 rain_output=$rain_filename.nc
+output_dir=$RICHAMP_OUTDIR
+cp $wind_output $rain_output $run_properties $output_dir
+#copy wave output
 if [[ $GRAPH_WAVES == "True" ]]; then
     wave_output=$RICHAMP_INDIR/swan_HS.63.nc
+    cp $wave_output $output_dir
+    mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 fi
-output_dir=$RICHAMP_OUTDIR
-cp $wind_output $rain_output $wave_output $run_properties $output_dir
-#rename wave file
-mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 cp -r graphs properties $output_dir
 #cp $indir/*.trk $output_dir
 
