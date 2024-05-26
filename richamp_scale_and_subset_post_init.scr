@@ -25,7 +25,8 @@ rm -rf graphs properties wind_temp wave_temp
 indir=$RICHAMP_INDIR
 postprocessdir=$POSTHOME
 
-
+# Comment out line to generate run properties if running scenario wind.
+# Create run.properties file manually
 python3 $postprocessdir/generateRunProperties.py --indir $indir
 while read line; do 
 	if [[ $line =~ "rawstart" ]]; then
@@ -44,17 +45,17 @@ echo "$end"
 # call MetGet for precipitation
 rain_filename=RICHAMP_rain
 #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
-metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
+# metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
 
 
 wind_filename=gfs_wind
-metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
+# metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
 wind_format="generic-netcdf"
 
 # Redefine wind format to manually set owi-ascii
 # Uncomment below lines of code to override metget data fetch
-#wind_filename=scenario_wind_1.wnd
-#wind_format="owi-ascii"
+wind_filename=scenario_wind_1.wnd
+wind_format="owi-ascii"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
 output=RICHAMP_wind

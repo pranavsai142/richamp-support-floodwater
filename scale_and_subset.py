@@ -445,10 +445,8 @@ def dir_met_to_and_from_math(direction):
 
 
 def direction_from_uv(u_vel, v_vel):
-    print(u_vel[0][0], v_vel[0][0])
     with numpy.errstate(divide="ignore"):  # Don't warn for divide by 0
         dir_math = numpy.rad2deg(numpy.arctan(numpy.divide(v_vel, u_vel)))
-        print(dir_math)
 #         NaN values fix 
 #         https://stackoverflow.com/questions/11620914/how-do-i-remove-nan-values-from-a-numpy-array
         dir_math[numpy.isnan(dir_math)] = 0.0
@@ -576,7 +574,6 @@ def roughness_adjust(subd_inputs):
     z0_hr_grid = WindGrid(z0_hr.lon(), z0_hr.lat())
     wind_hr_grid = wind_to_z0_res(wind_w_grid, z0_hr)
     dir_hr_grid = direction_from_uv(wind_hr_grid.u_velocity(), wind_hr_grid.v_velocity())
-    print(dir_hr_grid[0][0])
 #     print()
 #     print(z0_hr_grid.lat()[0][0], z0_hr_grid.lon()[0][0], dir_hr_grid[0][0])
     z0_hr_directional = z0_directional_interpolant((z0_hr_grid.lat(), z0_hr_grid.lon(), dir_hr_grid))
