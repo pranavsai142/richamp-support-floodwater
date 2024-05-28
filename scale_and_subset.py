@@ -238,7 +238,55 @@ class NetcdfOutput:
     def close(self):
         self.__nc.close()
 
+class Owi306Wind:
+    def __init__(self, lines):
+        self.__lines = lines
+        self.__grid = self.__get_grid()
+        self.__num_lats = self.__grid.n_latitude()
+        self.__num_lons = self.__grid.n_longitude()
+        self.__start_time = datetime.datetime(2012,10,27,3,0)
+        self.__time_delta = datetime.timedelta(seconds=3600)
 
+    def grid(self):
+        return self.__grid
+
+    def __get_grid(self):
+#     Manually set parameters for 306 type file
+        num_lats = 277
+        num_lons = 325
+        lat_step = 0.150002
+        lon_step = 0.150002
+        sw_corner_lat = 46.400002
+        sw_corner_lon = -98.599998
+        lat = numpy.linspace(sw_corner_lat, sw_corner_lat + (num_lats - 1) * lat_step, num_lats)
+        lon = numpy.linspace(sw_corner_lon, sw_corner_lon + (num_lons - 1) * lon_step, num_lons)
+        return WindGrid(lon, lat)
+
+    def num_times(self):
+        timesteps = int(len(self.__lines)/(self.__num_lats * self.__num_lons))
+        return timesteps
+
+    def get(self, idx):
+        idx_date = (self.__time_delta * idx) + self.__start_time
+#         print(idx_date)
+        starting_row = idx * (self.__num_lats * self.__num_lons)
+        ending_row = starting_row + (self.__num_lats * self.__num_lons)
+        latitudeIndex = 0
+        longitudeIndex = 0
+        uvel = [[None for i in range(self.__num_lons)] for j in range(self.__num_lats)]
+        vvel = [[None for i in range(self.__num_lons)] for j in range(self.__num_lats)]
+#         print(len(uvel), len(uvel[0]))
+        for index in range(starting_row, ending_row):
+            if(longitudeIndex >= self.__num_lons):
+                latitudeIndex = latitudeIndex + 1
+                longitudeIndex = 0
+#             print("index, latIndex, longIndex", index, latitudeIndex, longitudeIndex)
+            data = self.__lines[index].split()
+            uvel[latitudeIndex][longitudeIndex] = float(data[0])
+            vvel[latitudeIndex][longitudeIndex] = float(data[1])
+            longitudeIndex = longitudeIndex + 1  
+        return WindData(idx_date, self.__grid, uvel, vvel)
+        
 class OwiAsciiWind:
     def __init__(self, lines):
         self.__lines = lines
@@ -543,7 +591,7 @@ def roughness_adjust(subd_inputs):
     # Constant z0 values directly from the appropriate roughness file are now used over water
     input_wind, input_wback, wfmt, wbackfmt, z0_wr, z0_wbackr, z0_hr, z0_directional_interpolant, sl, \
         lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0 = subd_inputs
-    if (wfmt == "owi-ascii") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
+    if (wfmt == "owi-ascii") | (wfmt == "owi-306") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
         z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
     elif wfmt == "wnd":
         z0_wr_w_grid = z0_wr
@@ -747,7 +795,7 @@ def is_valid(args):
         print("ERROR: wfmt and wbackfmt cannot match. Please try again.", flush=True)
     elif args.sl != "adcirc" and args.sl != "up-down":
         print("ERROR: Unsupported scaling logic. Please try again.", flush=True)
-    elif args.wfmt != "owi-ascii" and args.wfmt != "generic-netcdf" and args.wfmt != "owi-netcdf" and args.wfmt != "wnd":
+    elif args.wfmt != "owi-ascii" and args.wfmt != "owi-306" and args.wfmt != "generic-netcdf" and args.wfmt != "owi-netcdf" and args.wfmt != "wnd":
         print("ERROR: Unsupported wind format. Please try again.", flush=True)
     elif args.wback is not None and args.wbackfmt != "owi-ascii" and args.wbackfmt != "generic-netcdf":
         print("ERROR: Unsupported background wind format. Please try again.", flush=True)
@@ -755,9 +803,9 @@ def is_valid(args):
         print("ERROR: wfmt must be wnd if wback is provided. Please try again.", flush=True)
     elif args.wbackfmt is None and args.wback is not None:
         print("ERROR: wbackfmt is required if wback is provided. Please try again.", flush=True)
-    elif args.wr is None and (args.wfmt == "owi-ascii" or args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf"):
+    elif args.wr is None and (args.wfmt == "owi-ascii" or args.wfmt == "owi-306" or args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf"):
         print("ERROR: wr is required when wfmt is owi-ascii or generic-netcdf. Please try again.", flush=True)
-    elif args.wbackr is None and (args.wbackfmt == "owi-ascii" or args.wbackfmt == "generic-netcdf" or args.wbackfmt == "owi-netcdf"):
+    elif args.wbackr is None and (args.wbackfmt == "owi-ascii" or args.wbackfmt == "owi-306" or args.wbackfmt == "generic-netcdf" or args.wbackfmt == "owi-netcdf"):
         print("ERROR: wbackr is required when wbackfmt is owi-ascii, owi-netcdf or generic-netcdf. Please try again.", flush=True)
     elif args.winp is None and args.wfmt == "wnd":
         print("ERROR: winp is required if wfmt is wnd. Please try again.", flush=True)
@@ -789,7 +837,7 @@ def build_parser():
     parser.add_argument("-wbackr", metavar="wback_roughness", type=str,
                         help="Wind-resolution land roughness file; required if wbackfmt is owi-ascii, owi-netcdf or generic-netcdf", required=False)
     parser.add_argument("-wfmt", metavar="w_format", type=str,
-                        help="Format of the input wind file. Supported values: owi-ascii, owi-netcdf, generic-netcdf, wnd. If wback is provided, this must be wnd.", required=True)
+                        help="Format of the input wind file. Supported values: owi-ascii, owi-306, owi-netcdf, generic-netcdf, wnd. If wback is provided, this must be wnd.", required=True)
     parser.add_argument("-winp", metavar="wind_inp", type=str,
                         help="Wind_Inp.txt metadata file; required if wfmt is wnd", required=False)
     parser.add_argument("-wr", metavar="wind_roughness", type=str,
@@ -823,6 +871,12 @@ def main():
     elif args.wfmt == "owi-netcdf":
         owi_netcdf = OwiNetcdf(args.w)
         num_times = owi_netcdf.num_times()
+    elif args.wfmt == "owi-306":
+        win_file = open(args.w, 'r')
+        lines = win_file.readlines()
+        win_file.close()
+        owi_ascii = Owi306Wind(lines)
+        num_times = owi_ascii.num_times()
     elif args.wfmt == "wnd":
         metadata = WndWindInp(args.winp)
         num_times = metadata.num_times()
@@ -834,7 +888,6 @@ def main():
         win_file = open(args.wback, 'r')
         lines = win_file.readlines()
         win_file.close()
-        owi_ascii = OwiAsciiWind(lines)
     elif args.wbackfmt == "generic-netcdf":
         owi_netcdf = GenericNetcdf(args.wback)
     elif args.wbackfmt == "owi-netcdf":
@@ -846,13 +899,13 @@ def main():
         rmw_interpolant, time_rmw_date_0 = generate_rmw_interpolant()
 
     # Define roughness grids
-    if (args.wfmt == "owi-ascii") | (args.wfmt == "generic-netcdf") | (args.wfmt == "owi-netcdf"):
+    if (args.wfmt == "owi-ascii") | (args.wfmt == "owi-306") | (args.wfmt == "generic-netcdf") | (args.wfmt == "owi-netcdf"):
         wr_lon, wr_lat, wr_land_rough = Roughness.get(args.wr)
         z0_wr = Roughness(wr_lon, wr_lat, wr_land_rough)
     elif args.wfmt == "wnd":
         z0_wnd = 0.0033
         wr_land_rough = numpy.zeros((metadata.num_lats(), metadata.num_lons())) + z0_wnd  # z0_wr defined below, after wnd grid is available
-    if (args.wbackfmt == "owi-ascii") | (args.wbackfmt == "generic-netcdf") | (args.wbackfmt == "owi-netcdf"):
+    if (args.wbackfmt == "owi-ascii") | (args.wbackfmt == "owi-306") | (args.wbackfmt == "generic-netcdf") | (args.wbackfmt == "owi-netcdf"):
         wbackr_lon, wbackr_lat, wbackr_land_rough = Roughness.get(args.wbackr)
         z0_wbackr = Roughness(wbackr_lon, wbackr_lat, wbackr_land_rough)
     hr_lon, hr_lat, hr_land_rough = Roughness.get(args.hr)
@@ -887,7 +940,7 @@ def main():
             print("INFO: Processing time slice {:d} of {:d}".format(time_index + 1, num_times), flush=True)
             subd_inputs = [[] for i in range(args.t)]
             # Generate inputs for roughness_adjust
-            if args.wfmt == "owi-ascii":
+            if args.wfmt == "owi-ascii" or args.wfmt == "owi-306":
                 input_wind = owi_ascii.get(time_index)
             elif args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf":
                 input_wind = owi_netcdf.get(time_index)
@@ -896,7 +949,7 @@ def main():
                 if time_index == 0:
                     z0_wr = Roughness(input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d(), wr_land_rough)
             if args.wback is not None:
-                if args.wbackfmt == 'owi-ascii':
+                if args.wbackfmt == 'owi-ascii' or args.wfmt == "owi-306":
                     input_wback = owi_ascii.get(time_index)
                 elif args.wbackfmt == 'generic-netcdf' or args.wbackfmt == "owi-netcdf":
                     input_wback = owi_netcdf.get(time_index)
