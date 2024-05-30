@@ -27,37 +27,37 @@ postprocessdir=$POSTHOME
 
 # Comment out line to generate run properties if running scenario wind.
 # Create run.properties file manually
-#python3 $postprocessdir/generateRunProperties.py --indir $indir
-#while read line; do 
-#	if [[ $line =~ "rawstart" ]]; then
-#	  t_start=$line
-#	elif [[ $line =~ "rawend" ]]; then
-#          t_end=$line
-#    fi
-#done < properties/run.properties
-#echo "$t_start"
-#echo "$t_end"
-#start=${t_start:10:17}
-#end=${t_end:8:17}
-#echo "$start"
-#echo "$end"
+python3 $postprocessdir/generateRunProperties.py --indir $indir
+while read line; do 
+if [[ $line =~ "rawstart" ]]; then
+  t_start=$line
+elif [[ $line =~ "rawend" ]]; then
+         t_end=$line
+   fi
+done < properties/run.properties
+echo "$t_start"
+echo "$t_end"
+start=${t_start:10:17}
+end=${t_end:8:17}
+echo "$start"
+echo "$end"
 #Manually define start and end date for scenario wind
 #start="2012-10-27 00:00"
 #end="2012-11-01 00:00"
 # call MetGet for precipitation
 rain_filename=RICHAMP_rain
 #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
-#metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
+metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
 
 
 wind_filename=gfs_wind
-# metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
+metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
 wind_format="generic-netcdf"
 
 # Redefine wind format to manually set owi-ascii
 # Uncomment below lines of code to override metget data fetch
-wind_filename=$SCENARIO_WIND
-wind_format="owi-306"
+# wind_filename=$SCENARIO_WIND
+# wind_format="owi-306"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
 output=RICHAMP_wind
