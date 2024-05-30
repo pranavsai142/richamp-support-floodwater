@@ -911,7 +911,7 @@ class PostWindReader:
         print("Wind file")
         print(self.POST_WIND_FILE)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
-        initializeClosestWindNodes = False
+        initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
             thresholdDistance = 0.05
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)

@@ -206,7 +206,7 @@ class Grapher:
                                 for longitudeIndex in range(len(self.mapSpeeds[index][latitudeIndex])):
                                     pointSpeed = self.mapSpeeds[index][latitudeIndex][longitudeIndex]
                                     if(pointSpeed > self.maxWind):
-                                        self.maxSpeed = pointSpeed
+                                        self.maxWind = pointSpeed
                 else:
                     stationKey = windDataset[nodeIndex]["stationKey"]
                     if(not self.obsExists or (stationKey in obsDataset.keys())):

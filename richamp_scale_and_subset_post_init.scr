@@ -20,32 +20,34 @@ echo "\"start\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_J
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has started." >> $logfile
 
 # Clear working directories
-rm -rf graphs properties wind_temp wave_temp
+rm -rf graphs properties
 
 indir=$RICHAMP_INDIR
 postprocessdir=$POSTHOME
 
 # Comment out line to generate run properties if running scenario wind.
 # Create run.properties file manually
-python3 $postprocessdir/generateRunProperties.py --indir $indir
-while read line; do 
-	if [[ $line =~ "rawstart" ]]; then
-	  t_start=$line
-	elif [[ $line =~ "rawend" ]]; then
-          t_end=$line
-    fi
-done < properties/run.properties
-echo "$t_start"
-echo "$t_end"
-start=${t_start:10:17}
-end=${t_end:8:17}
-echo "$start"
-echo "$end"
-
+#python3 $postprocessdir/generateRunProperties.py --indir $indir
+#while read line; do 
+#	if [[ $line =~ "rawstart" ]]; then
+#	  t_start=$line
+#	elif [[ $line =~ "rawend" ]]; then
+#          t_end=$line
+#    fi
+#done < properties/run.properties
+#echo "$t_start"
+#echo "$t_end"
+#start=${t_start:10:17}
+#end=${t_end:8:17}
+#echo "$start"
+#echo "$end"
+#Manually define start and end date for scenario wind
+#start="2012-10-27 00:00"
+#end="2012-11-01 00:00"
 # call MetGet for precipitation
 rain_filename=RICHAMP_rain
 #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
-# metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
+#metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
 
 
 wind_filename=gfs_wind
@@ -54,8 +56,8 @@ wind_format="generic-netcdf"
 
 # Redefine wind format to manually set owi-ascii
 # Uncomment below lines of code to override metget data fetch
-wind_filename=scenario_wind_1.wnd
-wind_format="owi-ascii"
+wind_filename=$SCENARIO_WIND
+wind_format="owi-306"
 
 # call python script to trim wind, interpolate to RICHAMP region of interest, and scale based on z0
 output=RICHAMP_wind
@@ -69,7 +71,9 @@ z0_sv=""
 #z0_sv='-z0sv'
 scale_logic=up-down
 echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
-if [ $wind_format == "owi-ascii" ]; then
+if [ $wind_format == "owi-306" ]; then
+	python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+elif [ $wind_format == "owi-ascii" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 elif [ $wind_format == "generic-netcdf" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename.nc -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
@@ -118,7 +122,8 @@ if [[ $GRAPH_WAVES == "True" ]]; then
     cp $wave_output $output_dir
     mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 fi
-cp -r graphs properties $output_dir
+#cp -r properties $output_dir
+cp -r graphs $output_dir
 #cp $indir/*.trk $output_dir
 
 echo "\"finish\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.finish # <-OVERWRITE

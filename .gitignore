@@ -3,6 +3,7 @@ wind_temp
 wave_temp
 __pycache__
 *_OUT
+metget.debug
 *.pickle
 filelist.json
 RICHAMP*

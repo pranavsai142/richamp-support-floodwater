@@ -244,7 +244,7 @@ class Owi306Wind:
         self.__grid = self.__get_grid()
         self.__num_lats = self.__grid.n_latitude()
         self.__num_lons = self.__grid.n_longitude()
-        self.__start_time = datetime.datetime(2012,10,27,3,0)
+        self.__start_time = datetime.datetime(2012,10,27,0,0)
         self.__time_delta = datetime.timedelta(seconds=3600)
 
     def grid(self):
