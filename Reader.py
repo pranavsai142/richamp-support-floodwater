@@ -557,12 +557,13 @@ class Reader:
 #             print(node)
             if(node[0] <= 90 and node[0] >= -90):
                 for stationKey in stationsDict["NOS"].keys():
+#                     print(stationKey)
                     stationDict = stationsDict["NOS"][stationKey]
                     stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
     #                             distance and threshold in kilometers
                     distance = haversine.haversine(stationCoordinates, node)
-    #                             print("stationCoordinates", stationCoordinates)
-    #                             print("distance", distance)
+#                     print("stationCoordinates", stationCoordinates)
+#                     print("distance", distance)
                     if(len(stationToNodeDistancesDict[stationKey].keys()) == 0):
                         stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
                         stationToNodeDistancesDict[stationKey]["distance"] = distance
@@ -652,15 +653,18 @@ class Reader:
             stationToNodeDistanceDict = stationToNodeDistancesDict[stationKey]
             nodeIndex = stationToNodeDistanceDict["nodeIndex"]
             closestNodes = stationToNodeDistancesDict[stationKey]["closestNodes"]
-            nodes["NOS"][nodeIndex] = {}
-            nodes["NOS"][nodeIndex]["closestNodes"] = closestNodes
-            nodes["NOS"][nodeIndex]["stationKey"] = stationKey
+#             nodes["NOS"][nodeIndex] = {}
+#             nodes["NOS"][nodeIndex]["closestNodes"] = closestNodes
+#             nodes["NOS"][nodeIndex]["stationKey"] = stationKey
+            nodes["NOS"][stationKey] = {}
+            nodes["NOS"][stationKey]["closestNodes"] = closestNodes
+            nodes["NOS"][stationKey]["nodeIndex"] = nodeIndex
             if(self.format == "GFS" or self.format == "POST"):
-                nodes["NOS"][nodeIndex]["latitude"] = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
-                nodes["NOS"][nodeIndex]["longitude"] = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
+                nodes["NOS"][stationKey]["latitude"] = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
+                nodes["NOS"][stationKey]["longitude"] = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
             if(self.format == "FORT"):
-                nodes["NOS"][nodeIndex]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
-                nodes["NOS"][nodeIndex]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
+                nodes["NOS"][stationKey]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
+                nodes["NOS"][stationKey]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
             
         with open(self.NODES_FILE, "w") as outfile:
             json.dump(nodes, outfile)
@@ -674,17 +678,18 @@ class Reader:
             
         data = {}
         print("Reading data", dataType)
-        for nodeIndex in nodes["NOS"].keys():
+        for stationKey in nodes["NOS"].keys():
 #                 print("getting wind data for node", nodeIndex)
-            data[nodeIndex] = {}
-            data[nodeIndex]["stationKey"] = nodes["NOS"][nodeIndex]["stationKey"]
-            data[nodeIndex]["times"] = times
+            data[stationKey] = {}
+            nodeIndex = nodes["NOS"][stationKey]["nodeIndex"]
+            data[stationKey]["nodeIndex"] = nodeIndex
+            data[stationKey]["times"] = times
             if(self.format == "GFS" or self.format == "POST"):
-                data[nodeIndex]["latitude"] = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
-                data[nodeIndex]["longitude"] = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
+                data[stationKey]["latitude"] = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
+                data[stationKey]["longitude"] = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
             elif(self.format == "FORT"):
-                data[nodeIndex]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
-                data[nodeIndex]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
+                data[stationKey]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
+                data[stationKey]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
 
             values = []
             valuesX = []
@@ -699,16 +704,16 @@ class Reader:
 
 #           Write values
             if(dataType == "rad"):
-                data[nodeIndex]["radstressX"] = valuesX
-                data[nodeIndex]["radstressY"] = valuesY
+                data[stationKey]["radstressX"] = valuesX
+                data[stationKey]["radstressY"] = valuesY
             elif(dataType == "gfs" or dataType == "fort"):
-                data[nodeIndex]["windsX"] = valuesX
-                data[nodeIndex]["windsY"] = valuesY
+                data[stationKey]["windsX"] = valuesX
+                data[stationKey]["windsY"] = valuesY
             elif(dataType == "post"):
-                data[nodeIndex]["speeds"] = valuesX
-                data[nodeIndex]["directions"] = valuesY
+                data[stationKey]["speeds"] = valuesX
+                data[stationKey]["directions"] = valuesY
             else:
-                data[nodeIndex][dataType] = values
+                data[stationKey][dataType] = values
     
         with open(DATA_FILE, "w") as outfile:
             json.dump(data, outfile)
@@ -729,11 +734,10 @@ class Reader:
         pointsValues = []
         pointsValuesX = []
         pointsValuesY = []
-        for node in nodes["NOS"].keys():
-            stationKey = nodes["NOS"][node]["stationKey"]
+        for stationKey in nodes["NOS"].keys():
             print("Getting coordinates for closest nodes around station",  stationKey)
 #                 print("getting wind data for node", nodeIndex)
-            for closestNode in nodes["NOS"][node]["closestNodes"]:
+            for closestNode in nodes["NOS"][stationKey]["closestNodes"]:
                 nodesIndex.append(closestNode)
                 x = 0.0
                 y = 0.0
@@ -770,8 +774,10 @@ class Reader:
             interpolatorY = scipy.interpolate.LinearNDInterpolator(points, pointsValuesY)
         else:
             interpolator = scipy.interpolate.LinearNDInterpolator(points, pointsValues)
-        for nodeIndex in nodes["NOS"].keys():
-            data[nodeIndex] = {}
+        for stationKey in nodes["NOS"].keys():
+            nodeIndex = nodes["NOS"][stationKey]["nodeIndex"]
+            data[stationKey] = {}
+            data[stationKey]["nodeIndex"] = nodeIndex
             latitude = ""
             longitude = ""
             if(self.format == "GFS" or self.format == "POST"):
@@ -780,11 +786,9 @@ class Reader:
             elif(self.format == "FORT"):
                 latitude = float(dataset.variables["y"][int(nodeIndex)].data)
                 longitude = float(dataset.variables["x"][int(nodeIndex)].data)
-            stationKey = nodes["NOS"][nodeIndex]["stationKey"]
-            data[nodeIndex]["latitude"] = latitude
-            data[nodeIndex]["longitude"] = longitude
-            data[nodeIndex]["stationKey"] = stationKey
-            data[nodeIndex]["times"] = times
+            data[stationKey]["latitude"] = latitude
+            data[stationKey]["longitude"] = longitude
+            data[stationKey]["times"] = times
             stationDict = stationsDict["NOS"][stationKey]
             stationLatitude = float(stationDict["latitude"])
             stationLongitude = float(stationDict["longitude"])
@@ -796,16 +800,16 @@ class Reader:
             else:
                 interpolatedValues = interpolator(stationLongitude, stationLatitude)
             if(dataType == "rad"):
-                data[nodeIndex]["radstressX"] = interpolatedValuesX
-                data[nodeIndex]["radstressY"] = interpolatedValuesY
+                data[stationKey]["radstressX"] = interpolatedValuesX
+                data[stationKey]["radstressY"] = interpolatedValuesY
             elif(dataType == "gfs" or dataType == "fort"):
-                data[nodeIndex]["windsX"] = interpolatedValuesX
-                data[nodeIndex]["windsY"] = interpolatedValuesY
+                data[stationKey]["windsX"] = interpolatedValuesX
+                data[stationKey]["windsY"] = interpolatedValuesY
             elif(dataType == "post"):
-                data[nodeIndex]["speeds"] = interpolatedValuesX
-                data[nodeIndex]["directions"] = interpolatedValuesY
+                data[stationKey]["speeds"] = interpolatedValuesX
+                data[stationKey]["directions"] = interpolatedValuesY
             else:
-                data[nodeIndex][dataType] = interpolatedValues
+                data[stationKey][dataType] = interpolatedValues
         
         print("Writing data to", DATA_FILE)
         with open(DATA_FILE, "w") as outfile:
@@ -857,7 +861,9 @@ class GFSWindReader:
         windDataset, timesWind = self.reader.getNetcdfProperties(self.GFS_WIND_FILE, "gfs")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
-            thresholdDistance = 20
+#             thresholdDistance = 20
+#             Use higher threshold distance if working with 306 data?
+            thresholdDistance = 800
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
         spaceSparseness = 1

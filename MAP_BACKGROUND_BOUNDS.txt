@@ -10,6 +10,17 @@ North atlantic basin
 "lat long of north east", "(47.21124061115944, -54.31640625)"
 "lat long of south west", "(26.341511434725856, -80.68359375)"
 
+North atlantic basin 2
+
+"lat long of center", "(45, -75.00000000000001)"
+"lat long of north east", "(53.56987123091265, -61.83191501302646)"
+"lat long of south west", "(34.93945948759182, -88.1835924088955)"
+
+North atlantic basin 3
+"lat long of center", "(42.000000000000014, -69.99999999999999)"
+"lat long of north east", "(46.70943547053439, -63.41595750651321)"
+"lat long of south west", "(36.92061410517965, -76.59179620444773)"
+
 America no cali
 "lat long of center", "(40.00000000000001, -85.00000000000001)"
 "lat long of north east", "(57.20008072241126, -58.663830026052906)"
@@ -24,3 +35,4 @@ America
 "lat long of center", "(40.00000000000001, -100)"
 "lat long of north east", "(68.95333199817976, -47.327660052105784)"
 "lat long of south west", "(-8.92452857958399, -152.73436963558197)"
+

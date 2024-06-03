@@ -160,8 +160,8 @@ class Grapher:
                   
         if(self.windExists):
             windTimestampsInitialized = False
-            for nodeIndex in windDataset.keys():
-                if(nodeIndex == "map_data"):
+            for stationKey in windDataset.keys():
+                if(stationKey == "map_data"):
                     self.mapWindPoints = windDataset["map_data"]["map_points"]
                     self.mapWindPointsLatitudes = windDataset["map_data"]["map_pointsLatitudes"]
                     self.mapWindPointsLongitudes = windDataset["map_data"]["map_pointsLongitude"]
@@ -208,11 +208,11 @@ class Grapher:
                                     if(pointSpeed > self.maxWind):
                                         self.maxWind = pointSpeed
                 else:
-                    stationKey = windDataset[nodeIndex]["stationKey"]
+                    nodeIndex = windDataset[stationKey]["nodeIndex"]
                     if(not self.obsExists or (stationKey in obsDataset.keys())):
                         self.windLabels.append(nodeIndex)
-                        self.windLatitudes.append(windDataset[nodeIndex]["latitude"])
-                        self.windLongitudes.append(windDataset[nodeIndex]["longitude"])
+                        self.windLatitudes.append(windDataset[stationKey]["latitude"])
+                        self.windLongitudes.append(windDataset[stationKey]["longitude"])
                     
                         if(not obsLabelsInitialized):
                             self.obsLabels.append(self.obsMetadata[stationKey]["name"])
@@ -221,19 +221,19 @@ class Grapher:
                     
                         datapointDirections = []
                         datapointSpeeds = []
-                        for index in range(len(windDataset[nodeIndex]["times"])):
+                        for index in range(len(windDataset[stationKey]["times"])):
                             if(self.windStartDate == None):
-                                self.windStartDate = datetime.fromtimestamp(int(windDataset[nodeIndex]["times"][index]))
+                                self.windStartDate = datetime.fromtimestamp(int(windDataset[stationKey]["times"][index]))
                             if(not windTimestampsInitialized):
-                                self.windTimes.append(self.unixTimeToDeltaHours(windDataset[nodeIndex]["times"][index], self.windStartDate))
+                                self.windTimes.append(self.unixTimeToDeltaHours(windDataset[stationKey]["times"][index], self.windStartDate))
                             if(self.windType == "GFS" or self.windType == "FORT"):
-                                windX = windDataset[nodeIndex]["windsX"][index]
-                                windY = windDataset[nodeIndex]["windsY"][index]
+                                windX = windDataset[stationKey]["windsX"][index]
+                                windY = windDataset[stationKey]["windsY"][index]
                                 windSpeed = self.vectorSpeed(windX, windY)
                                 windDirection = self.vectorDirection(windX, windY)
                             elif(self.windType == "POST"):
-                                windSpeed = windDataset[nodeIndex]["speeds"][index]
-                                windDirection = windDataset[nodeIndex]["directions"][index]
+                                windSpeed = windDataset[stationKey]["speeds"][index]
+                                windDirection = windDataset[stationKey]["directions"][index]
                             datapointDirections.append(windDirection)
                             datapointSpeeds.append(windSpeed)
                         windTimestampsInitialized = True
@@ -264,8 +264,8 @@ class Grapher:
                 rainDataset = json.load(outfile)
                 
             rainTimestampsInitialized = False
-            for nodeIndex in rainDataset.keys():
-                if(nodeIndex == "map_data"):
+            for stationKey in rainDataset.keys():
+                if(stationKey == "map_data"):
                     self.mapRainTimes = rainDataset["map_data"]["map_times"]
                     self.mapRainPoints = rainDataset["map_data"]["map_points"]
                     self.mapRainPointsLatitudes = rainDataset["map_data"]["map_pointsLatitudes"]
@@ -278,10 +278,10 @@ class Grapher:
                                 if(pointRain > self.maxRain):
                                     self.maxRain = pointRain
                 else:
-                    stationKey = rainDataset[nodeIndex]["stationKey"]
+                    nodeIndex = rainDataset[stationKey]["nodeIndex"]
                     self.rainLabels.append(nodeIndex)
-                    self.rainLatitudes.append(rainDataset[nodeIndex]["latitude"])
-                    self.rainLongitudes.append(rainDataset[nodeIndex]["longitude"])
+                    self.rainLatitudes.append(rainDataset[stationKey]"latitude"])
+                    self.rainLongitudes.append(rainDataset[stationKey]["longitude"])
                 
                     if(not obsLabelsInitialized):
                         self.obsLabels.append(self.obsMetadata[stationKey]["name"])
@@ -289,12 +289,12 @@ class Grapher:
                         self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
 
                     datapointRains = []
-                    for index in range(len(rainDataset[nodeIndex]["times"])):
+                    for index in range(len(rainDataset[stationKey]["times"])):
                         if(self.rainStartDate == None):
-                            self.rainStartDate = datetime.fromtimestamp(int(rainDataset[nodeIndex]["times"][index]))
+                            self.rainStartDate = datetime.fromtimestamp(int(rainDataset[stationKey]["times"][index]))
                         if(not rainTimestampsInitialized):
-                            self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[nodeIndex]["times"][index], self.rainStartDate))
-                        datapointRains.append(rainDataset[nodeIndex]["rain"][index])
+                            self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[stationKey]["times"][index], self.rainStartDate))
+                        datapointRains.append(rainDataset[[stationKey]["rain"][index])
                     rainTimestampsInitialized = True
                     self.datapointsRains.append(datapointRains)
             obsLabelsInitialized = True
@@ -338,8 +338,8 @@ class Grapher:
                         iteratorDataset = radDataset
             
             waveTimestampsInitialized = False
-            for nodeIndex in iteratorDataset.keys():
-                if(nodeIndex == "map_data"):
+            for stationKey in iteratorDataset.keys():
+                if(stationKey == "map_data"):
                     self.mapWaveTimes = swhDataset["map_data"]["map_times"]
                     self.mapWavePoints = swhDataset["map_data"]["map_points"]
                     self.mapWavePointsLatitudes = swhDataset["map_data"]["map_pointsLatitudes"]
@@ -351,10 +351,10 @@ class Grapher:
                             if(pointSWH > self.maxSWH):
                                 self.maxSWH = pointSWH
                 else:
-                    stationKey = iteratorDataset[nodeIndex]["stationKey"]
+                    nodeIndex = iteratorDataset[stationKey]["nodeIndex"]
                     self.waveLabels.append(nodeIndex)
-                    self.waveLatitudes.append(iteratorDataset[nodeIndex]["latitude"])
-                    self.waveLongitudes.append(iteratorDataset[nodeIndex]["longitude"])
+                    self.waveLatitudes.append(iteratorDataset[stationKey]["latitude"])
+                    self.waveLongitudes.append(iteratorDataset[stationKey]["longitude"])
                     if(not obsLabelsInitialized):
                         self.obsLabels.append(self.obsMetadata[stationKey]["name"])
                         self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
@@ -366,22 +366,22 @@ class Grapher:
                     datapointPWP = []
                     datapointRADMag = []
                     datapointRADDir = []
-                    for index in range(len(iteratorDataset[nodeIndex]["times"])):
+                    for index in range(len(iteratorDataset[stationKey]["times"])):
                         if(self.waveStartDate == None):
-                            self.waveStartDate = datetime.fromtimestamp(int(iteratorDataset[nodeIndex]["times"][index]))
+                            self.waveStartDate = datetime.fromtimestamp(int(iteratorDataset[stationKey]["times"][index]))
                         if(not waveTimestampsInitialized):
-                            self.waveTimes.append(self.unixTimeToDeltaHours(iteratorDataset[nodeIndex]["times"][index], self.waveStartDate))
+                            self.waveTimes.append(self.unixTimeToDeltaHours(iteratorDataset[stationKey]["times"][index], self.waveStartDate))
                         if(swhExists):
-                            datapointSWH.append(swhDataset[nodeIndex]["swh"][index])
+                            datapointSWH.append(swhDataset[stationKey]["swh"][index])
                         if(mwdExists):
-                            datapointMWD.append(mwdDataset[nodeIndex]["mwd"][index])
+                            datapointMWD.append(mwdDataset[stationKey]["mwd"][index])
                         if(mwpExists):
-                            datapointMWP.append(mwpDataset[nodeIndex]["mwp"][index])
+                            datapointMWP.append(mwpDataset[stationKey]["mwp"][index])
                         if(pwpExists):
-                            datapointPWP.append(pwpDataset[nodeIndex]["pwp"][index])
+                            datapointPWP.append(pwpDataset[stationKey]["pwp"][index])
                         if(radExists):
-                            radX = radDataset[nodeIndex]["radstressX"][index]
-                            radY = radDataset[nodeIndex]["radstressY"][index]
+                            radX = radDataset[stationKey]["radstressX"][index]
+                            radY = radDataset[stationKey]["radstressY"][index]
                             radMag = self.vectorSpeed(radX, radY)
                             radDir = self.vectorDirection(radX, radY)
                             datapointRADMag.append(radMag)
@@ -463,7 +463,7 @@ class Grapher:
                     print(len(self.mapWindPointsLongitudes), len(self.mapWindPointsLatitudes), len(self.mapSpeeds[index]))
                     contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', vmin=vmin, vmax=vmax, zorder=1)
 #                 plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
-                plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965,  46.70943547053439])
+                plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965, 46.70943547053439])
                 plt.title("Wind Speed")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index])))
     #             graphs up to 10 m/s, ~20 knots
