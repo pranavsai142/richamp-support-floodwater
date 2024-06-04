@@ -77,7 +77,7 @@ def main():
     if(args.gfsExists):
         GFS_WIND_FILE = args.wind
         GFS_WIND_DATA_FILE = wind_temp_directory + "gfs_wind_data_file" + ".json"
-        (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
+#         (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["GFS"] = GFS_WIND_DATA_FILE
     print("args.rainExists", args.rainExists)
     if(args.rainExists):

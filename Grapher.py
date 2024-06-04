@@ -280,7 +280,7 @@ class Grapher:
                 else:
                     nodeIndex = rainDataset[stationKey]["nodeIndex"]
                     self.rainLabels.append(nodeIndex)
-                    self.rainLatitudes.append(rainDataset[stationKey]"latitude"])
+                    self.rainLatitudes.append(rainDataset[stationKey]["latitude"])
                     self.rainLongitudes.append(rainDataset[stationKey]["longitude"])
                 
                     if(not obsLabelsInitialized):
@@ -294,7 +294,7 @@ class Grapher:
                             self.rainStartDate = datetime.fromtimestamp(int(rainDataset[stationKey]["times"][index]))
                         if(not rainTimestampsInitialized):
                             self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[stationKey]["times"][index], self.rainStartDate))
-                        datapointRains.append(rainDataset[[stationKey]["rain"][index])
+                        datapointRains.append(rainDataset[stationKey]["rain"][index])
                     rainTimestampsInitialized = True
                     self.datapointsRains.append(datapointRains)
             obsLabelsInitialized = True
@@ -436,8 +436,8 @@ class Grapher:
         plt.savefig(graph_directory + 'closest_points.png')
         plt.close()
         
-#         img = mpimg.imread('subsetFlipped.png')
-        img = mpimg.imread('NorthAtlanticBasin3.png')
+        img = mpimg.imread('subsetFlipped.png')
+#         img = mpimg.imread('NorthAtlanticBasin3.png')
         if(len(self.mapWindTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxWind)
@@ -448,8 +448,8 @@ class Grapher:
     #             print(self.endWindPointsLongitudes)
     #             print(self.endWindPointsLatitudes)
     #             print(self.endSpeeds)
-#                 plt.imshow(img, alpha=0.5, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874], zorder=2)
-                plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
+                plt.imshow(img, alpha=0.5, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874], zorder=2)
+#                 plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
                 if(self.windType == "FORT"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
@@ -461,9 +461,9 @@ class Grapher:
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
 #                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                     print(len(self.mapWindPointsLongitudes), len(self.mapWindPointsLatitudes), len(self.mapSpeeds[index]))
-                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', vmin=vmin, vmax=vmax, zorder=1)
-#                 plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
-                plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965, 46.70943547053439])
+                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
+                plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
+#                 plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965, 46.70943547053439])
                 plt.title("Wind Speed")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index])))
     #             graphs up to 10 m/s, ~20 knots
