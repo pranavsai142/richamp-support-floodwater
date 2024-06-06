@@ -36,3 +36,7 @@ America
 "lat long of north east", "(68.95333199817976, -47.327660052105784)"
 "lat long of south west", "(-8.92452857958399, -152.73436963558197)"
 
+Midwest
+"lat long of center", "(42.5, -85.00000000000001)"
+"lat long of north east", "(47.17062597464635, -78.41595750651324)"
+"lat long of south west", "(37.45872529389382, -91.59179620444776)"

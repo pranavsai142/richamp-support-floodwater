@@ -38,7 +38,7 @@ class Grapher:
     #     WIND_PROFILE_EXPONENT = 0.11
     #     return windVelocity * ((10.0/altitude)**WIND_PROFILE_EXPONENT)
 
-    def __init__(self, dataToGraph={}, STATIONS_FILE=""):
+    def __init__(self, dataToGraph={}, STATIONS_FILE="", backgroundMap="", backgroundAxis=[]):
         print("Initializing grapher")
         self.obsExists = False
         self.windExists = False
@@ -50,6 +50,9 @@ class Grapher:
         self.rainStartDate = None
         
         self.windType = ""
+        
+        self.backgroundMap = backgroundMap
+        self.backgroundAxis = backgroundAxis
         
         if("OBS" in dataToGraph):
             self.obsExists = True
@@ -436,7 +439,9 @@ class Grapher:
         plt.savefig(graph_directory + 'closest_points.png')
         plt.close()
         
-        img = mpimg.imread('subsetFlipped.png')
+        img = mpimg.imread(self.backgroundMap)
+        plotAxis = [self.backgroundAxis[0], self.backgroundAxis[1], self.backgroundAxis[3], self.backgroundAxis[2]]
+#         img = mpimg.imread('subsetFlipped.png')
 #         img = mpimg.imread('NorthAtlanticBasin3.png')
         if(len(self.mapWindTimes) > 0):
             vmin = 0
@@ -448,7 +453,7 @@ class Grapher:
     #             print(self.endWindPointsLongitudes)
     #             print(self.endWindPointsLatitudes)
     #             print(self.endSpeeds)
-                plt.imshow(img, alpha=0.5, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874], zorder=2)
+                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, zorder=2)
 #                 plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
                 if(self.windType == "FORT"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
@@ -456,13 +461,13 @@ class Grapher:
                 elif(self.windType == "POST"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
 #                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', vmin=vmin, vmax=vmax, zorder=1)
+                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
                 elif(self.windType == "GFS"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
 #                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                     print(len(self.mapWindPointsLongitudes), len(self.mapWindPointsLatitudes), len(self.mapSpeeds[index]))
                     contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
-                plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
+                plt.axis(plotAxis)
 #                 plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965, 46.70943547053439])
                 plt.title("Wind Speed")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index])))
@@ -488,8 +493,8 @@ class Grapher:
                     os.remove(graph_directory + filename)
         if(len(self.mapRainTimes) > 0):
             vmin = 0
-#             vmax = math.ceil(self.maxRain)
-            vmax = 20
+            vmax = math.ceil(self.maxRain)
+#             vmax = 20
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
             for index in range(len(self.mapRainTimes)):
@@ -497,10 +502,10 @@ class Grapher:
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.5, zorder=2)
 #                 contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='auto', alpha=0.5, vmin=vmin, vmax=vmax)
-                plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
+                contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
+                plt.axis(plotAxis)
                 plt.title("Rain")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapRainTimes[index])))
     #             plt.gca().invert_yaxis()
@@ -533,9 +538,9 @@ class Grapher:
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                plt.imshow(img, extent=[-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874])
+                plt.imshow(img, extent=self.backgroundAxis)
                 contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                plt.axis([-71.905117442267496, -71.0339945492675, 41.028319358056874, 42.200717972845119])
+                plt.axis(plotAxis)
                 plt.title("Significant Wave Height")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index])))
     #             plt.gca().invert_yaxis()

@@ -35,6 +35,7 @@ def latRad(lat):
     return max([min([radX2, math.pi]), -math.pi]) / 2;
 
 def findZoom(mapPx, worldPx, fraction):
+    print("raw zoom", mapPx / worldPx / fraction)
     return math.floor(math.log(mapPx / worldPx / fraction) / math.log(2))
 
 deltaPixelsWidth = 600
@@ -44,10 +45,10 @@ worldPixelsHeight = 256
 worldPixelsWidth = 256
 # https://groups.google.com/g/google-maps-js-api-v3/c/hDRO4oHVSeM/m/osOYQYXg2oUJ?pli=1
 # metersPerPixel = 156543.03392 * math.cos(centerLatitude * math.pi / 180) / math.pow(2, zoom)
-minLatitude = 40.0
-maxLatitude = 44.0
-minLongitude = -75.0
-maxLongitude = -65.0
+minLatitude = 39.0
+maxLatitude = 46.0
+minLongitude = -90.0
+maxLongitude = -80.0
 
 centerLatitude = (minLatitude + maxLatitude) / 2
 centerLongitude = (minLongitude + maxLongitude) / 2
@@ -88,7 +89,7 @@ print("latitude bounds",math.degrees(maxLatitude), minLatitude)
 print("longitude bounds", minLongitude, maxLongitude)
 
 
-urlretrieve(url, "satallite.png")
+# urlretrieve(url, "satallite.png")
 
 
 

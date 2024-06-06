@@ -5,6 +5,13 @@ import datetime
 import argparse
 import os
 
+# RHODE_ISLAND_MAP = "subsetFlipped.png"
+# RHODE_ISLAND_AXIS = [-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874]
+# NORTH_ATLANTIC_MAP = "NorthAtlanticBasin3.png"
+# NORTH_ATLANTIC_AXIS = [-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965]
+AMERICA_MAP = "America.png"
+AMERICA_AXIS = [-152.73436963558197, -47.327660052105784, 68.95333199817976, -8.92452857958399]
+
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
     p.add_argument(
@@ -83,7 +90,7 @@ def main():
     if(args.rainExists):
         GFS_RAIN_FILE = args.rain
         GFS_RAIN_DATA_FILE = wind_temp_directory + "gfs_rain_data_file" + ".json"
-        (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateRainDataForStations()
+#         (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateRainDataForStations()
         dataToGraph["RAIN"] = GFS_RAIN_DATA_FILE
     print("args.postExists", args.postExists)
     if(args.postExists):
@@ -139,9 +146,25 @@ def main():
         dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
         dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
         dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
+ 
+    print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
+    Grapher(
+        dataToGraph=dataToGraph, 
+        STATIONS_FILE=STATIONS_FILE, 
+        backgroundMap=RHODE_ISLAND_MAP,
+        backgroundAxis=RHODE_ISLAND_AXIS).generateGraphs()
+        
+#     Grapher(
+#         dataToGraph=dataToGraph, 
+#         STATIONS_FILE=STATIONS_FILE, 
+#         backgroundMap=NORTH_ATLANTIC_MAP,
+#         backgroundAxis=NORTH_ATLANTIC_AXIS).generateGraphs()
 # 
-#     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
-    Grapher(dataToGraph=dataToGraph, STATIONS_FILE=STATIONS_FILE).generateGraphs()
+#     Grapher(
+#         dataToGraph=dataToGraph, 
+#         STATIONS_FILE=STATIONS_FILE, 
+#         backgroundMap=AMERICA_MAP,
+#         backgroundAxis=AMERICA_AXIS).generateGraphs()
 
 if __name__ == "__main__":
     main()

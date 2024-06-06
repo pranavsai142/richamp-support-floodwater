@@ -29,8 +29,12 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
 # python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind ../ObservationalWind/RICHAMP_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
 
-python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/testRam.nc
+# python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/testRam.nc
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc
+
+# python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/test_american_wind.nc
+
+python generateGraphs.py --stations OBS_STATIONS.json --rainExists true --rain ../ObservationalWind/test_american_rain.nc
 
 
 # testing end value maps

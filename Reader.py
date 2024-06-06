@@ -861,9 +861,9 @@ class GFSWindReader:
         windDataset, timesWind = self.reader.getNetcdfProperties(self.GFS_WIND_FILE, "gfs")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
-#             thresholdDistance = 20
+            thresholdDistance = 20
 #             Use higher threshold distance if working with 306 data?
-            thresholdDistance = 800
+#             thresholdDistance = 800
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
         spaceSparseness = 1
