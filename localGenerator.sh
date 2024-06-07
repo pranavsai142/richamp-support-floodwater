@@ -34,8 +34,9 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/test_american_wind.nc
 
-python generateGraphs.py --stations OBS_STATIONS.json --rainExists true --rain ../ObservationalWind/test_american_rain.nc
+# python generateGraphs.py --stations OBS_STATIONS.json --rainExists true --rain ../ObservationalWind/test_american_rain.nc
 
+python generateGraphs.py --stations MIDWEST_STATIONS.json --rainExists true --rain ../ObservationalWind/test_midwest_rain.nc --gfsExists true --wind ../ObservationalWind/test_midwest_wind.nc --backgroundChoice MIDWEST
 
 # testing end value maps
 

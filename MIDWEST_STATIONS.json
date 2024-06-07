@@ -1,0 +1,36 @@
+{
+  "NOS": {
+    "0": {
+      "id": "0",
+      "source": "NOS",
+      "name": "Backyard, IL",
+      "latitude": "42.108922",
+      "longitude": "-88.368520",
+      "altitude": "999\n"
+    },
+    "1": {
+      "id": "0",
+      "source": "NOS",
+      "name": "Lake in The Hills Airport, IL",
+      "latitude": "42.206478",
+      "longitude": "-88.316897",
+      "altitude": "999\n"
+    },
+    "2": {
+      "id": "0",
+      "source": "NOS",
+      "name": "Serpent Mound, OH",
+      "latitude": "39.022067",
+      "longitude": "-83.431791",
+      "altitude": "999\n"
+    },
+    "3": {
+      "id": "0",
+      "source": "NOS",
+      "name": "Lambeau Field, WI",
+      "latitude": "44.501147",
+      "longitude": "-88.062146",
+      "altitude": "999\n"
+    }
+  }
+}

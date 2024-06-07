@@ -834,6 +834,7 @@ class GFSRainReader:
         initializeClosestRainNodes = True
         if(initializeClosestRainNodes):
             thresholdDistance = 20
+#             thresholdDistance = 100
             self.reader.initializeClosestNodes(rainDataset, thresholdDistance)
         interpolateValues = True
         spaceSparseness = 1
@@ -862,6 +863,7 @@ class GFSWindReader:
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
             thresholdDistance = 20
+#             thresholdDistance = 100
 #             Use higher threshold distance if working with 306 data?
 #             thresholdDistance = 800
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)

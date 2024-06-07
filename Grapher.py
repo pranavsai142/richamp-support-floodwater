@@ -502,7 +502,7 @@ class Grapher:
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                plt.imshow(img, extent=self.backgroundAxis, alpha=0.5, zorder=2)
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, zorder=2)
 #                 contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)

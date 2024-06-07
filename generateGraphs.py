@@ -5,12 +5,14 @@ import datetime
 import argparse
 import os
 
-# RHODE_ISLAND_MAP = "subsetFlipped.png"
-# RHODE_ISLAND_AXIS = [-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874]
-# NORTH_ATLANTIC_MAP = "NorthAtlanticBasin3.png"
-# NORTH_ATLANTIC_AXIS = [-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965]
+RHODE_ISLAND_MAP = "subsetFlipped.png"
+RHODE_ISLAND_AXIS = [-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874]
+NORTH_ATLANTIC_MAP = "NorthAtlanticBasin3.png"
+NORTH_ATLANTIC_AXIS = [-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965]
 AMERICA_MAP = "America.png"
 AMERICA_AXIS = [-152.73436963558197, -47.327660052105784, 68.95333199817976, -8.92452857958399]
+MIDWEST_MAP = "Midwest.png"
+MIDWEST_AXIS = [-91.59179620444776, -78.41595750651324, 47.17062597464635, 37.45872529389382]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -57,6 +59,8 @@ def main():
     p.add_argument(
         "--rainExists", type=bool, help="Graph adcirc wave data"
     )
+    p.add_argument(
+        "--backgroundChoice", type=str, help="Options: RHODE_ISLAND, NORTH_ATLANTIC, AMERICA, MIDWEST")
     args = p.parse_args()
     args.epsg = 4326
     print("Generating Wind Graphs!")
@@ -73,7 +77,12 @@ def main():
     dataToGraph = {}  
     print("Loading NetCDF file!")
     STATIONS_FILE = args.stations
-
+#     Default to Rhode Island Map
+    if(not args.backgroundChoice):
+        backgroundChoice = "RHODE_ISLAND"
+    else:
+        backgroundChoice = args.backgroundChoice
+        
     print("args.adcircExists", args.adcircExists)
     if(args.adcircExists):
         ADCIRC_WIND_FILE = args.wind
@@ -84,13 +93,13 @@ def main():
     if(args.gfsExists):
         GFS_WIND_FILE = args.wind
         GFS_WIND_DATA_FILE = wind_temp_directory + "gfs_wind_data_file" + ".json"
-#         (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
+        (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["GFS"] = GFS_WIND_DATA_FILE
     print("args.rainExists", args.rainExists)
     if(args.rainExists):
         GFS_RAIN_FILE = args.rain
         GFS_RAIN_DATA_FILE = wind_temp_directory + "gfs_rain_data_file" + ".json"
-#         (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateRainDataForStations()
+        (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateRainDataForStations()
         dataToGraph["RAIN"] = GFS_RAIN_DATA_FILE
     print("args.postExists", args.postExists)
     if(args.postExists):
@@ -146,25 +155,27 @@ def main():
         dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
         dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
         dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
- 
-    print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
+        
+    backgroundMap = None
+    backgroundAxis = None
+    if(backgroundChoice == "RHODE_ISLAND"):
+        backgroundMap = RHODE_ISLAND_MAP
+        backgroundAxis = RHODE_ISLAND_AXIS
+    elif(backgroundChoice == "NORTH_ATLANTIC"):
+        backgroundMap = NORTH_ATLANTIC_MAP
+        backgroundAxis = NORTH_ATLANTIC_AXIS
+    elif(backgroundChoice == "AMERICA"):
+        backgroundMap = AMERICA_MAP
+        backgroundAxis = AMERICA_AXIS
+    elif(backgroundChoice == "MIDWEST"):
+        backgroundMap = MIDWEST_MAP
+        backgroundAxis = MIDWEST_AXIS
+#     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     Grapher(
         dataToGraph=dataToGraph, 
         STATIONS_FILE=STATIONS_FILE, 
-        backgroundMap=RHODE_ISLAND_MAP,
-        backgroundAxis=RHODE_ISLAND_AXIS).generateGraphs()
-        
-#     Grapher(
-#         dataToGraph=dataToGraph, 
-#         STATIONS_FILE=STATIONS_FILE, 
-#         backgroundMap=NORTH_ATLANTIC_MAP,
-#         backgroundAxis=NORTH_ATLANTIC_AXIS).generateGraphs()
-# 
-#     Grapher(
-#         dataToGraph=dataToGraph, 
-#         STATIONS_FILE=STATIONS_FILE, 
-#         backgroundMap=AMERICA_MAP,
-#         backgroundAxis=AMERICA_AXIS).generateGraphs()
+        backgroundMap=backgroundMap,
+        backgroundAxis=backgroundAxis).generateGraphs()
 
 if __name__ == "__main__":
     main()
