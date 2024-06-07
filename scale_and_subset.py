@@ -254,7 +254,7 @@ class Owi306Wind:
 #     Manually set parameters for 306 type file
         num_lats = 277
         num_lons = 325
-        lat_step = 0.150002
+        lat_step = -0.150002
         lon_step = 0.150002
         sw_corner_lat = 46.400002
         sw_corner_lon = -98.599998
