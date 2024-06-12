@@ -461,7 +461,7 @@ class Grapher:
                 elif(self.windType == "POST"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
 #                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
+                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="coolwarm", vmin=vmin, vmax=vmax, zorder=1)
                 elif(self.windType == "GFS"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
 #                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
@@ -504,7 +504,7 @@ class Grapher:
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, zorder=2)
 #                 contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="Oranges", vmin=vmin, vmax=vmax, zorder=1)
+                contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="coolwarm", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Rain")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapRainTimes[index])))

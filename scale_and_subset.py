@@ -256,11 +256,11 @@ class Owi306Wind:
         num_lons = 325
         lat_step = 0.150002
         lon_step = 0.150002
-        nw_corner_lat = 46.400002
+#         nw_corner_lat = 46.400002
         sw_corner_lat = 4.9995
         sw_corner_lon = -98.6
-        lat = numpy.linspace(nw_corner_lat, nw_corner_lat + (num_lats - 1) * lat_step, num_lats)
-        lon = numpy.linspace(nw_corner_lon, nw_corner_lon + (num_lons - 1) * lon_step, num_lons)
+        lat = numpy.linspace(sw_corner_lat, sw_corner_lat + (num_lats - 1) * lat_step, num_lats)
+        lon = numpy.linspace(sw_corner_lon, sw_corner_lon + (num_lons - 1) * lon_step, num_lons)
         return WindGrid(lon, lat)
 
     def num_times(self):
