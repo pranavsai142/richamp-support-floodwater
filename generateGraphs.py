@@ -19,6 +19,18 @@ RHODE_ISLAND_MAP = "RhodeIsland.png"
 RHODE_ISLAND_AXIS = [-71.82698726277798, -71.00349734415707, 41.90734758914777, 41.29154575705807]
 SOUTH_RHODE_ISLAND_MAP = "SouthRhodeIsland.png"
 SOUTH_RHODE_ISLAND_AXIS = [-71.82698726277798, -71.00349734415707, 41.75806308487547, 41.140832039790766]
+NEWPORT_MAP = "Newport.png"
+NEWPORT_AXIS = [-71.55599363138899, -71.14424867207853, 41.65409629818921, 41.34571806834695]
+PROVIDENCE_MAP = "Providence.png"
+PROVIDENCE_AXIS = [-71.54599363138901, -71.1342486720785, 41.853618749387486, 41.54619474986597]
+NORTH_PROVIDENCE_MAP = "NorthProvidence.png"
+NORTH_PROVIDENCE_AXIS = [-71.745993631389, -71.33424867207854, 41.70156547197295, 42.00824736593589]
+WESTERLY_MAP = "Westerly.png"
+WESTERLY_AXIS = [-71.89599363138898, -71.48424867207852, 41.45457197608142, 41.14524327341847]
+NARRAGANSETT_MAP = "Narragansett.png"
+NARRAGANSETT_AXIS = [-71.54599363138901, -71.13424867207856, 41.45457197608142, 41.14524327341847]
+BLOCK_ISLAND_MAP = "BlockIsland.png"
+BLOCK_ISLAND_AXIS = [-71.64599363138898, -71.23424867207852, 41.45457197608142, 41.14524327341847]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -185,6 +197,24 @@ def main():
     elif(backgroundChoice == "SOUTH_RHODE_ISLAND"):
         backgroundMap = SOUTH_RHODE_ISLAND_MAP
         backgroundAxis = SOUTH_RHODE_ISLAND_AXIS
+    elif(backgroundChoice == "PROVIDENCE"):
+        backgroundMap = PROVIDENCE_MAP
+        backgroundAxis = PROVIDENCE_AXIS
+    elif(backgroundChoice == "NORTH_PROVIDENCE"):
+        backgroundMap = NORTH_PROVIDENCE_MAP
+        backgroundAxis = NORTH_PROVIDENCE_AXIS
+    elif(backgroundChoice == "WESTERLY"):
+        backgroundMap = WESTERLY_MAP
+        backgroundAxis = WESTERLY_AXIS
+    elif(backgroundChoice == "NEWPORT"):
+        backgroundMap = NEWPORT_MAP
+        backgroundAxis = NEWPORT_AXIS
+    elif(backgroundChoice == "NARRAGANSETT"):
+        backgroundMap = NARRAGANSETT_MAP
+        backgroundAxis = NARRAGANSETT_AXIS
+    elif(backgroundChoice == "BLOCK_ISLAND"):
+        backgroundMap = BLOCK_ISLAND_MAP
+        backgroundAxis = BLOCK_ISLAND_AXIS
 #     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     Grapher(
         dataToGraph=dataToGraph, 

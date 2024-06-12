@@ -48,3 +48,28 @@ SOUTH_RHODE_ISLAND
 RHODE_ISLAND
 "lat long of north east", "(41.90734758914777, -71.00349734415707)"
 "lat long of south west", "(41.29154575705807, -71.82698726277798)"
+
+WESTERLY
+"lat long of north east", "(41.45457197608142, -71.48424867207852)"
+"lat long of south west", "(41.14524327341847, -71.89599363138898)"
+
+NEWPORT
+"lat long of center", "(41.500000000000014, -71.35)"
+"lat long of north east", "(41.65409629818921, -71.14424867207853)"
+"lat long of south west", "(41.34571806834695, -71.55599363138899)"
+
+PROVIDENCE
+"lat long of north east", "(41.853618749387486, -71.13424867207856)"
+"lat long of south west", "(41.54619474986597, -71.54599363138901)"
+
+NORTH_PROVIDENCE
+"lat long of north east", "(42.00824736593589, -71.33424867207854)"
+"lat long of south west", "(41.70156547197295, -71.745993631389)"
+
+BLOCK_ISLAND
+"lat long of north east", "(41.45457197608142, -71.23424867207852)"
+"lat long of south west", "(41.14524327341847, -71.64599363138898)"
+
+NARRAGANSETT
+"lat long of north east", "(41.45457197608142, -71.13424867207856)"
+"lat long of south west", "(41.14524327341847, -71.54599363138901)"
