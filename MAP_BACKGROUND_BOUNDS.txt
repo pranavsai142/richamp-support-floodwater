@@ -31,7 +31,7 @@ America cali
 "lat long of north east", "(57.20008072241126, -78.66383002605289)"
 "lat long of south west", "(17.11497780436083, -131.36718481779099)"
 
-America
+America WROGNG
 "lat long of center", "(40.00000000000001, -100)"
 "lat long of north east", "(68.95333199817976, -47.327660052105784)"
 "lat long of south west", "(-8.92452857958399, -152.73436963558197)"
