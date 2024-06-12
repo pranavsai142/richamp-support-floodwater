@@ -254,11 +254,11 @@ class Owi306Wind:
 #     Manually set parameters for 306 type file
         num_lats = 277
         num_lons = 325
-        lat_step = -0.150002
+        lat_step = 0.150002
         lon_step = 0.150002
         nw_corner_lat = 46.400002
-#         sw_corner_lat = 14.849448
-        nw_corner_lon = -98.6
+        sw_corner_lat = 4.9995
+        sw_corner_lon = -98.6
         lat = numpy.linspace(nw_corner_lat, nw_corner_lat + (num_lats - 1) * lat_step, num_lats)
         lon = numpy.linspace(nw_corner_lon, nw_corner_lon + (num_lons - 1) * lon_step, num_lons)
         return WindGrid(lon, lat)
@@ -272,14 +272,14 @@ class Owi306Wind:
 #         print(idx_date)
         starting_row = idx * (self.__num_lats * self.__num_lons)
         ending_row = starting_row + (self.__num_lats * self.__num_lons)
-        latitudeIndex = 0
+        latitudeIndex = 276
         longitudeIndex = 0
         uvel = [[None for i in range(self.__num_lons)] for j in range(self.__num_lats)]
         vvel = [[None for i in range(self.__num_lons)] for j in range(self.__num_lats)]
 #         print(len(uvel), len(uvel[0]))
         for index in range(starting_row, ending_row):
             if(longitudeIndex >= self.__num_lons):
-                latitudeIndex = latitudeIndex + 1
+                latitudeIndex = latitudeIndex - 1
                 longitudeIndex = 0
 #             print("index, latIndex, longIndex", index, latitudeIndex, longitudeIndex)
             data = self.__lines[index].split()

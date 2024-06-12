@@ -40,3 +40,11 @@ Midwest
 "lat long of center", "(42.5, -85.00000000000001)"
 "lat long of north east", "(47.17062597464635, -78.41595750651324)"
 "lat long of south west", "(37.45872529389382, -91.59179620444776)"
+
+SOUTH_RHODE_ISLAND
+"lat long of north east", "(41.75806308487547, -71.00349734415707)"
+"lat long of south west", "(41.140832039790766, -71.82698726277798)"
+
+RHODE_ISLAND
+"lat long of north east", "(41.90734758914777, -71.00349734415707)"
+"lat long of south west", "(41.29154575705807, -71.82698726277798)"

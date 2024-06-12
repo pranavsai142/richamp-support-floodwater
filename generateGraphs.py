@@ -5,8 +5,8 @@ import datetime
 import argparse
 import os
 
-RHODE_ISLAND_MAP = "subsetFlipped.png"
-RHODE_ISLAND_AXIS = [-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874]
+SOUTH_NEW_ENGLAND_MAP = "subsetFlipped.png"
+SOUTH_NEW_ENGLAND_AXIS = [-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874]
 NORTH_ATLANTIC_MAP = "NorthAtlanticBasin3.png"
 NORTH_ATLANTIC_AXIS = [-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965]
 ATLANTIC_MAP = "AtlanticBasin.png"
@@ -15,6 +15,10 @@ ATLANTIC_AXIS = [-89.47265625, -45.52734375, 49.402995871752374, 23.351173294924
 # AMERICA_AXIS = [-152.73436963558197, -47.327660052105784, 68.95333199817976, -8.92452857958399]
 MIDWEST_MAP = "Midwest.png"
 MIDWEST_AXIS = [-91.59179620444776, -78.41595750651324, 47.17062597464635, 37.45872529389382]
+RHODE_ISLAND_MAP = "RhodeIsland.png"
+RHODE_ISLAND_AXIS = [-71.82698726277798, -71.00349734415707, 41.90734758914777, 41.29154575705807]
+SOUTH_RHODE_ISLAND_MAP = "SouthRhodeIsland.png"
+SOUTH_RHODE_ISLAND_AXIS = [-71.82698726277798, -71.00349734415707, 41.75806308487547, 41.140832039790766]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -95,7 +99,7 @@ def main():
     if(args.gfsExists):
         GFS_WIND_FILE = args.wind
         GFS_WIND_DATA_FILE = wind_temp_directory + "gfs_wind_data_file" + ".json"
-#         (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
+        (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["GFS"] = GFS_WIND_DATA_FILE
     print("args.rainExists", args.rainExists)
     if(args.rainExists):
@@ -175,6 +179,12 @@ def main():
     elif(backgroundChoice == "MIDWEST"):
         backgroundMap = MIDWEST_MAP
         backgroundAxis = MIDWEST_AXIS
+    elif(backgroundChoice == "RHODE_ISLAND"):
+        backgroundMap = RHODE_ISLAND_MAP
+        backgroundAxis = RHODE_ISLAND_AXIS
+    elif(backgroundChoice == "SOUTH_RHODE_ISLAND"):
+        backgroundMap = SOUTH_RHODE_ISLAND_MAP
+        backgroundAxis = SOUTH_RHODE_ISLAND_AXIS
 #     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     Grapher(
         dataToGraph=dataToGraph, 
