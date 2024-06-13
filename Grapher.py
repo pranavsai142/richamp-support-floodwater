@@ -44,10 +44,12 @@ class Grapher:
         self.windExists = False
         self.wavesExists = False
         self.rainExists = False
+        self.waterExists = False
         
         self.windStartDate = None
         self.waveStartDate = None
         self.rainStartDate = None
+        self.waterStartDate = None
         
         self.windType = ""
         
@@ -62,6 +64,8 @@ class Grapher:
             self.wavesExists = True
         if("RAIN" in dataToGraph):
             self.rainExists = True
+        if("WATER" in dataToGraph):
+            self.waterExists = True
         with open(STATIONS_FILE) as outfile:
             self.obsMetadata = json.load(outfile)["NOS"]
             
@@ -108,6 +112,20 @@ class Grapher:
         
         self.datapointsDirections = []
         self.datapointsSpeeds = []
+        
+        self.waterLongitudes = []
+        self.waterLatitudes = []
+        self.waterLabels = []
+        self.waterTimes = []
+        
+        self.maxWater = 5
+        self.mapWaterPoints = []
+        self.mapWaterTimes = []
+        self.mapWaterPointsLatitudes = []
+        self.mapWaterPointsLongitudes = []
+        self.mapWaters = []
+        
+        self.datapointsWaters = []
         
         self.rainLongitudes = []
         self.rainLatitudes = []
@@ -301,6 +319,45 @@ class Grapher:
                     rainTimestampsInitialized = True
                     self.datapointsRains.append(datapointRains)
             obsLabelsInitialized = True
+            
+        if(self.waterExists):
+            with open(dataToGraph["WATER"]) as outfile:
+                waterDataset = json.load(outfile)
+                
+            waterTimestampsInitialized = False
+            for stationKey in waterDataset.keys():
+                if(stationKey == "map_data"):
+                    self.mapWaterTimes = waterDataset["map_data"]["map_times"]
+                    self.mapWaterPoints = waterDataset["map_data"]["map_points"]
+                    self.mapWaterPointsLatitudes = waterDataset["map_data"]["map_pointsLatitudes"]
+                    self.mapWaterPointsLongitudes = waterDataset["map_data"]["map_pointsLongitude"]
+                    self.mapWaters = waterDataset["map_data"]["map_water"]
+                    for index in range(len(self.mapWaterTimes)):
+                        for nodeIndex in range(len(self.mapWaters[index])):
+                            pointWater = self.mapWaters[index][nodeIndex]
+                            if(pointWater > self.maxWater):
+                                self.maxWater = pointWater
+                else:
+                    nodeIndex = waterDataset[stationKey]["nodeIndex"]
+                    self.waterLabels.append(nodeIndex)
+                    self.waterLatitudes.append(waterDataset[stationKey]["latitude"])
+                    self.waterLongitudes.append(waterDataset[stationKey]["longitude"])
+                
+                    if(not obsLabelsInitialized):
+                        self.obsLabels.append(self.obsMetadata[stationKey]["name"])
+                        self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
+                        self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
+
+                    datapointWaters = []
+                    for index in range(len(waterDataset[stationKey]["times"])):
+                        if(self.waterStartDate == None):
+                            self.waterStartDate = datetime.utcfromtimestamp(int(waterDataset[stationKey]["times"][index]))
+                        if(not waterTimestampsInitialized):
+                            self.waterTimes.append(self.unixTimeToDeltaHours(waterDataset[stationKey]["times"][index], self.waterStartDate))
+                        datapointWaters.append(waterDataset[stationKey]["water"][index])
+                    waterTimestampsInitialized = True
+                    self.datapointsWaters.append(datapointWaters)
+            obsLabelsInitialized = True
                         
         if(self.wavesExists):
             swhExists = False
@@ -411,9 +468,11 @@ class Grapher:
             numberOfDatapoints = len(self.waveLabels)
         elif(self.rainExists):
             numberOfDatapoints = len(self.rainLabels)
+        elif(self.waterExists):
+            numberOfDatapoints = len(self.waterLabels)
         print("numberOfDatapoints", numberOfDatapoints)
         fig, ax = plt.subplots()
-        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH)
+        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater)
         
         ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
         if(self.windExists):
@@ -422,6 +481,8 @@ class Grapher:
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Waves")
         if(self.rainExists):
             ax.scatter(self.rainLongitudes, self.rainLatitudes, label="Rain")
+        if(self.waterExists):
+            ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Water")
         ax.legend(loc="lower right")
 
         for index, label in enumerate(self.obsLabels):
@@ -432,6 +493,8 @@ class Grapher:
                 ax.annotate(self.waveLabels[index], (self.waveLongitudes[index], self.waveLatitudes[index]))
             if(self.rainExists):
                 ax.annotate(self.rainLabels[index], (self.rainLongitudes[index], self.rainLatitudes[index]))
+            if(self.waterExists):
+                ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
             
         plt.title("location of datapoints by data type")
         plt.xlabel("longitude")
@@ -530,6 +593,43 @@ class Grapher:
                     writer.append_data(image)
                 for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
+                    os.remove(graph_directory + filename)
+        if(len(self.mapWaterTimes) > 0):
+            vmin = -1
+            vmax = math.ceil(self.maxWater)
+#             vmax = 20
+            levels = 100
+            level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            for index in range(len(self.mapWaterTimes)):
+                fig, ax = plt.subplots()
+    #             print(self.endWavePointsLongitudes)
+    #             print(self.endWavePointsLatitudes)
+    #             print(self.endSWH)
+                plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
+                contourset = ax.tricontourf(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], level_boundaries, cmap="jet", alpha=0.5, vmin=vmin, vmax=vmax)
+#                 contourset = ax.pcolormesh(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+                plt.axis(plotAxis)
+                plt.title("Water Elevation")
+                plt.xlabel(datetime.utcfromtimestamp(int(self.mapWaterTimes[index])))
+    #             plt.gca().invert_yaxis()
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=level_boundaries,
+                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    label="Meters",
+                    ax=plt.gca()
+                )
+                plt.savefig(graph_directory + 'map_water_' + str(index) + '.png')
+                plt.close()
+                gc.collect()
+            with imageio.get_writer(graph_directory + 'water.gif', mode='I') as writer:
+                for index in range(len(self.mapWaterTimes)):
+                    filename = "map_water_" + str(index) + ".png"
+                    image = imageio.imread(graph_directory + filename)
+                    writer.append_data(image)
+                for index in range(len(self.mapWaterTimes)):
+                    filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
         if(len(self.mapWaveTimes) > 0):
             vmin = 0

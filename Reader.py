@@ -60,6 +60,8 @@ class Reader:
             valueX = dataset.variables["windx"][index][int(nodeIndex)]
             valueY = dataset.variables["windy"][index][int(nodeIndex)]
             return (valueX, valueY)
+        elif(dataType == "water"):
+            return float(dataset.variables["zeta"][index][int(nodeIndex)])
         elif(dataType == "swh"):
             return float(dataset.variables["swan_HS"][index][int(nodeIndex)])
         elif(dataType == "mwd"):
@@ -139,6 +141,15 @@ class Reader:
                     values.append(data[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
                 pointsValues.append(values)
             return pointsValues
+        if(dataType == "water"):
+            pointsValues = []
+            data = dataset.variables["zeta"][::]
+            for nodeIndex in nodesIndex:
+                values = []
+                for index in range(len(data)):
+                    values.append(data[index][int(nodeIndex)])
+                pointsValues.append(values)
+            return pointsValues
         if(dataType == "swh"):
             pointsValues = []
             data = dataset.variables["swan_HS"][::]
@@ -205,24 +216,27 @@ class Reader:
             data = dataset.variables["rain"][::][::][::]
             return data
         elif(dataType == "fort"):
-            dataX = dataset.variables["windx"][::][::][::]
-            dataY = dataset.variables["windy"][::][::][::]
+            dataX = dataset.variables["windx"][::][::]
+            dataY = dataset.variables["windy"][::][::]
             return (dataX, dataY)
+        elif(dataType == "water"):
+            data = dataset.variables["zeta"][::][::]
+            return data
         elif(dataType == "swh"):
-            data = dataset.variables["swan_HS"][::][::][::]
+            data = dataset.variables["swan_HS"][::][::]
             return data
         elif(dataType == "mwd"):
-            data = dataset.variables["swan_DIR"][::][::][::]
+            data = dataset.variables["swan_DIR"][::][::]
             return data
         elif(dataType == "mwp"):
-            data = dataset.variables["swan_TMM10"][::][::][::]
+            data = dataset.variables["swan_TMM10"][::][::]
             return data
         elif(dataType == "pwp"):
-            data = dataset.variables["swan_TPS"][::][::][::]
+            data = dataset.variables["swan_TPS"][::][::]
             return data
         elif(dataType == "rad"):
-            dataX = dataset.variables["radstress_x"][::][::][::]
-            dataY = dataset.variables["radstress_y"][::][::][::]
+            dataX = dataset.variables["radstress_x"][::][::]
+            dataY = dataset.variables["radstress_y"][::][::]
             return (dataX, dataY)
                  
     def getValues(self, spaceSparseness, timeSparseness, dataType, dataset):
@@ -258,50 +272,57 @@ class Reader:
         elif(dataType == "fort"):
             valuesX = []
             valuesY = []
-            dataX = dataset.variables["windx"][::][::][::]
-            dataY = dataset.variables["windy"][::][::][::]
+            dataX = dataset.variables["windx"][::][::]
+            dataY = dataset.variables["windy"][::][::]
             for index in range(0, len(dataX), timeSparseness):
-                subsetDataX = np.array(dataX[index]).flatten()[::spaceSparseness]
-                subsetDataY = np.array(dataY[index]).flatten()[::spaceSparseness]
+                subsetDataX = np.array(dataX[index])[::spaceSparseness]
+                subsetDataY = np.array(dataY[index])[::spaceSparseness]
                 valuesX.append(subsetDataX)
                 valuesY.append(subsetDataY)
             return (valuesX, valuesY)
+        elif(dataType == "water"):
+            values = []
+            data = dataset.variables["zeta"][::][::]
+            for index in range(0, len(data), timeSparseness):
+                subsetData = np.array(data[index])[::spaceSparseness]
+                values.append(subsetData)
+            return values
         elif(dataType == "swh"):
             values = []
-            data = dataset.variables["swan_HS"][::][::][::]
+            data = dataset.variables["swan_HS"][::][::]
             for index in range(0, len(data), timeSparseness):
-                subsetData = np.array(data[index]).flatten()[::spaceSparseness]
+                subsetData = np.array(data[index])[::spaceSparseness]
                 values.append(subsetData)
             return values
         elif(dataType == "mwd"):
             values = []
-            data = dataset.variables["swan_DIR"][::][::][::]
+            data = dataset.variables["swan_DIR"][::][::]
             for index in range(0, len(data), timeSparseness):
                 subsetData = np.array(data[index]).flatten()[::spaceSparseness]
                 values.append(subsetData)
             return values
         elif(dataType == "mwp"):
             values = []
-            data = dataset.variables["swan_TMM10"][::][::][::]
+            data = dataset.variables["swan_TMM10"][::][::]
             for index in range(0, len(data), timeSparseness):
-                subsetData = np.array(data[index]).flatten()[::spaceSparseness]
+                subsetData = np.array(data[index])[::spaceSparseness]
                 values.append(subsetData)
             return values
         elif(dataType == "pwp"):
             values = []
-            data = dataset.variables["swan_TPS"][::][::][::]
+            data = dataset.variables["swan_TPS"][::][::]
             for index in range(0, len(data), timeSparseness):
-                subsetData = np.array(data[index]).flatten()[::spaceSparseness]
+                subsetData = np.array(data[index])[::spaceSparseness]
                 values.append(subsetData)
             return values
         elif(dataType == "rad"):
             valuesX = []
             valuesY = []
-            dataX = dataset.variables["radstress_x"][::][::][::]
-            dataY = dataset.variables["radstress_y"][::][::][::]
+            dataX = dataset.variables["radstress_x"][::][::]
+            dataY = dataset.variables["radstress_y"][::][::]
             for index in range(0, len(dataX), timeSparseness):
-                subsetDataX = np.array(dataX[index]).flatten()[::spaceSparseness]
-                subsetDataY = np.array(dataY[index]).flatten()[::spaceSparseness]
+                subsetDataX = np.array(dataX[index])[::spaceSparseness]
+                subsetDataY = np.array(dataY[index])[::spaceSparseness]
                 valuesX.append(subsetDataX)
                 valuesY.append(subsetDataY)
             return(valuesX, valuesY)
@@ -521,6 +542,12 @@ class Reader:
 
             print("windX0", windX0)
             print("windY0", windY0)
+        elif (dataType == "water"):
+            print("water at node0")
+            
+            zeta0 = dataset.variables["zeta"][0][0]
+            print("zeta0", zeta0)
+            
         elif (dataType == "rain"):
             print("rain at (0,0)")
             
@@ -843,7 +870,7 @@ class GFSRainReader:
             self.reader.generateDataFilesWithInterpolation(rainDataset, "rain", timesRain, spaceSparseness, timeSparseness, self.GFS_RAIN_DATA_FILE)
         else:
             self.reader.generateDataFiles(rainDataset, "rain", timesRain, self.GFS_RAIN_DATA_FILE)
-        return (datetime.fromtimestamp(timesRain[0]), datetime.fromtimestamp(timesRain[-1]))
+        return (datetime.utcfromtimestamp(timesRain[0]), datetime.utcfromtimestamp(timesRain[-1]))
             
 class GFSWindReader:
     def __init__(self, GFS_WIND_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE=""):
@@ -874,7 +901,7 @@ class GFSWindReader:
             self.reader.generateDataFilesWithInterpolation(windDataset, "gfs", timesWind, spaceSparseness, timeSparseness, self.GFS_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "gfs", timesWind, self.GFS_WIND_DATA_FILE)
-        return (datetime.fromtimestamp(timesWind[0]), datetime.fromtimestamp(timesWind[-1]))
+        return (datetime.utcfromtimestamp(timesWind[0]), datetime.utcfromtimestamp(timesWind[-1]))
             
 class Fort74Reader:
     def __init__(self, ADCIRC_WIND_FILE="", STATIONS_FILE="", ADCIRC_WIND_DATA_FILE=""):
@@ -902,8 +929,36 @@ class Fort74Reader:
             self.reader.generateDataFilesWithInterpolation(windDataset, "fort", timesWind, spaceSparseness, timeSparseness, self.ADCIRC_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "fort", timesWind, self.ADCIRC_WIND_DATA_FILE)
-        return (datetime.fromtimestamp(timesWind[0]), datetime.fromtimestamp(timesWind[-1]))
-            
+        return (datetime.utcfromtimestamp(timesWind[0]), datetime.utcfromtimestamp(timesWind[-1]))
+  
+class Fort63Reader:
+    def __init__(self, ADCIRC_WATER_FILE="", STATIONS_FILE="", ADCIRC_WATER_DATA_FILE=""):
+        temp_directory = "water_temp/"
+        self.ADCIRC_WATER_FILE = ADCIRC_WATER_FILE
+        self.STATIONS_FILE = STATIONS_FILE
+        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "ADCIRC_Station_To_Node_Distances.json"
+        self.ADCIRC_NODES_FILE = temp_directory + "ADCIRC_Nodes.json"
+        self.ADCIRC_WATER_DATA_FILE = ADCIRC_WATER_DATA_FILE
+        self.ADCIRC_NODES_WIND_DATA_FILE = temp_directory + "ADCIRC_Nodes_Water_Data.json"
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, format="FORT")
+    
+    def generateWindDataForStations(self):
+        print("Wind file")
+        print(self.ADCIRC_WATER_FILE)
+        waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
+        initializeClosestWaterNodes = True
+        if(initializeClosestWaterNodes):
+            thresholdDistance = 100
+            self.reader.initializeClosestNodes(waterDataset, thresholdDistance)
+        spaceSparseness = 10
+        timeSparseness = 1
+        interpolateValues = True
+        if(interpolateValues):
+            self.reader.generateDataFilesWithInterpolation(waterDataset, "water", timesWater, spaceSparseness, timeSparseness, self.ADCIRC_WATER_DATA_FILE)
+        else:
+            self.reader.generateDataFiles(waterDataset, "water", timesWater, self.ADCIRC_WATER_DATA_FILE)
+        return (datetime.utcfromtimestamp(timesWater[0]), datetime.utcfromtimestamp(timesWater[-1]))
+                  
 class PostWindReader:
     def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE=""):
         temp_directory = "wind_temp/"
@@ -930,7 +985,7 @@ class PostWindReader:
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "post", timesWind, self.POST_WIND_DATA_FILE)
-        return (datetime.fromtimestamp(timesWind[0]), datetime.fromtimestamp(timesWind[-1]))
+        return (datetime.utcfromtimestamp(timesWind[0]), datetime.utcfromtimestamp(timesWind[-1]))
         print("end, ", datetime.now())
    
 
@@ -998,4 +1053,4 @@ class WaveReader:
                     self.reader.generateDataFiles(mwpDataset, "mwp", timesSWH, self.WAVE_MWP_DATA_FILE)
                     self.reader.generateDataFiles(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
                     self.reader.generateDataFiles(radDataset, "rad", timesSWH, self.WAVE_RAD_DATA_FILE)
-                return (datetime.fromtimestamp(timesSWH[0]), datetime.fromtimestamp(timesSWH[-1]))
+                return (datetime.utcfromtimestamp(timesSWH[0]), datetime.utcfromtimestamp(timesSWH[-1]))

@@ -29,7 +29,10 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
 # python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind ../ObservationalWind/RICHAMP_wind.nc --rainExists true --rain ../ObservationalWind/RICHAMP_rain.nc
 
-python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/testSandySEStart.nc --backgroundChoice BLOCK_ISLAND
+# python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/testSandySEStart.nc --backgroundChoice BLOCK_ISLAND
+
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice NEWPORT
+
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc
 

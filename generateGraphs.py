@@ -1,4 +1,4 @@
-from Reader import Fort74Reader, GFSWindReader, GFSRainReader, PostWindReader, WaveReader
+from Reader import Fort74Reader, Fort63Reader, GFSWindReader, GFSRainReader, PostWindReader, WaveReader
 from Grapher import Grapher
 from GetBuoyWind import GetBuoyWind
 import datetime
@@ -41,6 +41,9 @@ def main():
         "--wind", help="Wind netcdf file", type=str
     )
     p.add_argument(
+        "--water", help="Water elevation netcdf file", type=str
+    )
+    p.add_argument(
         "--rain", help="Rain netcdf file", type=str
     )
     p.add_argument(
@@ -72,6 +75,9 @@ def main():
         "--obsExists", type=bool, help="Graph observational wind data"
     )
     p.add_argument(
+        "--waterExists", type=bool, help="Graph adcirc water elevation data"
+    )
+    p.add_argument(
         "--wavesExists", type=bool, help="Graph adcirc wave data"
     )
     p.add_argument(
@@ -84,13 +90,15 @@ def main():
     print("Generating Wind Graphs!")
     wind_temp_directory = "wind_temp/"
     graphs_directory = "graphs/"
+    water_temp_directory = "water_temp/"
     
 #      Create temp and graphs directories
     if not os.path.exists(graphs_directory):
         os.makedirs(graphs_directory)
     if not os.path.exists(wind_temp_directory):
         os.makedirs(wind_temp_directory)
-
+    if not os.path.exists(water_temp_directory):
+        os.makedirs(water_temp_directory)
     
     dataToGraph = {}  
     print("Loading NetCDF file!")
@@ -133,6 +141,12 @@ def main():
         GetBuoyWind(STATIONS_FILE=STATIONS_FILE, OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, startDateObject=windStartDateObject, endDateObject=windEndDateObject)
         dataToGraph["OBS"] = OBS_WIND_DATA_FILE
     
+    print("args.waterExists", args.waterExists)
+    if(args.waterExists):
+        ADCIRC_WATER_FILE = args.water
+        ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
+        (windStartDateObject, windEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE).generateWindDataForStations()
+        dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
 #     Grapher(graphObs=args.obs, graphRain=False, WIND_TYPE="POST", OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=POST_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
     print("args.wavesExists", args.wavesExists)
     if(args.wavesExists):
