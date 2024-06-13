@@ -441,6 +441,7 @@ class Grapher:
         
         img = mpimg.imread(self.backgroundMap)
         plotAxis = [self.backgroundAxis[0], self.backgroundAxis[1], self.backgroundAxis[3], self.backgroundAxis[2]]
+        aspectRatio = (self.backgroundAxis[1] - self.backgroundAxis[0]) / (self.backgroundAxis[2] - self.backgroundAxis[3])
 #         img = mpimg.imread('subsetFlipped.png')
 #         img = mpimg.imread('NorthAtlanticBasin3.png')
         if(len(self.mapWindTimes) > 0):
@@ -451,10 +452,11 @@ class Grapher:
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
             for index in range(len(self.mapWindTimes)):
                 fig, ax = plt.subplots()
+#                 plt.figure(figsize=(6, 6))
     #             print(self.endWindPointsLongitudes)
     #             print(self.endWindPointsLatitudes)
     #             print(self.endSpeeds)
-                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, zorder=2)
+                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
 #                 plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
                 if(self.windType == "FORT"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
@@ -503,7 +505,7 @@ class Grapher:
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, zorder=2)
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
 #                 contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
@@ -539,7 +541,7 @@ class Grapher:
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                plt.imshow(img, extent=self.backgroundAxis)
+                plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
                 contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis(plotAxis)
                 plt.title("Significant Wave Height")

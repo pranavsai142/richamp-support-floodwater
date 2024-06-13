@@ -66,7 +66,7 @@ NORTH_PROVIDENCE
 "lat long of north east", "(42.00824736593589, -71.33424867207854)"
 "lat long of south west", "(41.70156547197295, -71.745993631389)"
 
-BLOCK_ISLAND
+BLOCK_ISLAND aspect ratio 1.33
 "lat long of north east", "(41.45457197608142, -71.23424867207852)"
 "lat long of south west", "(41.14524327341847, -71.64599363138898)"
 
