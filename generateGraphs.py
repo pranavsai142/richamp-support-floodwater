@@ -31,6 +31,8 @@ NARRAGANSETT_MAP = "Narragansett.png"
 NARRAGANSETT_AXIS = [-71.54599363138901, -71.13424867207856, 41.45457197608142, 41.14524327341847]
 BLOCK_ISLAND_MAP = "BlockIsland.png"
 BLOCK_ISLAND_AXIS = [-71.64599363138898, -71.23424867207852, 41.45457197608142, 41.14524327341847]
+RHODE_ISLAND_CHAMP_MAP = "RhodeIslandChamp.png"
+RHODE_ISLAND_CHAMP_AXIS = [-72.041477237641615, -71.2671852954, 42.000010143316864, 41.1192500979]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -229,6 +231,9 @@ def main():
     elif(backgroundChoice == "BLOCK_ISLAND"):
         backgroundMap = BLOCK_ISLAND_MAP
         backgroundAxis = BLOCK_ISLAND_AXIS
+    elif(backgroundChoice == "RHODE_ISLAND_CHAMP"):
+        backgroundMap = RHODE_ISLAND_CHAMP_MAP
+        backgroundAxis = RHODE_ISLAND_CHAMP_AXIS
 #     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     Grapher(
         dataToGraph=dataToGraph, 
