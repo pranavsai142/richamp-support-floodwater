@@ -32,7 +32,7 @@ NARRAGANSETT_AXIS = [-71.54599363138901, -71.13424867207856, 41.45457197608142, 
 BLOCK_ISLAND_MAP = "BlockIsland.png"
 BLOCK_ISLAND_AXIS = [-71.64599363138898, -71.23424867207852, 41.45457197608142, 41.14524327341847]
 RHODE_ISLAND_CHAMP_MAP = "RhodeIslandChamp.png"
-RHODE_ISLAND_CHAMP_AXIS = [-72.041477237641615, -71.2671852954, 42.000010143316864, 41.1192500979]
+RHODE_ISLAND_CHAMP_AXIS = [-71.9050164752, -71.1307245329, 42.000010143316864, 41.1192500979]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -133,7 +133,7 @@ def main():
     if(args.postExists):
         POST_WIND_FILE = args.wind
         POST_WIND_DATA_FILE = wind_temp_directory + "post_wind_data_file" + ".json"
-        (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
+#         (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["POST"] = POST_WIND_DATA_FILE
 
     print("args.obsExists", args.obsExists)

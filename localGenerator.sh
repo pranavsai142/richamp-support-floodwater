@@ -33,6 +33,8 @@ python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ..
 
 # python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice RHODE_ISLAND_CHANP
 
+# python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind /Volumes/ssd/downloads/wind_data/RICHAMP_wind.nc --backgroundChoice RHODE_ISLAND_CHAMP
+
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc
 
