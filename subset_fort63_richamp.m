@@ -21,6 +21,7 @@ function subset_fort63_richamp(indir, outdir)
     time_unix=uint32(tstart_unix+time);
     %% subset - make grd and then subset
     grd.x=x; grd.y=y; grd.dp=z; grd.nm=element2;
+    %% Comment out these lines when running in scenario mode
     [x,y,depth,element,nn_new]=subset_dontplot_mesh(grd,lonrange,latrange);
     element=element';
     zeta=zeta(~isnan(nn_new),:); 
