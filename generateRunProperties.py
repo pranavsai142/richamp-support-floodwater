@@ -56,6 +56,12 @@ def main():
             f.write("stormnumber : " + storm + "\n")
             f.write("advisory : " + advisory + "\n")
             f.write("year : " + year + "\n")
+            if("veerLeftEdge" in args.indir):
+                f.write("track : veerLeftEdge\n")
+            elif("veerRightEdge" in args.indir):
+                f.write("track : veerRightEdge\n")    
+            else:
+                f.write("track : center\n")      
         else:
             f.write("stormtype : gfs\n")
         f.close()
@@ -74,14 +80,14 @@ def main():
             files = os.listdir(properties_directory)
             for file in files:
                 fileExtension = file[file.index("."):]
-                if "lin" in file:
-                    os.rename(file, properties_directory + "track" + fileExtension)
-                if "pgn" in file:
-                    os.rename(file, properties_directory + "cone" + fileExtension)
-                if "pts" in file:
-                    os.rename(file, properties_directory + "points" + fileExtension)
                 if "ww_wwlin" in file:
-                    os.remove(file)
+                    os.remove(properties_directory + file)
+                elif "lin" in file:
+                    os.rename(properties_directory + file, properties_directory + "track" + fileExtension)
+                elif "pgn" in file:
+                    os.rename(properties_directory + file, properties_directory + "cone" + fileExtension)
+                elif "pts" in file:
+                    os.rename(properties_directory + file, properties_directory + "points" + fileExtension)
                 
     
 

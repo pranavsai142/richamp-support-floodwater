@@ -133,7 +133,7 @@ def main():
     if(args.postExists):
         POST_WIND_FILE = args.wind
         POST_WIND_DATA_FILE = wind_temp_directory + "post_wind_data_file" + ".json"
-#         (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
+        (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["POST"] = POST_WIND_DATA_FILE
 
     print("args.obsExists", args.obsExists)

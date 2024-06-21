@@ -138,9 +138,6 @@ class Roughness:
         lon = numpy.array(f.variables["lon"][:])
         lat = numpy.array(f.variables["lat"][:])
         land_rough = numpy.array(f.variables["land_rough"][:][:])
-        for roughnessRow in range(len(land_rough)):
-            for roughnessCol in range(len(land_rough[roughnessRow])):
-                land_rough[roughnessRow][roughnessCol] = 0.0
         f.close()
         return lon, lat, land_rough
 
