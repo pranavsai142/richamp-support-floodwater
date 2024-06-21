@@ -120,14 +120,14 @@ python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE 
 wind_output=$output.nc
 rain_output=$rain_filename.nc
 output_dir=$RICHAMP_OUTDIR
-cp $wind_output $rain_output $run_properties $output_dir
+cp $wind_output $rain_output $output_dir
 #copy wave output
 if [[ $GRAPH_WAVES == "True" ]]; then
     wave_output=$RICHAMP_INDIR/swan_HS.63.nc
     cp $wave_output $output_dir
     mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 fi
-#cp -r properties $output_dir
+cp -r properties $output_dir
 cp -r graphs $output_dir
 #cp $indir/*.trk $output_dir
 
