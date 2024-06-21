@@ -2,7 +2,7 @@ import netCDF4 as nc
 import numpy as np
 import haversine
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 import scipy.interpolate
 from Encoders import NumpyEncoder
@@ -423,15 +423,18 @@ class Reader:
 #         print(dataset.variables)
 
         datasetTimeDescription = dataset.variables["time"].units
-        coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
+        if(self.format == "GFS"):
+            coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:] + "Z"
+        else:
+            coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
         coldStartDate = datetime.fromisoformat(coldStartDateText)
-#         print("coldStartDate", coldStartDate)
+        print("coldStartDate", coldStartDate)
 
         minT = float(dataset.variables["time"][0].data)
         maxT = float(dataset.variables["time"][-1].data)
         times = []
-#         print(minT)
-#         print(maxT)
+        print(minT)
+        print(maxT)
         if(self.format == "POST" or self.format == "GFS"):
 #             print("deltaT of data")
             windDeltaT = timedelta(minutes=maxT - minT)
@@ -442,14 +445,19 @@ class Reader:
 #             print(timesteps)
 
             for index in range(timesteps):
+#                 print("timedelta", timedelta(minutes=float(dataset.variables["time"][index].data)))
                 time = coldStartDate + timedelta(minutes=float(dataset.variables["time"][index].data))
+#                 time.replace(timezone.utc)
+#                 print("tzinfo", time.tzinfo)
                 times.append(time.timestamp())
+#                 print(times)
+#                 quit()
 
 #             print("start of data (seconds since coldstart)")
             startDate = coldStartDate + timedelta(minutes=float(minT))
             endDate = coldStartDate + timedelta(minutes=float(maxT))
-#             print("startDate", startDate)
-#             print("endDate", endDate)
+            print("startDate", startDate)
+            print("endDate", endDate)
 #         
             # GFS Data is grid based system
 #             print("min max latitude and longitude")
@@ -870,7 +878,7 @@ class GFSRainReader:
             self.reader.generateDataFilesWithInterpolation(rainDataset, "rain", timesRain, spaceSparseness, timeSparseness, self.GFS_RAIN_DATA_FILE)
         else:
             self.reader.generateDataFiles(rainDataset, "rain", timesRain, self.GFS_RAIN_DATA_FILE)
-        return (datetime.utcfromtimestamp(timesRain[0]), datetime.utcfromtimestamp(timesRain[-1]))
+        return (datetime.fromtimestamp(timesRain[0], timezone.utc), datetime.fromtimestamp(timesRain[-1], timezone.utc))
             
 class GFSWindReader:
     def __init__(self, GFS_WIND_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE=""):
@@ -901,7 +909,7 @@ class GFSWindReader:
             self.reader.generateDataFilesWithInterpolation(windDataset, "gfs", timesWind, spaceSparseness, timeSparseness, self.GFS_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "gfs", timesWind, self.GFS_WIND_DATA_FILE)
-        return (datetime.utcfromtimestamp(timesWind[0]), datetime.utcfromtimestamp(timesWind[-1]))
+        return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
             
 class Fort74Reader:
     def __init__(self, ADCIRC_WIND_FILE="", STATIONS_FILE="", ADCIRC_WIND_DATA_FILE=""):
@@ -929,7 +937,7 @@ class Fort74Reader:
             self.reader.generateDataFilesWithInterpolation(windDataset, "fort", timesWind, spaceSparseness, timeSparseness, self.ADCIRC_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "fort", timesWind, self.ADCIRC_WIND_DATA_FILE)
-        return (datetime.utcfromtimestamp(timesWind[0]), datetime.utcfromtimestamp(timesWind[-1]))
+        return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
   
 class Fort63Reader:
     def __init__(self, ADCIRC_WATER_FILE="", STATIONS_FILE="", ADCIRC_WATER_DATA_FILE=""):
@@ -957,7 +965,7 @@ class Fort63Reader:
             self.reader.generateDataFilesWithInterpolation(waterDataset, "water", timesWater, spaceSparseness, timeSparseness, self.ADCIRC_WATER_DATA_FILE)
         else:
             self.reader.generateDataFiles(waterDataset, "water", timesWater, self.ADCIRC_WATER_DATA_FILE)
-        return (datetime.utcfromtimestamp(timesWater[0]), datetime.utcfromtimestamp(timesWater[-1]))
+        return (datetime.fromtimestamp(timesWater[0], timezone.utc), datetime.fromtimestamp(timesWater[-1], timezone.utc))
                   
 class PostWindReader:
     def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE=""):
@@ -985,7 +993,7 @@ class PostWindReader:
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
         else:
             self.reader.generateDataFiles(windDataset, "post", timesWind, self.POST_WIND_DATA_FILE)
-        return (datetime.utcfromtimestamp(timesWind[0]), datetime.utcfromtimestamp(timesWind[-1]))
+        return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
         print("end, ", datetime.now())
    
 
@@ -1053,4 +1061,4 @@ class WaveReader:
                     self.reader.generateDataFiles(mwpDataset, "mwp", timesSWH, self.WAVE_MWP_DATA_FILE)
                     self.reader.generateDataFiles(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
                     self.reader.generateDataFiles(radDataset, "rad", timesSWH, self.WAVE_RAD_DATA_FILE)
-                return (datetime.utcfromtimestamp(timesSWH[0]), datetime.utcfromtimestamp(timesSWH[-1]))
+                return (datetime.fromtimestamp(timesSWH[0], timezone.utc), datetime.fromtimestamp(timesSWH[-1], timezone.utc))

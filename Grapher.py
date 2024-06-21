@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from matplotlib.cm import ScalarMappable
 from matplotlib.tri import Triangulation
-from datetime import datetime
+from datetime import datetime, timezone
 import imageio
 import gc
 
@@ -30,7 +30,7 @@ class Grapher:
         return degrees
     
     def unixTimeToDeltaHours(self, timestamp, startDate):
-        delta = datetime.utcfromtimestamp(timestamp) - startDate
+        delta = datetime.fromtimestamp(timestamp, timezone.utc) - startDate
         return delta.total_seconds()/3600
     
     def extrapolateWindToTenMeterHeight(self, windVelocity, altitude):
@@ -244,7 +244,7 @@ class Grapher:
                         datapointSpeeds = []
                         for index in range(len(windDataset[stationKey]["times"])):
                             if(self.windStartDate == None):
-                                self.windStartDate = datetime.utcfromtimestamp(int(windDataset[stationKey]["times"][index]))
+                                self.windStartDate = datetime.fromtimestamp(int(windDataset[stationKey]["times"][index]), timezone.utc)
                             if(not windTimestampsInitialized):
                                 self.windTimes.append(self.unixTimeToDeltaHours(windDataset[stationKey]["times"][index], self.windStartDate))
                             if(self.windType == "GFS" or self.windType == "FORT"):
@@ -312,7 +312,7 @@ class Grapher:
                     datapointRains = []
                     for index in range(len(rainDataset[stationKey]["times"])):
                         if(self.rainStartDate == None):
-                            self.rainStartDate = datetime.utcfromtimestamp(int(rainDataset[stationKey]["times"][index]))
+                            self.rainStartDate = datetime.fromtimestamp(int(rainDataset[stationKey]["times"][index]), timezone.utc)
                         if(not rainTimestampsInitialized):
                             self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[stationKey]["times"][index], self.rainStartDate))
                         datapointRains.append(rainDataset[stationKey]["rain"][index])
@@ -351,7 +351,7 @@ class Grapher:
                     datapointWaters = []
                     for index in range(len(waterDataset[stationKey]["times"])):
                         if(self.waterStartDate == None):
-                            self.waterStartDate = datetime.utcfromtimestamp(int(waterDataset[stationKey]["times"][index]))
+                            self.waterStartDate = datetime.fromtimestamp(int(waterDataset[stationKey]["times"][index]), timezone.utc)
                         if(not waterTimestampsInitialized):
                             self.waterTimes.append(self.unixTimeToDeltaHours(waterDataset[stationKey]["times"][index], self.waterStartDate))
                         datapointWaters.append(waterDataset[stationKey]["water"][index])
@@ -428,7 +428,7 @@ class Grapher:
                     datapointRADDir = []
                     for index in range(len(iteratorDataset[stationKey]["times"])):
                         if(self.waveStartDate == None):
-                            self.waveStartDate = datetime.utcfromtimestamp(int(iteratorDataset[stationKey]["times"][index]))
+                            self.waveStartDate = datetime.fromtimestamp(int(iteratorDataset[stationKey]["times"][index]), timezone.utc)
                         if(not waveTimestampsInitialized):
                             self.waveTimes.append(self.unixTimeToDeltaHours(iteratorDataset[stationKey]["times"][index], self.waveStartDate))
                         if(swhExists):
@@ -536,7 +536,7 @@ class Grapher:
                 plt.axis(plotAxis)
 #                 plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965, 46.70943547053439])
                 plt.title("Wind Speed")
-                plt.xlabel(datetime.utcfromtimestamp(int(self.mapWindTimes[index])))
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
     #             graphs up to 10 m/s, ~20 knots
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
@@ -573,7 +573,7 @@ class Grapher:
                 contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Rain")
-                plt.xlabel(datetime.utcfromtimestamp(int(self.mapRainTimes[index])))
+                plt.xlabel(datetime.fromtimestamp(int(self.mapRainTimes[index]), timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
@@ -610,7 +610,7 @@ class Grapher:
 #                 contourset = ax.pcolormesh(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Water Elevation")
-                plt.xlabel(datetime.utcfromtimestamp(int(self.mapWaterTimes[index])))
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
@@ -645,7 +645,7 @@ class Grapher:
                 contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis(plotAxis)
                 plt.title("Significant Wave Height")
-                plt.xlabel(datetime.utcfromtimestamp(int(self.mapWaveTimes[index])))
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
