@@ -127,7 +127,11 @@ if [[ $GRAPH_WAVES == "True" ]]; then
     cp $wave_output $output_dir
     mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 fi
+<<<<<<< Updated upstream
 #cp -r properties $output_dir
+=======
+# cp -r properties $output_dir
+>>>>>>> Stashed changes
 cp -r graphs $output_dir
 #cp $indir/*.trk $output_dir
 
