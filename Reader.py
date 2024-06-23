@@ -55,7 +55,7 @@ class Reader:
             valueY = float(dataset.variables["wind_v"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
             return(valueX, valueY)
         elif(dataType == "rain"):
-            return float(dataset.variables["rain"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+            return float(dataset.variables["precipitation"][index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
         elif(dataType == "fort"):
             valueX = dataset.variables["windx"][index][int(nodeIndex)]
             valueY = dataset.variables["windy"][index][int(nodeIndex)]
@@ -134,7 +134,7 @@ class Reader:
             return (pointsValuesX, pointsValuesY)
         if(dataType == "rain"):
             pointsValues = []
-            data = dataset.variables["rain"][::]
+            data = dataset.variables["precipitation"][::]
             for nodeIndex in nodesIndex:
                 values = []
                 for index in range(len(data)):
@@ -213,7 +213,7 @@ class Reader:
             dataY = dataset.variables["wind_v"][::][::][::]
             return (dataX, dataY)
         elif(dataType == "rain"):
-            data = dataset.variables["rain"][::][::][::]
+            data = dataset.variables["precipitation"][::][::][::]
             return data
         elif(dataType == "fort"):
             dataX = dataset.variables["windx"][::][::]
@@ -264,7 +264,7 @@ class Reader:
             return (valuesX, valuesY)
         elif(dataType == "rain"):
             values = []
-            data = dataset.variables["rain"][::][::][::]
+            data = dataset.variables["precipitation"][::][::][::]
             for index in range(0, len(data), timeSparseness):
                 subsetData = np.array(data[index]).flatten()[::spaceSparseness]
                 values.append(subsetData)
@@ -559,7 +559,7 @@ class Reader:
         elif (dataType == "rain"):
             print("rain at (0,0)")
             
-            rain0 = dataset.variables["rain"][0][0][0]
+            rain0 = dataset.variables["precipitation"][0][0][0]
             print("rain", rain0)
         elif (dataType == "gfs"):
             print("Wind at t=0, point(0, 0)")
