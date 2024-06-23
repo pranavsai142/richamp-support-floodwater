@@ -423,7 +423,8 @@ class Reader:
 #         print(dataset.variables)
 
         datasetTimeDescription = dataset.variables["time"].units
-        if(self.format == "GFS"):
+#         Add UTC time marker if not existing in cold start date
+        if(not ("Z" in datasetTimeDescription)):
             coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:] + "Z"
         else:
             coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
