@@ -629,8 +629,8 @@ def roughness_adjust(subd_inputs):
     if sl == "adcirc":
         wind_out = adcirc_scaling(wind_hr_grid, z0_wr_hr_grid.land_rough(), z0_hr_directional)
     elif sl == "up-down":
-#         wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
-        wind_out = wind_hr_grid
+        wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
+#         wind_out = wind_hr_grid
     return wind_out
 
 
