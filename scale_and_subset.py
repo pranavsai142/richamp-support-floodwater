@@ -229,6 +229,8 @@ class NetcdfOutput:
         self.__group_main_var_time_unix[idx] = seconds
         # self.__group_main_var_u10[idx, :, :] = uvel
         # self.__group_main_var_v10[idx, :, :] = vvel
+#         print(self.__group_main_var_lat[::])
+#         print(self.__group_main_var_lon[::])
         self.__group_main_var_spd[idx, :, :] = magnitude_from_uv(uvel, vvel)
         self.__group_main_var_dir[idx, :, :] = dir_met_to_and_from_math(direction_from_uv(uvel, vvel))
 
@@ -966,9 +968,11 @@ def main():
             subd_wind_scaled = executor.map(roughness_adjust, subd_inputs)
             u_scaled, v_scaled, date = subd_restitch_domain(subd_wind_scaled, subd_start_index, subd_end_index, z0_hr.land_rough().shape, args.t)
             wind_scaled = WindData(date, WindGrid(z0_hr.lon(), z0_hr.lat()), u_scaled, v_scaled)
+            wind_scaled = wind_to_wind_res(wind_scaled, input_wind)
             # Write to NetCDF; single-threaded with optional asynchronicity for now, as thread-safe NetCDF is complicated
             if not wind:
-                wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
+#                 wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
+                wind = NetcdfOutput(args.o, [-72, -71.75, -71.5, -71.25, -71, -70.75, -70.5, -70.25, -70.0], [41.0, 41.25, 41.5, 41.75, 42.0])
             if args.wasync:
                 if time_index > 0 and not did_warn and write_thread[time_index - 1].is_alive():
                     print("WARNING: NetCDF writes are taking longer than computations. This may result in higher memory use. "
