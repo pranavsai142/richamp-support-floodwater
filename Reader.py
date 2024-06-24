@@ -985,7 +985,10 @@ class PostWindReader:
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
-            thresholdDistance = 0.05
+            #thresholdDistance = 0.05
+            #If working with post low res high altitude, the threshold distance needs to be increased
+            #Because there is no longer a high density of points in the post wind
+            thresholdDistance = 20
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
         spaceSparseness = 10
