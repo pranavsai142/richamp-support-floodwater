@@ -991,7 +991,9 @@ class PostWindReader:
             thresholdDistance = 20
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
-        spaceSparseness = 10
+#         spaceSparseness = 10
+#         Uncomment for low res wind post generation
+        spaceSparseness = 1
         timeSparseness = 1
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
