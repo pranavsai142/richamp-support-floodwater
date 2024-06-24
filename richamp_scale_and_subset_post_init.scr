@@ -11,6 +11,7 @@
 ##SBATCH --reservation=richamp
 ##SBATCH --partition=uri-richamp
 #SBATCH --mail-user=pranav.sai@uri.edu
+#SBATCH --mail-type=END
 
 # METGET_API_KEY and METGET_ENDPOINT environment variables must be set in order for
 # get_metget_data.py to succeed
