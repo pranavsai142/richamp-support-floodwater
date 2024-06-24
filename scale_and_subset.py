@@ -972,7 +972,8 @@ def main():
             # Write to NetCDF; single-threaded with optional asynchronicity for now, as thread-safe NetCDF is complicated
             if not wind:
 #                 wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
-                wind = NetcdfOutput(args.o, [-72, -71.75, -71.5, -71.25, -71, -70.75, -70.5, -70.25, -70.0], [41.0, 41.25, 41.5, 41.75, 42.0])
+                wind = NetcdfOutput(args.o, input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d())
+#                 wind = NetcdfOutput(args.o, [-72, -71.75, -71.5, -71.25, -71, -70.75, -70.5, -70.25, -70.0], [41.0, 41.25, 41.5, 41.75, 42.0])
             if args.wasync:
                 if time_index > 0 and not did_warn and write_thread[time_index - 1].is_alive():
                     print("WARNING: NetCDF writes are taking longer than computations. This may result in higher memory use. "
