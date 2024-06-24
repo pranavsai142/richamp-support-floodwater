@@ -631,8 +631,8 @@ def roughness_adjust(subd_inputs):
     if sl == "adcirc":
         wind_out = adcirc_scaling(wind_hr_grid, z0_wr_hr_grid.land_rough(), z0_hr_directional)
     elif sl == "up-down":
-#         wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
-        wind_out = wind_hr_grid
+        wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
+#         wind_out = wind_hr_grid
     return wind_out
 
 
@@ -972,7 +972,7 @@ def main():
             # Write to NetCDF; single-threaded with optional asynchronicity for now, as thread-safe NetCDF is complicated
             if not wind:
 #                 wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
-                wind = NetcdfOutput(args.o, input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d())
+                wind = NetcdfOutput(args.o, list(reversed(input_wind.wind_grid().lon1d())), input_wind.wind_grid().lat1d())
 #                 wind = NetcdfOutput(args.o, [-72, -71.75, -71.5, -71.25, -71, -70.75, -70.5, -70.25, -70.0], [41.0, 41.25, 41.5, 41.75, 42.0])
             if args.wasync:
                 if time_index > 0 and not did_warn and write_thread[time_index - 1].is_alive():
