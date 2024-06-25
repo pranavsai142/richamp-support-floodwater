@@ -708,7 +708,7 @@ class Grapher:
                 ax.legend(loc="lower right")
                 stationName = self.obsLabels[index]
                 plt.title(stationName + " station water elevation")
-                plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
+                plt.xlabel("Hours since " + self.waterStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("elevation (meters)")
                 plt.savefig(graph_directory + stationName + '_water.png')
                 plt.close()
