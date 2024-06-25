@@ -957,7 +957,8 @@ class Fort63Reader:
         waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
         initializeClosestWaterNodes = True
         if(initializeClosestWaterNodes):
-            thresholdDistance = 0.1
+            thresholdDistance = 10
+#             thresholdDistance = 0.1
             self.reader.initializeClosestNodes(waterDataset, thresholdDistance)
         spaceSparseness = 10
         timeSparseness = 1
@@ -985,10 +986,10 @@ class PostWindReader:
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
-            #thresholdDistance = 0.05
+            thresholdDistance = 0.05
             #If working with post low res high altitude, the threshold distance needs to be increased
             #Because there is no longer a high density of points in the post wind
-            thresholdDistance = 20
+#             thresholdDistance = 20
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
 #         spaceSparseness = 10
