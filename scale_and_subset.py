@@ -595,7 +595,11 @@ def roughness_adjust(subd_inputs):
     input_wind, input_wback, wfmt, wbackfmt, z0_wr, z0_wbackr, z0_hr, z0_directional_interpolant, sl, \
         lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0 = subd_inputs
     if (wfmt == "owi-ascii") | (wfmt == "owi-306") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
-        z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
+#         If applying uniform roughness, wind grid has already been created
+        if applyUniformRoughness:
+            z0_wr_w_grid = z0_wr
+        else:
+            z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
     elif wfmt == "wnd":
         z0_wr_w_grid = z0_wr
     if sl == "adcirc":
@@ -631,8 +635,9 @@ def roughness_adjust(subd_inputs):
     if sl == "adcirc":
         wind_out = adcirc_scaling(wind_hr_grid, z0_wr_hr_grid.land_rough(), z0_hr_directional)
     elif sl == "up-down":
-#         wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
-        wind_out = wind_hr_grid
+        wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
+#         Uncomment to return high altitude wind
+#         wind_out = wind_hr_grid
     return wind_out
 
 
@@ -931,7 +936,8 @@ def main():
 
     # Define subdomains for multiprocessing
     subd_z0_hr, subd_z0_directional_interpolant, subd_start_index, subd_end_index = subd_prep(z0_hr, z0_directional_interpolant, args.t)
-
+    
+    applyUniformRoughness = True
     # Scale wind one time slice at a time
     wind = None
     time_index = 0
@@ -946,6 +952,12 @@ def main():
             # Generate inputs for roughness_adjust
             if args.wfmt == "owi-ascii" or args.wfmt == "owi-306":
                 input_wind = owi_ascii.get(time_index)
+#                 Uncomment below block to generate uniform wind roughness
+                if time_index == 0 and applyUniformRoughness:
+                    print("APPLYING UNIFORM ROUGHNESS WIND")
+                    z0_wnd = 0.0033
+                    wr_land_rough = numpy.zeros((len(input_wind.wind_grid().lat1d()), len(input_wind.wind_grid().lon1d()))) + z0_wnd
+                    z0_wr = Roughness(input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d(), wr_land_rough)
             elif args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf":
                 input_wind = owi_netcdf.get(time_index)
             elif args.wfmt == "wnd":
@@ -968,13 +980,13 @@ def main():
             subd_wind_scaled = executor.map(roughness_adjust, subd_inputs)
             u_scaled, v_scaled, date = subd_restitch_domain(subd_wind_scaled, subd_start_index, subd_end_index, z0_hr.land_rough().shape, args.t)
             wind_scaled = WindData(date, WindGrid(z0_hr.lon(), z0_hr.lat()), u_scaled, v_scaled)
-            wind_scaled = wind_to_wind_res(wind_scaled, input_wind)
+#             Uncomment below line to graph low res high altitude roughness
+#             wind_scaled = wind_to_wind_res(wind_scaled, input_wind)
             # Write to NetCDF; single-threaded with optional asynchronicity for now, as thread-safe NetCDF is complicated
             if not wind:
-#                 wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
-                wind = NetcdfOutput(args.o, input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d())
-#                 wind = NetcdfOutput(args.o, list(reversed(input_wind.wind_grid().lon1d())), input_wind.wind_grid().lat1d())
-#                 wind = NetcdfOutput(args.o, [-72, -71.75, -71.5, -71.25, -71, -70.75, -70.5, -70.25, -70.0], [41.0, 41.25, 41.5, 41.75, 42.0])
+                wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
+#             Comment below line to graph low res high altitude wind
+#                 wind = NetcdfOutput(args.o, input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d())
             if args.wasync:
                 if time_index > 0 and not did_warn and write_thread[time_index - 1].is_alive():
                     print("WARNING: NetCDF writes are taking longer than computations. This may result in higher memory use. "
