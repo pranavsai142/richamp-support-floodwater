@@ -593,11 +593,13 @@ def roughness_adjust(subd_inputs):
     # That is not feasible performance-wise while also calculating directional z0, so that functionality has been removed
     # Constant z0 values directly from the appropriate roughness file are now used over water
     input_wind, input_wback, wfmt, wbackfmt, z0_wr, z0_wbackr, z0_hr, z0_directional_interpolant, sl, \
-        lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0 = subd_inputs
+        lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0, parametric = subd_inputs
     if (wfmt == "owi-ascii") | (wfmt == "owi-306") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
 #         If applying uniform roughness, wind grid has already been created
-        z0_wr_w_grid = z0_wr
-#         z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
+        if parametric:
+            z0_wr_w_grid = z0_wr
+        else:
+            z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
     elif wfmt == "wnd":
         z0_wr_w_grid = z0_wr
     if sl == "adcirc":
@@ -853,6 +855,9 @@ def build_parser():
                         action='store_true', required=False, default=False)
     parser.add_argument("-z0name", metavar="z0_name", type=str,
                         help="Name of directional z0 interpolant file; it will be generated if z0sv is True and loaded if z0sv is False", required=False, default='z0_interp')
+    parser.add_argument(
+        "--parametric", metavar="parametric", type=bool, help="Sets input roughness to uniform value (NHC parametric wind forecasts)"
+    )
     return parser
 
 
@@ -936,7 +941,6 @@ def main():
     subd_z0_hr, subd_z0_directional_interpolant, subd_start_index, subd_end_index = subd_prep(z0_hr, z0_directional_interpolant, args.t)
     
 #     Apply uniform roughness. SEE ROUGHNESS ADJUST METHOD for additional line to be commented
-    applyUniformRoughness = True
     # Scale wind one time slice at a time
     wind = None
     time_index = 0
@@ -952,7 +956,7 @@ def main():
             if args.wfmt == "owi-ascii" or args.wfmt == "owi-306":
                 input_wind = owi_ascii.get(time_index)
 #                 Uncomment below block to generate uniform wind roughness
-                if time_index == 0 and applyUniformRoughness:
+                if time_index == 0 and args.parametric:
                     print("APPLYING UNIFORM ROUGHNESS WIND")
                     z0_wnd = 0.0033
                     wr_land_rough = numpy.zeros((len(input_wind.wind_grid().lat1d()), len(input_wind.wind_grid().lon1d()))) + z0_wnd
@@ -970,11 +974,11 @@ def main():
                     input_wback = owi_netcdf.get(time_index)
                 for i in range(0, args.t):
                     subd_inputs[i] = [input_wind, input_wback, args.wfmt, args.wbackfmt, z0_wr, z0_wbackr, subd_z0_hr[i], subd_z0_directional_interpolant[i],
-                                      args.sl, lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0]
+                                      args.sl, lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0, args.parametric]
             else:
                 for i in range(0, args.t):
                     subd_inputs[i] = [input_wind, None, args.wfmt, None, z0_wr, None, subd_z0_hr[i], subd_z0_directional_interpolant[i],
-                                      args.sl, None, None, None, None, None]
+                                      args.sl, None, None, None, None, None, args.parametric]
             # Call roughness_adjust for each subdomain
             subd_wind_scaled = executor.map(roughness_adjust, subd_inputs)
             u_scaled, v_scaled, date = subd_restitch_domain(subd_wind_scaled, subd_start_index, subd_end_index, z0_hr.land_rough().shape, args.t)
