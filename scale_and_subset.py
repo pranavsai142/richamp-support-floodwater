@@ -596,10 +596,8 @@ def roughness_adjust(subd_inputs):
         lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0 = subd_inputs
     if (wfmt == "owi-ascii") | (wfmt == "owi-306") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
 #         If applying uniform roughness, wind grid has already been created
-        if applyUniformRoughness:
-            z0_wr_w_grid = z0_wr
-        else:
-            z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
+        z0_wr_w_grid = z0_wr
+#         z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
     elif wfmt == "wnd":
         z0_wr_w_grid = z0_wr
     if sl == "adcirc":
@@ -937,6 +935,7 @@ def main():
     # Define subdomains for multiprocessing
     subd_z0_hr, subd_z0_directional_interpolant, subd_start_index, subd_end_index = subd_prep(z0_hr, z0_directional_interpolant, args.t)
     
+#     Apply uniform roughness. SEE ROUGHNESS ADJUST METHOD for additional line to be commented
     applyUniformRoughness = True
     # Scale wind one time slice at a time
     wind = None
