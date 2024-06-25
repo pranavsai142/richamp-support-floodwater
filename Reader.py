@@ -957,8 +957,8 @@ class Fort63Reader:
         waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
         initializeClosestWaterNodes = True
         if(initializeClosestWaterNodes):
-            thresholdDistance = 10
-#             thresholdDistance = 0.1
+#             thresholdDistance = 10
+            thresholdDistance = 0.1
             self.reader.initializeClosestNodes(waterDataset, thresholdDistance)
         spaceSparseness = 10
         timeSparseness = 1
