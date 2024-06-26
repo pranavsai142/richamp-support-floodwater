@@ -510,7 +510,7 @@ class Grapher:
         if(len(self.mapWindTimes) > 0):
             vmin = 0
 #             vmax = math.ceil(self.maxWind)
-            vmax = 40
+            vmax = 50
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
             for index in range(len(self.mapWindTimes)):
