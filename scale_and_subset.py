@@ -856,7 +856,7 @@ def build_parser():
     parser.add_argument("-z0name", metavar="z0_name", type=str,
                         help="Name of directional z0 interpolant file; it will be generated if z0sv is True and loaded if z0sv is False", required=False, default='z0_interp')
     parser.add_argument(
-        "--parametric", metavar="parametric", type=bool, help="Sets input roughness to uniform value (NHC parametric wind forecasts)"
+        "-parametric", metavar="parametric", type=bool, help="Sets input roughness to uniform value (NHC parametric wind forecasts)"
     )
     return parser
 
