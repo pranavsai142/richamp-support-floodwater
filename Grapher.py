@@ -606,7 +606,7 @@ class Grapher:
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
-#                 contourset = ax.tricontourf(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], level_boundaries, cmap="jet", alpha=0.5, vmin=vmin, vmax=vmax)
+#               Todo: Fix triangulation errors
                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Water Elevation")

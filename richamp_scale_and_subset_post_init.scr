@@ -46,6 +46,16 @@ postprocessdir=$POSTHOME
 #Manually define start and end date for scenario wind
 #start="2012-10-27 00:00"
 #end="2012-11-01 00:00"
+# 
+# if [[ $PARAMETRIC_WIND == "True" ]]; then
+#     graphAdcirc="--adcircExists true --wind $RICHAMP_INDIR/fort.74.nc"
+# fi
+
+# TODO: Integrate parametric wind and rain generation as an alternative to metget
+# If/else block. If forecasting using NHC, then generate parametric wind and rain,
+# otherwise call metget for wind and rain. Then postprocess the wind file and deliver.
+# The scale_and_subset script will probably need an additional boolean to toggle the uniform roughness
+
 # call MetGet for precipitation
 rain_filename=RICHAMP_rain
 #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
@@ -120,7 +130,7 @@ fi
 if [[ $GRAPH_WATER == "True" ]]; then
     graphWater="--waterExists true --water $RICHAMP_INDIR/fort.63.nc"
 fi
-echo python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves
+echo python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves $graphWater
 python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves $graphWater
 
 
