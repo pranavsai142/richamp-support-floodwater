@@ -29,20 +29,25 @@ postprocessdir=$POSTHOME
 
 # Comment out line to generate run properties if running scenario wind.
 # Create run.properties file manually
-# python3 $postprocessdir/generateRunProperties.py --indir $indir
-# while read line; do 
-# if [[ $line =~ "rawstart" ]]; then
-#   t_start=$line
-# elif [[ $line =~ "rawend" ]]; then
-#          t_end=$line
-#    fi
-# done < properties/run.properties
-# echo "$t_start"
-# echo "$t_end"
-# start=${t_start:10:17}
-# end=${t_end:8:17}
-# echo "$start"
-# echo "$end"
+python3 $postprocessdir/generateRunProperties.py --indir $indir
+while read line; do 
+if [[ $line =~ "rawstart" ]]; then
+    t_start=$line
+elif [[ $line =~ "rawend" ]]; then
+    t_end=$line
+elif [[ $line =~ "track" ]]; then
+    track=$line
+fi
+done < properties/run.properties
+echo "$t_start"
+echo "$t_end"
+start=${t_start:10:17}
+end=${t_end:8:17}
+echo "$start"
+echo "$end"
+echo "$track"
+track=${track:8:#track-1}
+echo "$track"
 #Manually define start and end date for scenario wind
 #start="2012-10-27 00:00"
 #end="2012-11-01 00:00"
@@ -53,8 +58,15 @@ wind_format="owi-ascii"
 #wind_format="owi-306"
 parametric=""
     
-if [[ $PARAMETRIC_WIND == "True" ]]; then
-    parametric="-parametric true"
+if [[ $TC_FORCING == "True" ]]; then
+    track_only=1
+    module load matlab/r2021b
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+    ln -s $postprocessdir/diag_parm.nml diag_parm.nml
+    $postprocessdir/windgfdl
+    wind_param=richamp.wnd
+    wind_inp=Wind_Inp.txt
+    wind_format="wnd"
 else
     rain_filename=RICHAMP_rain
     #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
@@ -66,6 +78,10 @@ else
     metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
     
     wind_format="generic-netcdf"
+fi
+
+if [[ $PARAMETRIC_WIND == "True" ]]; then
+    parametric="-parametric true"
 fi
 
 # TODO: Integrate parametric wind and rain generation as an alternative to metget
@@ -88,15 +104,19 @@ scale_logic=up-down
 
 #skip scale_and_subset
 #wind_format=none
-echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
+if [ $wind_format == "wnd" ]; then
+    echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+else
+    echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
+fi
 if [ $wind_format == "owi-306" ]; then
 	python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
 elif [ $wind_format == "owi-ascii" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
 elif [ $wind_format == "generic-netcdf" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename.nc -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
-#elif [ $wind_format == "wnd" ]; then
-#   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
+elif [ $wind_format == "wnd" ]; then
+  python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 #elif [ $wind_format == "blend" ]; then
 #   python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt "wnd" -winp $wind_inp -wback $wind_back -wbackfmt "owi-ascii" -wbackr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 fi
@@ -136,25 +156,16 @@ python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE 
 
 # richamp_scale_and_subset.scr
 
-targetScript="richamp_scale_and_subset.scr"
-postinitScript="richamp_scale_and_subset_post_init.scr"
-timeout=$((55*60))  # max time in seconds to wait for $postinitScript to finish
-logfile=$1  # first parameter passed from richamp_scale_and_subset.sh`
-echo "\"start\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.start # <-OVERWRITE
-echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has started." >> $logfile
-
 # load run.properties file into associative array and extract relevant properties
 #declare -A properties
 #RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
 #SCRIPTDIR=`sed -n 's/[ ^]*$//;s/path.scriptdir\s*:\s*//p' $RUNPROPERTIES`
 #source $SCRIPTDIR/properties.sh
 #loadProperties $RUNPROPERTIES
-tc_forcing=$RICHAMP_TC_FORCING
 forcing=GFS
-if [ $tc_forcing == "on" ]; then
+if [ $TC_FORCING == "on" ]; then
    forcing=NHC
 fi
-ENSTORM=forecast
 
 # call Matlab scripts to trim depth data to RICHAMP region of interest and to generate a simple max inundation plot
 indir=$RICHAMP_INDIR/
@@ -165,9 +176,9 @@ nc_rough=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
 module load matlab/r2021b
 if [[ "$SCENARIO_WIND" != "" ]]; then
     cp $RICHAMP_INDIR/fort.63.nc $POSTHOME/RICHAMP_fort63.nc
-    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, plot_max_inundation $indir $outdir $nc_rough $track $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
 else
-    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $track $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
 fi
 module purge
 module load matlab/r2021a
