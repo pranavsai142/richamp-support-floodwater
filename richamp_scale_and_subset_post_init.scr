@@ -49,11 +49,11 @@ echo "$end"
 # call MetGet for precipitation
 rain_filename=RICHAMP_rain
 #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
-#metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
+metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
 
 
 wind_filename=gfs_wind
-#metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
+metget build --domain gfs 0.1 -72 40 -70 43 --start "$start" --end "$end" --timestep 3600 --output $wind_filename --multiple-forecasts --format generic-netcdf --variable wind_pressure
 wind_format="generic-netcdf"
 
 # Redefine wind format to manually set owi-ascii
