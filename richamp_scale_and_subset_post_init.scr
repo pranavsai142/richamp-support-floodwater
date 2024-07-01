@@ -36,7 +36,7 @@ if [[ $line =~ "rawstart" ]]; then
 elif [[ $line =~ "rawend" ]]; then
     t_end=$line
 elif [[ $line =~ "track" ]]; then
-    track=$line
+    trackstr=$line
 fi
 done < properties/run.properties
 echo "$t_start"
@@ -45,9 +45,9 @@ start=${t_start:10:17}
 end=${t_end:8:17}
 echo "$start"
 echo "$end"
-echo "$track"
+echo "$trackstr"
 if [[ $track != "" ]]; then
-    track=${track:8:#track-1}
+    track=${trackstr:8:#trackstr-1}
     echo "$track"
 fi
 #Manually define start and end date for scenario wind
