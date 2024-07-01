@@ -46,8 +46,10 @@ end=${t_end:8:17}
 echo "$start"
 echo "$end"
 echo "$track"
-track=${track:8:#track-1}
-echo "$track"
+if [[ $track != "" ]]; then
+    track=${track:8:#track-1}
+    echo "$track"
+fi
 #Manually define start and end date for scenario wind
 #start="2012-10-27 00:00"
 #end="2012-11-01 00:00"
@@ -62,6 +64,7 @@ if [[ $TC_FORCING == "True" ]]; then
     track_only=1
     module load matlab/r2021b
     matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+    mv Track.shp Track.shx Track.dbf track.richamp graphs/.
     ln -s $postprocessdir/diag_parm.nml diag_parm.nml
     $postprocessdir/windgfdl
     wind_param=richamp.wnd
@@ -163,7 +166,7 @@ python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE 
 #source $SCRIPTDIR/properties.sh
 #loadProperties $RUNPROPERTIES
 forcing=GFS
-if [ $TC_FORCING == "on" ]; then
+if [ $TC_FORCING == "True" ]; then
    forcing=NHC
 fi
 
@@ -198,7 +201,7 @@ if [[ $GRAPH_WAVES == "True" ]]; then
     mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 fi
 
-#cp -r properties $output_dir
+cp -r properties $output_dir
 cp -r graphs $output_dir
 #cp $indir/*.trk $output_dir
 
