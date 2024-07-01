@@ -119,9 +119,6 @@ function ASGS_fort22_to_PWM_inputs()
         end
     end
 
-    if exist('Wind_Inp.txt', 'file')
-        delete 'Wind_Inp.txt'
-    end
     fnw = 'Wind_Inp.txt';  % output file name
     fid = fopen(fnw,'w');
     tn = 'richamp';
