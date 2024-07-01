@@ -1,6 +1,6 @@
 % NOTE: Requires mapping toolbox to write shapefile
 function ASGS_fort22_to_PWM_inputs(track_only)
-    fno = 'fort.22';
+    fno = 'nhc.btk';
     fid = fopen(fno);
 
     r = 0;
