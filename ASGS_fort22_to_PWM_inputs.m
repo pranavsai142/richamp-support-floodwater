@@ -1,5 +1,6 @@
-function ASGS_fort22_to_PWM_inputs(track_only, outdir)
-    fno = 'nhc_merge_2023_al_13_036.trk';
+% NOTE: Requires mapping toolbox to write shapefile
+function ASGS_fort22_to_PWM_inputs(track_only)
+    fno = 'nhc.trk';
     fid = fopen(fno);
 
     r = 0;
@@ -118,12 +119,11 @@ function ASGS_fort22_to_PWM_inputs(track_only, outdir)
                 Ad2(i,15) = 0;  
             end
         end
-        
-        windInpFile = outdir + 'Wind_Inp.txt';
-        if exist(windInpFile, 'file')
+
+        if exist('Wind_Inp.txt', 'file')
             delete 'Wind_Inp.txt'
         end
-        fnw = windInpFile;  % output file name
+        fnw = 'Wind_Inp.txt';  % output file name
         fid = fopen(fnw,'w');
         tn = 'richamp';
         fprintf(fid,'%s \n',tn);
@@ -136,7 +136,7 @@ function ASGS_fort22_to_PWM_inputs(track_only, outdir)
         fprintf(fid,'%s \n','12.');
         fclose(fid);
 
-        fno = outdir + 'track.' + tn;  % output file name
+        fno = ['track.' tn];  % output file name
         Ad = Ad2;
         sz = size(As);
         At = zeros(sz(1),6);
@@ -257,7 +257,7 @@ function ASGS_fort22_to_PWM_inputs(track_only, outdir)
         fclose(fid);
         
         %% write out time, pressure and radius of max winds
-        fnp = outdir + 'TrackRMW.txt';
+        fnp = 'TrackRMW.txt';
         fid = fopen(fnp,'w');
         fprintf(fid,'%s\n','Yr, Mo, Day, Hr, Min, Sec, Central P(mbar), Background P(mbar), Radius of Max Winds (km)');
         for n = 1:sz(1)  
