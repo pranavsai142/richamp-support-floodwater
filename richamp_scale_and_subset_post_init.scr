@@ -46,8 +46,8 @@ end=${t_end:8:17}
 echo "$start"
 echo "$end"
 echo "$trackstr"
-if [[ $track != "" ]]; then
-    track=${trackstr:8:#trackstr-1}
+if [[ $trackstr != "" ]]; then
+    track=${trackstr:8:${#trackstr}-1}
     echo "$track"
 fi
 #Manually define start and end date for scenario wind
