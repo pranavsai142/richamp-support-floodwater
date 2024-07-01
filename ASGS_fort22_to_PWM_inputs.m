@@ -41,8 +41,6 @@ function ASGS_fort22_to_PWM_inputs(track_only)
     for i=1:deltaHoursSize(1)
         B3(i) = B3(i) + hours(deltaHours(i, 1));
     end
-    
-    B3 = datetime(B2(:,1),B2(:,2),B2(:,3),B2(:,4),B2(:,5),0);
     [~,ia,~] = unique(B3);
     str1 = 'NHC';
     str2 = ['A' pad(sn,2,'left','0')];
