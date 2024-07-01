@@ -1,6 +1,6 @@
 % NOTE: Requires mapping toolbox to write shapefile
 function ASGS_fort22_to_PWM_inputs(track_only)
-    fno = 'nhc.btk';
+    fno = 'nhc.trk';
     fid = fopen(fno);
 
     r = 0;
@@ -20,6 +20,11 @@ function ASGS_fort22_to_PWM_inputs(track_only)
         end           
     end
     sn = char(A(1,2));  % storm number 
+    deltaHoursString = char(A(:, 6));
+    deltaHoursSize = size(deltaHoursString);
+    for i=1:deltaHoursSize(1)
+        deltaHours(i, 1) = str2double(deltaHoursString(i, 1:3));
+    end
     B = cell2mat(A(:,3));
 
     %%  datetime - find forecast time (latest time -end of file)
@@ -32,6 +37,11 @@ function ASGS_fort22_to_PWM_inputs(track_only)
         B2(i,5) = 0;
     end
 
+    B3 = datetime(B2(:,1),B2(:,2),B2(:,3),B2(:,4),B2(:,5),0);
+    for i=1:deltaHoursSize(1)
+        B3(i) = B3(i) + hours(deltaHours(i, 1));
+    end
+    
     B3 = datetime(B2(:,1),B2(:,2),B2(:,3),B2(:,4),B2(:,5),0);
     [~,ia,~] = unique(B3);
     str1 = 'NHC';

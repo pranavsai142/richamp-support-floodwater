@@ -61,10 +61,10 @@ wind_format="owi-ascii"
 parametric=""
     
 if [[ $TC_FORCING == "True" ]]; then
-    cp $RICHAMP_INDIR/*.btk ./nhc.btk
+    cp $RICHAMP_INDIR/*.trk ./nhc.trk
     track_only=1
     module load matlab/r2021b
-    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir/, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
     mv Track.shp Track.shx Track.dbf track.richamp properties/.
     ln -s $postprocessdir/diag_parm.nml diag_parm.nml
     $postprocessdir/windgfdl
