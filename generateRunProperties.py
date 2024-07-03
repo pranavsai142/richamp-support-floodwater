@@ -66,6 +66,8 @@ def main():
             f.write("stormtype : gfs\n")
         f.close()
     if(tcFound):
+        if(len(storm) == 1):
+            storm = "0" + storm
         filename = "al" + storm + year + "_5day_" + advisory + ".zip"
         url = "http://www.nhc.noaa.gov/gis/forecast/archive/" + filename
         urlretrieve(url, properties_directory + filename)
