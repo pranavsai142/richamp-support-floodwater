@@ -704,7 +704,7 @@ class Grapher:
                 plt.close()
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots()
-                ax.scatter(self.waterTimes, self.datapointsWaters[index], marker=".", label="Forecast")
+                ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
                 ax.legend(loc="lower right")
                 stationName = self.obsLabels[index]
                 plt.title(stationName + " station water elevation")
