@@ -5,11 +5,11 @@ if echo $RICHAMP_INDIR | grep -q $ENSEMBLE_MEMBER >/dev/null 2>&1; then
     done
     rm -f *.start *.finish *.submit
     $POSTHOME/richamp_scale_and_subset_post_init.sh
-    while ! test -e richamp_scale_and_subset_post_init.scr.start
+    while ! test -e $POSTHOME/richamp_scale_and_subset_post_init.scr.start
     do
         sleep 5
     done
-    job_string=$(cat richamp_scale_and_subset_post_init.scr.start)
+    job_string=$(cat $POSTHOME/richamp_scale_and_subset_post_init.scr.start)
     search=jobid
     left_job_string=${job_string%%$search*}
     jobid_lit_idx=${#left_job_string}
