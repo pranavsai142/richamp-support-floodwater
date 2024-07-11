@@ -31,7 +31,7 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/test1938.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
-python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice RHODE_ISLAND_CHAMP
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
 # python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind RICHAMP_wind.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
@@ -51,3 +51,6 @@ python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water
 
 
 #  --args.waverad /Volumes/ssd/downloads/wave_data/rads.64.nc --args.waveswh /Volumes/ssd/downloads/wave_data/swan_HS.63.nc --args.wavemwd /Volumes/ssd/downloads/wave_data/swan_DIR.63.nc --args.wavemwp /Volumes/ssd/downloads/wave_data/swan_TMM10.63.nc --args.wavepwp /Volumes/ssd/downloads/wave_data/swan_TPS.63.nc
+
+
+python generateParametricInput.py --track nhc_merge_2023_al_13_036.trk

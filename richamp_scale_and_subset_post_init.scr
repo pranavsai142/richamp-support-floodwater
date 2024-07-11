@@ -23,6 +23,7 @@ echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has star
 
 # Clear working directories
 rm -rf graphs properties
+cd $POSTHOME
 
 indir=$RICHAMP_INDIR
 postprocessdir=$POSTHOME
@@ -61,9 +62,11 @@ wind_format="owi-ascii"
 parametric=""
     
 if [[ $TC_FORCING == "True" ]]; then
-    cp $RICHAMP_INDIR/*.trk ./nhc.trk
+    cp $RICHAMP_INDIR/*.trk $postprocessdir/nhc.trk
+    python3 $postprocessdir/generateRunProperties.py --track $postprocessdir/nhc.track
+    track_only=1 # set to 0 and uncomment the rest of the code in this block to run with the parametric model
     module load matlab/r2021b
-    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir/, try, ASGS_fort22_to_PWM_inputs, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
     mv Track.shp Track.shx Track.dbf track.richamp properties/.
     ln -s $postprocessdir/diag_parm.nml diag_parm.nml
     $postprocessdir/windgfdl
