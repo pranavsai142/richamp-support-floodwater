@@ -3,7 +3,7 @@ if echo $RICHAMP_INDIR | grep -q $ENSEMBLE_MEMBER >/dev/null 2>&1; then
     do
         exit
     done
-    rm -f *.start *.finish *.submit
+    rm -f $POSTHOME/*.start $POSTHOME/*.finish $POSTHOME/*.submit
     $POSTHOME/richamp_scale_and_subset_post_init.sh
     while ! test -e $POSTHOME/richamp_scale_and_subset_post_init.scr.start
     do
