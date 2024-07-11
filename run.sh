@@ -1,3 +1,7 @@
+while squeue -u $USER | grep -q pst_init >/dev/null 2>&1
+do
+    exit
+done
 rm -f *.start *.finish *.submit
 $POSTHOME/richamp_scale_and_subset_post_init.sh
 while ! test -e richamp_scale_and_subset_post_init.scr.start
