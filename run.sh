@@ -17,11 +17,12 @@ if echo $RICHAMP_INDIR | grep -q $ENSEMBLE_MEMBER >/dev/null 2>&1; then
     jobid_endidx=$((${#job_string}-$jobid_idx-1))
     jobid=${job_string:$jobid_idx:$jobid_endidx}
     i=0
+    MAX_RUN_TIME=5000
     while squeue -j $jobid | grep -q $jobid >/dev/null 2>&1
     do
         sleep 10
-        i=i+1
-        if [[ i > 5000 ]]; then
+        i=$[i+1]
+        if [[ "$i" -gt "$MAX_RUN_TIME" ]]; then
             exit
         fi
     done
