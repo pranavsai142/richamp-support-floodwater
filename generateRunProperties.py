@@ -26,7 +26,7 @@ def main():
             if "SIMULATION_START" in line:
                 simulationStartIndex = line.index("SIMULATION_START")
                 rawstart = line[simulationStartIndex + 18: simulationStartIndex + 34]
-                print(rawstart)
+                print(rawstart, flush=True)
                 startFound = True
             elif "SIMULATION_END" in line:
                 simulationEndIndex = line.index("SIMULATION_END")
