@@ -1,4 +1,26 @@
-if echo $RICHAMP_INDIR | grep -q $ENSEMBLE_MEMBER >/dev/null 2>&1; then
+env >> $POSTHOME/environmentVariable2.txt
+echo $RICHAMP_INDIR $ENSEMBLE_MEMBER >> $POSTHOME/indirEnsemble.txt
+indirIndex=0
+numberSlashesFound=0
+ecfNameLength=${#ECF_NAME}
+ecfNameLength=$[ecfNameLength-1]
+while (( $indirIndex < $ecfNameLength ))
+do
+    charEndIndex=${indirIndex+1}
+    char=${ECF_NAME:indirIndex:charEndIndex}
+
+    if [[ $char == "/" ]]; then
+        numberSlashesFound=$[numberSlashesFound+1]
+    fi
+    if (( $numberSlashesFound == 5 )); then
+        break
+    fi
+    indirIndex=$[indirIndex+1]
+done
+RICHAMP_INDIR=${ECF_NAME:0:indirIndex}
+RICHAMP_INDIR=$ECF_HOME$RICHAMP_INDIR/simulation
+echo $RICHAMP_INDIR
+if echo $RICHAMP_INDIR | grep -q $POST_ENSEMBLE >/dev/null 2>&1; then
     while squeue -u $USER | grep -q pst_init >/dev/null 2>&1
     do
         exit
