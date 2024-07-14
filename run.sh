@@ -44,6 +44,7 @@ if echo $RICHAMP_INDIR | grep -q $POST_ENSEMBLE >/dev/null 2>&1; then
     do
         sleep 10
         i=$[i+1]
+        echo EXECUTING POSTPROCESSING! Step: $i
         if [[ "$i" -gt "$MAX_RUN_TIME" ]]; then
             exit
         fi
