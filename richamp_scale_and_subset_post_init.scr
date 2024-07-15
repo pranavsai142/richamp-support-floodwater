@@ -139,7 +139,7 @@ echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has star
 #loadProperties $RUNPROPERTIES
 tc_forcing=$RICHAMP_TC_FORCING
 forcing=GFS
-if [ $tc_forcing == "on" ]; then
+if [[ $tc_forcing == "on" ]]; then
    forcing=NHC
 fi
 ENSTORM=forecast
