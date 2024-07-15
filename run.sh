@@ -1,5 +1,3 @@
-env >> $POSTHOME/environmentVariable2.txt
-echo $RICHAMP_INDIR $ENSEMBLE_MEMBER >> $POSTHOME/indirEnsemble.txt
 indirIndex=0
 numberSlashesFound=0
 ecfNameLength=${#ECF_NAME}
@@ -18,8 +16,8 @@ do
     indirIndex=$[indirIndex+1]
 done
 RICHAMP_INDIR=${ECF_NAME:0:indirIndex}
-RICHAMP_INDIR=$ECF_HOME$RICHAMP_INDIR/simulation
-echo $RICHAMP_INDIR
+export RICHAMP_INDIR=$ECF_HOME$RICHAMP_INDIR/simulation
+echo $RICHAMP_INDIR $POST_ENSEMBLE
 if echo $RICHAMP_INDIR | grep -q $POST_ENSEMBLE >/dev/null 2>&1; then
     while squeue -u $USER | grep -q pst_init >/dev/null 2>&1
     do
