@@ -13,8 +13,8 @@ class GetBuoyWind:
 	def __init__(self, STATIONS_FILE="", OBS_WIND_DATA_FILE="", startDateObject="", endDateObject=""):
 		
 		temp_directory = "wind_temp/"
-		print(type(startDateObject))
-		print(startDateObject)
+		print(type(startDateObject), flush=True)
+		print(startDateObject, flush=True)
 		with open(STATIONS_FILE) as stations_file:
 			stationsDict = json.load(stations_file)
 

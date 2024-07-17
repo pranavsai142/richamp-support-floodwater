@@ -39,7 +39,7 @@ class Grapher:
     #     return windVelocity * ((10.0/altitude)**WIND_PROFILE_EXPONENT)
 
     def __init__(self, dataToGraph={}, STATIONS_FILE="", backgroundMap="", backgroundAxis=[]):
-        print("Initializing grapher")
+        print("Initializing grapher", flush=True)
         self.obsExists = False
         self.windExists = False
         self.wavesExists = False
@@ -470,9 +470,9 @@ class Grapher:
             numberOfDatapoints = len(self.rainLabels)
         elif(self.waterExists):
             numberOfDatapoints = len(self.waterLabels)
-        print("numberOfDatapoints", numberOfDatapoints)
+        print("numberOfDatapoints", numberOfDatapoints, flush=True)
         fig, ax = plt.subplots()
-        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater)
+        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, flush=True)
         
         ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
         if(self.windExists):

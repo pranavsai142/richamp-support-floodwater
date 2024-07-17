@@ -371,7 +371,7 @@ class Reader:
         return (latitudes, longitudes), nodesIndex
    
     def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
-        print("getting map", dataType)
+        print("getting map", dataType, flush=True)
         mapValuesX = []
         mapValuesY = []
         mapValues = []
@@ -429,13 +429,13 @@ class Reader:
         else:
             coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
         coldStartDate = datetime.fromisoformat(coldStartDateText)
-        print("coldStartDate", coldStartDate)
+        print("coldStartDate", coldStartDate, flush=True)
 
         minT = float(dataset.variables["time"][0].data)
         maxT = float(dataset.variables["time"][-1].data)
         times = []
-        print(minT)
-        print(maxT)
+        print(minT, flush=True)
+        print(maxT, flush=True)
         if(self.format == "POST" or self.format == "GFS"):
 #             print("deltaT of data")
             windDeltaT = timedelta(minutes=maxT - minT)
@@ -457,8 +457,8 @@ class Reader:
 #             print("start of data (seconds since coldstart)")
             startDate = coldStartDate + timedelta(minutes=float(minT))
             endDate = coldStartDate + timedelta(minutes=float(maxT))
-            print("startDate", startDate)
-            print("endDate", endDate)
+            print("startDate", startDate, flush=True)
+            print("endDate", endDate, flush=True)
 #         
             # GFS Data is grid based system
 #             print("min max latitude and longitude")
@@ -475,14 +475,14 @@ class Reader:
             deltaLatitude = maxLatitude - minLatitude
             deltaLongitude = maxLongitude - minLongitude
 
-            print("deltaLatitude", deltaLatitude)
-            print("deltaLongitude", deltaLongitude)
+            print("deltaLatitude", deltaLatitude, flush=True)
+            print("deltaLongitude", deltaLongitude, flush=True)
 
             deltaNodesLatitude = len(dataset.variables["lat"][:])
             deltaNodesLongitude = len(dataset.variables["lon"][:])
 
-            print("deltaNodesLatitude", deltaNodesLatitude)
-            print("deltaNodesLongitude", deltaNodesLongitude)
+            print("deltaNodesLatitude", deltaNodesLatitude, flush=True)
+            print("deltaNodesLongitude", deltaNodesLongitude, flush=True)
         elif(self.format == "FORT"):
     #         print("deltaT of data")
             windDeltaT = timedelta(seconds=maxT - minT)
@@ -512,67 +512,67 @@ class Reader:
 #         print("number of nodes", numberOfNodes)
         
         if (dataType == "swh"):
-            print("significant wave height at node200000")
+            print("significant wave height at node200000", flush=True)
         
             swhX0 = dataset.variables["swan_HS"][0][200000]
 
-            print("swhX0", swhX0)
+            print("swhX0", swhX0, flush=True)
         elif (dataType == "mwd"):
-            print("mean wave direction at node200000")
+            print("mean wave direction at node200000", flush=True)
         
             mwdX0 = dataset.variables["swan_DIR"][0][200000]
 
-            print("mwdX0", mwdX0)
+            print("mwdX0", mwdX0, flush=True)
         elif (dataType == "mwp"):
-            print("mean wave period at node200000")
+            print("mean wave period at node200000", flush=True)
         
             mwpX0 = dataset.variables["swan_TMM10"][0][200000]
 
-            print("mwpX0", mwpX0)
+            print("mwpX0", mwpX0, flush=True)
         elif (dataType == "pwp"):
-            print("peak wave period at node200000")
+            print("peak wave period at node200000", flush=True)
         
             tpsX0 = dataset.variables["swan_TPS"][0][200000]
 
-            print("tpsX0", tpsX0)
+            print("tpsX0", tpsX0, flush=True)
         elif (dataType == "rad"):
-            print("radiation stress gradient at node200000")
+            print("radiation stress gradient at node200000", flush=True)
         
             radX0 = dataset.variables["radstress_x"][0][200000]
             radY0 = dataset.variables["radstress_y"][0][200000]
 
-            print("radX0", radX0)
-            print("radY0", radY0)
+            print("radX0", radX0, flush=True)
+            print("radY0", radY0, flush=True)
         elif (dataType == "fort"):
             print("wind at node0")
         
             windX0 = dataset.variables["windx"][0][0]
             windY0 = dataset.variables["windy"][0][0]
 
-            print("windX0", windX0)
-            print("windY0", windY0)
+            print("windX0", windX0, flush=True)
+            print("windY0", windY0, flush=True)
         elif (dataType == "water"):
-            print("water at node0")
+            print("water at node0", flush=True)
             
             zeta0 = dataset.variables["zeta"][0][0]
-            print("zeta0", zeta0)
+            print("zeta0", zeta0, flush=True)
             
         elif (dataType == "rain"):
-            print("rain at (0,0)")
+            print("rain at (0,0)", flush=True)
             
             rain0 = dataset.variables["precipitation"][0][0][0]
-            print("rain", rain0)
+            print("rain", rain0, flush=True)
         elif (dataType == "gfs"):
-            print("Wind at t=0, point(0, 0)")
+            print("Wind at t=0, point(0, 0)", flush=True)
             windX0 = dataset.variables["wind_u"][0][0][0]
             windY0 = dataset.variables["wind_v"][0][0][0]
-            print("windX000", windX0)
-            print("windY000", windY0)
+            print("windX000", windX0, flush=True)
+            print("windY000", windY0, flush=True)
         elif (dataType == "post"):
             speed0 = dataset.variables["spd"][0][0][0]
             direction0 = dataset.variables["dir"][0][0][0]
-            print("speed0", speed0)
-            print("direction0", direction0)
+            print("speed0", speed0, flush=True)
+            print("direction0", direction0, flush=True)
 
         return dataset, times
         
@@ -585,7 +585,7 @@ class Reader:
         for stationKey in stationsDict["NOS"].keys():
             stationToNodeDistancesDict[stationKey] = {}
         # recreate station to node distances calculations dictionary
-        print("retreving coordinates for all nodes")
+        print("retreving coordinates for all nodes", flush=True)
         (nodesLatitudes, nodesLongitudes), nodesIndex = self.getCoordinates(1, dataset)
         for index in range(len(nodesIndex)):
             node = (nodesLatitudes[index], nodesLongitudes[index])
@@ -612,9 +612,9 @@ class Reader:
                         stationToNodeDistancesDict[stationKey]["closestNodes"].append(nodeIndex)
             else:
                 badNodes.append(nodeIndex)
-                print("bad node", nodeIndex, node)
+                print("bad node", nodeIndex, node, flush=True)
             if(index % 100000 == 0):
-                print("index", index)
+                print("index", index, flush=True)
 #         if(self.format == "GFS" or self.format == "POST"):
 #             deltaNodesLatitude = len(dataset.variables["lat"][:])
 #             deltaNodesLongitude = len(dataset.variables["lon"][:])
@@ -713,7 +713,7 @@ class Reader:
             nodes = json.load(outfile)
             
         data = {}
-        print("Reading data", dataType)
+        print("Reading data", dataType, flush=True)
         for stationKey in nodes["NOS"].keys():
 #                 print("getting wind data for node", nodeIndex)
             data[stationKey] = {}
@@ -764,14 +764,14 @@ class Reader:
         data = {}
         data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
                 
-        print("Interpolating", dataType)
+        print("Interpolating", dataType, flush=True)
         nodesIndex = []
         points = []
         pointsValues = []
         pointsValuesX = []
         pointsValuesY = []
         for stationKey in nodes["NOS"].keys():
-            print("Getting coordinates for closest nodes around station",  stationKey)
+            print("Getting coordinates for closest nodes around station",  stationKey, flush=True)
 #                 print("getting wind data for node", nodeIndex)
             for closestNode in nodes["NOS"][stationKey]["closestNodes"]:
                 nodesIndex.append(closestNode)
@@ -785,7 +785,7 @@ class Reader:
                     y = float(dataset.variables["y"][int(closestNode)].data)
                 point = (x, y)
                 points.append(point)
-        print("getting time series data for closest nodes")
+        print("getting time series data for closest nodes", flush=True)
         values = self.getValuesForPoints(nodesIndex, dataType, dataset)
         if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
             pointsValuesX.extend(values[0])
@@ -804,7 +804,7 @@ class Reader:
 #                 pointsValuesX.append(valuesX)
 #                 pointsValuesY.append(valuesY)
 #             Interpolate values
-        print("initializing interpolator")
+        print("initializing interpolator", flush=True)
         if(dataType == "rad" or dataType == "gfs" or dataType == "fort" or dataType == "post"):
             interpolatorX = scipy.interpolate.LinearNDInterpolator(points, pointsValuesX)
             interpolatorY = scipy.interpolate.LinearNDInterpolator(points, pointsValuesY)
@@ -829,7 +829,7 @@ class Reader:
             stationLatitude = float(stationDict["latitude"])
             stationLongitude = float(stationDict["longitude"])
             stationCoordinates = (stationLongitude, stationLatitude)
-            print("interpolating data for station", stationKey, "at", stationCoordinates)
+            print("interpolating data for station", stationKey, "at", stationCoordinates, flush=True)
             if(dataType == "rad" or dataType == "gfs" or dataType == "fort" or dataType == "post"):
                 interpolatedValuesX = interpolatorX(stationLongitude, stationLatitude)
                 interpolatedValuesY = interpolatorY(stationLongitude, stationLatitude)
@@ -847,7 +847,7 @@ class Reader:
             else:
                 data[stationKey][dataType] = interpolatedValues
         
-        print("Writing data to", DATA_FILE)
+        print("Writing data to", DATA_FILE, flush=True)
         with open(DATA_FILE, "w") as outfile:
             json.dump(data, outfile, cls=NumpyEncoder)
         
@@ -864,8 +864,8 @@ class GFSRainReader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, format="GFS")
     
     def generateRainDataForStations(self):
-        print("Rain file")
-        print(self.GFS_RAIN_FILE)
+        print("Rain file", flush=True)
+        print(self.GFS_RAIN_FILE, flush=True)
         rainDataset, timesRain = self.reader.getNetcdfProperties(self.GFS_RAIN_FILE, "rain")
         initializeClosestRainNodes = True
         if(initializeClosestRainNodes):
@@ -893,8 +893,8 @@ class GFSWindReader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, format="GFS")
     
     def generateWindDataForStations(self):
-        print("Wind file")
-        print(self.GFS_WIND_FILE)
+        print("Wind file", flush=True)
+        print(self.GFS_WIND_FILE, flush=True)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.GFS_WIND_FILE, "gfs")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
@@ -924,8 +924,8 @@ class Fort74Reader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, format="FORT")
     
     def generateWindDataForStations(self):
-        print("Wind file")
-        print(self.ADCIRC_WIND_FILE)
+        print("Wind file", flush=True)
+        print(self.ADCIRC_WIND_FILE, flush=True)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.ADCIRC_WIND_FILE, "fort")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
@@ -952,8 +952,8 @@ class Fort63Reader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, format="FORT")
     
     def generateWindDataForStations(self):
-        print("Wind file")
-        print(self.ADCIRC_WATER_FILE)
+        print("Water file", flush=True)
+        print(self.ADCIRC_WATER_FILE, flush=True)
         waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
         initializeClosestWaterNodes = True
         if(initializeClosestWaterNodes):
@@ -981,9 +981,9 @@ class PostWindReader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.POST_NODES_FILE, format="POST")
     
     def generateWindDataForStations(self):
-        print("start, ", datetime.now())
-        print("Wind file")
-        print(self.POST_WIND_FILE)
+        print("start, ", datetime.now(), flush=True)
+        print("Wind file", flush=True)
+        print(self.POST_WIND_FILE, flush=True)
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
@@ -1002,7 +1002,7 @@ class PostWindReader:
         else:
             self.reader.generateDataFiles(windDataset, "post", timesWind, self.POST_WIND_DATA_FILE)
         return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
-        print("end, ", datetime.now())
+        print("end, ", datetime.now(), flush=True)
    
 
 class WaveReader:
@@ -1035,12 +1035,12 @@ class WaveReader:
         self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.WAVE_NODES_FILE, format="FORT")
     
     def generateWaveDataForStations(self):
-        print("Wave files")
-        print(self.WAVE_SWH_FILE)
-        print(self.WAVE_MWD_FILE)
-        print(self.WAVE_MWP_FILE)
-        print(self.WAVE_PWP_FILE)
-        print(self.WAVE_RAD_FILE)
+        print("Wave files", flush=True)
+        print(self.WAVE_SWH_FILE, flush=True)
+        print(self.WAVE_MWD_FILE, flush=True)
+        print(self.WAVE_MWP_FILE, flush=True)
+        print(self.WAVE_PWP_FILE, flush=True)
+        print(self.WAVE_RAD_FILE, flush=True)
         swhDataset, timesSWH = self.reader.getNetcdfProperties(self.WAVE_SWH_FILE, "swh")
         mwdDataset, timesMWD = self.reader.getNetcdfProperties(self.WAVE_MWD_FILE, "mwd")
         mwpDataset, timesMWP = self.reader.getNetcdfProperties(self.WAVE_MWP_FILE, "mwp")

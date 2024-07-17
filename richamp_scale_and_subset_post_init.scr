@@ -162,6 +162,7 @@ python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE 
 
 # richamp_scale_and_subset.scr
 
+
 # load run.properties file into associative array and extract relevant properties
 #declare -A properties
 #RUNPROPERTIES=run.properties #PWD should be the SCENARIODIR
@@ -169,7 +170,7 @@ python3 $postprocessdir/generateGraphs.py --backgroundChoice $BACKGROUND_CHOICE 
 #source $SCRIPTDIR/properties.sh
 #loadProperties $RUNPROPERTIES
 forcing=GFS
-if [ $TC_FORCING == "True" ]; then
+if [[ $TC_FORCING == "True" ]]; then
    forcing=NHC
 fi
 
@@ -204,6 +205,7 @@ if [[ $GRAPH_WAVES == "True" ]]; then
     mv $output_dir/$wave_output $output_dir/RICHAMP_wave.nc
 fi
 
+rm -rf $output_dir/properties $output_dir/graphs
 cp -r properties $output_dir
 cp -r graphs $output_dir
 #cp $indir/*.trk $output_dir

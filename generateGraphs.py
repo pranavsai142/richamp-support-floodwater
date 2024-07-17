@@ -89,7 +89,7 @@ def main():
         "--backgroundChoice", type=str, help="Options: RHODE_ISLAND, NORTH_ATLANTIC, AMERICA, MIDWEST")
     args = p.parse_args()
     args.epsg = 4326
-    print("Generating Wind Graphs!")
+    print("Generating Wind Graphs!", flush=True)
     wind_temp_directory = "wind_temp/"
     graphs_directory = "graphs/"
     water_temp_directory = "water_temp/"
@@ -103,7 +103,7 @@ def main():
         os.makedirs(water_temp_directory)
     
     dataToGraph = {}  
-    print("Loading NetCDF file!")
+    print("Loading NetCDF file!", flush=True)
     STATIONS_FILE = args.stations
 #     Default to Rhode Island Map
     if(not args.backgroundChoice):
@@ -111,55 +111,55 @@ def main():
     else:
         backgroundChoice = args.backgroundChoice
         
-    print("args.adcircExists", args.adcircExists)
+    print("args.adcircExists", args.adcircExists, flush=True)
     if(args.adcircExists):
         ADCIRC_WIND_FILE = args.wind
         ADCIRC_WIND_DATA_FILE = wind_temp_directory + "adcirc_wind_data_file" + ".json"
         (windStartDateObject, windEndDateObject) = Fort74Reader(ADCIRC_WIND_FILE=ADCIRC_WIND_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WIND_DATA_FILE=ADCIRC_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["FORT"] = ADCIRC_WIND_DATA_FILE
-    print("args.gfsExists", args.gfsExists)
+    print("args.gfsExists", args.gfsExists, flush=True)
     if(args.gfsExists):
         GFS_WIND_FILE = args.wind
         GFS_WIND_DATA_FILE = wind_temp_directory + "gfs_wind_data_file" + ".json"
         (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["GFS"] = GFS_WIND_DATA_FILE
-    print("args.rainExists", args.rainExists)
+    print("args.rainExists", args.rainExists, flush=True)
     if(args.rainExists):
         GFS_RAIN_FILE = args.rain
         GFS_RAIN_DATA_FILE = wind_temp_directory + "gfs_rain_data_file" + ".json"
         (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateRainDataForStations()
         dataToGraph["RAIN"] = GFS_RAIN_DATA_FILE
-    print("args.postExists", args.postExists)
+    print("args.postExists", args.postExists, flush=True)
     if(args.postExists):
         POST_WIND_FILE = args.wind
         POST_WIND_DATA_FILE = wind_temp_directory + "post_wind_data_file" + ".json"
         (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
         dataToGraph["POST"] = POST_WIND_DATA_FILE
 
-    print("args.obsExists", args.obsExists)
+    print("args.obsExists", args.obsExists, flush=True)
     if(args.obsExists):
-        print("Parsed start and end date from netCDF, ", windStartDateObject, windEndDateObject)
+        print("Parsed start and end date from netCDF, ", windStartDateObject, windEndDateObject, flush=True)
         OBS_WIND_DATA_FILE = wind_temp_directory + "obs_wind_data_file" + ".json"
         GetBuoyWind(STATIONS_FILE=STATIONS_FILE, OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, startDateObject=windStartDateObject, endDateObject=windEndDateObject)
         dataToGraph["OBS"] = OBS_WIND_DATA_FILE
     
-    print("args.waterExists", args.waterExists)
+    print("args.waterExists", args.waterExists, flush=True)
     if(args.waterExists):
         ADCIRC_WATER_FILE = args.water
         ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
         (windStartDateObject, windEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE).generateWindDataForStations()
         dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
 #     Grapher(graphObs=args.obs, graphRain=False, WIND_TYPE="POST", OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=POST_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
-    print("args.wavesExists", args.wavesExists)
+    print("args.wavesExists", args.wavesExists, flush=True)
     if(args.wavesExists):
-        print("Generating Wave Graphs!")
+        print("Generating Wave Graphs!", flush=True)
         wave_temp_directory = "wave_temp/"
     
     #     Create temp and graphs directories
         if not os.path.exists(wave_temp_directory):
             os.makedirs(wave_temp_directory)
         
-        print("Loading NetCDF file!")
+        print("Loading NetCDF file!", flush=True)
         WAVE_SWH_FILE = args.waveswh 
         WAVE_MWD_FILE = args.wavemwd
         WAVE_MWP_FILE = args.wavemwp
