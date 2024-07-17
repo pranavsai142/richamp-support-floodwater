@@ -229,6 +229,8 @@ class NetcdfOutput:
         self.__group_main_var_time_unix[idx] = seconds
         # self.__group_main_var_u10[idx, :, :] = uvel
         # self.__group_main_var_v10[idx, :, :] = vvel
+#         print(self.__group_main_var_lat[::])
+#         print(self.__group_main_var_lon[::])
         self.__group_main_var_spd[idx, :, :] = magnitude_from_uv(uvel, vvel)
         self.__group_main_var_dir[idx, :, :] = dir_met_to_and_from_math(direction_from_uv(uvel, vvel))
 
@@ -591,9 +593,13 @@ def roughness_adjust(subd_inputs):
     # That is not feasible performance-wise while also calculating directional z0, so that functionality has been removed
     # Constant z0 values directly from the appropriate roughness file are now used over water
     input_wind, input_wback, wfmt, wbackfmt, z0_wr, z0_wbackr, z0_hr, z0_directional_interpolant, sl, \
-        lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0 = subd_inputs
+        lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0, parametric = subd_inputs
     if (wfmt == "owi-ascii") | (wfmt == "owi-306") | (wfmt == "generic-netcdf") | (wfmt == "owi-netcdf"):
-        z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
+#         If applying uniform roughness, wind grid has already been created
+        if parametric:
+            z0_wr_w_grid = z0_wr
+        else:
+            z0_wr_w_grid = z0_to_wind_res(z0_wr, input_wind)
     elif wfmt == "wnd":
         z0_wr_w_grid = z0_wr
     if sl == "adcirc":
@@ -630,6 +636,8 @@ def roughness_adjust(subd_inputs):
         wind_out = adcirc_scaling(wind_hr_grid, z0_wr_hr_grid.land_rough(), z0_hr_directional)
     elif sl == "up-down":
         wind_out = zref_to_ten(z0_hr_directional, wind_hr_grid)
+#         Uncomment to return high altitude wind
+#         wind_out = wind_hr_grid
     return wind_out
 
 
@@ -847,6 +855,9 @@ def build_parser():
                         action='store_true', required=False, default=False)
     parser.add_argument("-z0name", metavar="z0_name", type=str,
                         help="Name of directional z0 interpolant file; it will be generated if z0sv is True and loaded if z0sv is False", required=False, default='z0_interp')
+    parser.add_argument(
+        "-parametric", metavar="parametric", type=bool, help="Sets input roughness to uniform value (NHC parametric wind forecasts)"
+    )
     return parser
 
 
@@ -928,7 +939,8 @@ def main():
 
     # Define subdomains for multiprocessing
     subd_z0_hr, subd_z0_directional_interpolant, subd_start_index, subd_end_index = subd_prep(z0_hr, z0_directional_interpolant, args.t)
-
+    
+#     Apply uniform roughness. SEE ROUGHNESS ADJUST METHOD for additional line to be commented
     # Scale wind one time slice at a time
     wind = None
     time_index = 0
@@ -943,6 +955,12 @@ def main():
             # Generate inputs for roughness_adjust
             if args.wfmt == "owi-ascii" or args.wfmt == "owi-306":
                 input_wind = owi_ascii.get(time_index)
+#                 Uncomment below block to generate uniform wind roughness
+                if time_index == 0 and args.parametric:
+                    print("APPLYING UNIFORM ROUGHNESS WIND")
+                    z0_wnd = 0.0033
+                    wr_land_rough = numpy.zeros((len(input_wind.wind_grid().lat1d()), len(input_wind.wind_grid().lon1d()))) + z0_wnd
+                    z0_wr = Roughness(input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d(), wr_land_rough)
             elif args.wfmt == "generic-netcdf" or args.wfmt == "owi-netcdf":
                 input_wind = owi_netcdf.get(time_index)
             elif args.wfmt == "wnd":
@@ -956,18 +974,22 @@ def main():
                     input_wback = owi_netcdf.get(time_index)
                 for i in range(0, args.t):
                     subd_inputs[i] = [input_wind, input_wback, args.wfmt, args.wbackfmt, z0_wr, z0_wbackr, subd_z0_hr[i], subd_z0_directional_interpolant[i],
-                                      args.sl, lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0]
+                                      args.sl, lon_ctr_interpolant, lat_ctr_interpolant, rmw_interpolant, time_ctr_date_0, time_rmw_date_0, args.parametric]
             else:
                 for i in range(0, args.t):
                     subd_inputs[i] = [input_wind, None, args.wfmt, None, z0_wr, None, subd_z0_hr[i], subd_z0_directional_interpolant[i],
-                                      args.sl, None, None, None, None, None]
+                                      args.sl, None, None, None, None, None, args.parametric]
             # Call roughness_adjust for each subdomain
             subd_wind_scaled = executor.map(roughness_adjust, subd_inputs)
             u_scaled, v_scaled, date = subd_restitch_domain(subd_wind_scaled, subd_start_index, subd_end_index, z0_hr.land_rough().shape, args.t)
             wind_scaled = WindData(date, WindGrid(z0_hr.lon(), z0_hr.lat()), u_scaled, v_scaled)
+#             Uncomment below line to graph low res high altitude roughness
+#             wind_scaled = wind_to_wind_res(wind_scaled, input_wind)
             # Write to NetCDF; single-threaded with optional asynchronicity for now, as thread-safe NetCDF is complicated
             if not wind:
                 wind = NetcdfOutput(args.o, z0_hr.lon(), z0_hr.lat())
+#             Comment below line to graph low res high altitude wind
+#                 wind = NetcdfOutput(args.o, input_wind.wind_grid().lon1d(), input_wind.wind_grid().lat1d())
             if args.wasync:
                 if time_index > 0 and not did_warn and write_thread[time_index - 1].is_alive():
                     print("WARNING: NetCDF writes are taking longer than computations. This may result in higher memory use. "

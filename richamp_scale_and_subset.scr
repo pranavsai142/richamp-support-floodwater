@@ -40,8 +40,12 @@ outdir=./
 postprocessdir=$POSTHOME
 nc_rough=$postprocessdir/NLCD_z0_RICHAMP_Reg_Grid.nc
 module load matlab/r2021b
-matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
-
+if [[ "$SCENARIO_WIND" != "" ]]; then
+    cp $RICHAMP_INDIR/fort.63.nc $POSTHOME/RICHAMP_fort63.nc
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+else
+    matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, subset_fort63_richamp $indir $outdir, plot_max_inundation $indir $outdir $nc_rough $ENSTORM $forcing, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
+fi
 module purge
 module load matlab/r2021a
 matlab -nodisplay -nosplash -nodesktop -singleCompThread -r "run('Plot_Eonly_asgs.m');exit;"
@@ -70,4 +74,3 @@ fi
 
 echo "\"finish\" : \"[$(date +'%Y-%h-%d-T%H:%M:%S%z')]\", \"jobid\" : \"${SLURM_JOBID}\"" > $targetScript.finish # <-OVERWRITE
 echo "[$(date +'%Y-%h-%d-T%H:%M:%S%z')] The batch job for $targetScript has finished." >> $logfile
-

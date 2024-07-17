@@ -957,9 +957,11 @@ class Fort63Reader:
         waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
         initializeClosestWaterNodes = True
         if(initializeClosestWaterNodes):
+#             thresholdDistance = 10
             thresholdDistance = 0.1
             self.reader.initializeClosestNodes(waterDataset, thresholdDistance)
-        spaceSparseness = 10
+        spaceSparseness = 1
+#         spaceSparseness = 10
         timeSparseness = 1
         interpolateValues = True
         if(interpolateValues):
@@ -992,6 +994,8 @@ class PostWindReader:
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
         interpolateValues = True
         spaceSparseness = 10
+#         Uncomment for low res wind post generation
+#         spaceSparseness = 1
         timeSparseness = 1
         if(interpolateValues):
             self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)

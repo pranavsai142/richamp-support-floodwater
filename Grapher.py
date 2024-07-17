@@ -605,16 +605,16 @@ class Grapher:
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
-                plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
-                contourset = ax.tricontourf(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], level_boundaries, cmap="jet", alpha=0.5, vmin=vmin, vmax=vmax)
-#                 contourset = ax.pcolormesh(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
+#               Todo: Fix triangulation errors
+                contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Water Elevation")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                    ticks=range(vmin, vmax+5, 5),
+                    ticks=range(vmin, vmax+5, 2),
                     boundaries=level_boundaries,
                     values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
                     label="Meters",
@@ -699,8 +699,18 @@ class Grapher:
                 stationName = self.obsLabels[index]
                 plt.title(stationName + " station rain")
                 plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
-                plt.ylabel("Rain mm/hr")
+                plt.ylabel("rain (mm/hr)")
                 plt.savefig(graph_directory + stationName + '_rain.png')
+                plt.close()
+            if(len(self.datapointsWaters) > 0):
+                fig, ax = plt.subplots()
+                ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
+                ax.legend(loc="lower right")
+                stationName = self.obsLabels[index]
+                plt.title(stationName + " station water elevation")
+                plt.xlabel("Hours since " + self.waterStartDate.strftime(self.DATE_FORMAT))
+                plt.ylabel("elevation (meters)")
+                plt.savefig(graph_directory + stationName + '_water.png')
                 plt.close()
             if(self.wavesExists):
                 if(len(self.datapointsSWH[index]) > 0):
