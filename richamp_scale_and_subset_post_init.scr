@@ -63,7 +63,7 @@ parametric=""
     
 if [[ $TC_FORCING == "True" ]]; then
     cp $RICHAMP_INDIR/*.trk $postprocessdir/nhc.trk
-    python3 $postprocessdir/generateParametricInput.py --track $postprocessdir/nhc.trk
+    python3 $postprocessdir/generateParametricInput.py --track $postprocessdir/nhc.track
     track_only=1 # set to 0 and uncomment the rest of the code in this block to run with the parametric model
     module load matlab/r2021b
     matlab -nodesktop -nodisplay -nosplash -r "addpath $postprocessdir, try, ASGS_fort22_to_PWM_inputs $track_only, catch me, fprintf('%s / %s\n',me.identifier,me.message), end, exit"
