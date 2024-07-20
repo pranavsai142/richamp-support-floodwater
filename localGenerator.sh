@@ -2,7 +2,7 @@
 
 # python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w gfs_wind.nc -wfmt "generic-netcdf" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000 -t 3 -wasync
 
-# python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/scenario_wind/ramram6_222.txt -wfmt "owi-ascii" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000
+# python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/scenario_wind/ramram6_222.txt -wfmt "owi-ascii" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000 -t 3 -wasync
 
 # python scale_and_subset.py -o RICHAMP_wind -sl up-down -hr NLCD_z0_RICHAMP_Reg_Grid.nc -w ../ObservationalWind/scenario_wind/news_hwrf_subset_10v3_27oct_0_1nov_23_fort.22 -wfmt "owi-306" -wr gfs-roughness.nc -z0name generated_z0_interp $z0_sv -r 3000 -sigma 1000
 
@@ -31,9 +31,9 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/test1938.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
-# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice RHODE_ISLAND_CHAMP
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice RHODE_ISLAND_CHANP
 
-# python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind RICHAMP_wind.nc --backgroundChoice RHODE_ISLAND_CHAMP
+python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind RICHAMP_wind.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/gfs_wind.nc
@@ -51,6 +51,3 @@
 
 
 #  --args.waverad /Volumes/ssd/downloads/wave_data/rads.64.nc --args.waveswh /Volumes/ssd/downloads/wave_data/swan_HS.63.nc --args.wavemwd /Volumes/ssd/downloads/wave_data/swan_DIR.63.nc --args.wavemwp /Volumes/ssd/downloads/wave_data/swan_TMM10.63.nc --args.wavepwp /Volumes/ssd/downloads/wave_data/swan_TPS.63.nc
-
-
-python generateParametricInput.py --track nhc_merge_2023_al_13_036.trk

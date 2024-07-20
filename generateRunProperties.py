@@ -85,11 +85,11 @@ def main():
                 if "ww_wwlin" in file:
                     os.remove(properties_directory + file)
                 elif "lin" in file:
-                    os.rename(properties_directory + file, properties_directory + "Track" + fileExtension)
+                    os.rename(properties_directory + file, properties_directory + "track" + fileExtension)
                 elif "pgn" in file:
-                    os.rename(properties_directory + file, properties_directory + "Cone" + fileExtension)
+                    os.rename(properties_directory + file, properties_directory + "cone" + fileExtension)
                 elif "pts" in file:
-                    os.rename(properties_directory + file, properties_directory + "Points" + fileExtension)
+                    os.rename(properties_directory + file, properties_directory + "points" + fileExtension)
                 
     
 

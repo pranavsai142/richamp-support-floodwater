@@ -21,7 +21,3 @@ run.properties
 .DS_Store
 gfs_wind.nc
 /water_temp
-*.trk
-track.richamp
-TrackRMW.txt
-Wind_Inp.txt
