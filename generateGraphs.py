@@ -90,9 +90,9 @@ def main():
     args = p.parse_args()
     args.epsg = 4326
     print("Generating Wind Graphs!", flush=True)
-    wind_temp_directory = "wind_temp/"
+    wind_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wind_temp/"
     graphs_directory = "graphs/"
-    water_temp_directory = "water_temp/"
+    water_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/water_temp/"
     
 #      Create temp and graphs directories
     if not os.path.exists(graphs_directory):
@@ -153,7 +153,7 @@ def main():
     print("args.wavesExists", args.wavesExists, flush=True)
     if(args.wavesExists):
         print("Generating Wave Graphs!", flush=True)
-        wave_temp_directory = "wave_temp/"
+        wave_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wave_temp/"
     
     #     Create temp and graphs directories
         if not os.path.exists(wave_temp_directory):

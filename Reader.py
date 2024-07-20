@@ -854,7 +854,7 @@ class Reader:
          
 class GFSRainReader:
     def __init__(self, GFS_RAIN_FILE="", STATIONS_FILE="", GFS_RAIN_DATA_FILE=""):
-        temp_directory = "wind_temp/"
+        temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wind_temp/"
         self.GFS_RAIN_FILE = GFS_RAIN_FILE
         self.STATIONS_FILE = STATIONS_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "GFS_Station_To_Node_Distances.json"
@@ -883,7 +883,7 @@ class GFSRainReader:
             
 class GFSWindReader:
     def __init__(self, GFS_WIND_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE=""):
-        temp_directory = "wind_temp/"
+        temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wind_temp/"
         self.GFS_WIND_FILE = GFS_WIND_FILE
         self.STATIONS_FILE = STATIONS_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "GFS_Station_To_Node_Distances.json"
@@ -914,7 +914,7 @@ class GFSWindReader:
             
 class Fort74Reader:
     def __init__(self, ADCIRC_WIND_FILE="", STATIONS_FILE="", ADCIRC_WIND_DATA_FILE=""):
-        temp_directory = "wind_temp/"
+        temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wind_temp/"
         self.ADCIRC_WIND_FILE = ADCIRC_WIND_FILE
         self.STATIONS_FILE = STATIONS_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "ADCIRC_Station_To_Node_Distances.json"
@@ -942,7 +942,7 @@ class Fort74Reader:
   
 class Fort63Reader:
     def __init__(self, ADCIRC_WATER_FILE="", STATIONS_FILE="", ADCIRC_WATER_DATA_FILE=""):
-        temp_directory = "water_temp/"
+        temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/water_temp/"
         self.ADCIRC_WATER_FILE = ADCIRC_WATER_FILE
         self.STATIONS_FILE = STATIONS_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "ADCIRC_Station_To_Node_Distances.json"
@@ -972,7 +972,7 @@ class Fort63Reader:
                   
 class PostWindReader:
     def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE=""):
-        temp_directory = "wind_temp/"
+        temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wind_temp/"
         self.POST_WIND_FILE = POST_WIND_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Post_Station_To_Node_Distances.json"
         self.POST_NODES_FILE = temp_directory + "Post_Nodes.json"
@@ -1019,7 +1019,7 @@ class WaveReader:
         WAVE_MWP_DATA_FILE="",
         WAVE_PWP_DATA_FILE="",
         WAVE_RAD_DATA_FILE=""):
-        temp_directory = "wave_temp/"
+        temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wave_temp/"
         self.WAVE_SWH_FILE=WAVE_SWH_FILE
         self.WAVE_MWD_FILE=WAVE_MWD_FILE
         self.WAVE_MWP_FILE=WAVE_MWP_FILE

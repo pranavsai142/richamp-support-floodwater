@@ -1,3 +1,4 @@
+. /home/pranav_sai_uri_edu/scripts/ECFLOWEnv.sh
 indirIndex=0
 numberSlashesFound=0
 ecfNameLength=${#ECF_NAME}
