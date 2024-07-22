@@ -244,12 +244,12 @@ class Owi306Wind:
     def __init__(self, lines, inputFileLines):
         self.__lines = lines
         self.__input_file_lines = inputFileLines
-        self.__grid = self.__get_grid()
         self.__num_lats = self.__grid.n_latitude()
         self.__num_lons = self.__grid.n_longitude()
-        self.__start_time = datetime.datetime(2012,10,27,0,0)
+        self.__start_time = None
         self.__time_delta = datetime.timedelta(seconds=3600)
-
+        self.__grid = self.__get_grid()
+        
     def grid(self):
         return self.__grid
 
@@ -257,7 +257,7 @@ class Owi306Wind:
 #     Manually set parameters for 306 type file
         lines = self.__input_file_lines
         datepart = lines[2].split()
-        start_time = datetime.datetime(int(datepart[0]), int(datepart[1]), int(datepart[2]), int(datepart[3]), int(datepart[4]), int(datepart[5]))
+        self.__start_time = datetime.datetime(int(datepart[0]), int(datepart[1]), int(datepart[2]), int(datepart[3]), int(datepart[4]), int(datepart[5]))
         time_step = float(lines[3])
         num_times = int(lines[4])
         spatial_res = float(1 / int(lines[7].strip().replace(".", "")))
