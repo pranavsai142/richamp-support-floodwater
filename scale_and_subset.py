@@ -244,11 +244,11 @@ class Owi306Wind:
     def __init__(self, lines, inputFileLines):
         self.__lines = lines
         self.__input_file_lines = inputFileLines
-        self.__num_lats = self.__grid.n_latitude()
-        self.__num_lons = self.__grid.n_longitude()
         self.__start_time = None
         self.__time_delta = datetime.timedelta(seconds=3600)
         self.__grid = self.__get_grid()
+        self.__num_lats = self.__grid.n_latitude()
+        self.__num_lons = self.__grid.n_longitude()
         
     def grid(self):
         return self.__grid
