@@ -137,6 +137,7 @@ def main():
         print(dataDict)
         previousLatitude = None
         previousLongitude = None
+        catchLargeStormSpan = False
         for index, row in enumerate(dataDict):
             dateStr = row["date"].strip()
             hoursStr = row["hours"].strip()
