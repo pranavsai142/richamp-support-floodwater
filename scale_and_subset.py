@@ -241,8 +241,9 @@ class NetcdfOutput:
         self.__nc.close()
 
 class Owi306Wind:
-    def __init__(self, lines):
+    def __init__(self, lines, inputFileLines):
         self.__lines = lines
+        self.__input_file_lines = inputFileLines
         self.__grid = self.__get_grid()
         self.__num_lats = self.__grid.n_latitude()
         self.__num_lons = self.__grid.n_longitude()
@@ -254,13 +255,31 @@ class Owi306Wind:
 
     def __get_grid(self):
 #     Manually set parameters for 306 type file
+        lines = self.__input_file_lines
+        datepart = lines[2].split()
+        start_time = datetime.datetime(int(datepart[0]), int(datepart[1]), int(datepart[2]), int(datepart[3]), int(datepart[4]), int(datepart[5]))
+        time_step = float(lines[3])
+        num_times = int(lines[4])
+        spatial_res = float(1 / int(lines[7].strip().replace(".", "")))
+        lat_bounds = lines[6].split()
+        lon_bounds = lines[5].split()
+        s_lim = float(lat_bounds[0])
+        n_lim = float(lat_bounds[1])
+        w_lim = float(lon_bounds[0])
+        e_lim = float(lon_bounds[1])
+        num_lats = int((n_lim - s_lim) / spatial_res + 1)
+        num_lons = int((e_lim - w_lim) / spatial_res + 1)
         num_lats = 277
         num_lons = 325
-        lat_step = 0.150002
-        lon_step = 0.150002
+#         lat_step = 0.150002
+#         lon_step = 0.150002
+        lat_step = spatial_res
+        lon_step = spatial_res
 #         nw_corner_lat = 46.400002
-        sw_corner_lat = 4.9995
-        sw_corner_lon = -98.6
+#         sw_corner_lat = 4.9995
+#         sw_corner_lon = -98.6
+        sw_corner_lat = 4.0
+        sw_corner_lon = -101.0
         lat = numpy.linspace(sw_corner_lat, sw_corner_lat + (num_lats - 1) * lat_step, num_lats)
         lon = numpy.linspace(sw_corner_lon, sw_corner_lon + (num_lons - 1) * lon_step, num_lons)
         return WindGrid(lon, lat)
@@ -885,9 +904,12 @@ def main():
         num_times = owi_netcdf.num_times()
     elif args.wfmt == "owi-306":
         win_file = open(args.w, 'r')
+        win_inp_file = open(args.winp, 'r')
         lines = win_file.readlines()
         win_file.close()
-        owi_ascii = Owi306Wind(lines)
+        win_inp_lines = win_inp_file.readlines()
+        win_inp_file.close()
+        owi_ascii = Owi306Wind(lines, win_inp_lines)
         num_times = owi_ascii.num_times()
     elif args.wfmt == "wnd":
         metadata = WndWindInp(args.winp)
