@@ -278,8 +278,8 @@ class Owi306Wind:
 #         nw_corner_lat = 46.400002
 #         sw_corner_lat = 4.9995
 #         sw_corner_lon = -98.6
-        sw_corner_lat = 4.0
-        sw_corner_lon = -101.0
+        sw_corner_lat = s_lim
+        sw_corner_lon = w_lim
         lat = numpy.linspace(sw_corner_lat, sw_corner_lat + (num_lats - 1) * lat_step, num_lats)
         lon = numpy.linspace(sw_corner_lon, sw_corner_lon + (num_lons - 1) * lon_step, num_lons)
         return WindGrid(lon, lat)
@@ -293,7 +293,7 @@ class Owi306Wind:
 #         print(idx_date)
         starting_row = idx * (self.__num_lats * self.__num_lons)
         ending_row = starting_row + (self.__num_lats * self.__num_lons)
-        latitudeIndex = 276
+        latitudeIndex = self.__num_lats - 1
         longitudeIndex = 0
         uvel = [[None for i in range(self.__num_lons)] for j in range(self.__num_lats)]
         vvel = [[None for i in range(self.__num_lons)] for j in range(self.__num_lats)]
