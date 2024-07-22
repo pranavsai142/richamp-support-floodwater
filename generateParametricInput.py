@@ -251,7 +251,7 @@ def main():
 
     with open("track.richamp", "w") as f:
         for index, trackTime in enumerate(trackTimes):
-            stormAndDateString = "NHC A" + stormNumber + " URIPWMIN  " + str(trackTime.year).zfill(4) + " " + str(trackTime.month).zfill(2) + " " + str(trackTime.day).zfill(2) + " " + str(trackTime.hour).zfill(2) + " " + str(trackTime.minute).zfill(2)
+            stormAndDateString = "NHC A" + stormNumber + " URIPWMIN  " + str(trackTime.year).zfill(4) + str(trackTime.month).zfill(2) + str(trackTime.day).zfill(2) + " " + str(trackTime.hour).zfill(2) + str(trackTime.minute).zfill(2)
             bearingString = latitudeStrings[index].zfill(3) + " " + longitudeStrings[index].zfill(5) + " " + str(round(trackHeadings[index])).zfill(3)
             pressureAndRadiusString = str(centralPressures[index]).zfill(4) + " " + str(centralPressures[index]).zfill(4) + " " + str(backgroundPressures[index]).zfill(4) + " " + str(round(radiusClosures[index])).zfill(4) + " " + str(round(maxWindSpeeds[index])).zfill(2) + " " + str(round(radiusMaxWinds[index])).zfill(3)
             print("writing tack")
