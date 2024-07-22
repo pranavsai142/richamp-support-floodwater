@@ -148,6 +148,28 @@ def main():
 #             print("date hours", row["date"], row["hours"])
             
             time = datetime(year=year, month=month, day=day, hour=hour) + timedelta(hours=hours)
+            if(catchLargeStormSpan):
+                if(time == stormSpanDate):
+                    windNE = float(row["34ktNE"].strip()) * 1.852
+                    if(windNE == 0):
+                        windNE = -999
+                    print("50ktNE", windNE)
+                    windSE = float(row["34ktSE"].strip()) * 1.852
+                    if(windSE == 0):
+                        windSE = -999
+                    print("50ktSE", windSE)
+                    windNW = float(row["34ktNW"].strip()) * 1.852
+                    if(windNW == 0):
+                        windNW = -999
+                    print("50ktNW", windNW)
+                    windSW = float(row["34ktSW"].strip()) * 1.852
+                    if(windSW == 0):
+                        windSW = -999
+                    print("50ktSW", windSW)
+                    largeStormSpans.append((windNE, windSE, windNW, windSW))
+                else:
+                    largeStormSpans.append((-999, -999, -999, -999))
+                catchLargeStormSpan = False
             if(time not in trackTimes):
                 stormNumber = row["number"].strip()
                 trackTimes.append(time)
@@ -193,8 +215,11 @@ def main():
                     windSW = -999
                 print("34ktSW", windSW)
                 stormSpans.append((windNE, windSE, windNW, windSW))
-                if(index > 0):
-                    largeStormSpans.append((windNE, windSE, windNW, windSW))
+                if(index < lineCount - 1):
+                    catchLargeStormSpan = True
+                    stormSpanDate = time
+                else:
+                    largeStormSpans.append((-999, -999, -999, -999))
                 latitudeStrings.append(row["latitude"].strip())
                 longitudeStrings.append(row["longitude"].strip())
 #                 print(row["latitude"])
@@ -251,7 +276,7 @@ def main():
 
     with open("track.richamp", "w") as f:
         for index, trackTime in enumerate(trackTimes):
-            stormAndDateString = "NHC A" + stormNumber + " URIPWMIN  " + str(trackTime.year).zfill(4) + str(trackTime.month).zfill(2) + str(trackTime.day).zfill(2) + " " + str(trackTime.hour).zfill(2) + str(trackTime.minute).zfill(2)
+            stormAndDateString = "NHC A" + stormNumber + " URIPWMIN   " + str(trackTime.year).zfill(4) + str(trackTime.month).zfill(2) + str(trackTime.day).zfill(2) + " " + str(trackTime.hour).zfill(2) + str(trackTime.minute).zfill(2)
             bearingString = latitudeStrings[index].zfill(3) + " " + longitudeStrings[index].zfill(5) + " " + str(round(trackHeadings[index])).zfill(3)
             pressureAndRadiusString = str(centralPressures[index]).zfill(4) + " " + str(centralPressures[index]).zfill(4) + " " + str(backgroundPressures[index]).zfill(4) + " " + str(round(radiusClosures[index])).zfill(4) + " " + str(round(maxWindSpeeds[index])).zfill(2) + " " + str(round(radiusMaxWinds[index])).zfill(3)
             print("writing tack")
