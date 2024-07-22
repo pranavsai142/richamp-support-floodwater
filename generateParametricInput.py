@@ -6,6 +6,26 @@ import math
 # Yr, Mo, Day, Hr, Min, Sec, Central P(mbar), Background P(mbar), Radius of Max Winds (km)
 # 2023 9 1 12 0 0 982 1014 96.1887
 
+
+# Track merge file
+# ["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktSW", "34ktNW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "name"]
+
+# AL, 08, 2021081500,   , BEST, 174, 394N,  710W,  65,  986, HU,  34, NEQ,   80,  110,   80,   50, 1012,  240,  25,  80,   0,   L,   0,    ,   0,   0,      HENRI, D, 12, NEQ,  150,  270,  120,   60, genesis-num, 021,
+# AL, 08, 2021081500,   , BEST, 174, 394N,  710W,  65,  986, HU,  50, NEQ,   50,   70,    0,    0, 1012,  240,  25,  80,   0,   L,   0,    ,   0,   0,      HENRI, D, 12, NEQ,  150,  270,  120,   60, genesis-num, 021,
+# AL, 08, 2021081500,   , BEST, 174, 394N,  710W,  65,  986, HU,  64, NEQ,    0,   30,    0,    0, 1012,  240,  25,  80,   0,   L,   0,    ,   0,   0,      HENRI, D, 12, NEQ,  150,  270,  120,   60, genesis-num, 021,
+# AL, 08, 2021081500,   , BEST, 180, 407N,  713W,  55,  986, TS,  34, NEQ,   80,   90,   60,   50, 1012,  240,  25,  65,   0,   L,   0,    ,   0,   0,      HENRI, D, 12, NEQ,  150,  270,   90,   90, genesis-num, 021,
+# AL, 08, 2021081500,   , BEST, 180, 407N,  713W,  55,  986, TS,  50, NEQ,   40,   50,    0,    0, 1012,  240,  25,  65,   0,   L,   0,    ,   0,   0,      HENRI, D, 12, NEQ,  150,  270,   90,   90, genesis-num, 021,
+# AL, 08, 2021081500, 20, BEST, 183, 412N,  716W,  55,  987, TS,  34, NEQ,   50,   60,   40,   40, 1012,  240,  25,   0,   0,   L,   0,    ,   0,   0,      HENRI,  ,  0,    ,    0,    0,    0,    0, genesis-num, 021,
+# AL, 08, 2021081500, 20, BEST, 183, 412N,  716W,  55,  987, TS,  50, NEQ,   40,   50,    0,    0, 1012,  240,  25,   0,   0,   L,   0,    ,   0,   0,      HENRI,  ,  0,    ,    0,    0,    0,    0, genesis-num, 021,
+# AL, 08, 2021081500, 15, BEST, 184, 413N,  718W,  55,  988, TS,  34, NEQ,   50,   60,   40,   40, 1012,  240,  25,   0,   0,   L,   0,    ,   0,   0,      HENRI,  ,  0,    ,    0,    0,    0,    0, genesis-num, 021,
+# AL, 08, 2021081500, 15, BEST, 184, 413N,  718W,  55,  988, TS,  50, NEQ,   40,   50,    0,    0, 1012,  240,  25,   0,   0,   L,   0,    ,   0,   0,      HENRI,  ,  0,    ,    0,    0,    0,    0, genesis-num, 021,
+# AL, 08, 2021081500,   , BEST, 186, 415N,  720W,  40,  991, TS,  34, NEQ,   30,   40,   30,   20, 1012,  240,  25,  50,   0,   L,   0,    ,   0,   0,      HENRI, D,  0,    ,    0,    0,    0,    0, genesis-num, 021,
+# AL, 08, 2021081500, 03, OFCL, 189, 416N,  724W,  35,  997, TS,  34, NEQ,    0,   30,    0,    0,    0,    0,   0,  50,   0,    ,   0, SRS, 290,   6,           ,  , 12, NEQ,    0,   90,   90,    0,
+# AL, 08, 2021081500, 03, OFCL, 198, 420N,  735W,  30,    0, TD,  34, NEQ,    0,    0,    0,    0,    0,    0,   0,  40,   0,    ,   0, SRS, 295,   6,
+# AL, 08, 2021081500, 03, OFCL, 210, 426N,  730W,  25,    0, TD,  34, NEQ,    0,    0,    0,    0,    0,    0,   0,  35,   0,    ,   0, SRS,  30,   4,
+# AL, 08, 2021081500, 03, OFCL, 222, 430N,  704W,  25,    0, LO,  34, NEQ,    0,    0,    0,    0,    0,    0,   0,  35,   0,    ,   0, SRS,  75,  10,
+# AL, 08, 2021081500, 03, OFCL, 234, 436N,  665W,  25,    0, LO,  34, NEQ,    0,    0,    0,    0,    0,    0,   0,  35,   0,    ,   0, SRS,  75,  15,
+
 # Sample input data
 # AL, 13, 2023090112,   , BEST,  96, 122N,  396W,  30, 1008, TD,   0,    ,    0,    0,    0,    0, 1012,  210, 120,  40,   0,   L,   0,    ,   0,   0,   THIRTEEN, M,  0,    ,    0,    0,    0,    0, genesis-num, 027, TRANSITIONED, alB52023 to al132023, DISSIPATED, al132023 to al952023, TRANSITIONED, alC52023 to al132023,
 # AL, 13, 2023090112,   , BEST, 102, 129N,  411W,  35, 1006, TS,  34, NEQ,   60,    0,    0,   60, 1012,  210,  60,  45,   0,   L,   0,    ,   0,   0,        LEE, M, 12, NEQ,   60,    0,    0,    0, genesis-num, 027,
@@ -35,6 +55,26 @@ import math
 # AL, 13, 2023091700,   , OFCL,  72, 442N,  680W,  60,  971,   ,  50, NEQ,  130,  130,  100,  130, 1013,     ,   0,     ,    ,    ,    ,    ,  1,  17,      LEE   ,   8,    2, 1, 1, 1, 1,     85.0,   66.6,   99.7,  130.0,    0.6379,   1.0347,   0.9497,   1.1992,   1.4388,  56.9072,  56.9072,  60.3430,  63.4082
 # AL, 13, 2023091800,   , OFCL,  96, 512N,  627W,  40,  974,   ,  34, NEQ,    0,    0,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 27,  20,      LEE   ,   9,    1, 1, 1, 1, 1,     73.2,   78.2,   70.1,   77.3,    0.2389,   0.4316,   0.4316,   0.4316,   0.4316,  33.5586,  33.5586,  33.5586,  33.5586
 # AL, 13, 2023091900,   , OFCL, 120, 571N,  513W,  35,  977,   ,  34, NEQ,    0,    0,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 49,  22,      LEE   ,  10,    1, 1, 1, 1, 1,     73.2,   78.2,   70.1,   77.3,    0.1690,   0.3255,   0.3255,   0.3255,   0.3255,  27.1172,  27.1172,  27.1172,  27.1172
+
+# Fort.22 sample input from josh
+# ["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktSW", "34ktNW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "name"]
+# AL, 08, 2021082106,   , BEST,   0, 325N,  734W,  60,  993,   ,  34, NEQ,   90,  100,   50,   7a0, 1013,     ,  30,     ,    ,    ,    ,    , 16,  12,     HENRI  ,   1,    2, 1, 1, 1, 1,     43.6,   44.2,   21.7,   39.2,    1.5911,   1.9328,   1.9381,   1.7605,   1.8986,  58.4902,  58.4902,  58.4902,  58.4902
+# AL, 08, 2021082106,   , BEST,   0, 325N,  734W,  60,  993,   ,  50, NEQ,   50,   50,    0,    0, 1013,     ,  30,     ,    ,    ,    ,    , 16,  12,     HENRI  ,   1,    2, 1, 1, 0, 0,     38.2,   31.0,    0.0,    0.0,    1.5911,   1.8900,   1.8337,   1.7419,   1.7012,  58.4902,  58.4902,  58.4902,  58.4902
+# AL, 08, 2021082109,   , OFCL,   3, 331N,  732W,  60,  996,   ,  34, NEQ,   90,  100,   50,   70, 1013,     ,   0,     ,    ,    ,    ,    , 16,  12,    HENRI   ,   2,    2, 1, 1, 1, 1,     48.9,   50.5,   24.8,   42.9,    1.8719,   2.3283,   2.3431,   2.1023,   2.2722,  58.4902,  58.4902,  58.4902,  58.4902
+# AL, 08, 2021082109,   , OFCL,   3, 331N,  732W,  60,  996,   ,  50, NEQ,   50,   50,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 16,  12,    HENRI   ,   2,    2, 1, 1, 0, 0,     39.7,   33.4,    0.0,    0.0,    1.8719,   2.2420,   2.1824,   2.0586,   2.0149,  58.4902,  58.4902,  58.4902,  58.4902
+# AL, 08, 2021082118,   , OFCL,  12, 356N,  723W,  70,  978,   ,  34, NEQ,  100,  110,   90,   50, 1013,     ,   0,     ,    ,    ,    ,    , 17,  17,    HENRI   ,   3,    3, 1, 1, 1, 1,     31.7,   30.8,   28.1,   16.9,    1.2178,   1.3973,   1.3920,   1.3766,   1.3126,  67.6926,  67.6926,  67.6926,  67.6926
+# AL, 08, 2021082118,   , OFCL,  12, 356N,  723W,  70,  978,   ,  50, NEQ,   50,   50,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 17,  17,    HENRI   ,   3,    3, 1, 1, 0, 0,     24.9,   19.7,    0.0,    0.0,    1.2178,   1.3582,   1.3285,   1.2839,   1.3235,  67.6926,  67.6926,  67.6926,  67.6926
+# AL, 08, 2021082118,   , OFCL,  12, 356N,  723W,  70,  978,   ,  64, NEQ,   20,   25,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 17,  17,    HENRI   ,   3,    3, 1, 1, 0, 0,     20.0,   15.7,    0.0,    0.0,    1.2178,   1.3146,   1.3055,   1.2529,   1.2529,  67.2734,  67.6926,  67.6926,  67.6926
+# AL, 08, 2021082206,   , OFCL,  24, 388N,  720W,  70,  978,   ,  34, NEQ,  110,  130,   90,   50, 1013,     ,   0,     ,    ,    ,    ,    ,  4,  16,    HENRI   ,   4,    3, 1, 1, 1, 1,     36.2,   41.5,   30.3,   16.7,    1.2358,   1.4585,   1.4919,   1.4217,   1.3377,  68.1904,  68.1904,  68.1904,  68.1904
+# AL, 08, 2021082206,   , OFCL,  24, 388N,  720W,  70,  978,   ,  50, NEQ,   50,   60,   20,   20, 1013,     ,   0,     ,    ,    ,    ,    ,  4,  16,    HENRI   ,   4,    3, 1, 1, 1, 1,     23.8,   25.4,   10.0,   13.7,    1.2358,   1.3811,   1.3914,   1.2961,   1.3190,  68.1904,  68.1904,  68.1904,  68.1904
+# AL, 08, 2021082206,   , OFCL,  24, 388N,  720W,  70,  978,   ,  64, NEQ,   20,   25,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    ,  4,  16,    HENRI   ,   4,    3, 1, 1, 0, 0,     16.0,   16.0,    0.0,    0.0,    1.2358,   1.3333,   1.3331,   1.2744,   1.2744,  68.1904,  68.1904,  68.1904,  68.1904
+# AL, 08, 2021082218,   , OFCL,  36, 409N,  727W,  60,  984,   ,  34, NEQ,   90,  120,   80,   60, 1013,     ,   0,     ,    ,    ,    ,    ,346,  11,    HENRI   ,   5,    2, 1, 1, 1, 1,     30.9,   44.9,   32.9,   24.1,    1.1233,   1.3333,   1.4300,   1.3467,   1.2862,  59.1787,  59.1787,  59.1787,  59.1787
+# AL, 08, 2021082218,   , OFCL,  36, 409N,  727W,  60,  984,   ,  50, NEQ,   50,   60,   30,   20, 1013,     ,   0,     ,    ,    ,    ,    ,346,  11,    HENRI   ,   5,    2, 1, 1, 1, 1,     29.4,   34.1,   30.0,   20.0,    1.1233,   1.3226,   1.3553,   1.4032,   1.2967,  59.1787,  59.1787,  61.0226,  60.1418
+# AL, 08, 2021082306,   , OFCL,  48, 421N,  736W,  35, 1000,   ,  34, NEQ,   40,   80,   30,   30, 1013,     ,   0,     ,    ,    ,    ,    ,331,   7,    HENRI   ,   6,    1, 1, 1, 1, 1,     40.0,   79.9,   30.0,   30.0,    0.7917,   1.1244,   1.6315,   1.6430,   1.4526,  32.6299,  34.9991,  42.7683,  39.8732
+# AL, 08, 2021082318,   , OFCL,  60, 428N,  733W,  25, 1000,   ,  34, NEQ,    0,    0,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 18,   4,    HENRI   ,   7,    1, 1, 1, 1, 1,     40.0,   79.9,   30.0,   30.0,    0.4119,   0.7254,   0.7254,   0.7254,   0.7254,  23.9921,  23.9921,  23.9921,  23.9921
+# AL, 08, 2021082406,   , OFCL,  72, 433N,  715W,  25, 1000,   ,  34, NEQ,    0,    0,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 69,   7,    HENRI   ,   8,    1, 1, 1, 1, 1,     40.0,   79.9,   30.0,   30.0,    0.3487,   0.6567,   0.6567,   0.6567,   0.6567,  22.0742,  22.0742,  22.0742,  22.0742
+# AL, 08, 2021082506,   , OFCL,  96, 445N,  625W,  25, 1000,   ,  34, NEQ,    0,    0,    0,    0, 1013,     ,   0,     ,    ,    ,    ,    , 80,  17,    HENRI   ,   9,    1, 1, 1, 1, 1,     40.0,   79.9,   30.0,   30.0,    0.2325,   0.5110,   0.5110,   0.5110,   0.5110,  18.0278,  18.0278,  18.0278,  18.0278
+
 
 # Wind_Inp.txt sample only dynamic fields are 3 and 5th fields. Date and delta hours. Rest are hardcoded
 # richamp 
@@ -163,8 +203,8 @@ def main():
                 if(radiusOfMaxWind == 0 or True):
                     radiusOfMaxWind = calculateRadiusOfMaxWind(row["latitude"], row["pressure"], row["background"])
 #                 print(radiusOfMaxWind)
-                closureRadius = float(row["closure"].strip())
-                if(closureRadius == 0 or True):
+#                 closureRadius = float(row["closure"].strip())
+                if(True):
 #                     print("setting Closure radius")
 #                   closure radius is max wind times 20
                     closureRadius = radiusOfMaxWind * 20
@@ -253,7 +293,7 @@ def main():
         for index, trackTime in enumerate(trackTimes):
             stormAndDateString = "NHC A" + stormNumber + " URIPWMIN  " + str(trackTime.year).zfill(4) + " " + str(trackTime.month).zfill(2) + " " + str(trackTime.day).zfill(2) + " " + str(trackTime.hour).zfill(2) + " " + str(trackTime.minute).zfill(2)
             bearingString = latitudeStrings[index].zfill(3) + " " + longitudeStrings[index].zfill(5) + " " + str(round(trackHeadings[index])).zfill(3)
-            pressureAndRadiusString = str(centralPressures[index]).zfill(4) + " " + str(centralPressures[index]).zfill(4) + " " + str(backgroundPressures[index]).zfill(4) + " " + str(round(radiusClosures[index])).zfill(4) + " " + str(round(maxWindSpeeds[index])).zfill(2) + " " + str(round(radiusMaxWinds[index])).zfill(3)
+            pressureAndRadiusString = str(centralPressures[index]).zfill(4) + " " + str(backgroundPressures[index]).zfill(4) + " " + str(round(radiusClosures[index])).zfill(4) + " " + str(round(maxWindSpeeds[index])).zfill(2) + " " + str(round(radiusMaxWinds[index])).zfill(3)
             print("writing tack")
             print(len(stormSpans))
             stormSpanString = str(round(stormSpans[index][0])).zfill(4) + " " + str(round(stormSpans[index][1])).zfill(4) + " " + str(round(stormSpans[index][2])).zfill(4) + " " + str(round(stormSpans[index][3])).zfill(4)
