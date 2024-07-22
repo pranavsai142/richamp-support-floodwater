@@ -269,8 +269,8 @@ class Owi306Wind:
         e_lim = float(lon_bounds[1])
         num_lats = int((n_lim - s_lim) / spatial_res + 1)
         num_lons = int((e_lim - w_lim) / spatial_res + 1)
-        num_lats = 277
-        num_lons = 325
+#         num_lats = 277
+#         num_lons = 325
 #         lat_step = 0.150002
 #         lon_step = 0.150002
         lat_step = spatial_res
