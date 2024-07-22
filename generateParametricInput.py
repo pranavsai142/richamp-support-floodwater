@@ -133,7 +133,7 @@ def main():
     dataDict = None
     lineCount = sum(1 for line in open(args.track))
     with open(args.track) as trackFile:
-        dataDict = csv.DictReader(trackFile, fieldnames=["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktSW", "34ktNW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "name"])
+        dataDict = csv.DictReader(trackFile, fieldnames=["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktNW", "34ktSW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "name"])
         print(dataDict)
         previousLatitude = None
         previousLongitude = None
