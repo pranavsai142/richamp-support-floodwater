@@ -88,6 +88,7 @@ def convertLatitude(latitudeString):
 def calculateRadiusOfMaxWind(latitudeString, pressure, background):
     pressure = float(pressure)
     background = float(background)
+    background = 1014
     latitude = convertLatitude(latitudeString)
     deltaPressure = background - pressure
 #         % if not specified - calculated %Rmax = exp(2.636 - ((0.00005086 * (dP ^ 2)) + 0.0394899 * latitude)) 
@@ -148,6 +149,7 @@ def main():
             hours = int(hoursStr)
 #             print("date hours", row["date"], row["hours"])
             
+            #time = datetime(year=year, month=month, day=day, hour=hour)
             time = datetime(year=year, month=month, day=day, hour=hour) + timedelta(hours=hours)
             if(catchLargeStormSpan):
                 if(time == stormSpanDate):
@@ -177,17 +179,18 @@ def main():
                 trackDeltaHours.append(hours)
                 centralPressures.append(int(row["pressure"].strip()))
                 backgroundPressure = int(row["background"].strip())
-                if(backgroundPressure == 0):
+                if(backgroundPressure == 0 or True):
                     backgroundPressure = 1014
                 backgroundPressures.append(backgroundPressure)
-                radiusOfMaxWind = float(row["radius"].strip())
-#                 print("radiusOfMaWind", radiusOfMaxWind)
+                radiusOfMaxWind = float(row["radius"].strip()) * 1.852
+                #print("radiusOfMaWind", radiusOfMaxWind)
 #                 Calculate both radius of max wind and closure radius, instead of relying on track values
-                if(radiusOfMaxWind == 0 or True):
+                if(radiusOfMaxWind == 0):
+                    print("CALCULATING RADIUS")
                     radiusOfMaxWind = calculateRadiusOfMaxWind(row["latitude"], row["pressure"], row["background"])
 #                 print(radiusOfMaxWind)
-                closureRadius = float(row["closure"].strip())
-                if(closureRadius == 0 or True):
+                #closureRadius = float(row["closure"].strip()) * 1.852
+                if(True):
 #                     print("setting Closure radius")
 #                   closure radius is max wind times 20
                     closureRadius = radiusOfMaxWind * 20
