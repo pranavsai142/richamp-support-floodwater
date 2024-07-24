@@ -72,7 +72,8 @@ if [[ $TC_FORCING == "True" ]]; then
     mv Track.shp Track.shx Track.dbf track.richamp properties/.
     wind_param=richamp.wnd
     wind_inp=Wind_Inp.txt
-    wind_format="wnd"
+    wind_format="owi-306"
+    parametric="-parametric true"
 else
     rain_filename=RICHAMP_rain
     #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
@@ -110,13 +111,13 @@ scale_logic=up-down
 
 #skip scale_and_subset
 #wind_format=none
-if [ $wind_format == "wnd" ]; then
+if [ $wind_format == "owi-306" ]; then
     echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_param -wfmt $wind_format -winp $wind_inp -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync
 else
     echo python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
 fi
 if [ $wind_format == "owi-306" ]; then
-	python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
+	python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -winp $wind_inp -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
 elif [ $wind_format == "owi-ascii" ]; then
    python3 $postprocessdir/scale_and_subset.py -o $output -sl $scale_logic -hr $highres_roughness -w $wind_filename -wfmt $wind_format -wr $wind_roughness -z0name $z0_interp_name $z0_sv -r $radius -sigma $sigma -t $threads -wasync $parametric
 elif [ $wind_format == "generic-netcdf" ]; then
