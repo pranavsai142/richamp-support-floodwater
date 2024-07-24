@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import argparse
 import csv
 import math
 
@@ -98,13 +97,7 @@ def calculateRadiusOfMaxWind(latitudeString, pressure, background):
     return radiusOfMaxWind
     
 
-def main():
-    p = argparse.ArgumentParser(description="Make a request to generate parametric wind input")
-    p.add_argument(
-        "--track", help="NHC Track file. In floodwater this file is nhc_merge*.track", type=str
-    )
-    args = p.parse_args()
-    args.epsg = 4326
+def main(track):
     trackDict = {}
     stormName = ""
     stormType = ""
@@ -132,9 +125,9 @@ def main():
     largeStormSpans = []
     
     dataDict = None
-    lineCount = sum(1 for line in open(args.track))
-    with open(args.track) as trackFile:
-        dataDict = csv.DictReader(trackFile, fieldnames=["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktNW", "34ktSW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "name"])
+    lineCount = sum(1 for line in open(track))
+    with open(track) as trackFile:
+        dataDict = csv.DictReader(trackFile, fieldnames=["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktNW", "34ktSW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "unknown16", "name", "tag"])
         print(dataDict)
         previousLatitude = None
         previousLongitude = None
@@ -174,6 +167,12 @@ def main():
                     largeStormSpans.append((-999, -999, -999, -999))
                 catchLargeStormSpan = False
             if(time not in trackTimes):
+                print(row["name"])
+                if(row["name"] != None):
+                    if(len(row["name"].strip()) > 0):
+                        stormName = row["name"].strip()
+#                 stormSpanTag = row["tag"]:
+#                 print(stormName, stormSpanTag)
                 stormNumber = row["number"].strip()
                 trackTimes.append(time)
                 trackDeltaHours.append(hours)
@@ -290,7 +289,5 @@ def main():
 
             f.write(stormAndDateString + " " + bearingString + " " + pressureAndRadiusString + " " + stormSpanString + " D " + largeStormSpanString + "\n")
         f.close()
+    return stormName
 
-    
-if __name__ == "__main__":
-    main()

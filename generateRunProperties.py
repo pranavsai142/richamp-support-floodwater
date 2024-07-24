@@ -4,6 +4,8 @@ from urllib.request import urlretrieve
 from datetime import datetime
 from zipfile import ZipFile
 
+import generateParametricInput
+
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate run properties")
     p.add_argument(
@@ -52,6 +54,13 @@ def main():
         f.write("rawstart: " + rawstart + "\n")
         f.write("rawend: " + rawend + "\n")
         if(tcFound):
+            for file in os.listdir(args.indir):
+                # check only text files
+                if file.endswith('.trk'):
+                    track = file
+                    break
+            stormName = generateParametricInput.main(track)
+            f.write("stormname : " + stormName + "\n")
             f.write("stormtype : nhc\n")
             f.write("stormnumber : " + storm + "\n")
             f.write("advisory : " + advisory + "\n")
