@@ -86,13 +86,17 @@ def main():
         "--rainExists", type=bool, help="Graph adcirc wave data"
     )
     p.add_argument(
-        "--backgroundChoice", type=str, help="Options: RHODE_ISLAND, NORTH_ATLANTIC, AMERICA, MIDWEST")
+        "--backgroundChoice", type=str, help="Options: RHODE_ISLAND, NORTH_ATLANTIC, AMERICA, MIDWEST"
+    )
+    p.add_argument(
+        "--tempDir", type=str, help="Temp json data file directory"
+    )
     args = p.parse_args()
     args.epsg = 4326
     print("Generating Wind Graphs!", flush=True)
-    wind_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wind_temp/"
+    wind_temp_directory = args.tempDir
     graphs_directory = "graphs/"
-    water_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/water_temp/"
+    water_temp_directory = args.tempDir
     
 #      Create temp and graphs directories
     if not os.path.exists(graphs_directory):
