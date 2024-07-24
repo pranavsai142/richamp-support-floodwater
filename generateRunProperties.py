@@ -54,12 +54,13 @@ def main():
         f.write("rawstart: " + rawstart + "\n")
         f.write("rawend: " + rawend + "\n")
         if(tcFound):
+            track = ""
             for file in os.listdir(args.indir):
                 # check only text files
                 if file.endswith('.trk'):
                     track = file
                     break
-            stormName = generateParametricInput.main(track)
+            stormName = generateParametricInput.main(args.indir + "/" + track)
             f.write("stormname : " + stormName + "\n")
             f.write("stormtype : nhc\n")
             f.write("stormnumber : " + storm + "\n")
