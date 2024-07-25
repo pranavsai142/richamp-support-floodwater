@@ -11,7 +11,7 @@ from Encoders import NumpyEncoder
         
 class GetBuoyWind:
     def __init__(self, STATIONS_FILE="", OBS_WIND_DATA_FILE="", startDateObject="", endDateObject=""):
-        temp_directory = "".join(OBS_WIND_DATA_FILE.split('/')[0:-1])
+        temp_directory = OBS_WIND_DATA_FILE[0:OBS_WIND_DATA_FILE.rfind("/") + 1]
         print(type(startDateObject), flush=True)
         print(startDateObject, flush=True)
         with open(STATIONS_FILE) as stations_file:
