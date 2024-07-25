@@ -71,7 +71,7 @@ if [[ $TC_FORCING == "True" ]]; then
     $postprocessdir/windgfdl
 #     mv Track.shp Track.shx Track.dbf track.richamp properties/.
     mv track.richamp properties/.
-    wind_param=richamp.wnd
+    wind_filename=richamp.wnd
     wind_inp=Wind_Inp.txt
     wind_format="owi-306"
     parametric="-parametric true"
