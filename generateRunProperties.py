@@ -78,7 +78,8 @@ def main():
     if(tcFound):
         if(len(storm) == 1):
             storm = "0" + storm
-        filename = "al" + storm + year + "_5day_" + advisory + ".zip"
+#         filename = "al" + storm + year + "_5day_" + advisory + ".zip"
+        filename = "al" + storm + year + "_5day_latest.zip"
         url = "http://www.nhc.noaa.gov/gis/forecast/archive/" + filename
         urlretrieve(url, properties_directory + filename)
 

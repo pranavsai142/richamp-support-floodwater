@@ -12,8 +12,8 @@ from Encoders import NumpyEncoder
 class GetBuoyWind:
 	def __init__(self, STATIONS_FILE="", OBS_WIND_DATA_FILE="", startDateObject="", endDateObject=""):
 		
-		temp_directory = str(OBS_WIND_DATA_FILE.split('/')[0:-1])
-		print(type(startDateObject), flush=True)
+        temp_directory = "".join(OBS_WIND_DATA_FILE.split('/')[0:-1])
+	    print(type(startDateObject), flush=True)
 		print(startDateObject, flush=True)
 		with open(STATIONS_FILE) as stations_file:
 			stationsDict = json.load(stations_file)
