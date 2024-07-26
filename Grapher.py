@@ -567,7 +567,7 @@ class Grapher:
                 for index in range(len(self.mapWindTimes)):
                     filename = "map_wind_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapSpeedsNoNan = self.mapSpeeds
+            mapSpeedsNoNan = np.array(self.mapSpeeds)
             mapSpeedsNoNan = mapSpeedsNoNan[np.isnan(mapSpeedsNoNan)] = 0
             swathWind = np.max(mapSpeedsNoNan, axis=0)
             fig, ax = plt.subplots()
@@ -628,7 +628,7 @@ class Grapher:
                 for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapRainsNoNan = self.mapRains
+            mapRainsNoNan = np.array(self.mapRains)
             mapRainsNoNan = mapRainsNoNan[np.isnan(mapRainsNoNan)] = 0
             swathRain = np.max(mapRainsNoNan, axis=0)
             fig, ax = plt.subplots()
@@ -688,10 +688,9 @@ class Grapher:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapWatersNoNan = self.mapWaters
+            mapWatersNoNan = np.array(self.mapWaters)
             mapWatersNoNan = mapWatersNoNan[np.isnan(mapWatersNoNan)] = 0
-            swathRain = np.max(mapWatersNoNan, axis=0)
-            swathWater = np.max(self.mapWaters, axis=0)
+            swathWaters = np.max(self.mapWaters, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
@@ -746,7 +745,7 @@ class Grapher:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapSWHNoNan = self.mapSWH
+            mapSWHNoNan = np.array(self.mapSWH)
             mapSWHNoNan = mapSWHNoNan[np.isnan(mapSWHNoNan)] = 0
             swathSWH = np.max(mapSWHNoNan, axis=0)
             fig, ax = plt.subplots()
