@@ -567,8 +567,7 @@ class Grapher:
                 for index in range(len(self.mapWindTimes)):
                     filename = "map_wind_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapSpeedsNoNan = np.array(self.mapSpeeds)
-            mapSpeedsNoNan = mapSpeedsNoNan[np.isnan(mapSpeedsNoNan)] = 0
+            mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
             swathWind = np.max(mapSpeedsNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
@@ -628,8 +627,7 @@ class Grapher:
                 for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapRainsNoNan = np.array(self.mapRains)
-            mapRainsNoNan = mapRainsNoNan[np.isnan(mapRainsNoNan)] = 0
+            mapRainsNoNan = np.nan_to_num(self.mapRains)
             swathRain = np.max(mapRainsNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
@@ -688,8 +686,7 @@ class Grapher:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapWatersNoNan = np.array(self.mapWaters)
-            mapWatersNoNan = mapWatersNoNan[np.isnan(mapWatersNoNan)] = 0
+            mapWatersNoNan = np.nan_to_num(self.mapWaters)
             swathWaters = np.max(self.mapWaters, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
@@ -745,8 +742,7 @@ class Grapher:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapSWHNoNan = np.array(self.mapSWH)
-            mapSWHNoNan = mapSWHNoNan[np.isnan(mapSWHNoNan)] = 0
+            mapSWHNoNan = np.nan_to_num(self.mapSWH)
             swathSWH = np.max(mapSWHNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
