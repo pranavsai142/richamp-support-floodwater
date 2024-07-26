@@ -103,7 +103,6 @@ class Grapher:
         self.windTimes = []
         
         self.maxWind = 20
-        self.swathWind = []
         self.mapWindPoints = []
         self.mapWindPointsLatitudes = []
         self.mapWindPointsLongitudes = []
