@@ -103,6 +103,7 @@ class Grapher:
         self.windTimes = []
         
         self.maxWind = 20
+        self.swathWind = []
         self.mapWindPoints = []
         self.mapWindPointsLatitudes = []
         self.mapWindPointsLongitudes = []
@@ -188,15 +189,17 @@ class Grapher:
                     self.mapWindPointsLongitudes = windDataset["map_data"]["map_pointsLongitude"]
                     self.mapWindTimes = windDataset["map_data"]["map_times"]
                     if(self.windType == "FORT"):
+                        mapWindsX = windDataset["map_data"]["map_windsX"]
+                        mapWindsY = windDataset["map_data"]["map_windsY"]
                         for index in range(len(self.mapWindTimes)):
-                            pointSpeeds = []
-                            pointDirections = []
+                            lineSpeed = []
+                            lineDirection = []
                             for nodeIndex in range(len(mapWindsX[index])):
                                 pointSpeed = self.vectorSpeed(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex])
                                 if(pointSpeed > self.maxWind):
                                     self.maxWind = pointSpeed
-                                pointSpeeds.append(pointSpeed)
-                                pointDirections.append(self.vectorDirection(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex]))
+                                lineSpeed.append(pointSpeed)
+                                lineDirection.append(self.vectorDirection(mapWindsX[index][nodeIndex], mapWindsY[index][nodeIndex]))
                             self.mapSpeeds.append(pointSpeeds)
                             self.mapDirections.append(pointDirections)
                     elif(self.windType == "GFS"):
@@ -557,6 +560,25 @@ class Grapher:
                 for index in range(len(self.mapWindTimes)):
                     filename = "map_wind_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
+            swathWind = np.max(self.mapSpeeds, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            plt.axis(plotAxis)
+            plt.title("Wind Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 5),
+                boundaries=level_boundaries,
+                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                label="Meters/Second",
+                ax=plt.gca()
+            )
+            plt.savefig(graph_directory + 'map_wind_swath.png')
+            plt.close()
+            gc.collect()
         if(len(self.mapRainTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxRain)
@@ -594,6 +616,25 @@ class Grapher:
                 for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
+            swathRain = np.max(self.mapRains, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, swathRain, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            plt.axis(plotAxis)
+            plt.title("Rain Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 5),
+                boundaries=level_boundaries,
+                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                label="Millimeters/Hour",
+                ax=plt.gca()
+            )
+            plt.savefig(graph_directory + 'map_rain_swath.png')
+            plt.close()
+            gc.collect()
         if(len(self.mapWaterTimes) > 0):
             vmin = -1
             vmax = math.ceil(self.maxWater)
@@ -631,6 +672,25 @@ class Grapher:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
+            swathWater = np.max(self.mapWaters, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            plt.axis(plotAxis)
+            plt.title("Water Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 2),
+                boundaries=level_boundaries,
+                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                label="Meters",
+                ax=plt.gca()
+            )
+            plt.savefig(graph_directory + 'map_water_swath.png')
+            plt.close()
+            gc.collect()
         if(len(self.mapWaveTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxWave)
@@ -666,6 +726,25 @@ class Grapher:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
+            swathSWH = np.max(self.mapSWH, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, swathSWH, level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+            plt.axis(plotAxis)
+            plt.title("Wave Significant Wave Height Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 5),
+                boundaries=level_boundaries,
+                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                label="Meters",
+                ax=plt.gca()
+            )        
+            plt.savefig(graph_directory + 'map_swh_swath.png')
+            plt.close()
+            gc.collect()
         # Plot wind speed over time
         for index in range(numberOfDatapoints):
             if(len(self.datapointsSpeeds) > 0):
