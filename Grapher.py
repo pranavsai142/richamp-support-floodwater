@@ -108,6 +108,7 @@ class Grapher:
         self.mapWindPointsLatitudes = []
         self.mapWindPointsLongitudes = []
         self.mapWindTimes = []
+        self.mapWindTriangles = []
         self.mapSpeeds = []
         self.mapDirections = []
         
@@ -124,6 +125,7 @@ class Grapher:
         self.mapWaterTimes = []
         self.mapWaterPointsLatitudes = []
         self.mapWaterPointsLongitudes = []
+        self.mapWaterTriangles = []
         self.mapWaters = []
         
         self.datapointsWaters = []
@@ -189,6 +191,7 @@ class Grapher:
                     self.mapWindPointsLongitudes = windDataset["map_data"]["map_pointsLongitude"]
                     self.mapWindTimes = windDataset["map_data"]["map_times"]
                     if(self.windType == "FORT"):
+                        self.mapWindTriangles = windDataset["map_data"]["map_triangles"]
                         mapWindsX = windDataset["map_data"]["map_windsX"]
                         mapWindsY = windDataset["map_data"]["map_windsY"]
                         for index in range(len(self.mapWindTimes)):
@@ -330,6 +333,7 @@ class Grapher:
             waterTimestampsInitialized = False
             for stationKey in waterDataset.keys():
                 if(stationKey == "map_data"):
+                    self.mapWaterTriangles = waterDataset["map_data"]["map_triangles"]
                     self.mapWaterTimes = waterDataset["map_data"]["map_times"]
                     self.mapWaterPoints = waterDataset["map_data"]["map_points"]
                     self.mapWaterPointsLatitudes = waterDataset["map_data"]["map_pointsLatitudes"]
@@ -403,6 +407,7 @@ class Grapher:
             waveTimestampsInitialized = False
             for stationKey in iteratorDataset.keys():
                 if(stationKey == "map_data"):
+                    self.mapWaveTriangles = waveDataset["map_data"]["map_triangles"]
                     self.mapWaveTimes = swhDataset["map_data"]["map_times"]
                     self.mapWavePoints = swhDataset["map_data"]["map_points"]
                     self.mapWavePointsLatitudes = swhDataset["map_data"]["map_pointsLatitudes"]
@@ -516,6 +521,8 @@ class Grapher:
             vmax = 50
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            if(self.windType == "FORT"):
+                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles)
             for index in range(len(self.mapWindTimes)):
                 fig, ax = plt.subplots()
 #                 plt.figure(figsize=(6, 6))
@@ -526,7 +533,7 @@ class Grapher:
 #                 plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
                 if(self.windType == "FORT"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
-                    contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
                 elif(self.windType == "POST"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
 #                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
@@ -641,14 +648,16 @@ class Grapher:
 #             vmax = 20
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles)
             for index in range(len(self.mapWaterTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
+                contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
 #               Todo: Fix triangulation errors
-                contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+#                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Water Elevation")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))

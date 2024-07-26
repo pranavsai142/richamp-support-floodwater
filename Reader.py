@@ -370,10 +370,14 @@ class Reader:
                 nodesIndex.append(str(index))
         return (latitudes, longitudes), nodesIndex
    
+    def getTriangles(self, dataset):
+        trianglesOffByOne = np.array(dataset.variables["element"][:])
+        triangles = trianglesOffByOne - 1
     def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
         print("getting map", dataType, flush=True)
         mapValuesX = []
         mapValuesY = []
+        mapTriangles = []
         mapValues = []
         
         mapNodes = []
@@ -386,6 +390,7 @@ class Reader:
         elif(self.format == "FORT"):
             value = self.getValues(spaceSparseness, timeSparseness, dataType, dataset)
             nodes, nodesIndex = self.getCoordinates(spaceSparseness, dataset)
+            mapTriangles = self.getTriangles(dataset)
         if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
             mapValuesX = value[0]
             mapValuesY = value[1]
@@ -401,6 +406,8 @@ class Reader:
         data["map_data"]["map_points"] = mapNodes
         data["map_data"]["map_pointsLatitudes"] = mapNodesLatitudes
         data["map_data"]["map_pointsLongitude"] = mapNodesLongitudes
+        if(self.format == "FORT"):
+            data["map_data"]["map_triangles"] = mapTriangles
         if(dataType == "rad"):
             data["map_data"]["map_radstressX"] = mapValuesX
             data["map_data"]["map_radstressY"] = mapValuesY
@@ -421,6 +428,28 @@ class Reader:
             dataset = nc.Dataset(NETCDF_FILE)
         metadata = dataset.__dict__
 #         print(dataset.variables)
+#         triangles = dataset.variables["element"]
+#         xCoordinates = dataset.variables["x"]
+#         yCoordinates = dataset.variables["y"]
+#         print(len(xCoordinates))
+#         print(len(yCoordinates))
+#         print(np.min(triangles, axis=0))
+#         quit()
+#         badTriangles = []
+#         badTriangle = False
+#         for triangle in triangles:
+#             for index in triangle:
+#                 if(len(xCoordinates) < index):
+#                     badTriangles.append(triangle)
+#                     badTriangle = True
+#             if(not badTriangle):
+#                 triangleXCoordinates = [xCoordinates[triangle[0]], xCoordinates[triangle[1]], xCoordinates[triangle[2]]]
+#                 triangleYCoordinates = [yCoordinates[triangle[0]], yCoordinates[triangle[1]], yCoordinates[triangle[2]]]
+#             badTriangle = False
+#                 
+#         print(badTriangles)
+#         print(len(badTriangles))
+#         quit()
 
         datasetTimeDescription = dataset.variables["time"].units
 #         Add UTC time marker if not existing in cold start date
@@ -931,7 +960,7 @@ class Fort74Reader:
         if(initializeClosestWindNodes):
             thresholdDistance = 0.1
             self.reader.initializeClosestNodes(windDataset, thresholdDistance)
-        spaceSparseness = 10
+        spaceSparseness = 1
         timeSparseness = 1
         interpolateValues = True
         if(interpolateValues):
@@ -1050,7 +1079,7 @@ class WaveReader:
         if(timesSWH == timesMWD == timesMWP == timesPWP == timesRAD):
             timesEqual = True
         if(timesEqual):
-                spaceSparseness = 10
+                spaceSparseness = 1
                 timeSparseness = 1
                 initializeClosestWaveNodes = True
                 if(initializeClosestWaveNodes):
