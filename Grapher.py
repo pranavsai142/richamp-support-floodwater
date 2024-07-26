@@ -159,6 +159,7 @@ class Grapher:
         self.mapWavePoints = []
         self.mapWavePointsLatitude = []
         self.mapWavePointsLongitude = []
+        self.mapWaveTriangles = []
         self.mapWaveTimes = []
         self.mapSWH = []
 
@@ -566,10 +567,15 @@ class Grapher:
                 for index in range(len(self.mapWindTimes)):
                     filename = "map_wind_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            swathWind = np.max(self.mapSpeeds, axis=0)
+            mapSpeedsNoNan = self.mapSpeeds
+            mapSpeedsNoNan = mapSpeedsNoNan[np.isnan(mapSpeedsNoNan)] = 0
+            swathWind = np.max(mapSpeedsNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            if(self.windType == "FORT"):
+                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+            else:
+                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             plt.axis(plotAxis)
             plt.title("Wind Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
@@ -622,7 +628,9 @@ class Grapher:
                 for index in range(len(self.mapRainTimes)):
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            swathRain = np.max(self.mapRains, axis=0)
+            mapRainsNoNan = self.mapRains
+            mapRainsNoNan = mapRainsNoNan[np.isnan(mapRainsNoNan)] = 0
+            swathRain = np.max(mapRainsNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, swathRain, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
@@ -680,10 +688,13 @@ class Grapher:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
+            mapWatersNoNan = self.mapWaters
+            mapWatersNoNan = mapWatersNoNan[np.isnan(mapWatersNoNan)] = 0
+            swathRain = np.max(mapWatersNoNan, axis=0)
             swathWater = np.max(self.mapWaters, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             plt.axis(plotAxis)
             plt.title("Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
@@ -704,13 +715,14 @@ class Grapher:
             vmax = math.ceil(self.maxWave)
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles)
             for index in range(len(self.mapWaveTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
-                contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis(plotAxis)
                 plt.title("Significant Wave Height")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
@@ -734,10 +746,12 @@ class Grapher:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            swathSWH = np.max(self.mapSWH, axis=0)
+            mapSWHNoNan = self.mapSWH
+            mapSWHNoNan = mapSWHNoNan[np.isnan(mapSWHNoNan)] = 0
+            swathSWH = np.max(mapSWHNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, swathSWH, level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
             plt.axis(plotAxis)
             plt.title("Wave Significant Wave Height Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
