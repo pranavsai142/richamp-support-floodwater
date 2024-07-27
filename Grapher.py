@@ -108,6 +108,7 @@ class Grapher:
         self.mapWindPointsLongitudes = []
         self.mapWindTimes = []
         self.mapWindTriangles = []
+        self.mapWindMaskedTriangles = []
         self.mapSpeeds = []
         self.mapDirections = []
         
@@ -125,6 +126,7 @@ class Grapher:
         self.mapWaterPointsLatitudes = []
         self.mapWaterPointsLongitudes = []
         self.mapWaterTriangles = []
+        self.mapWaterMaskedTriangles = []
         self.mapWaters = []
         
         self.datapointsWaters = []
@@ -160,6 +162,7 @@ class Grapher:
         self.mapWavePointsLatitude = []
         self.mapWavePointsLongitude = []
         self.mapWaveTriangles = []
+        self.mapWaveMaskedTriangles = []
         self.mapWaveTimes = []
         self.mapSWH = []
 
@@ -192,6 +195,7 @@ class Grapher:
                     self.mapWindTimes = windDataset["map_data"]["map_times"]
                     if(self.windType == "FORT"):
                         self.mapWindTriangles = windDataset["map_data"]["map_triangles"]
+                        self.mapWindMaskedTriangles = windDataset["map_data"]["map_maskedTriangles"]
                         mapWindsX = windDataset["map_data"]["map_windsX"]
                         mapWindsY = windDataset["map_data"]["map_windsY"]
                         for index in range(len(self.mapWindTimes)):
@@ -334,6 +338,7 @@ class Grapher:
             for stationKey in waterDataset.keys():
                 if(stationKey == "map_data"):
                     self.mapWaterTriangles = waterDataset["map_data"]["map_triangles"]
+                    self.mapWaterMaskedTriangles = waterDataset["map_data"]["map_maskedTriangles"]
                     self.mapWaterTimes = waterDataset["map_data"]["map_times"]
                     self.mapWaterPoints = waterDataset["map_data"]["map_points"]
                     self.mapWaterPointsLatitudes = waterDataset["map_data"]["map_pointsLatitudes"]
@@ -407,7 +412,8 @@ class Grapher:
             waveTimestampsInitialized = False
             for stationKey in iteratorDataset.keys():
                 if(stationKey == "map_data"):
-                    self.mapWaveTriangles = waveDataset["map_data"]["map_triangles"]
+                    self.mapWaveTriangles = swhDataset["map_data"]["map_triangles"]
+                    self.mapWaveMaskedTriangles = swhDataset["map_data"]["map_maskedTriangles"]
                     self.mapWaveTimes = swhDataset["map_data"]["map_times"]
                     self.mapWavePoints = swhDataset["map_data"]["map_points"]
                     self.mapWavePointsLatitudes = swhDataset["map_data"]["map_pointsLatitudes"]
@@ -522,7 +528,7 @@ class Grapher:
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
             if(self.windType == "FORT"):
-                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles)
+                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, self.mapWindMaskedTriangles)
             for index in range(len(self.mapWindTimes)):
                 fig, ax = plt.subplots()
 #                 plt.figure(figsize=(6, 6))
@@ -653,7 +659,7 @@ class Grapher:
 #             vmax = 20
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
-            waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles)
+            waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
             for index in range(len(self.mapWaterTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
@@ -711,7 +717,7 @@ class Grapher:
             vmax = math.ceil(self.maxWave)
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
-            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles)
+            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
             for index in range(len(self.mapWaveTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)

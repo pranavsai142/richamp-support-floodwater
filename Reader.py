@@ -35,11 +35,12 @@ from Encoders import NumpyEncoder
 # NOS_ADCIRC_WIND_DATA_FILE_NAME = "NOS_Floodwater_Wind_Data.json"
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
 class Reader:
-    def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", format=""):
+    def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", BACKGROUND_AXIS=[], format=""):
         self.STATIONS_FILE = STATIONS_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = STATION_TO_NODE_DISTANCES_FILE
         self.NODES_FILE = NODES_FILE
         self.format = format
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
     def extractLatitudeIndex(self, nodeIndex):
         return int(nodeIndex[1: nodeIndex.find(",")])
     def extractLongitudeIndex(self, nodeIndex):
@@ -369,10 +370,68 @@ class Reader:
             for index in range(len(latitudes)):
                 nodesIndex.append(str(index))
         return (latitudes, longitudes), nodesIndex
+
+# Example background axis
+# SOUTH_NEW_ENGLAND_AXIS = [-71.905117442267496, -71.0339945492675, 42.200717972845119, 41.028319358056874]
+    def isOutsideBackground(self, point):
+        if(point[0] > self.BACKGROUND_AXIS[0] and point[0] < self.BACKGROUND_AXIS[1]):
+            if(point[1] > self.BACKGROUND_AXIS[3] and point[1] < self.BACKGROUND_AXIS[2]):
+                return False
+        return True
    
+    def findTriangleIndicesOutsideBackground(self, triangles, dataset):
+        latitudes = dataset.variables["y"][::]
+        longitudes = dataset.variables["x"][::]
+        maskedIndices = []
+        for index, triangle in enumerate(triangles):
+            point0 = [longitudes[triangle[0]], latitudes[triangle[0]]]
+            point1 = [longitudes[triangle[1]], latitudes[triangle[1]]]
+            point2 = [longitudes[triangle[2]], latitudes[triangle[2]]]
+            if(self.isOutsideBackground(point0) or self.isOutsideBackground(point1) or self.isOutsideBackground(point2)):
+                maskedIndices.append(True)
+            else:
+                maskedIndices.append(False)
+        return maskedIndices
+                
+#    TODO: Get map background bounds and mask triangles with any vertices that fall outside of bounds
     def getTriangles(self, dataset):
         trianglesOffByOne = np.array(dataset.variables["element"][:])
         triangles = trianglesOffByOne - 1
+        maskedIndices = self.findTriangleIndicesOutsideBackground(triangles, dataset)
+#         xCoordinates = dataset.variables["x"]
+#         yCoordinates = dataset.variables["y"]
+#         triangleXCoordinates = []
+#         triangleYCoordinates = []
+#         print(len(xCoordinates))
+#         print(len(yCoordinates))
+#         print(np.min(triangles, axis=0))
+#         for triangle in triangles:
+#             triangleXCoordinates.append([xCoordinates[triangle[0]], xCoordinates[triangle[1]], xCoordinates[triangle[2]]])
+#             triangleYCoordinates.append([yCoordinates[triangle[0]], yCoordinates[triangle[1]], yCoordinates[triangle[2]]])
+#             
+#         triangleAreas = []
+#         badIndices = []
+#         for index, triangleXCoordinate in enumerate(triangleXCoordinates):
+#             x1 = triangleXCoordinate[0]
+#             x2 = triangleXCoordinate[1]
+#             x3 = triangleXCoordinate[2]
+#             y1 = triangleYCoordinates[index][0]
+#             y2 = triangleYCoordinates[index][1]
+#             y3 = triangleYCoordinates[index][2]
+#             print(x1, x2, x3)
+#             if ((x1 < -71.9) or (x2 < -71.9) or (x3 < -71.9)):
+#                 badIndices.append(index)
+#             area = (0.5) * np.abs(((x1 * (y2 - y3)) + (x2 * (y3 - y1)) + (x3*(y1 - y2))))
+#             triangleAreas.append(area)
+# #             print(area)
+#                 
+#         for index in badIndices:
+#             area = triangleAreas[index]
+#             print("index, area", index, area)
+#         print(badIndices)
+#         print(len(triangles), len(badIndices))
+        return triangles, maskedIndices
+        
     def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
         print("getting map", dataType, flush=True)
         mapValuesX = []
@@ -390,7 +449,7 @@ class Reader:
         elif(self.format == "FORT"):
             value = self.getValues(spaceSparseness, timeSparseness, dataType, dataset)
             nodes, nodesIndex = self.getCoordinates(spaceSparseness, dataset)
-            mapTriangles = self.getTriangles(dataset)
+            mapTriangles, mapMaskedTriangles = self.getTriangles(dataset)
         if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
             mapValuesX = value[0]
             mapValuesY = value[1]
@@ -408,6 +467,7 @@ class Reader:
         data["map_data"]["map_pointsLongitude"] = mapNodesLongitudes
         if(self.format == "FORT"):
             data["map_data"]["map_triangles"] = mapTriangles
+            data["map_data"]["map_maskedTriangles"] = mapMaskedTriangles
         if(dataType == "rad"):
             data["map_data"]["map_radstressX"] = mapValuesX
             data["map_data"]["map_radstressY"] = mapValuesY
@@ -428,28 +488,6 @@ class Reader:
             dataset = nc.Dataset(NETCDF_FILE)
         metadata = dataset.__dict__
 #         print(dataset.variables)
-#         triangles = dataset.variables["element"]
-#         xCoordinates = dataset.variables["x"]
-#         yCoordinates = dataset.variables["y"]
-#         print(len(xCoordinates))
-#         print(len(yCoordinates))
-#         print(np.min(triangles, axis=0))
-#         quit()
-#         badTriangles = []
-#         badTriangle = False
-#         for triangle in triangles:
-#             for index in triangle:
-#                 if(len(xCoordinates) < index):
-#                     badTriangles.append(triangle)
-#                     badTriangle = True
-#             if(not badTriangle):
-#                 triangleXCoordinates = [xCoordinates[triangle[0]], xCoordinates[triangle[1]], xCoordinates[triangle[2]]]
-#                 triangleYCoordinates = [yCoordinates[triangle[0]], yCoordinates[triangle[1]], yCoordinates[triangle[2]]]
-#             badTriangle = False
-#                 
-#         print(badTriangles)
-#         print(len(badTriangles))
-#         quit()
 
         datasetTimeDescription = dataset.variables["time"].units
 #         Add UTC time marker if not existing in cold start date
@@ -882,7 +920,7 @@ class Reader:
         
          
 class GFSRainReader:
-    def __init__(self, GFS_RAIN_FILE="", STATIONS_FILE="", GFS_RAIN_DATA_FILE=""):
+    def __init__(self, GFS_RAIN_FILE="", STATIONS_FILE="", GFS_RAIN_DATA_FILE="", BACKGROUND_AXIS=[]):
         temp_directory = GFS_RAIN_DATA_FILE[0:GFS_RAIN_DATA_FILE.rfind("/") + 1]
         self.GFS_RAIN_FILE = GFS_RAIN_FILE
         self.STATIONS_FILE = STATIONS_FILE
@@ -890,7 +928,8 @@ class GFSRainReader:
         self.GFS_NODES_FILE = temp_directory + "GFS_Nodes.json"
         self.GFS_RAIN_DATA_FILE = GFS_RAIN_DATA_FILE
         self.GFS_NODES_WIND_DATA_FILE = temp_directory + "GFS_Nodes_Wind_Data.json"
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, format="GFS")
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="GFS")
     
     def generateRainDataForStations(self):
         print("Rain file", flush=True)
@@ -911,7 +950,7 @@ class GFSRainReader:
         return (datetime.fromtimestamp(timesRain[0], timezone.utc), datetime.fromtimestamp(timesRain[-1], timezone.utc))
             
 class GFSWindReader:
-    def __init__(self, GFS_WIND_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE=""):
+    def __init__(self, GFS_WIND_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE="", BACKGROUND_AXIS=[]):
         temp_directory = GFS_WIND_DATA_FILE[0:GFS_WIND_DATA_FILE.rfind("/") + 1]
         self.GFS_WIND_FILE = GFS_WIND_FILE
         self.STATIONS_FILE = STATIONS_FILE
@@ -919,7 +958,8 @@ class GFSWindReader:
         self.GFS_NODES_FILE = temp_directory + "GFS_Nodes.json"
         self.GFS_WIND_DATA_FILE = GFS_WIND_DATA_FILE
         self.GFS_NODES_WIND_DATA_FILE = temp_directory + "GFS_Nodes_Wind_Data.json"
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, format="GFS")
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="GFS")
     
     def generateWindDataForStations(self):
         print("Wind file", flush=True)
@@ -942,7 +982,7 @@ class GFSWindReader:
         return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
             
 class Fort74Reader:
-    def __init__(self, ADCIRC_WIND_FILE="", STATIONS_FILE="", ADCIRC_WIND_DATA_FILE=""):
+    def __init__(self, ADCIRC_WIND_FILE="", STATIONS_FILE="", ADCIRC_WIND_DATA_FILE="", BACKGROUND_AXIS=[]):
         temp_directory = ADCIRC_WIND_DATA_FILE[0:ADCIRC_WIND_DATA_FILE.rfind("/") + 1]
         self.ADCIRC_WIND_FILE = ADCIRC_WIND_FILE
         self.STATIONS_FILE = STATIONS_FILE
@@ -950,7 +990,8 @@ class Fort74Reader:
         self.ADCIRC_NODES_FILE = temp_directory + "ADCIRC_Nodes.json"
         self.ADCIRC_WIND_DATA_FILE = ADCIRC_WIND_DATA_FILE
         self.ADCIRC_NODES_WIND_DATA_FILE = temp_directory + "ADCIRC_Nodes_Wind_Data.json"
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, format="FORT")
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
     
     def generateWindDataForStations(self):
         print("Wind file", flush=True)
@@ -970,7 +1011,7 @@ class Fort74Reader:
         return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
   
 class Fort63Reader:
-    def __init__(self, ADCIRC_WATER_FILE="", STATIONS_FILE="", ADCIRC_WATER_DATA_FILE=""):
+    def __init__(self, ADCIRC_WATER_FILE="", STATIONS_FILE="", ADCIRC_WATER_DATA_FILE="", BACKGROUND_AXIS=[]):
         temp_directory = ADCIRC_WATER_DATA_FILE[0:ADCIRC_WATER_DATA_FILE.rfind("/") + 1]
         self.ADCIRC_WATER_FILE = ADCIRC_WATER_FILE
         self.STATIONS_FILE = STATIONS_FILE
@@ -978,7 +1019,8 @@ class Fort63Reader:
         self.ADCIRC_NODES_FILE = temp_directory + "ADCIRC_Nodes.json"
         self.ADCIRC_WATER_DATA_FILE = ADCIRC_WATER_DATA_FILE
         self.ADCIRC_NODES_WIND_DATA_FILE = temp_directory + "ADCIRC_Nodes_Water_Data.json"
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, format="FORT")
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
     
     def generateWindDataForStations(self):
         print("Water file", flush=True)
@@ -986,8 +1028,8 @@ class Fort63Reader:
         waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
         initializeClosestWaterNodes = True
         if(initializeClosestWaterNodes):
-#             thresholdDistance = 10
-            thresholdDistance = 0.1
+            thresholdDistance = 10
+#             thresholdDistance = 0.1
             self.reader.initializeClosestNodes(waterDataset, thresholdDistance)
         spaceSparseness = 1
 #         spaceSparseness = 10
@@ -1000,14 +1042,15 @@ class Fort63Reader:
         return (datetime.fromtimestamp(timesWater[0], timezone.utc), datetime.fromtimestamp(timesWater[-1], timezone.utc))
                   
 class PostWindReader:
-    def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE=""):
+    def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE="", BACKGROUND_AXIS=[]):
         temp_directory = POST_WIND_DATA_FILE[0:POST_WIND_DATA_FILE.rfind("/") + 1]
         self.POST_WIND_FILE = POST_WIND_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Post_Station_To_Node_Distances.json"
         self.POST_NODES_FILE = temp_directory + "Post_Nodes.json"
         self.POST_WIND_DATA_FILE = POST_WIND_DATA_FILE
         self.POST_NODES_WIND_DATA_FILE = temp_directory + "Post_Nodes_Wind_Data.json"
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.POST_NODES_FILE, format="POST")
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.POST_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="POST")
     
     def generateWindDataForStations(self):
         print("start, ", datetime.now(), flush=True)
@@ -1047,7 +1090,8 @@ class WaveReader:
         WAVE_MWD_DATA_FILE="",
         WAVE_MWP_DATA_FILE="",
         WAVE_PWP_DATA_FILE="",
-        WAVE_RAD_DATA_FILE=""):
+        WAVE_RAD_DATA_FILE="", 
+        BACKGROUND_AXIS=[]):
         temp_directory = WAVE_SWH_DATA_FILE[0:WAVE_SWH_DATA_FILE.rfind("/") + 1]
         self.WAVE_SWH_FILE=WAVE_SWH_FILE
         self.WAVE_MWD_FILE=WAVE_MWD_FILE
@@ -1061,7 +1105,8 @@ class WaveReader:
         self.WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Wave_Station_To_Node_Distances.json"
         self.WAVE_NODES_FILE = temp_directory + "Wave_Nodes.json"
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.WAVE_NODES_FILE, format="FORT")
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.WAVE_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
     
     def generateWaveDataForStations(self):
         print("Wave files", flush=True)

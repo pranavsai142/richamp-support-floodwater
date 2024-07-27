@@ -115,85 +115,6 @@ def main():
     else:
         backgroundChoice = args.backgroundChoice
         
-    print("args.adcircExists", args.adcircExists, flush=True)
-    if(args.adcircExists):
-        ADCIRC_WIND_FILE = args.wind
-        ADCIRC_WIND_DATA_FILE = wind_temp_directory + "adcirc_wind_data_file" + ".json"
-        (windStartDateObject, windEndDateObject) = Fort74Reader(ADCIRC_WIND_FILE=ADCIRC_WIND_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WIND_DATA_FILE=ADCIRC_WIND_DATA_FILE).generateWindDataForStations()
-        dataToGraph["FORT"] = ADCIRC_WIND_DATA_FILE
-    print("args.gfsExists", args.gfsExists, flush=True)
-    if(args.gfsExists):
-        GFS_WIND_FILE = args.wind
-        GFS_WIND_DATA_FILE = wind_temp_directory + "gfs_wind_data_file" + ".json"
-        (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE).generateWindDataForStations()
-        dataToGraph["GFS"] = GFS_WIND_DATA_FILE
-    print("args.rainExists", args.rainExists, flush=True)
-    if(args.rainExists):
-        GFS_RAIN_FILE = args.rain
-        GFS_RAIN_DATA_FILE = wind_temp_directory + "gfs_rain_data_file" + ".json"
-        (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateRainDataForStations()
-        dataToGraph["RAIN"] = GFS_RAIN_DATA_FILE
-    print("args.postExists", args.postExists, flush=True)
-    if(args.postExists):
-        POST_WIND_FILE = args.wind
-        POST_WIND_DATA_FILE = wind_temp_directory + "post_wind_data_file" + ".json"
-        (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE).generateWindDataForStations()
-        dataToGraph["POST"] = POST_WIND_DATA_FILE
-
-    print("args.obsExists", args.obsExists, flush=True)
-    if(args.obsExists):
-        print("Parsed start and end date from netCDF, ", windStartDateObject, windEndDateObject, flush=True)
-        OBS_WIND_DATA_FILE = wind_temp_directory + "obs_wind_data_file" + ".json"
-        GetBuoyWind(STATIONS_FILE=STATIONS_FILE, OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, startDateObject=windStartDateObject, endDateObject=windEndDateObject)
-        dataToGraph["OBS"] = OBS_WIND_DATA_FILE
-    
-    print("args.waterExists", args.waterExists, flush=True)
-    if(args.waterExists):
-        ADCIRC_WATER_FILE = args.water
-        ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
-        (windStartDateObject, windEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE).generateWindDataForStations()
-        dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
-#     Grapher(graphObs=args.obs, graphRain=False, WIND_TYPE="POST", OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=POST_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
-    print("args.wavesExists", args.wavesExists, flush=True)
-    if(args.wavesExists):
-        print("Generating Wave Graphs!", flush=True)
-        wave_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wave_temp/"
-    
-    #     Create temp and graphs directories
-        if not os.path.exists(wave_temp_directory):
-            os.makedirs(wave_temp_directory)
-        
-        print("Loading NetCDF file!", flush=True)
-        WAVE_SWH_FILE = args.waveswh 
-        WAVE_MWD_FILE = args.wavemwd
-        WAVE_MWP_FILE = args.wavemwp
-        WAVE_PWP_FILE = args.wavepwp
-        WAVE_RAD_FILE = args.waverad
-        WAVE_SWH_DATA_FILE = wave_temp_directory + "wave_swh_data_file" + ".json"
-        WAVE_MWD_DATA_FILE = wave_temp_directory + "wave_mwd_data_file" + ".json"
-        WAVE_MWP_DATA_FILE = wave_temp_directory + "wave_mwp_data_file" + ".json"
-        WAVE_PWP_DATA_FILE = wave_temp_directory + "wave_pwp_data_file" + ".json"
-        WAVE_RAD_DATA_FILE = wave_temp_directory + "wave_rad_data_file" + ".json"
-        STATIONS_FILE = args.stations
-        (startDateObject, endDateObject) = WaveReader(
-            WAVE_SWH_FILE=WAVE_SWH_FILE,
-            WAVE_MWD_FILE=WAVE_MWD_FILE,
-            WAVE_MWP_FILE=WAVE_MWP_FILE,
-            WAVE_PWP_FILE=WAVE_PWP_FILE,
-            WAVE_RAD_FILE=WAVE_RAD_FILE,
-            STATIONS_FILE=STATIONS_FILE, 
-            WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
-            WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
-            WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
-            WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
-            WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE).generateWaveDataForStations()
-        
-        dataToGraph["SWH"] = WAVE_SWH_DATA_FILE
-        dataToGraph["MWD"] = WAVE_MWD_DATA_FILE
-        dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
-        dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
-        dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
-        
     backgroundMap = None
     backgroundAxis = None
     if(backgroundChoice == "RHODE_ISLAND"):
@@ -238,6 +159,87 @@ def main():
     elif(backgroundChoice == "RHODE_ISLAND_CHAMP"):
         backgroundMap = RHODE_ISLAND_CHAMP_MAP
         backgroundAxis = RHODE_ISLAND_CHAMP_AXIS
+        
+    print("args.adcircExists", args.adcircExists, flush=True)
+    if(args.adcircExists):
+        ADCIRC_WIND_FILE = args.wind
+        ADCIRC_WIND_DATA_FILE = wind_temp_directory + "adcirc_wind_data_file" + ".json"
+        (windStartDateObject, windEndDateObject) = Fort74Reader(ADCIRC_WIND_FILE=ADCIRC_WIND_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WIND_DATA_FILE=ADCIRC_WIND_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        dataToGraph["FORT"] = ADCIRC_WIND_DATA_FILE
+    print("args.gfsExists", args.gfsExists, flush=True)
+    if(args.gfsExists):
+        GFS_WIND_FILE = args.wind
+        GFS_WIND_DATA_FILE = wind_temp_directory + "gfs_wind_data_file" + ".json"
+        (windStartDateObject, windEndDateObject) = GFSWindReader(GFS_WIND_FILE=GFS_WIND_FILE, STATIONS_FILE=STATIONS_FILE, GFS_WIND_DATA_FILE=GFS_WIND_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        dataToGraph["GFS"] = GFS_WIND_DATA_FILE
+    print("args.rainExists", args.rainExists, flush=True)
+    if(args.rainExists):
+        GFS_RAIN_FILE = args.rain
+        GFS_RAIN_DATA_FILE = wind_temp_directory + "gfs_rain_data_file" + ".json"
+        (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateRainDataForStations()
+        dataToGraph["RAIN"] = GFS_RAIN_DATA_FILE
+    print("args.postExists", args.postExists, flush=True)
+    if(args.postExists):
+        POST_WIND_FILE = args.wind
+        POST_WIND_DATA_FILE = wind_temp_directory + "post_wind_data_file" + ".json"
+        (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        dataToGraph["POST"] = POST_WIND_DATA_FILE
+
+    print("args.obsExists", args.obsExists, flush=True)
+    if(args.obsExists):
+        print("Parsed start and end date from netCDF, ", windStartDateObject, windEndDateObject, flush=True)
+        OBS_WIND_DATA_FILE = wind_temp_directory + "obs_wind_data_file" + ".json"
+        GetBuoyWind(STATIONS_FILE=STATIONS_FILE, OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, startDateObject=windStartDateObject, endDateObject=windEndDateObject)
+        dataToGraph["OBS"] = OBS_WIND_DATA_FILE
+    
+    print("args.waterExists", args.waterExists, flush=True)
+    if(args.waterExists):
+        ADCIRC_WATER_FILE = args.water
+        ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
+        (windStartDateObject, windEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
+#     Grapher(graphObs=args.obs, graphRain=False, WIND_TYPE="POST", OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=POST_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
+    print("args.wavesExists", args.wavesExists, flush=True)
+    if(args.wavesExists):
+        print("Generating Wave Graphs!", flush=True)
+        wave_temp_directory = "/project/pi_iginis_uri_edu/pranav_sai_uri_edu/post_output/wave_temp/"
+    
+    #     Create temp and graphs directories
+        if not os.path.exists(wave_temp_directory):
+            os.makedirs(wave_temp_directory)
+        
+        print("Loading NetCDF file!", flush=True)
+        WAVE_SWH_FILE = args.waveswh 
+        WAVE_MWD_FILE = args.wavemwd
+        WAVE_MWP_FILE = args.wavemwp
+        WAVE_PWP_FILE = args.wavepwp
+        WAVE_RAD_FILE = args.waverad
+        WAVE_SWH_DATA_FILE = wave_temp_directory + "wave_swh_data_file" + ".json"
+        WAVE_MWD_DATA_FILE = wave_temp_directory + "wave_mwd_data_file" + ".json"
+        WAVE_MWP_DATA_FILE = wave_temp_directory + "wave_mwp_data_file" + ".json"
+        WAVE_PWP_DATA_FILE = wave_temp_directory + "wave_pwp_data_file" + ".json"
+        WAVE_RAD_DATA_FILE = wave_temp_directory + "wave_rad_data_file" + ".json"
+        STATIONS_FILE = args.stations
+        (startDateObject, endDateObject) = WaveReader(
+            WAVE_SWH_FILE=WAVE_SWH_FILE,
+            WAVE_MWD_FILE=WAVE_MWD_FILE,
+            WAVE_MWP_FILE=WAVE_MWP_FILE,
+            WAVE_PWP_FILE=WAVE_PWP_FILE,
+            WAVE_RAD_FILE=WAVE_RAD_FILE,
+            STATIONS_FILE=STATIONS_FILE, 
+            WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
+            WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
+            WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
+            WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
+            WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
+            BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
+        
+        dataToGraph["SWH"] = WAVE_SWH_DATA_FILE
+        dataToGraph["MWD"] = WAVE_MWD_DATA_FILE
+        dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
+        dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
+        dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
+        
 #     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
     Grapher(
         dataToGraph=dataToGraph, 
