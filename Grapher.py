@@ -528,7 +528,7 @@ class Grapher:
             levels = 100
             level_boundaries = np.linspace(vmin, vmax, levels + 1)
             if(self.windType == "FORT"):
-                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, self.mapWindMaskedTriangles)
+                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, mask=self.mapWindMaskedTriangles)
             for index in range(len(self.mapWindTimes)):
                 fig, ax = plt.subplots()
 #                 plt.figure(figsize=(6, 6))
