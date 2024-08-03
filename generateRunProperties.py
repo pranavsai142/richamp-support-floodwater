@@ -60,18 +60,19 @@ def main():
                 if file.endswith('.trk'):
                     track = file
                     break
-            stormName = generateParametricInput.main(args.indir + "/" + track)
+            stormName, stormClass = generateParametricInput.main(args.indir + "/" + track)
             f.write("stormname : " + stormName + "\n")
+            f.write("stormclass : " + stormClass + "\n")
             f.write("stormtype : nhc\n")
             f.write("stormnumber : " + storm + "\n")
             f.write("advisory : " + advisory + "\n")
             f.write("year : " + year + "\n")
             if("veerLeftEdge" in args.indir):
-                f.write("track : veerLeftEdge\n")
+                f.write("track : LEFT\n")
             elif("veerRightEdge" in args.indir):
-                f.write("track : veerRightEdge\n")    
+                f.write("track : RIGHT\n")    
             else:
-                f.write("track : center\n")      
+                f.write("track : CENTER\n")      
         else:
             f.write("stormtype : gfs\n")
         f.close()
