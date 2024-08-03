@@ -98,9 +98,10 @@ def calculateRadiusOfMaxWind(latitudeString, pressure, background):
     
 
 def main(track):
+    STORM_CLASS_VALUES = ["", "LO", "TD", "TS", "HU"]
     trackDict = {}
     stormName = ""
-    stormType = ""
+    stormClass = ""
     stormNumber = ""
     trackDict["date"] = []
     trackDict["pressure"] = []
@@ -124,11 +125,13 @@ def main(track):
     stormSpans = []
     largeStormSpans = []
     
+    
+    print("Generating Parametric Wind From track file:", track)
     dataDict = None
     lineCount = sum(1 for line in open(track))
     with open(track) as trackFile:
         dataDict = csv.DictReader(trackFile, fieldnames=["basin","number","date","unknown1", "type", "hours", "latitude", "longitude", "wind", "pressure", "class", "unknown2", "unknown3", "34ktNE", "34ktSE", "34ktNW", "34ktSW", "background", "closure", "radius", "unknown8", "unknown11", "unknown12", "unknown13", "unknown14", "unknown15", "unknown16", "name", "tag"])
-        print(dataDict)
+#         print(dataDict)
         previousLatitude = None
         previousLongitude = None
         catchLargeStormSpan = False
@@ -149,28 +152,35 @@ def main(track):
                     windNE = float(row["34ktNE"].strip()) * 1.852
                     if(windNE == 0):
                         windNE = -999
-                    print("50ktNE", windNE)
+#                     print("50ktNE", windNE)
                     windSE = float(row["34ktSE"].strip()) * 1.852
                     if(windSE == 0):
                         windSE = -999
-                    print("50ktSE", windSE)
+#                     print("50ktSE", windSE)
                     windNW = float(row["34ktNW"].strip()) * 1.852
                     if(windNW == 0):
                         windNW = -999
-                    print("50ktNW", windNW)
+#                     print("50ktNW", windNW)
                     windSW = float(row["34ktSW"].strip()) * 1.852
                     if(windSW == 0):
                         windSW = -999
-                    print("50ktSW", windSW)
+#                     print("50ktSW", windSW)
                     largeStormSpans.append((windNE, windSE, windNW, windSW))
                 else:
                     largeStormSpans.append((-999, -999, -999, -999))
                 catchLargeStormSpan = False
             if(time not in trackTimes):
-                print(row["name"])
+#                 print(row["name"])
                 if(row["name"] != None):
                     if(len(row["name"].strip()) > 0):
                         stormName = row["name"].strip()
+                if(row["class"] != None):
+                    if(len(row["class"].strip()) > 0):
+                        currentStormClass = row["class"].strip()
+                        if currentStormClass in STORM_CLASS_VALUES:
+                            if(STORM_CLASS_VALUES.index(currentStormClass) > STORM_CLASS_VALUES.index(stormClass)):
+                                stormClass = currentStormClass
+                            
 #                 stormSpanTag = row["tag"]:
 #                 print(stormName, stormSpanTag)
                 stormNumber = row["number"].strip()
@@ -185,7 +195,7 @@ def main(track):
                 #print("radiusOfMaWind", radiusOfMaxWind)
 #                 Calculate both radius of max wind and closure radius, instead of relying on track values
                 if(radiusOfMaxWind == 0):
-                    print("CALCULATING RADIUS")
+#                     print("CALCULATING RADIUS")
                     radiusOfMaxWind = calculateRadiusOfMaxWind(row["latitude"], row["pressure"], row["background"])
 #                 print(radiusOfMaxWind)
                 #closureRadius = float(row["closure"].strip()) * 1.852
@@ -204,19 +214,19 @@ def main(track):
                 windNE = float(row["34ktNE"].strip()) * 1.852
                 if(windNE == 0):
                     windNE = -999
-                print("34ktNE", windNE)
+#                 print("34ktNE", windNE)
                 windSE = float(row["34ktSE"].strip()) * 1.852
                 if(windSE == 0):
                     windSE = -999
-                print("34ktSE", windSE)
+#                 print("34ktSE", windSE)
                 windNW = float(row["34ktNW"].strip()) * 1.852
                 if(windNW == 0):
                     windNW = -999
-                print("34ktNW", windNW)
+#                 print("34ktNW", windNW)
                 windSW = float(row["34ktSW"].strip()) * 1.852
                 if(windSW == 0):
                     windSW = -999
-                print("34ktSW", windSW)
+#                 print("34ktSW", windSW)
                 stormSpans.append((windNE, windSE, windNW, windSW))
                 if(index < lineCount - 1):
                     catchLargeStormSpan = True
@@ -239,7 +249,7 @@ def main(track):
                     deltaLatitude = latitude - previousLatitude
                     deltaLongitude = longitude - previousLongitude
                     heading = findHeading(previousLatitude, latitude, deltaLongitude)
-                    print("calculated", heading)
+#                     print("calculated", heading)
                     trackHeadings.append(heading)
 #                 if(heading == 0 and (previousLatitude != latitude or previousLongitude != longitude)):     
 #                     deltaLatitude = latitude - previousLatitude
@@ -250,21 +260,25 @@ def main(track):
 #                     print(heading)
 #                     trackHeadings.append(heading)
                     
-                print(latitude, longitude)
+#                 print(latitude, longitude)
         trackHeadings.append(trackHeadings[-1])
         largeStormSpans.append((-999, -999, -999, -999))
-        print(len(largeStormSpans))
-        print(len(stormSpans))
+#         print(len(largeStormSpans))
+#         print(len(stormSpans))
 #                 print("closureRadius", closureRadius)
 #                 print(float(row["wind"]) * 0.514444)
 #                 print("radiusOfMaxWind", round(radiusOfMaxWind, 4))
-                
+             
+    print("Storm Name, Storm Class:", stormName, stormClass)   
+    
+    print("writing file TrackRMW.txt")
     with open("TrackRMW.txt", "w") as f:
         f.write("Yr, Mo, Day, Hr, Min, Sec, Central P(mbar), Background P(mbar), Radius of Max Winds (km)\n")
         for index, trackTime in enumerate(trackTimes):
             f.write(str(trackTime.year) + " " + str(trackTime.month) + " " + str(trackTime.day) + " " + str(trackTime.hour) + " " + str(trackTime.minute) + " " + str(trackTime.second) + " " + str(centralPressures[index]) + " " + str(backgroundPressures[index]) + " " + str(radiusMaxWinds[index]) + "\n")
         f.close()
 
+    print("writing file Wind_Inp.txt")
     with open("Wind_Inp.txt", "w") as f:
         f.write("richamp\n")
         f.write("3\n")
@@ -277,17 +291,18 @@ def main(track):
         f.write("12.\n")
         f.close()
 
+    print("writing file track.richamp")
     with open("track.richamp", "w") as f:
         for index, trackTime in enumerate(trackTimes):
             stormAndDateString = "NHC A" + stormNumber + " URIPWMIN   " + str(trackTime.year).zfill(4) + str(trackTime.month).zfill(2) + str(trackTime.day).zfill(2) + " " + str(trackTime.hour).zfill(2) + str(trackTime.minute).zfill(2)
             bearingString = latitudeStrings[index].zfill(3) + " " + longitudeStrings[index].zfill(5) + " " + str(round(trackHeadings[index])).zfill(3)
             pressureAndRadiusString = str(centralPressures[index]).zfill(4) + " " + str(centralPressures[index]).zfill(4) + " " + str(backgroundPressures[index]).zfill(4) + " " + str(round(radiusClosures[index])).zfill(4) + " " + str(round(maxWindSpeeds[index])).zfill(2) + " " + str(round(radiusMaxWinds[index])).zfill(3)
-            print("writing tack")
-            print(len(stormSpans))
+#             print("writing tack")
+#             print(len(stormSpans))
             stormSpanString = str(round(stormSpans[index][0])).zfill(4) + " " + str(round(stormSpans[index][1])).zfill(4) + " " + str(round(stormSpans[index][2])).zfill(4) + " " + str(round(stormSpans[index][3])).zfill(4)
             largeStormSpanString = str(round(largeStormSpans[index][0])).zfill(4) + " " + str(round(largeStormSpans[index][1])).zfill(4) + " " + str(round(largeStormSpans[index][2])).zfill(4) + " " + str(round(largeStormSpans[index][3])).zfill(4)
 
             f.write(stormAndDateString + " " + bearingString + " " + pressureAndRadiusString + " " + stormSpanString + " D " + largeStormSpanString + "\n")
         f.close()
-    return stormName
+    return stormName, stormClass
 
