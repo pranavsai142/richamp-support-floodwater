@@ -158,8 +158,8 @@ fi
 if [[ $GRAPH_WATER == "True" ]]; then
     graphWater="--waterExists true --water $RICHAMP_INDIR/fort.63.nc"
 fi
-echo python3 $postprocessdir/generateGraphs.py --tempDir $POST_TEMP_DIR --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves $graphWater
-python3 $postprocessdir/generateGraphs.py --tempDir $POST_TEMP_DIR --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves $graphWater
+echo python3 $postprocessdir/generateGraphs.py --tempDir $POST_TEMP_DIR/ --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves $graphWater
+python3 $postprocessdir/generateGraphs.py --tempDir $POST_TEMP_DIR/ --backgroundChoice $BACKGROUND_CHOICE --stations $WIND_STATIONS $graphAdcirc $graphGfs $graphRain $graphPost $graphObs $graphWaves $graphWater
 
 
 # richamp_scale_and_subset.scr
