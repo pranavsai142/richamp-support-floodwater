@@ -54,12 +54,12 @@ def main():
         f.write("rawstart: " + rawstart + "\n")
         f.write("rawend: " + rawend + "\n")
         if(tcFound):
-            track = ""
-            for file in os.listdir(args.indir):
-                # check only text files
-                if file.endswith('.trk'):
-                    track = file
-                    break
+            track = "fort.22"
+#             for file in os.listdir(args.indir):
+#                 # check only text files
+#                 if file.endswith('.trk'):
+#                     track = file
+#                     break
             stormName, stormClass = generateParametricInput.main(args.indir + "/" + track)
             f.write("stormname : " + stormName + "\n")
             f.write("stormclass : " + stormClass + "\n")
