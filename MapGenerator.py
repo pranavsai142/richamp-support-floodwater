@@ -45,10 +45,10 @@ worldPixelsHeight = 256
 worldPixelsWidth = 256
 # https://groups.google.com/g/google-maps-js-api-v3/c/hDRO4oHVSeM/m/osOYQYXg2oUJ?pli=1
 # metersPerPixel = 156543.03392 * math.cos(centerLatitude * math.pi / 180) / math.pow(2, zoom)
-minLatitude = 41.1
-maxLatitude = 41.5
-minLongitude = -71.39
-maxLongitude = -71.29
+minLatitude = 28.0
+maxLatitude = 43.0
+minLongitude = -80.0
+maxLongitude = -60.0
 
 centerLatitude = (minLatitude + maxLatitude) / 2
 centerLongitude = (minLongitude + maxLongitude) / 2
@@ -67,8 +67,10 @@ latZoom = findZoom(deltaPixelsHeight, worldPixelsHeight, latFraction)
 lngZoom = findZoom(deltaPixelsWidth, worldPixelsWidth, lngFraction)
 print("zoom", latZoom, lngZoom)
 
-zoom = min(latZoom, lngZoom, ZOOM_MAX) + 1
-url = "https://maps.googleapis.com/maps/api/staticmap?center=" + str(centerLatitude) + "," + str(centerLongitude) + "&zoom=" + str(zoom) + "&scale=1&size=" + str(deltaPixelsWidth) + "x" + str(deltaPixelsHeight) + "&maptype=satellite&format=png&visual_refresh=true&key=AIzaSyBt_MCVG-uJti3DYrnCE1ElGkA8VBIl1so"
+zoom = min(latZoom, lngZoom, ZOOM_MAX)
+url = "https://maps.googleapis.com/maps/api/staticmap?center=" + str(centerLatitude) + "," + str(centerLongitude) + "&zoom=" + str(zoom) + "&scale=1&size=" + str(deltaPixelsWidth) + "x" + str(deltaPixelsHeight) + "&maptype=terrain&format=png&visual_refresh=true&key=AIzaSyBt_MCVG-uJti3DYrnCE1ElGkA8VBIl1so"
+
+# url = "https://maps.googleapis.com/maps/api/staticmap?center=" + str(centerLatitude) + "," + str(centerLongitude) + "&zoom=" + str(zoom) + "&scale=1&size=" + str(deltaPixelsWidth) + "x" + str(deltaPixelsHeight) + "&maptype=satellite&format=png&visual_refresh=true&key=AIzaSyBt_MCVG-uJti3DYrnCE1ElGkA8VBIl1so"
 urlretrieve(url, "satallite.png")
 quit()
 

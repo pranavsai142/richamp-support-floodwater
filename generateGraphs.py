@@ -33,6 +33,9 @@ BLOCK_ISLAND_MAP = "BlockIsland.png"
 BLOCK_ISLAND_AXIS = [-71.64599363138898, -71.23424867207852, 41.45457197608142, 41.14524327341847]
 RHODE_ISLAND_CHAMP_MAP = "RhodeIslandChamp.png"
 RHODE_ISLAND_CHAMP_AXIS = [-71.9050164752, -71.1307245329, 42.000010143316864, 41.1192500979]
+EAST_COAST_MAP = "EastCoast.png"
+EAST_COAST_OUTLINE_MAP = "EastCoastOutline.png"
+EAST_COAST_AXIS = [-83.18359374999999, -56.816406249999986, 45.49399717614716, 24.090563202580892]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -159,6 +162,13 @@ def main():
     elif(backgroundChoice == "RHODE_ISLAND_CHAMP"):
         backgroundMap = RHODE_ISLAND_CHAMP_MAP
         backgroundAxis = RHODE_ISLAND_CHAMP_AXIS
+    elif(backgroundChoice == "EAST_COAST"):
+        backgroundMap = EAST_COAST_MAP
+        backgroundAxis = EAST_COAST_AXIS
+    elif(backgroundChoice == "EAST_COAST_OUTLINE"):
+        backgroundMap = EAST_COAST_OUTLINE_MAP
+        backgroundAxis = EAST_COAST_AXIS
+        
         
     print("args.adcircExists", args.adcircExists, flush=True)
     if(args.adcircExists):
