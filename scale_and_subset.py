@@ -260,7 +260,7 @@ class Owi306Wind:
         self.__start_time = datetime.datetime(int(datepart[0]), int(datepart[1]), int(datepart[2]), int(datepart[3]), int(datepart[4]), int(datepart[5]))
         time_step = float(lines[3])
         num_times = int(lines[4])
-        spatial_res = float(1 / int(lines[7].strip().replace(".", "")))
+        spatial_res = float(1 / float(lines[7].strip()))        
         lat_bounds = lines[6].split()
         lon_bounds = lines[5].split()
         s_lim = float(lat_bounds[0])
@@ -278,6 +278,10 @@ class Owi306Wind:
 #         nw_corner_lat = 46.400002
 #         sw_corner_lat = 4.9995
 #         sw_corner_lon = -98.6
+
+# Sandy wind
+# 277  325 46.400002 -98.599998  0.150002 0.150002  3600 600 !NWLAT,NWLON,WLATMAX,WLONMIN,WLATINC,WLONINC,WTIMINC,RSTIMINC
+
         sw_corner_lat = s_lim
         sw_corner_lon = w_lim
         lat = numpy.linspace(sw_corner_lat, sw_corner_lat + (num_lats - 1) * lat_step, num_lats)
