@@ -526,7 +526,7 @@ class Grapher:
 #             vmax = math.ceil(self.maxWind)
             vmax = 50
             levels = 100
-            level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             if(self.windType == "FORT"):
                 windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, mask=self.mapWindMaskedTriangles)
             for index in range(len(self.mapWindTimes)):
@@ -539,14 +539,14 @@ class Grapher:
 #                 plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
                 if(self.windType == "FORT"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
-                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
                 elif(self.windType == "POST"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
-#                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+#                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                     contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 elif(self.windType == "GFS"):
 #                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
-#                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+#                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
 #                     print(len(self.mapWindPointsLongitudes), len(self.mapWindPointsLatitudes), len(self.mapSpeeds[index]))
                     contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
@@ -557,8 +557,8 @@ class Grapher:
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                     ticks=range(vmin, vmax+5, 5),
-                    boundaries=level_boundaries,
-                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                     label="Meters/Second",
                     ax=plt.gca()
                 )
@@ -578,7 +578,7 @@ class Grapher:
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             if(self.windType == "FORT"):
-                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
             else:
                 contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             plt.axis(plotAxis)
@@ -588,8 +588,8 @@ class Grapher:
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                 ticks=range(vmin, vmax+5, 5),
-                boundaries=level_boundaries,
-                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 label="Meters/Second",
                 ax=plt.gca()
             )
@@ -598,17 +598,19 @@ class Grapher:
             gc.collect()
         if(len(self.mapRainTimes) > 0):
             vmin = 0
-            vmax = math.ceil(self.maxRain)
-#             vmax = 20
+#             vmax = math.ceil(self.maxRain)
+            vmax = 25
+            vmaxAccumulation = 500
             levels = 100
-            level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+            levelBoundariesAccumulation = np.linspace(vmin, vmaxAccumulation, levels + 1)
             for index in range(len(self.mapRainTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
-#                 contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+#                 contourset = ax.tricontourf(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, self.mapRains[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title("Rain")
@@ -617,8 +619,8 @@ class Grapher:
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                     ticks=range(vmin, vmax+5, 5),
-                    boundaries=level_boundaries,
-                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                     label="Millimeters/Hour",
                     ax=plt.gca()
                 )
@@ -634,23 +636,24 @@ class Grapher:
                     filename = "map_rain_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
             mapRainsNoNan = np.nan_to_num(self.mapRains)
-            swathRain = np.max(mapRainsNoNan, axis=0)
+            accumulatedRain = np.sum(mapRainsNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, swathRain, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            contourset = ax.pcolormesh(self.mapRainPointsLongitudes, self.mapRainPointsLatitudes, accumulatedRain, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmaxAccumulation, zorder=1)
             plt.axis(plotAxis)
-            plt.title("Rain Swath")
+            plt.title("Rain Accumulation")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=range(vmin, vmax+5, 5),
-                boundaries=level_boundaries,
-                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
-                label="Millimeters/Hour",
+#                 Increase vmax by factor of length of time to fit accumulation
+                ticks=range(vmin, vmaxAccumulation+5, 50),
+                boundaries=levelBoundariesAccumulation,
+                values=(levelBoundariesAccumulation[:-1] + levelBoundariesAccumulation[1:]) / 2,
+                label="Millimeters",
                 ax=plt.gca()
             )
-            plt.savefig(graph_directory + 'map_rain_swath.png')
+            plt.savefig(graph_directory + 'map_rain_accumulation.png')
             plt.close()
             gc.collect()
         if(len(self.mapWaterTimes) > 0):
@@ -658,7 +661,7 @@ class Grapher:
             vmax = math.ceil(self.maxWater)
 #             vmax = 20
             levels = 100
-            level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
             for index in range(len(self.mapWaterTimes)):
                 fig, ax = plt.subplots()
@@ -676,8 +679,8 @@ class Grapher:
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                     ticks=range(vmin, vmax+5, 2),
-                    boundaries=level_boundaries,
-                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                     label="Meters",
                     ax=plt.gca()
                 )
@@ -704,8 +707,8 @@ class Grapher:
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                 ticks=range(vmin, vmax+5, 2),
-                boundaries=level_boundaries,
-                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 label="Meters",
                 ax=plt.gca()
             )
@@ -716,7 +719,7 @@ class Grapher:
             vmin = 0
             vmax = math.ceil(self.maxWave)
             levels = 100
-            level_boundaries = np.linspace(vmin, vmax, levels + 1)
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
             for index in range(len(self.mapWaveTimes)):
                 fig, ax = plt.subplots()
@@ -724,7 +727,7 @@ class Grapher:
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
-                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis(plotAxis)
                 plt.title("Significant Wave Height")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
@@ -732,8 +735,8 @@ class Grapher:
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                     ticks=range(vmin, vmax+5, 5),
-                    boundaries=level_boundaries,
-                    values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                     label="Meters",
                     ax=plt.gca()
                 )                
@@ -752,7 +755,7 @@ class Grapher:
             swathSWH = np.max(mapSWHNoNan, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, level_boundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
             plt.axis(plotAxis)
             plt.title("Wave Significant Wave Height Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
@@ -760,8 +763,8 @@ class Grapher:
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
                 ticks=range(vmin, vmax+5, 5),
-                boundaries=level_boundaries,
-                values=(level_boundaries[:-1] + level_boundaries[1:]) / 2,
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 label="Meters",
                 ax=plt.gca()
             )        
