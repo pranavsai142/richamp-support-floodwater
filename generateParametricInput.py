@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 import csv
 import math
 
+import generateParametricRain
+
 # Yr, Mo, Day, Hr, Min, Sec, Central P(mbar), Background P(mbar), Radius of Max Winds (km)
 # 2023 9 1 12 0 0 982 1014 96.1887
 
@@ -99,6 +101,16 @@ def calculateRadiusOfMaxWind(latitudeString, pressure, background):
 
 def main(track):
     STORM_CLASS_VALUES = ["", "LO", "TD", "TS", "HU"]
+    
+    RAIN_FILENAME = "RICHAMP_rain.nc"
+    MIN_LATITUDE = 4.0
+    MAX_LATITUDE = 51.0
+    MIN_LONGITUDE = -101.0
+    MAX_LONGITUDE = -49.0
+    SPATIAL_RESOLUTION = 1.0/12.0
+    
+    DEFAULT_BACKGROUND_PRESSURE = 1010
+    
     trackDict = {}
     stormName = ""
     stormClass = ""
@@ -117,11 +129,14 @@ def main(track):
 #     data[5]
     latitudeStrings = []
     longitudeStrings = []
+    latitudes = []
+    longitudes = []
     centralPressures = []
     backgroundPressures = []
     radiusMaxWinds = []
     radiusClosures = []
     maxWindSpeeds = []
+    maxWindSpeedsKnots = []
     stormSpans = []
     largeStormSpans = []
     
@@ -189,7 +204,7 @@ def main(track):
                 centralPressures.append(int(row["pressure"].strip()))
                 backgroundPressure = int(row["background"].strip())
                 if(backgroundPressure == 0 or True):
-                    backgroundPressure = 1014
+                    backgroundPressure = DEFAULT_BACKGROUND_PRESSURE
                 backgroundPressures.append(backgroundPressure)
                 radiusOfMaxWind = float(row["radius"].strip()) * 1.852
                 #print("radiusOfMaWind", radiusOfMaxWind)
@@ -206,9 +221,12 @@ def main(track):
                 radiusOfMaxWind = round(radiusOfMaxWind, 4)
                 radiusMaxWinds.append(radiusOfMaxWind)
                 radiusClosures.append(closureRadius)
-#                 Convert to m/s
-                maxWindSpeed = float(row["wind"].strip()) * 0.514444
+#                 Comes in as knots
+                maxWindSpeed = float(row["wind"].strip())
 #                 print("MaxWindSpeed", maxWindSpeed)
+                maxWindSpeedsKnots.append(maxWindSpeed)
+#                 Convert to m/2
+                maxWindSpeed = maxWindSpeed * 0.514444
                 maxWindSpeeds.append(maxWindSpeed)
 #                 Convert to KM, from nautical miles
                 windNE = float(row["34ktNE"].strip()) * 1.852
@@ -239,7 +257,10 @@ def main(track):
                 latitude = convertLatitude(row["latitude"])
                 longitude = convertLongitude(row["longitude"])
                 
-#                 heading = int(row["heading?"].strip())
+                latitudes.append(latitude)
+                longitudes.append(longitude)
+                
+#                 heading =  int(row["heading?"].strip())
 #                 print("headingString", heading)
                 if(not previousLatitude and not previousLongitude):
                     previousLatitude = latitude
@@ -269,7 +290,9 @@ def main(track):
 #                 print(float(row["wind"]) * 0.514444)
 #                 print("radiusOfMaxWind", round(radiusOfMaxWind, 4))
              
-    print("Storm Name, Storm Class:", stormName, stormClass)   
+    print("Storm Name, Storm Class:", stormName, stormClass)       
+    
+    generateParametricRain.main(MIN_LATITUDE, MIN_LONGITUDE, MAX_LATITUDE, MAX_LONGITUDE, SPATIAL_RESOLUTION, trackTimes, trackDeltaHours, maxWindSpeedsKnots, latitudes, longitudes)
     
     print("writing file TrackRMW.txt")
     with open("TrackRMW.txt", "w") as f:
@@ -286,8 +309,8 @@ def main(track):
         f.write(str(minTrackTime.year).zfill(4) + " " + str(minTrackTime.month).zfill(2) + " " + str(minTrackTime.day).zfill(2) + " " + str(minTrackTime.hour).zfill(2) + " " + str(minTrackTime.minute).zfill(2) + " " + str(minTrackTime.second).zfill(2) + "\n")
         f.write("1.0\n")
         f.write(str(max(trackDeltaHours)) + "\n")
-        f.write("-101.0 -49.0\n")
-        f.write("4.0  51.\n")
+        f.write(str(MIN_LONGITUDE) + " " + str(MAX_LONGITUDE) + "\n")
+        f.write(str(MIN_LATITUDE) + " " + str(MAX_LATITUDE) + "\n")
         f.write("12.\n")
         f.close()
 
