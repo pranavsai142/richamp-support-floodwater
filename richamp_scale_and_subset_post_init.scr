@@ -75,6 +75,7 @@ if [[ $TC_FORCING == "True" ]]; then
     wind_inp=Wind_Inp.txt
     wind_format="owi-306"
     parametric="-parametric true"
+    rain_filename=RICHAMP_rain
 else
     rain_filename=RICHAMP_rain
     #metget build --domain gfs 0.1 -72 41 -71 43 --start "$start" --end "$end" --timestep 3600 --output $rain_filename --multiple-forecasts --format generic-netcdf --variable rain
