@@ -187,7 +187,8 @@ def main(track):
             if(time not in trackTimes):
 #                 print(row["name"])
                 if(row["name"] != None):
-                    if(len(row["name"].strip()) > 1):
+#                     Remove "0" and "NA" names
+                    if(len(row["name"].strip()) > 2):
                         stormName = row["name"].strip()
                 if(row["class"] != None):
                     if(len(row["class"].strip()) > 0):
