@@ -293,7 +293,8 @@ def main(track):
              
     print("Storm Name, Storm Class:", stormName, stormClass)       
     
-    generateParametricRain.main(MIN_LATITUDE, MIN_LONGITUDE, MAX_LATITUDE, MAX_LONGITUDE, SPATIAL_RESOLUTION, trackTimes, trackDeltaHours, maxWindSpeedsKnots, latitudes, longitudes)
+    trackStartTime = trackTimes[0]
+    generateParametricRain.main(MIN_LATITUDE, MIN_LONGITUDE, MAX_LATITUDE, MAX_LONGITUDE, SPATIAL_RESOLUTION, trackStartTime, trackDeltaHours, maxWindSpeedsKnots, latitudes, longitudes)
     
     print("writing file TrackRMW.txt")
     with open("TrackRMW.txt", "w") as f:

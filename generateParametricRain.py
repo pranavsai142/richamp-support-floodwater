@@ -1,11 +1,12 @@
 import math
 import numpy as np
 import haversine
+import datetime
 from Dataset import Dataset
 
 
 # Track radius comes in as km, track winds come in as knots
-def main(minLatitude, minLongitude, maxLatitude, maxLongitude, spatialResolution, trackTimes, trackDeltaHours, trackWinds, trackLatitudes, trackLongitudes):
+def main(minLatitude, minLongitude, maxLatitude, maxLongitude, spatialResolution, trackStartTime, trackDeltaHours, trackWinds, trackLatitudes, trackLongitudes):
     print("Generating Parametric Rain!")
     minTrackDeltaHours = min(trackDeltaHours)
     maxTrackDeltaHours = max(trackDeltaHours)
@@ -13,7 +14,10 @@ def main(minLatitude, minLongitude, maxLatitude, maxLongitude, spatialResolution
     
     print("Interpolating track to hourly intervals")
     rainDeltaHours = np.linspace(minTrackDeltaHours, maxTrackDeltaHours, num=numTimesRain)
-    rainTimes = np.linspace(min(trackTimes), max(trackTimes), num=numTimesRain)
+    rainTimes = []
+    for deltaHour in rainDeltaHours:
+        rainTimes.append(trackStartTime + datetime.timedelta(hours=deltaHour))
+#     rainTimes = np.linspace(min(trackTimes), max(trackTimes), num=numTimesRain)
     interpolatedTrackLatitudes = np.interp(rainDeltaHours, trackDeltaHours, trackLatitudes)
     interpolatedTrackLongitudes = np.interp(rainDeltaHours, trackDeltaHours, trackLongitudes)
     interpolatedTrackWinds = np.interp(rainDeltaHours, trackDeltaHours, trackWinds)
@@ -40,7 +44,7 @@ def main(minLatitude, minLongitude, maxLatitude, maxLongitude, spatialResolution
         trackWind = interpolatedTrackWinds[index]
         
         lineRains = []
-#             print("time", time, "lat lon", trackLatitude, trackLongitude, "wind speed", trackWind)
+#         print("time", time, "lat lon", trackLatitude, trackLongitude, "wind speed", trackWind)
         for latitude in latitudes:
             lineRain = []
             for longitude in longitudes:
