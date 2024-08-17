@@ -879,7 +879,7 @@ class Grapher:
 
                 rainNoNan = np.nan_to_num(self.datapointsRains[index])
                 accumulationRain = str(round(np.sum(rainNoNan), 2))
-                plt.title(stationName + " station rain [accumulation mm/hh gauge/rain:" + accumulationGauge + "/" + accumulationRain)
+                plt.title(stationName + " rain-accumulation forecast/gauge:" + accumulationRain + "/" + accumulationGauge)
                 plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("rain (mm/hr)")
                 plt.savefig(graph_directory + stationName + '_rain.png')

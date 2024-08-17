@@ -74,7 +74,7 @@ class GetObsRain:
             stationDict = stationsDict["USGS"][key]
             stationId = stationDict["id"]
             stationName = stationDict["name"]
-            url = "https://waterdata.usgs.gov/nwis/dv?cb_00045=on&format=html&site_no=01115170&legacy=&referred_module=sw&period=&begin_date=" + startDate + "&end_date=" + endDate
+            url = "https://waterdata.usgs.gov/nwis/dv?cb_00045=on&format=html&site_no=" + stationId + "&legacy=&referred_module=sw&period=&begin_date=" + startDate + "&end_date=" + endDate
         #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
             filename = "raintest"
         #     sensorFilename = stationDict["id"] + "_sensor"
@@ -178,7 +178,7 @@ class GetObsRain:
                         dateStr = (month[0] + month[1] + str(rowDay).zfill(2)) + "12"
                         date = datetime.strptime(dateStr, "%b%Y%d%H").replace(tzinfo=timezone.utc)
                         dates.append(date)
-                        print(date)
+#                         print(date)
                         rains.append(rowRains[monthIndex][dayIndex - 1])
                         dayIndex = dayIndex + 1
 #                     while dayIndex < (startDay + deltaDaysForMonth):
@@ -200,7 +200,7 @@ class GetObsRain:
 #                 windDict[key]["directions"] = windDirections
 #                 windDict[key]["speeds"] = windSpeeds
 #                 windDict[key]["gusts"] = windGusts
-                print(len(dates), len(rains))
+#                 print(len(dates), len(rains))
                 timestamps = []
                 for date in dates:
                     timestamps.append(date.timestamp())

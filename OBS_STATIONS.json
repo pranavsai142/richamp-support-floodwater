@@ -1,12 +1,11 @@
 {
   "USGS": {
     "1": {
-      "id": "1",
+      "id": "01115170",
       "source": "USGS",
-      "name": "TEST",
-      "latitude": "41.505",
-      "longitude": "-71.326667",
-      "altitude": "21.0\n"    
+      "name": "Moswansicut Stream, RI",
+      "latitude": "41.840833333333336",
+      "longitude": "-71.585"
     }
   },
   "NOS": {
