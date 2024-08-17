@@ -1,4 +1,14 @@
 {
+  "USGS": {
+    "1": {
+      "id": "1",
+      "source": "USGS",
+      "name": "TEST",
+      "latitude": "41.505",
+      "longitude": "-71.326667",
+      "altitude": "21.0\n"    
+    }
+  },
   "NOS": {
     "82": {
       "id": "8454000",

@@ -41,6 +41,8 @@ class Grapher:
     def __init__(self, dataToGraph={}, STATIONS_FILE="", backgroundMap="", backgroundAxis=[]):
         print("Initializing grapher", flush=True)
         self.obsExists = False
+        self.gaugeExists = False
+        self.tideExists = False
         self.windExists = False
         self.wavesExists = False
         self.rainExists = False
@@ -58,6 +60,10 @@ class Grapher:
         
         if("OBS" in dataToGraph):
             self.obsExists = True
+        if("GAUGE" in dataToGraph):
+            self.gaugeExists = True
+        if("TIDE" in dataToGraph):
+            self.tideExists = True
         if("POST" in dataToGraph or "GFS" in dataToGraph or "FORT" in dataToGraph):
             self.windExists = True
         if("SWH" in dataToGraph or "MWD" in dataToGraph or "MWP" in dataToGraph or "PWP" in dataToGraph or "RAD" in dataToGraph):
@@ -67,7 +73,7 @@ class Grapher:
         if("WATER" in dataToGraph):
             self.waterExists = True
         with open(STATIONS_FILE) as outfile:
-            self.obsMetadata = json.load(outfile)["NOS"]
+            self.obsMetadata = json.load(outfile)
             
                 
 #         There are 3 possible perturbations. 
@@ -96,6 +102,22 @@ class Grapher:
         self.obsDatapointsDirections = []
         self.obsDatapointsSpeeds = []
         self.obsDatapointsHeights = []
+        
+        gaugeLabelsInitialized = False
+        self.gaugeLongitudes = []
+        self.gaugeLatitudes = []
+        self.gaugeLabels = []
+        
+        self.gaugeDatapointsTimes = []
+        self.gaugeDatapointsRains = []
+        
+        tideLabelsInitialized = False
+        self.tideLongitudes = []
+        self.tideLatitudes = []
+        self.tideLabels = []
+        
+        self.tideDatapointsTimes = []
+        self.tideDatapointsWaters = []
         
         self.windLongitudes = []
         self.windLatitudes = []
@@ -184,6 +206,12 @@ class Grapher:
             self.windType = "FORT"
             with open(dataToGraph["FORT"]) as outfile:
                 windDataset = json.load(outfile)
+        if("GAUGE" in dataToGraph):
+            with open(dataToGraph["GAUGE"]) as outfile:
+                gaugeDataset = json.load(outfile)
+        if("TIDE" in dataToGraph):
+            with open(dataToGraph["TIDE"]) as outfile:
+                tideDataset = json.load(outfile)
                   
         if(self.windExists):
             windTimestampsInitialized = False
@@ -246,9 +274,9 @@ class Grapher:
                         self.windLongitudes.append(windDataset[stationKey]["longitude"])
                     
                         if(not obsLabelsInitialized):
-                            self.obsLabels.append(self.obsMetadata[stationKey]["name"])
-                            self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
-                            self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
+                            self.obsLabels.append(self.obsMetadata["NOS"][stationKey]["name"])
+                            self.obsLatitudes.append(float(self.obsMetadata["NOS"][stationKey]["latitude"]))
+                            self.obsLongitudes.append(float(self.obsMetadata["NOS"][stationKey]["longitude"]))
                     
                         datapointDirections = []
                         datapointSpeeds = []
@@ -310,25 +338,37 @@ class Grapher:
                                     self.maxRain = pointRain
                 else:
                     nodeIndex = rainDataset[stationKey]["nodeIndex"]
-                    self.rainLabels.append(nodeIndex)
-                    self.rainLatitudes.append(rainDataset[stationKey]["latitude"])
-                    self.rainLongitudes.append(rainDataset[stationKey]["longitude"])
-                
-                    if(not obsLabelsInitialized):
-                        self.obsLabels.append(self.obsMetadata[stationKey]["name"])
-                        self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
-                        self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
-
-                    datapointRains = []
-                    for index in range(len(rainDataset[stationKey]["times"])):
-                        if(self.rainStartDate == None):
-                            self.rainStartDate = datetime.fromtimestamp(int(rainDataset[stationKey]["times"][index]), timezone.utc)
-                        if(not rainTimestampsInitialized):
-                            self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[stationKey]["times"][index], self.rainStartDate))
-                        datapointRains.append(rainDataset[stationKey]["rain"][index])
-                    rainTimestampsInitialized = True
-                    self.datapointsRains.append(datapointRains)
-            obsLabelsInitialized = True
+                    if(not self.gaugeExists or (stationKey in gaugeDataset.keys())):
+                        self.rainLabels.append(nodeIndex)
+                        self.rainLatitudes.append(rainDataset[stationKey]["latitude"])
+                        self.rainLongitudes.append(rainDataset[stationKey]["longitude"])
+                    
+                        if(not gaugeLabelsInitialized):
+                            self.gaugeLabels.append(self.obsMetadata["USGS"][stationKey]["name"])
+                            self.gaugeLatitudes.append(float(self.obsMetadata["USGS"][stationKey]["latitude"]))
+                            self.gaugeLongitudes.append(float(self.obsMetadata["USGS"][stationKey]["longitude"]))
+    
+                        datapointRains = []
+                        for index in range(len(rainDataset[stationKey]["times"])):
+                            if(self.rainStartDate == None):
+                                self.rainStartDate = datetime.fromtimestamp(int(rainDataset[stationKey]["times"][index]), timezone.utc)
+                            if(not rainTimestampsInitialized):
+                                self.rainTimes.append(self.unixTimeToDeltaHours(rainDataset[stationKey]["times"][index], self.rainStartDate))
+                            datapointRains.append(rainDataset[stationKey]["rain"][index])
+                        rainTimestampsInitialized = True
+                        self.datapointsRains.append(datapointRains)
+                        
+                        if(self.gaugeExists):
+                            gaugeTimes = []
+                            gaugeRains = []
+        #                         Height is not station altitude, it is sea surface height
+                            for index in range(len(gaugeDataset[stationKey]["times"])):
+                                gaugeTimes.append(self.unixTimeToDeltaHours(gaugeDataset[stationKey]["times"][index], self.rainStartDate))
+                                gaugeRain = gaugeDataset[stationKey]["rain"][index]
+                                gaugeRains.append(gaugeRain)
+                            self.gaugeDatapointsTimes.append(gaugeTimes)
+                            self.gaugeDatapointsRains.append(gaugeRains)
+            gaugeLabelsInitialized = True
             
         if(self.waterExists):
             with open(dataToGraph["WATER"]) as outfile:
@@ -351,24 +391,35 @@ class Grapher:
                                 self.maxWater = pointWater
                 else:
                     nodeIndex = waterDataset[stationKey]["nodeIndex"]
-                    self.waterLabels.append(nodeIndex)
-                    self.waterLatitudes.append(waterDataset[stationKey]["latitude"])
-                    self.waterLongitudes.append(waterDataset[stationKey]["longitude"])
-                
-                    if(not obsLabelsInitialized):
-                        self.obsLabels.append(self.obsMetadata[stationKey]["name"])
-                        self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
-                        self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
-
-                    datapointWaters = []
-                    for index in range(len(waterDataset[stationKey]["times"])):
-                        if(self.waterStartDate == None):
-                            self.waterStartDate = datetime.fromtimestamp(int(waterDataset[stationKey]["times"][index]), timezone.utc)
-                        if(not waterTimestampsInitialized):
-                            self.waterTimes.append(self.unixTimeToDeltaHours(waterDataset[stationKey]["times"][index], self.waterStartDate))
-                        datapointWaters.append(waterDataset[stationKey]["water"][index])
-                    waterTimestampsInitialized = True
-                    self.datapointsWaters.append(datapointWaters)
+                    if(not self.tideExists or (stationKey in tideDataset.keys())):
+                        self.waterLabels.append(nodeIndex)
+                        self.waterLatitudes.append(waterDataset[stationKey]["latitude"])
+                        self.waterLongitudes.append(waterDataset[stationKey]["longitude"])
+                    
+                        if(not tideLabelsInitialized):
+                            self.tideLabels.append(self.obsMetadata["NOS"][stationKey]["name"])
+                            self.tideLatitudes.append(float(self.obsMetadata["NOS"][stationKey]["latitude"]))
+                            self.tideLongitudes.append(float(self.obsMetadata["NOS"][stationKey]["longitude"]))
+    
+                        datapointWaters = []
+                        for index in range(len(waterDataset[stationKey]["times"])):
+                            if(self.waterStartDate == None):
+                                self.waterStartDate = datetime.fromtimestamp(int(waterDataset[stationKey]["times"][index]), timezone.utc)
+                            if(not waterTimestampsInitialized):
+                                self.waterTimes.append(self.unixTimeToDeltaHours(waterDataset[stationKey]["times"][index], self.waterStartDate))
+                            datapointWaters.append(waterDataset[stationKey]["water"][index])
+                        waterTimestampsInitialized = True
+                        self.datapointsWaters.append(datapointWaters)
+                        if(self.gaugeExists):
+                            tideTimes = []
+                            tideWaters = []
+                #                         Height is not station altitude, it is sea surface height
+                            for index in range(len(tideDataset[stationKey]["times"])):
+                                tideTimes.append(self.unixTimeToDeltaHours(tideDataset[stationKey]["times"][index], self.waterStartDate))
+                                tideWater = gaugeDataset[stationKey]["water"][index]
+                                tideWaters.append(tideWater)
+                            self.tideDatapointsTimes.append(tideWaters)
+                            self.tideDatapointsWaters.append(tideWaters)
             obsLabelsInitialized = True
                         
         if(self.wavesExists):
@@ -430,9 +481,9 @@ class Grapher:
                     self.waveLatitudes.append(iteratorDataset[stationKey]["latitude"])
                     self.waveLongitudes.append(iteratorDataset[stationKey]["longitude"])
                     if(not obsLabelsInitialized):
-                        self.obsLabels.append(self.obsMetadata[stationKey]["name"])
-                        self.obsLatitudes.append(float(self.obsMetadata[stationKey]["latitude"]))
-                        self.obsLongitudes.append(float(self.obsMetadata[stationKey]["longitude"]))
+                        self.obsLabels.append(self.obsMetadata["NOS"][stationKey]["name"])
+                        self.obsLatitudes.append(float(self.obsMetadata["NOS"][stationKey]["latitude"]))
+                        self.obsLongitudes.append(float(self.obsMetadata["NOS"][stationKey]["longitude"]))
 
                     datapointSWH = []
                     datapointMWD = []
@@ -474,6 +525,12 @@ class Grapher:
         graph_directory = "graphs/"
         
         numberOfDatapoints = 0
+#         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
+#           entries for each type of product
+        if(self.tideExists):
+            numberOfDatapoints = len(tideDatapointsTimes)
+        if(self.gaugeExists):
+            numberOfDatapoints = len(self.gaugeDatapointsTimes)
         if(self.obsExists):
             numberOfDatapoints = len(self.obsDatapointsTimes)
         elif(self.windExists):
@@ -493,8 +550,12 @@ class Grapher:
             ax.scatter(self.windLongitudes, self.windLatitudes, label="Wind")
         if(self.wavesExists):
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Waves")
+        if(self.gaugeExists):
+                ax.scatter(self.gaugeLongitudes, self.gaugeLatitudes, label="Gauge")
         if(self.rainExists):
             ax.scatter(self.rainLongitudes, self.rainLatitudes, label="Rain")
+        if(self.tideExists):
+                ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide")
         if(self.waterExists):
             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Water")
         ax.legend(loc="lower right")
@@ -505,8 +566,14 @@ class Grapher:
                 ax.annotate(self.windLabels[index], (self.windLongitudes[index], self.windLatitudes[index]))
             if(self.wavesExists):
                 ax.annotate(self.waveLabels[index], (self.waveLongitudes[index], self.waveLatitudes[index]))
+            if(self.waterExists):
+                ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
+        for index, label in enumerate(self.gaugeLabels):
+            ax.annotate(label, (self.gaugeLongitudes[index], self.gaugeLatitudes[index]))
             if(self.rainExists):
                 ax.annotate(self.rainLabels[index], (self.rainLongitudes[index], self.rainLatitudes[index]))
+        for index, label in enumerate(self.tideLabels):
+            ax.annotate(label, (self.tideLongitudes[index], self.tideLatitudes[index]))
             if(self.waterExists):
                 ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
             
@@ -800,9 +867,19 @@ class Grapher:
             if(len(self.datapointsRains) > 0):
                 fig, ax = plt.subplots()
                 ax.scatter(self.rainTimes, self.datapointsRains[index], marker=".", label="Forecast")
+                if(self.gaugeExists):
+                    ax.plot(self.gaugeDatapointsTimes[index], self.gaugeDatapointsRains[index], label="Gauge")
+                    gaugeNoNan = np.nan_to_num(self.gaugeDatapointsRains[index])
+                    accumulationGauge = str(round(np.sum(gaugeNoNan), 2))
+                else:
+                    accumulationGauge = "NA"
                 ax.legend(loc="lower right")
-                stationName = self.obsLabels[index]
-                plt.title(stationName + " station rain")
+                stationName = self.gaugeLabels[index]
+                
+
+                rainNoNan = np.nan_to_num(self.datapointsRains[index])
+                accumulationRain = str(round(np.sum(rainNoNan), 2))
+                plt.title(stationName + " station rain [accumulation mm/hh gauge/rain:" + accumulationGauge + "/" + accumulationRain)
                 plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("rain (mm/hr)")
                 plt.savefig(graph_directory + stationName + '_rain.png')
@@ -810,6 +887,8 @@ class Grapher:
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots()
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
+                if(self.tideExists):
+                    ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Tide Station")
                 ax.legend(loc="lower right")
                 stationName = self.obsLabels[index]
                 plt.title(stationName + " station water elevation")

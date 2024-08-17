@@ -644,12 +644,16 @@ class Reader:
         return dataset, times
         
         
-    def initializeClosestNodes(self, dataset, thresholdDistance):
+    def initializeClosestNodes(self, dataset, thresholdDistance, dataType):
         # Find node indexes that are closest to NOS_Stations
         with open(self.STATIONS_FILE) as stations_file:
             stationsDict = json.load(stations_file)
         stationToNodeDistancesDict = {}
-        for stationKey in stationsDict["NOS"].keys():
+        if(dataType == "rain"):
+            stationKeys = stationsDict["USGS"].keys()
+        else:
+            stationKeys = stationsDict["NOS"].keys()
+        for stationKey in stationKeys:
             stationToNodeDistancesDict[stationKey] = {}
         # recreate station to node distances calculations dictionary
         print("retreving coordinates for all nodes", flush=True)
@@ -659,9 +663,12 @@ class Reader:
             nodeIndex = nodesIndex[index]
 #             print(node)
             if(node[0] <= 90 and node[0] >= -90):
-                for stationKey in stationsDict["NOS"].keys():
+                for stationKey in stationKeys:
 #                     print(stationKey)
-                    stationDict = stationsDict["NOS"][stationKey]
+                    if(dataType == "rain"):
+                        stationDict = stationsDict["USGS"][stationKey]
+                    else:
+                        stationDict = stationsDict["NOS"][stationKey]
                     stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
     #                             distance and threshold in kilometers
                     distance = haversine.haversine(stationCoordinates, node)
@@ -892,7 +899,10 @@ class Reader:
             data[stationKey]["latitude"] = latitude
             data[stationKey]["longitude"] = longitude
             data[stationKey]["times"] = times
-            stationDict = stationsDict["NOS"][stationKey]
+            if(dataType == "rain"):
+                stationDict = stationsDict["USGS"][stationKey]
+            else:
+                stationDict = stationsDict["NOS"][stationKey]
             stationLatitude = float(stationDict["latitude"])
             stationLongitude = float(stationDict["longitude"])
             stationCoordinates = (stationLongitude, stationLatitude)
@@ -939,7 +949,7 @@ class GFSRainReader:
         if(initializeClosestRainNodes):
             thresholdDistance = 20
 #             thresholdDistance = 100
-            self.reader.initializeClosestNodes(rainDataset, thresholdDistance)
+            self.reader.initializeClosestNodes(rainDataset, thresholdDistance, "rain")
         interpolateValues = True
         spaceSparseness = 1
         timeSparseness = 1
@@ -971,7 +981,7 @@ class GFSWindReader:
 #             thresholdDistance = 100
 #             Use higher threshold distance if working with 306 data?
 #             thresholdDistance = 800
-            self.reader.initializeClosestNodes(windDataset, thresholdDistance)
+            self.reader.initializeClosestNodes(windDataset, thresholdDistance, "gfs")
         interpolateValues = True
         spaceSparseness = 1
         timeSparseness = 1
@@ -1000,7 +1010,7 @@ class Fort74Reader:
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
             thresholdDistance = 0.1
-            self.reader.initializeClosestNodes(windDataset, thresholdDistance)
+            self.reader.initializeClosestNodes(windDataset, thresholdDistance, "fort")
         spaceSparseness = 1
         timeSparseness = 1
         interpolateValues = True
@@ -1030,7 +1040,7 @@ class Fort63Reader:
         if(initializeClosestWaterNodes):
 #             thresholdDistance = 10
             thresholdDistance = 0.1
-            self.reader.initializeClosestNodes(waterDataset, thresholdDistance)
+            self.reader.initializeClosestNodes(waterDataset, thresholdDistance, "water")
         spaceSparseness = 1
 #         spaceSparseness = 10
         timeSparseness = 1
@@ -1063,7 +1073,7 @@ class PostWindReader:
             #If working with post low res high altitude, the threshold distance needs to be increased
             #Because there is no longer a high density of points in the post wind
 #             thresholdDistance = 20
-            self.reader.initializeClosestNodes(windDataset, thresholdDistance)
+            self.reader.initializeClosestNodes(windDataset, thresholdDistance, "post")
         interpolateValues = True
         spaceSparseness = 10
 #         Uncomment for low res wind post generation
@@ -1129,7 +1139,7 @@ class WaveReader:
                 initializeClosestWaveNodes = True
                 if(initializeClosestWaveNodes):
                     thresholdDistance = 0.1
-                    self.reader.initializeClosestNodes(swhDataset, thresholdDistance)
+                    self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
                 interpolateValues = True
                 if(interpolateValues):
                     self.reader.generateDataFilesWithInterpolation(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)

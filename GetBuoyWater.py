@@ -9,9 +9,9 @@ from datetime import datetime, timedelta
 import json
 from Encoders import NumpyEncoder
         
-class GetBuoyWind:
-    def __init__(self, STATIONS_FILE="", OBS_WIND_DATA_FILE="", startDateObject="", endDateObject=""):
-        temp_directory = OBS_WIND_DATA_FILE[0:OBS_WIND_DATA_FILE.rfind("/") + 1]
+class GetBuoyWater:
+    def __init__(self, STATIONS_FILE="", OBS_WATER_DATA_FILE="", startDateObject="", endDateObject=""):
+        temp_directory = OBS_WATER_DATA_FILE[0:OBS_WATER_DATA_FILE.rfind("/") + 1]
         print(type(startDateObject), flush=True)
         print(startDateObject, flush=True)
         with open(STATIONS_FILE) as stations_file:
@@ -39,21 +39,19 @@ class GetBuoyWind:
         # heightEndDate = "2022-12-24T23:59:59Z"
     
         badStations = []
-        windDict = {}
+        waterDict = {}
         for key in stationsDict["NOS"].keys():
             stationDict = stationsDict["NOS"][key]
             stationId = stationDict["id"]
             stationName = stationDict["name"]
-            url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Wind.mat?STATION_ID%2Ctime%2CWind_Speed%2CWind_Direction%2CWind_Gust&STATION_ID%3E=%22" + stationId + "%22&BEGIN_DATE%3E=%22" + startDate + "%22&END_DATE%3E=%22" + endDate + "%22&time%3E=" + startDateFormat + "T00%3A00%3A00Z"
-            heightURL = "https://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetObservation&version=1.0.0&observedProperty=water_surface_height_above_reference_datum&offering=urn:ioos:station:NOAA.NOS.CO-OPS:" + stationId + "&responseFormat=text/csv&eventTime=" + heightStartDate + "/" + heightEndDate + "&unit=Meters"
+# https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.htmlTable?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%228452660%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%222024-07-29%22&END_DATE%3E=%222024-08-10%22
+            url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.mat?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%22"  + stationId + "%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%22" + startDateFormat + "%22&END_DATE%3E=%22" + endDateFormat + "%22"
         #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
             matFilename = temp_directory + stationDict["id"] + ".mat"
-            heightFilename = temp_directory + stationDict["id"] + "_height.csv"
         #     sensorFilename = stationDict["id"] + "_sensor"
             try:
         #     Once mat files are downloaded once, comment out this line to stop querying the API
                 urlretrieve(url, matFilename)
-                urlretrieve(heightURL, heightFilename)
         #         urlretrieve(sensorURL, sensorFilename)
                 data = scipy.io.loadmat(matFilename)
                 unixTimes = data["IOOS_Wind"]["time"][0][0].flatten()
@@ -66,45 +64,10 @@ class GetBuoyWind:
                 windDict[key]["speeds"] = windSpeeds
                 windDict[key]["gusts"] = windGusts
         
-        
-                file = open(heightFilename)
-                csvHeightTimes = []
-                csvHeightValues = []
-                skipHeader = True
-                for line in file:
-                    if(skipHeader):
-                        skipHeader = False
-                    else:
-                        data = line.split(",")
-        #                 print(data)
-                        heightFormattedTime = data[4]
-                        year = int(heightFormattedTime[0:4])
-                        month = int(heightFormattedTime[5:7])
-                        day = int(heightFormattedTime[8:10])
-                        hour = int(heightFormattedTime[11:13])
-                        minute = int(heightFormattedTime[14:16])
-                        second = int(heightFormattedTime[17:19])
-                
-                        heightTime = datetime(year=year, month=month, day=day, hour=hour, minute=minute, second=second)
-                
-                        heightValue = float(data[5])
-                        csvHeightTimes.append(datetime.timestamp(heightTime))
-                        csvHeightValues.append(heightValue)
-#                 print("CSV and .mat same length? " + stationName, len(csvHeightTimes) == len(unixTimes))
-#                 print("CSV height Times vs unixTimes len", len(csvHeightTimes), len(unixTimes))
-                heightTime = datetime.timestamp(datetime(year=3000, month=1, day=1))
-                csvHeightTimes.append(heightTime)
-                heightIndex = 0
-                heightValues = []
-                for unixTime in unixTimes:
-                    if(unixTime > csvHeightTimes[heightIndex + 1]):
-                        heightIndex += 1
-                    heightValues.append(csvHeightValues[heightIndex])
-                windDict[key]["heights"] = heightValues
             except (HTTPError, FileNotFoundError):
         #         print("oops bad url")
                 badStations.append(badStations.append(stationDict))
         
         # print(windDict)
-        with open(OBS_WIND_DATA_FILE, "w") as outfile:
-            json.dump(windDict, outfile, cls=NumpyEncoder)
+        with open(OBS_WATER_DATA_FILE, "w") as outfile:
+            json.dump(waterDict, outfile, cls=NumpyEncoder)
