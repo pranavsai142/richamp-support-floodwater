@@ -410,17 +410,17 @@ class Grapher:
                             datapointWaters.append(waterDataset[stationKey]["water"][index])
                         waterTimestampsInitialized = True
                         self.datapointsWaters.append(datapointWaters)
-                        if(self.gaugeExists):
+                        if(self.tideExists):
                             tideTimes = []
                             tideWaters = []
                 #                         Height is not station altitude, it is sea surface height
                             for index in range(len(tideDataset[stationKey]["times"])):
                                 tideTimes.append(self.unixTimeToDeltaHours(tideDataset[stationKey]["times"][index], self.waterStartDate))
-                                tideWater = gaugeDataset[stationKey]["water"][index]
+                                tideWater = tideDataset[stationKey]["water"][index]
                                 tideWaters.append(tideWater)
-                            self.tideDatapointsTimes.append(tideWaters)
+                            self.tideDatapointsTimes.append(tideTimes)
                             self.tideDatapointsWaters.append(tideWaters)
-            obsLabelsInitialized = True
+            tideLabelsInitialized = True
                         
         if(self.wavesExists):
             swhExists = False
@@ -528,7 +528,7 @@ class Grapher:
 #         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
 #           entries for each type of product
         if(self.tideExists):
-            numberOfDatapoints = len(tideDatapointsTimes)
+            numberOfDatapoints = len(self.tideDatapointsTimes)
         if(self.gaugeExists):
             numberOfDatapoints = len(self.gaugeDatapointsTimes)
         if(self.obsExists):
@@ -871,26 +871,51 @@ class Grapher:
                     ax.plot(self.gaugeDatapointsTimes[index], self.gaugeDatapointsRains[index], label="Gauge")
                     gaugeNoNan = np.nan_to_num(self.gaugeDatapointsRains[index])
                     accumulationGauge = str(round(np.sum(gaugeNoNan), 2))
+                    accumulationSeriesGauge = []
+                    for rainIndex, gaugeRain in enumerate(gaugeNoNan):
+                        if(rainIndex == 0):
+                            accumulationSeriesGauge.append(gaugeRain)
+                        else:
+                            accumulationSeriesGauge.append(gaugeRain + accumulationSeriesGauge[rainIndex - 1])
+
                 else:
                     accumulationGauge = "NA"
+                    accumulationSeriesGauge = []
                 ax.legend(loc="lower right")
                 stationName = self.gaugeLabels[index]
                 
 
                 rainNoNan = np.nan_to_num(self.datapointsRains[index])
                 accumulationRain = str(round(np.sum(rainNoNan), 2))
+                accumulationSeriesRain = []
+                for rainIndex, rain in enumerate(rainNoNan):
+                    if(rainIndex == 0):
+                        accumulationSeriesRain.append(rain)
+                    else:
+                        accumulationSeriesRain.append(rain + accumulationSeriesRain[rainIndex - 1])
                 plt.title(stationName + " rain-accumulation forecast/gauge:" + accumulationRain + "/" + accumulationGauge)
                 plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("rain (mm/hr)")
                 plt.savefig(graph_directory + stationName + '_rain.png')
+                plt.close()
+#                Plot accumulation series
+                fig, ax = plt.subplots()
+                ax.scatter(self.rainTimes, accumulationSeriesRain, marker=".", label="Forecast")
+                if(self.gaugeExists):
+                    ax.plot(self.gaugeDatapointsTimes[index], accumulationSeriesGauge, label="Gauge")
+                ax.legend(loc="lower right")
+                plt.title(stationName + " accumulated rain- forecast/gauge:" + accumulationRain + "/" + accumulationGauge)
+                plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
+                plt.ylabel("rain (mm)")
+                plt.savefig(graph_directory + stationName + 'rain_accumulation.png')
                 plt.close()
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots()
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
                 if(self.tideExists):
                     ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Tide Station")
-                ax.legend(loc="lower right")
-                stationName = self.obsLabels[index]
+                ax.legend(loc="upper left")
+                stationName = self.tideLabels[index]
                 plt.title(stationName + " station water elevation")
                 plt.xlabel("Hours since " + self.waterStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("elevation (meters)")
