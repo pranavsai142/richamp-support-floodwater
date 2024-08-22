@@ -65,7 +65,7 @@ def main():
             maxWindSpeedsKnots.append(wind)
             print(wind)
     
-    generateParametricRain.main(MIN_LATITUDE, MIN_LONGITUDE, MAX_LATITUDE, MAX_LONGITUDE, SPATIAL_RESOLUTION, trackTimes, trackDeltaHours, maxWindSpeedsKnots, latitudes, longitudes)
+    generateParametricRain.main(MIN_LATITUDE, MIN_LONGITUDE, MAX_LATITUDE, MAX_LONGITUDE, SPATIAL_RESOLUTION, startTime, trackDeltaHours, maxWindSpeedsKnots, latitudes, longitudes)
 
 
 if __name__ == "__main__":

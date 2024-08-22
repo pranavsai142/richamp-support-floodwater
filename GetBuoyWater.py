@@ -46,6 +46,7 @@ class GetBuoyWater:
             stationName = stationDict["name"]
 # https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.htmlTable?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%228452660%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%222024-07-29%22&END_DATE%3E=%222024-08-10%22
             url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.mat?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%22"  + stationId + "%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%22" + startDateFormat + "%22&END_DATE%3E=%22" + endDateFormat + "%22"
+#             print(url)
         #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
             matFilename = temp_directory + stationDict["id"] + ".mat"
         #     sensorFilename = stationDict["id"] + "_sensor"
@@ -54,15 +55,11 @@ class GetBuoyWater:
                 urlretrieve(url, matFilename)
         #         urlretrieve(sensorURL, sensorFilename)
                 data = scipy.io.loadmat(matFilename)
-                unixTimes = data["IOOS_Wind"]["time"][0][0].flatten()
-                windDirections = data["IOOS_Wind"]["Wind_Direction"][0][0].flatten()
-                windSpeeds = data["IOOS_Wind"]["Wind_Speed"][0][0].flatten()
-                windGusts = data["IOOS_Wind"]["Wind_Gust"][0][0].flatten()
-                windDict[key] = {}
-                windDict[key]["times"] = unixTimes
-                windDict[key]["directions"] = windDirections
-                windDict[key]["speeds"] = windSpeeds
-                windDict[key]["gusts"] = windGusts
+                unixTimes = data["IOOS_Hourly_Height_Verified_Wat"]["time"][0][0].flatten()
+                waters = data["IOOS_Hourly_Height_Verified_Wat"]["WL_VALUE"][0][0].flatten()
+                waterDict[key] = {}
+                waterDict[key]["times"] = unixTimes
+                waterDict[key]["water"] = waters
         
             except (HTTPError, FileNotFoundError):
         #         print("oops bad url")

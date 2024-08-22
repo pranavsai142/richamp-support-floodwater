@@ -7,6 +7,7 @@ from urllib.request import urlretrieve
 from urllib.error import HTTPError
 from datetime import datetime, timedelta, timezone
 import json
+import numpy as np
 from Encoders import NumpyEncoder
         
         
@@ -50,8 +51,9 @@ from Encoders import NumpyEncoder
 class GetObsRain:
     def __init__(self, STATIONS_FILE="", OBS_RAIN_DATA_FILE="", startDateObject="", endDateObject=""):
         temp_directory = OBS_RAIN_DATA_FILE[0:OBS_RAIN_DATA_FILE.rfind("/") + 1]
-        print(type(startDateObject), flush=True)
-        print(startDateObject, flush=True)
+        print("Getting observational rain")
+#         print(type(startDateObject), flush=True)
+#         print(startDateObject, flush=True)
         with open(STATIONS_FILE) as stations_file:
             stationsDict = json.load(stations_file)
 
@@ -136,8 +138,8 @@ class GetObsRain:
                                     else:
 #                                         print(rain)
 #                                         print("RAIN", rain[17:rain.find("<")])
-#                                         Convert from inches per day to mm per hour
-                                        rowRains[index].append(float(rain[17:rain.find("<")]) * 1.0583333153333347)
+#                                         Convert from inches per day to mm per day
+                                        rowRains[index].append(float(rain[17:rain.find("<")]) * 25.4)
 #                                     print(rowRains)
 #                                     if(index == 2):
 #                                         quit()
@@ -174,12 +176,25 @@ class GetObsRain:
                     dayIndex = startDay
 #                     print(dayIndex)
 #                     quit()
+
+#                     TODO: Rework data so obs rain graph looks like a triangle for a day, with area equal to the daily accumulation.
+#                     Basically, there should be an entry for each hour in the day, with the peak being at noon.
+#                     The integral of the total day's worth of rain data (shaped like a triangle) will be equal to the total accumulation for the day
                     for index, rowDay in enumerate(rowDays):
-                        dateStr = (month[0] + month[1] + str(rowDay).zfill(2)) + "12"
-                        date = datetime.strptime(dateStr, "%b%Y%d%H").replace(tzinfo=timezone.utc)
-                        dates.append(date)
-#                         print(date)
-                        rains.append(rowRains[monthIndex][dayIndex - 1])
+                        rainAccumulation = rowRains[monthIndex][dayIndex - 1]
+                        maxRainRate = (rainAccumulation * 2) / 24
+                        rainRates = np.linspace(0, maxRainRate, num=12)
+                        for hour in range(0, 24):
+                            dateStr = (month[0] + month[1] + str(rowDay).zfill(2)) + str(hour)
+                            date = datetime.strptime(dateStr, "%b%Y%d%H").replace(tzinfo=timezone.utc)
+                            dates.append(date)
+    #                         print(date)
+                            rainRate = 0
+                            if(hour < 12):
+                                rainRate = rainRates[hour]
+                            if(hour >= 12):
+                                rainRate = rainRates[(23 - hour)]
+                            rains.append(rainRate)
                         dayIndex = dayIndex + 1
 #                     while dayIndex < (startDay + deltaDaysForMonth):
 #                         print(dayIndex)
@@ -212,6 +227,7 @@ class GetObsRain:
 #                 badStations.append(badStations.append(stationDict))
         
         # print(windDict)
+        print("Writing observational rain")
         with open(OBS_RAIN_DATA_FILE, "w") as outfile:
             json.dump(rainDict, outfile, cls=NumpyEncoder)
 #         quit()
