@@ -31,7 +31,15 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/scenario_wind/test1938.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
-# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water ../ObservationalWind/fort.63.nc --backgroundChoice RHODE_ISLAND_CHAMP
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water sandy.deb.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
+
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water v18.tidal.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
+
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --wavesExists true --waveswh swan_HS.63.nc --wavemwd swan_DIR.63.nc --wavemwp swan_TMM10.63.nc --wavepwp swan_TPS.63.nc --waverad rads.64.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
+
+
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water sandy.forecast.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
+
 
 # python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind RICHAMP_wind.nc --backgroundChoice RHODE_ISLAND_CHAMP
 
@@ -40,7 +48,16 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --gfsExists true --wind ../ObservationalWind/test_american_wind.nc
 
-# python generateGraphs.py --stations OBS_STATIONS.json --rainExists true --rain ../ObservationalWind/test_american_rain.nc
+# python generateGraphs.py --stations OBS_STATIONS.json --rainExists true --rain RICHAMP_rain.nc --tempDir temp/ --backgroundChoice EAST_COAST_OUTLINE
+
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain henri_rain_gfs.nc --tempDir temp/ --backgroundChoice EAST_COAST_OUTLINE
+
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain ernesto_rain_gfs.nc --tempDir temp/ --backgroundChoice EAST_COAST_OUTLINE
+
+
+
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind wind_gfs.nc --tempDir post_temp/ --backgroundChoice RHODE_ISLAND_CHAMP
+
 
 # python generateGraphs.py --stations MIDWEST_STATIONS.json --rainExists true --rain ../ObservationalWind/test_midwest_rain.nc --gfsExists true --wind ../ObservationalWind/test_midwest_wind.nc --backgroundChoice MIDWEST
 
@@ -53,4 +70,23 @@
 #  --args.waverad /Volumes/ssd/downloads/wave_data/rads.64.nc --args.waveswh /Volumes/ssd/downloads/wave_data/swan_HS.63.nc --args.wavemwd /Volumes/ssd/downloads/wave_data/swan_DIR.63.nc --args.wavemwp /Volumes/ssd/downloads/wave_data/swan_TMM10.63.nc --args.wavepwp /Volumes/ssd/downloads/wave_data/swan_TPS.63.nc
 
 
-python generateParametricInput.py --track nhc_merge_2023_al_13_036.trk
+# nhc_merge_2024_al_5_018.trk
+# python generateRunProperties.py --indir rundir
+# 
+# python readParametricTrack.py --file ../trackfiles/scenariofiles/datefix.track.ramram6
+
+# python readParametricTrack.py --file ../trackfiles/scenariofiles/datefix.track.m38002
+#  nhc_merge_2024_al_5_018.trk
+
+# python readHurdatTrack.py --file ../trackfiles/scenariofiles/datefix.SandyHurdatTrack.txt
+
+# python readHurdatTrack.py --file ../trackfiles/scenariofiles/HoneHurdatTrack.txt
+
+# python generateGraphs.py --stations OBS_STATIONS.json --rainExists true --rain ../WeatherVisualizer/Sandy_RICHAMP_rain.nc --tempDir temp/ --backgroundChoice NORTH_ATLANTIC
+
+# python generateGraphs.py --stations HAWAII_STATIONS.json --rainExists true --rain RICHAMP_rain.nc --tempDir temp/ --backgroundChoice HAWAII
+
+
+# python generateGraphs.py --stations HAWAII_STATIONS.json --rainExists true --rain hone_rain_gfs.nc --tempDir temp/ --backgroundChoice HAWAII
+
+# python generateGraphs.py --stations HAWAII_STATIONS.json --gfsExists true --wind hone_wind_gfs.nc --tempDir temp/ --backgroundChoice HAWAII

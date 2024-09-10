@@ -1,0 +1,20 @@
+{
+  "USGS": {
+    "1": {
+      "id": "0",
+      "source": "USGS",
+      "name": "Waikoloa Village, HI",
+      "latitude": "19.93719",
+      "longitude": "-155.79111"
+    }
+  },
+  "NOS": {
+    "1": {
+      "id": "0",
+      "source": "USGS",
+      "name": "Waikoloa Village, HI",
+      "latitude": "19.93719",
+      "longitude": "-155.79111"
+    }
+  }
+}
