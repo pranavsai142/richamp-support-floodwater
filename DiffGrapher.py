@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 import imageio
 import gc
 
-class Grapher:
+class DiffGrapher:
     DATE_FORMAT = "%m/%d/%y-%HZ"
     
         
@@ -43,7 +43,6 @@ class Grapher:
         self.obsExists = False
         self.gaugeExists = False
         self.tideExists = False
-        self.buoyExists = False
         self.windExists = False
         self.wavesExists = False
         self.rainExists = False
@@ -69,8 +68,6 @@ class Grapher:
             self.windExists = True
         if("SWH" in dataToGraph or "MWD" in dataToGraph or "MWP" in dataToGraph or "PWP" in dataToGraph or "RAD" in dataToGraph):
             self.wavesExists = True
-        if("BUOY" in dataToGraph):
-            self.buoyExists = True
         if("RAIN" in dataToGraph):
             self.rainExists = True
         if("WATER" in dataToGraph):
@@ -144,6 +141,7 @@ class Grapher:
         self.waterLatitudes = []
         self.waterLabels = []
         self.waterTimes = []
+        self.waterDiffTimes = []
         
         self.maxWater = 5
         self.mapWaterPoints = []
@@ -155,6 +153,7 @@ class Grapher:
         self.mapWaters = []
         
         self.datapointsWaters = []
+        self.datapointsDiffWaters = []
         
         self.rainLongitudes = []
         self.rainLatitudes = []
@@ -181,17 +180,6 @@ class Grapher:
         self.datapointsPWP = []
         self.datapointsRADMag = []
         self.datapointsRADDir = []
-        
-        buoyLabelsInitialized = False
-        self.buoyLongitudes = []
-        self.buoyLatitudes = []
-        self.buoyLabels = []
-        
-        self.buoyDatapointsTimes = []
-        self.buoyDatapointsSWH = []
-        self.buoyDatapointsMWD = []
-        self.buoyDatapointsMWP = []
-        self.buoyDatapointsPWP = []
         
         self.maxSWH = 3
         self.mapWavePoints = []
@@ -226,9 +214,6 @@ class Grapher:
         if("TIDE" in dataToGraph):
             with open(dataToGraph["TIDE"]) as outfile:
                 tideDataset = json.load(outfile)
-        if("BUOY" in dataToGraph):
-            with open(dataToGraph["BUOY"]) as outfile:
-                buoyDataset = json.load(outfile)
                   
         if(self.windExists):
             windTimestampsInitialized = False
@@ -390,8 +375,11 @@ class Grapher:
         if(self.waterExists):
             with open(dataToGraph["WATER"]) as outfile:
                 waterDataset = json.load(outfile)
+            with open(dataToGraph["DIFF"]) as outfile:
+                waterDiffDataset = json.load(outfile)
                 
             waterTimestampsInitialized = False
+            waterDiffTimestampsInitialized = False
             for stationKey in waterDataset.keys():
                 if(stationKey == "map_data"):
                     self.mapWaterTriangles = waterDataset["map_data"]["map_triangles"]
@@ -401,9 +389,11 @@ class Grapher:
                     self.mapWaterPointsLatitudes = waterDataset["map_data"]["map_pointsLatitudes"]
                     self.mapWaterPointsLongitudes = waterDataset["map_data"]["map_pointsLongitude"]
                     self.mapWaters = waterDataset["map_data"]["map_water"]
+                    self.diffWaters = waterDiffDataset["map_data"]["map_water"]
                     for index in range(len(self.mapWaterTimes)):
                         for nodeIndex in range(len(self.mapWaters[index])):
                             pointWater = self.mapWaters[index][nodeIndex]
+#                             pointWater = self.mapWaters[index][nodeIndex] - self.diffWaters[index][nodeIndex]
                             if(pointWater > self.maxWater):
                                 self.maxWater = pointWater
                 else:
@@ -419,14 +409,25 @@ class Grapher:
                             self.tideLongitudes.append(float(self.obsMetadata["NOS"][stationKey]["longitude"]))
     
                         datapointWaters = []
+                        datapointDiffWaters = []
                         for index in range(len(waterDataset[stationKey]["times"])):
                             if(self.waterStartDate == None):
                                 self.waterStartDate = datetime.fromtimestamp(int(waterDataset[stationKey]["times"][index]), timezone.utc)
                             if(not waterTimestampsInitialized):
                                 self.waterTimes.append(self.unixTimeToDeltaHours(waterDataset[stationKey]["times"][index], self.waterStartDate))
-                            datapointWaters.append(waterDataset[stationKey]["water"][index])
+#                             print(len(waterDataset[stationKey]["water"]), len(waterDiffDataset[stationKey]["water"]))
+                            datapointWater = waterDataset[stationKey]["water"][index]
+                            datapointWaters.append(datapointWater)
                         waterTimestampsInitialized = True
+                        for index in range(len(waterDiffDataset[stationKey]["times"])):
+                            if(not waterDiffTimestampsInitialized):
+                                self.waterDiffTimes.append(self.unixTimeToDeltaHours(waterDiffDataset[stationKey]["times"][index], self.waterStartDate))
+#                             print(len(waterDataset[stationKey]["water"]), len(waterDiffDataset[stationKey]["water"]))
+                            datapointDiffWaters.append(waterDiffDataset[stationKey]["water"][index])
+#                             datapointWaters.append(waterDataset[stationKey]["water"][index])
+                        waterDiffTimestampsInitialized = True
                         self.datapointsWaters.append(datapointWaters)
+                        self.datapointsDiffWaters.append(datapointDiffWaters)
                         if(self.tideExists):
                             tideTimes = []
                             tideWaters = []
@@ -497,10 +498,10 @@ class Grapher:
                     self.waveLabels.append(nodeIndex)
                     self.waveLatitudes.append(iteratorDataset[stationKey]["latitude"])
                     self.waveLongitudes.append(iteratorDataset[stationKey]["longitude"])
-                    if(not buoyLabelsInitialized):
-                        self.buoyLabels.append(self.obsMetadata["NDBC"][stationKey]["name"])
-                        self.buoyLatitudes.append(float(self.obsMetadata["NDBC"][stationKey]["latitude"]))
-                        self.buoyLongitudes.append(float(self.obsMetadata["NDBC"][stationKey]["longitude"]))
+                    if(not obsLabelsInitialized):
+                        self.obsLabels.append(self.obsMetadata["NOS"][stationKey]["name"])
+                        self.obsLatitudes.append(float(self.obsMetadata["NOS"][stationKey]["latitude"]))
+                        self.obsLongitudes.append(float(self.obsMetadata["NOS"][stationKey]["longitude"]))
 
                     datapointSWH = []
                     datapointMWD = []
@@ -528,33 +529,15 @@ class Grapher:
                             radDir = self.vectorDirection(radX, radY)
                             datapointRADMag.append(radMag)
                             datapointRADDir.append(radDir)
+                        
                     waveTimestampsInitialized = True
                     self.datapointsSWH.append(datapointSWH)
                     self.datapointsMWD.append(datapointMWD)
                     self.datapointsMWP.append(datapointMWP)
                     self.datapointsPWP.append(datapointPWP)
                     self.datapointsRADMag.append(datapointRADMag)
-                    self.datapointsRADDir.append(datapointRADDir) 
-                    if(self.buoyExists):
-                        buoyTimes = []
-                        buoySWH = []
-                        buoyMWD = []
-                        buoyMWP = []
-                        buoyPWP = []
-            #                         Height is not station altitude, it is sea surface height
-                        for index in range(len(buoyDataset[stationKey]["times"])):
-                            buoyTimes.append(self.unixTimeToDeltaHours(buoyDataset[stationKey]["times"][index], self.waveStartDate))
-                            buoySWH.append(buoyDataset[stationKey]["swh"][index])
-                            buoyMWD.append(buoyDataset[stationKey]["mwd"][index])
-                            buoyMWP.append(buoyDataset[stationKey]["mwp"][index])
-                            buoyPWP.append(buoyDataset[stationKey]["pwp"][index])
-                        self.buoyDatapointsTimes.append(buoyTimes)
-                        self.buoyDatapointsSWH.append(buoySWH)
-                        self.buoyDatapointsMWD.append(buoyMWD)
-                        self.buoyDatapointsMWP.append(buoyMWP)
-                        self.buoyDatapointsPWP.append(buoyPWP)
-   
-            buoyLabelsInitialized = True              
+                    self.datapointsRADDir.append(datapointRADDir)    
+            obsLabelsInitialized = True              
 
     def generateGraphs(self):
         graph_directory = "graphs/"
@@ -562,8 +545,6 @@ class Grapher:
         numberOfDatapoints = 0
 #         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
 #           entries for each type of product
-        if(self.buoyExists):
-            numberOfDatapoints = len(self.buoyDatapointsTimes)
         if(self.tideExists):
             numberOfDatapoints = len(self.tideDatapointsTimes)
         if(self.gaugeExists):
@@ -585,8 +566,6 @@ class Grapher:
         ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
         if(self.windExists):
             ax.scatter(self.windLongitudes, self.windLatitudes, label="Wind")
-        if(self.buoyExists):
-                ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy")
         if(self.wavesExists):
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Waves")
         if(self.gaugeExists):
@@ -607,10 +586,6 @@ class Grapher:
                 ax.annotate(self.waveLabels[index], (self.waveLongitudes[index], self.waveLatitudes[index]))
             if(self.waterExists):
                 ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
-        for index, label in enumerate(self.buoyLabels):
-            ax.annotate(label, (self.buoyLongitudes[index], self.buoyLatitudes[index]))
-            if(self.wavesExists):
-                ax.annotate(self.waveLabels[index], (self.waveLongitudes[index], self.waveLatitudes[index]))
         for index, label in enumerate(self.gaugeLabels):
             ax.annotate(label, (self.gaugeLongitudes[index], self.gaugeLatitudes[index]))
             if(self.rainExists):
@@ -955,6 +930,7 @@ class Grapher:
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots()
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
+                ax.plot(self.waterDiffTimes, self.datapointsDiffWaters[index], label="Diff")
                 if(self.tideExists):
                     ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Tide Station")
                 ax.legend(loc="upper left")
@@ -968,10 +944,8 @@ class Grapher:
                 if(len(self.datapointsSWH[index]) > 0):
                     fig, ax = plt.subplots()
                     ax.scatter(self.waveTimes, self.datapointsSWH[index], marker=".", label="Forecast")
-                    if(self.buoyExists):
-                        ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], label="Buoy")
                     ax.legend(loc="lower right")
-                    stationName = self.buoyLabels[index]
+                    stationName = self.obsLabels[index]
                     plt.title(stationName + " station significant wave height")
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("SWH (meters)")
@@ -980,10 +954,8 @@ class Grapher:
                 if(len(self.datapointsMWD[index]) > 0):
                     fig, ax = plt.subplots()
                     ax.scatter(self.waveTimes, self.datapointsMWD[index], marker=".", label="Forecast")
-                    if(self.buoyExists):
-                        ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsMWD[index], label="Buoy")
                     ax.legend(loc="lower right")
-                    stationName = self.buoyLabels[index]
+                    stationName = self.obsLabels[index]
                     plt.title(stationName + " station mean wave direction")
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("MWD (degrees)")
@@ -992,10 +964,8 @@ class Grapher:
                 if(len(self.datapointsMWP[index]) > 0):
                     fig, ax = plt.subplots()
                     ax.scatter(self.waveTimes, self.datapointsMWP[index], marker=".", label="Forecast")
-                    if(self.buoyExists):
-                        ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsMWP[index], label="Buoy")
                     ax.legend(loc="lower right")
-                    stationName = self.buoyLabels[index]
+                    stationName = self.obsLabels[index]
                     plt.title(stationName + " station mean wave period")
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("MWP (seconds)")
@@ -1004,10 +974,8 @@ class Grapher:
                 if(len(self.datapointsPWP[index]) > 0):
                     fig, ax = plt.subplots()
                     ax.scatter(self.waveTimes, self.datapointsPWP[index], marker=".", label="Forecast")
-                    if(self.buoyExists):
-                        ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsPWP[index], label="Buoy")
                     ax.legend(loc="lower right")
-                    stationName = self.buoyLabels[index]
+                    stationName = self.obsLabels[index]
                     plt.title(stationName + " station peak wave period")
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("PWP (seconds)")
@@ -1017,7 +985,7 @@ class Grapher:
                     fig, ax = plt.subplots()
                     ax.scatter(self.waveTimes, self.datapointsRADMag[index], marker=".", label="Forecast")
                     ax.legend(loc="lower right")
-                    stationName = self.buoyLabels[index]
+                    stationName = self.obsLabels[index]
                     plt.title(stationName + " station radiation stress magnitude")
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("Rad Stress Magitude (1/m^2s^2)")
@@ -1027,7 +995,7 @@ class Grapher:
                     fig, ax = plt.subplots()
                     ax.scatter(self.waveTimes, self.datapointsRADDir[index], marker=".", label="Forecast")
                     ax.legend(loc="lower right")
-                    stationName = self.buoyLabels[index]
+                    stationName = self.obsLabels[index]
                     plt.title(stationName + " station radiation stress direction")
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("Rad stress direction (degrees)")

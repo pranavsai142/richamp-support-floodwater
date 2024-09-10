@@ -45,10 +45,10 @@ worldPixelsHeight = 256
 worldPixelsWidth = 256
 # https://groups.google.com/g/google-maps-js-api-v3/c/hDRO4oHVSeM/m/osOYQYXg2oUJ?pli=1
 # metersPerPixel = 156543.03392 * math.cos(centerLatitude * math.pi / 180) / math.pow(2, zoom)
-minLatitude = 28.0
-maxLatitude = 43.0
-minLongitude = -80.0
-maxLongitude = -60.0
+minLatitude = 17.0
+maxLatitude = 23.0
+minLongitude = -160.0
+maxLongitude = -155.0
 
 centerLatitude = (minLatitude + maxLatitude) / 2
 centerLongitude = (minLongitude + maxLongitude) / 2

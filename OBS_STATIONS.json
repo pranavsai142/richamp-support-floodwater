@@ -8,6 +8,15 @@
       "longitude": "-71.585"
     }
   },
+  "NDBC": {
+    "10": {
+      "id": "44097",
+      "source": "NDBC",
+      "name": "Block Island, RI",
+      "latitude": "40.967",
+      "longitude": "-71.124"
+    }
+  },
   "NOS": {
     "82": {
       "id": "8454000",

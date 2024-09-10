@@ -87,3 +87,8 @@ RHODE_ISLAND_CHAMP
 EAST_COAST
 "lat long of north east", "(45.49399717614716, -56.816406249999986)"
 "lat long of south west", "(24.090563202580892, -83.18359374999999)"
+
+
+Hawaii
+"lat long of north east", "(23.06539242194311, -154.2041015625)"
+"lat long of south west", "(16.873745326186384, -160.7958984375)"

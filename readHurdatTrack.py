@@ -16,10 +16,15 @@ def convertLatitude(latitudeString):
 
 def main():
     RAIN_FILENAME = "RICHAMP_rain.nc"
-    MIN_LATITUDE = 4.0
-    MAX_LATITUDE = 51.0
-    MIN_LONGITUDE = -101.0
-    MAX_LONGITUDE = -49.0
+#     MIN_LATITUDE = 4.0
+#     MAX_LATITUDE = 51.0
+#     MIN_LONGITUDE = -101.0
+#     MAX_LONGITUDE = -49.0
+#     Hawaii
+    MIN_LATITUDE = 15.0
+    MAX_LATITUDE = 25.0
+    MIN_LONGITUDE = -161.0
+    MAX_LONGITUDE = -154.0
     SPATIAL_RESOLUTION = 1.0/12.0
 
     p = argparse.ArgumentParser(description="Make a request read parametric track and generate rain")

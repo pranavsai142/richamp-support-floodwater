@@ -496,6 +496,7 @@ class Reader:
         else:
             coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
         coldStartDate = datetime.fromisoformat(coldStartDateText)
+#         coldStartDate = datetime(year=2018, month=2, day=23, hour=5)
         print("coldStartDate", coldStartDate, flush=True)
 
         minT = float(dataset.variables["time"][0].data)
@@ -651,6 +652,9 @@ class Reader:
         stationToNodeDistancesDict = {}
         if(dataType == "rain"):
             stationKeys = stationsDict["USGS"].keys()
+        elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
+            stationKeys = stationsDict["NDBC"].keys()
+            print(stationKeys)
         else:
             stationKeys = stationsDict["NOS"].keys()
         for stationKey in stationKeys:
@@ -667,6 +671,8 @@ class Reader:
 #                     print(stationKey)
                     if(dataType == "rain"):
                         stationDict = stationsDict["USGS"][stationKey]
+                    elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
+                        stationDict = stationsDict["NDBC"][stationKey]
                     else:
                         stationDict = stationsDict["NOS"][stationKey]
                     stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
@@ -836,7 +842,7 @@ class Reader:
             stationsDict = json.load(stations_file)
             
         data = {}
-        data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
+#         data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
                 
         print("Interpolating", dataType, flush=True)
         nodesIndex = []
@@ -901,6 +907,8 @@ class Reader:
             data[stationKey]["times"] = times
             if(dataType == "rain"):
                 stationDict = stationsDict["USGS"][stationKey]
+            elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
+                stationDict = stationsDict["NDBC"][stationKey]   
             else:
                 stationDict = stationsDict["NOS"][stationKey]
             stationLatitude = float(stationDict["latitude"])
