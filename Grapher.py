@@ -121,6 +121,9 @@ class Grapher:
         
         self.tideDatapointsTimes = []
         self.tideDatapointsWaters = []
+    
+        self.tideDatapointsPredictionTimes = []
+        self.tideDatapointsPredictionWaters = []
         
         self.windLongitudes = []
         self.windLatitudes = []
@@ -437,6 +440,15 @@ class Grapher:
                                 tideWaters.append(tideWater)
                             self.tideDatapointsTimes.append(tideTimes)
                             self.tideDatapointsWaters.append(tideWaters)
+                            tidePredictionTimes = []
+                            tidePredictionWaters = []
+                #                         Height is not station altitude, it is sea surface height
+                            for index in range(len(tideDataset[stationKey]["prediction_times"])):
+                                tidePredictionTimes.append(self.unixTimeToDeltaHours(tideDataset[stationKey]["prediction_times"][index], self.waterStartDate))
+                                tidePredictionWater = tideDataset[stationKey]["prediction_water"][index]
+                                tidePredictionWaters.append(tidePredictionWater)
+                            self.tideDatapointsPredictionTimes.append(tidePredictionTimes)
+                            self.tideDatapointsPredictionWaters.append(tidePredictionWaters)
             tideLabelsInitialized = True
                         
         if(self.wavesExists):
@@ -953,10 +965,11 @@ class Grapher:
                 plt.savefig(graph_directory + stationName + '_rain_accumulation.png')
                 plt.close()
             if(len(self.datapointsWaters) > 0):
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots(figsize=(16,9))
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
                 if(self.tideExists):
-                    ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Tide Station")
+                    ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Station")
+                    ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
                 ax.legend(loc="upper left")
                 stationName = self.tideLabels[index]
                 plt.title(stationName + " station water elevation")

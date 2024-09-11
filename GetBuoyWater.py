@@ -40,12 +40,48 @@ class GetBuoyWater:
     
         badStations = []
         waterDict = {}
+        
+        predictionYears = []
+        year = startDateObject.year
+        endYear = endDateObject.year
+        while(year <= endYear):
+#             print("Historical Data!")
+            predictionYears.append(year)
+            year += 1
+            
         for key in stationsDict["NOS"].keys():
             stationDict = stationsDict["NOS"][key]
             stationId = stationDict["id"]
             stationName = stationDict["name"]
 # https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.htmlTable?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%228452660%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%222024-07-29%22&END_DATE%3E=%222024-08-10%22
             url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.mat?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%22"  + stationId + "%22&DATUM%3E=%22NAVD%22&BEGIN_DATE%3E=%22" + startDateFormat + "%22&END_DATE%3E=%22" + endDateFormat + "%22"
+            
+            predictionTimes = []
+            predictionWaters = []
+            for year in predictionYears:
+                try:
+                    predictionUrl = "https://tidesandcurrents.noaa.gov/cgi-bin/predictiondownload.cgi?&stnid=" + stationId +  "&threshold=&thresholdDirection=greaterThan&bdate=" + str(year) + "&timezone=GMT&datum=NAVD&clock=24hour&type=txt&annual=true"
+#                     print(predictionUrl)
+                    predictionFilename = temp_directory + stationDict["id"] + str(year) + "_TidePrediction.mat"
+                    urlretrieve(predictionUrl, predictionFilename)
+                    with open(predictionFilename) as file:
+                        lines = file.readlines()
+                        if(len(lines) > 0):
+                            for line in lines[14::]:
+                                data = line.split("\t")
+#                                 https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
+                                time = datetime.strptime(data[0] + data[2] + "GMT", "%Y/%m/%d%H:%M%Z")
+                                if(time >= startDateObject and time <= endDateObject):
+                                    print(time)
+                                    predictionTimes.append(datetime.timestamp(time))
+                                    predictionWater = float(data[5]) / 100.0
+                                    predictionWaters.append(predictionWater)
+#                             predictionLines.append(lines[15::])
+                except (HTTPError, FileNotFoundError):
+                    print("Bad prdiction url")
+                    badStations.append(badStations.append(stationDict))
+#             print(predictionLines)
+
 #             print(url)
         #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
             matFilename = temp_directory + stationDict["id"] + ".mat"
@@ -60,6 +96,8 @@ class GetBuoyWater:
                 waterDict[key] = {}
                 waterDict[key]["times"] = unixTimes
                 waterDict[key]["water"] = waters
+                waterDict[key]["prediction_times"] = predictionTimes
+                waterDict[key]["prediction_water"] = predictionWaters
         
             except (HTTPError, FileNotFoundError):
         #         print("oops bad url")

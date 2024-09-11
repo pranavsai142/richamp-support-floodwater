@@ -33,9 +33,9 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water sandy.deb.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
 
-# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water v18.tidal.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water v18.tidal.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
 
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --wavesExists true --waveswh swan_HS.63.nc --wavemwd swan_DIR.63.nc --wavemwp swan_TMM10.63.nc --wavepwp swan_TPS.63.nc --waverad rads.64.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --wavesExists true --waveswh swan_HS.63.nc --wavemwd swan_DIR.63.nc --wavemwp swan_TMM10.63.nc --wavepwp swan_TPS.63.nc --waverad rads.64.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
 
 
 # python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water sandy.forecast.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir temp/
