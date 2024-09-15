@@ -1147,6 +1147,7 @@ class WaveReader:
                 initializeClosestWaveNodes = True
                 if(initializeClosestWaveNodes):
                     thresholdDistance = 0.1
+                    thresholdDistance = 1
                     self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
                 interpolateValues = True
                 if(interpolateValues):
