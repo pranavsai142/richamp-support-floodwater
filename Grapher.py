@@ -571,25 +571,28 @@ class Grapher:
     def generateGraphs(self):
         graph_directory = "graphs/"
         
-        numberOfDatapoints = 0
+        numberOfWindDatapoints = 0
+        numberOfRainDatapoints = 0
+        numberOfWaterDatapoints = 0
+        numberOfWaveDatapoints = 0
 #         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
 #           entries for each type of product
         if(self.buoyExists):
-            numberOfDatapoints = len(self.buoyDatapointsTimes)
+            numberOfWaveDatapoints = len(self.buoyDatapointsTimes)
         if(self.tideExists):
-            numberOfDatapoints = len(self.tideDatapointsTimes)
+            numberOfWaterDatapoints = len(self.tideDatapointsTimes)
         if(self.gaugeExists):
-            numberOfDatapoints = len(self.gaugeDatapointsTimes)
+            numberOfRainDatapoints = len(self.gaugeDatapointsTimes)
         if(self.obsExists):
-            numberOfDatapoints = len(self.obsDatapointsTimes)
+            numberOfWindDatapoints = len(self.obsDatapointsTimes)
         elif(self.windExists):
-            numberOfDatapoints = len(self.windLabels)
+            numberOfWindDatapoints = len(self.windLabels)
         elif(self.wavesExists):
-            numberOfDatapoints = len(self.waveLabels)
+            numberOfWaveDatapoints = len(self.waveLabels)
         elif(self.rainExists):
-            numberOfDatapoints = len(self.rainLabels)
+            numberOfRainDatapoints = len(self.rainLabels)
         elif(self.waterExists):
-            numberOfDatapoints = len(self.waterLabels)
+            numberOfWaterDatapoints = len(self.waterLabels)
         print("numberOfDatapoints", numberOfDatapoints, flush=True)
         fig, ax = plt.subplots()
         print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, flush=True)
@@ -837,64 +840,64 @@ class Grapher:
 #             plt.savefig(graph_directory + 'map_water_swath.png')
 #             plt.close()
 #             gc.collect()
-        if(len(self.mapWaveTimes) > 0):
-            vmin = 0
-            vmax = math.ceil(self.maxWave)
-            levels = 100
-            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
-            for index in range(len(self.mapWaveTimes)):
-                fig, ax = plt.subplots()
-    #             print(self.endWavePointsLongitudes)
-    #             print(self.endWavePointsLatitudes)
-    #             print(self.endSWH)
-                plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
-                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                plt.axis(plotAxis)
-                plt.title("Significant Wave Height")
-                plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
-    #             plt.gca().invert_yaxis()
-                plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                    ticks=range(vmin, vmax+5, 5),
-                    boundaries=levelBoundaries,
-                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                    label="Meters",
-                    ax=plt.gca()
-                )                
-                plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
-                plt.close()
-                gc.collect()
-            with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
-                for index in range(len(self.mapWaveTimes)):
-                    filename = "map_swh_" + str(index) + ".png"
-                    image = imageio.imread(graph_directory + filename)
-                    writer.append_data(image)
-                for index in range(len(self.mapWaveTimes)):
-                    filename = "map_swh_" + str(index) + ".png"
-                    os.remove(graph_directory + filename)
-            mapSWHNoNan = np.nan_to_num(self.mapSWH)
-            swathSWH = np.max(mapSWHNoNan, axis=0)
-            fig, ax = plt.subplots()
-            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-            plt.axis(plotAxis)
-            plt.title("Wave Significant Wave Height Swath")
-#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-#             graphs up to 10 m/s, ~20 knots
-            plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=range(vmin, vmax+5, 5),
-                boundaries=levelBoundaries,
-                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                label="Meters",
-                ax=plt.gca()
-            )        
-            plt.savefig(graph_directory + 'map_swh_swath.png')
-            plt.close()
-            gc.collect()
+#         if(len(self.mapWaveTimes) > 0):
+#             vmin = 0
+#             vmax = math.ceil(self.maxWave)
+#             levels = 100
+#             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+#             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
+#             for index in range(len(self.mapWaveTimes)):
+#                 fig, ax = plt.subplots()
+#     #             print(self.endWavePointsLongitudes)
+#     #             print(self.endWavePointsLatitudes)
+#     #             print(self.endSWH)
+#                 plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
+#                 contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+#                 plt.axis(plotAxis)
+#                 plt.title("Significant Wave Height")
+#                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
+#     #             plt.gca().invert_yaxis()
+#                 plt.colorbar(
+#                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+#                     ticks=range(vmin, vmax+5, 5),
+#                     boundaries=levelBoundaries,
+#                     values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+#                     label="Meters",
+#                     ax=plt.gca()
+#                 )                
+#                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
+#                 plt.close()
+#                 gc.collect()
+#             with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
+#                 for index in range(len(self.mapWaveTimes)):
+#                     filename = "map_swh_" + str(index) + ".png"
+#                     image = imageio.imread(graph_directory + filename)
+#                     writer.append_data(image)
+#                 for index in range(len(self.mapWaveTimes)):
+#                     filename = "map_swh_" + str(index) + ".png"
+#                     os.remove(graph_directory + filename)
+#             mapSWHNoNan = np.nan_to_num(self.mapSWH)
+#             swathSWH = np.max(mapSWHNoNan, axis=0)
+#             fig, ax = plt.subplots()
+#             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+#             contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+#             plt.axis(plotAxis)
+#             plt.title("Wave Significant Wave Height Swath")
+# #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+# #             graphs up to 10 m/s, ~20 knots
+#             plt.colorbar(
+#                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+#                 ticks=range(vmin, vmax+5, 5),
+#                 boundaries=levelBoundaries,
+#                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+#                 label="Meters",
+#                 ax=plt.gca()
+#             )        
+#             plt.savefig(graph_directory + 'map_swh_swath.png')
+#             plt.close()
+#             gc.collect()
         # Plot wind speed over time
-        for index in range(numberOfDatapoints):
+        for index in range(numberOfWindDatapoints):
             if(len(self.datapointsSpeeds) > 0):
                 fig, ax = plt.subplots()
                 ax.scatter(self.windTimes, self.datapointsSpeeds[index], marker=".", label="Forecast")
@@ -919,6 +922,7 @@ class Grapher:
                 plt.ylabel("wind direction (degrees)")
                 plt.savefig(graph_directory + stationName + '_wind_direction.png')
                 plt.close()
+        for index in range(numberOfRainDatapoints):
             if(len(self.datapointsRains) > 0):
                 fig, ax = plt.subplots()
                 ax.scatter(self.rainTimes, self.datapointsRains[index], marker=".", label="Forecast")
@@ -964,6 +968,7 @@ class Grapher:
                 plt.ylabel("rain (mm)")
                 plt.savefig(graph_directory + stationName + '_rain_accumulation.png')
                 plt.close()
+        for index in range(numberOfWaterDatapoints):
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots(figsize=(16,9))
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
@@ -977,6 +982,7 @@ class Grapher:
                 plt.ylabel("elevation (meters)")
                 plt.savefig(graph_directory + stationName + '_water.png')
                 plt.close()
+        for index in range(numberOfWaveDatapoints):
             if(self.wavesExists):
                 if(len(self.datapointsSWH[index]) > 0):
                     fig, ax = plt.subplots()

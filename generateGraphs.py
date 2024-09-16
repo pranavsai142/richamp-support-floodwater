@@ -216,9 +216,9 @@ def main():
 
         ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
 
-#         (waterStartDateObject, waterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
-        waterStartDateObject = datetime.datetime(year=2018, month=2, day=28, hour=5)
-        waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
+        (waterStartDateObject, waterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+#         waterStartDateObject = datetime.datetime(year=2018, month=2, day=28, hour=5)
+#         waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
         dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
 #         dataToGraph["DIFF"] = ADCIRC_DIFF_WATER_DATA_FILE
         
