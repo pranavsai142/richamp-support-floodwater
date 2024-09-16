@@ -593,7 +593,7 @@ class Grapher:
             numberOfRainDatapoints = len(self.rainLabels)
         elif(self.waterExists):
             numberOfWaterDatapoints = len(self.waterLabels)
-        print("numberOfDatapoints", numberOfDatapoints, flush=True)
+        print("numberOfDatapoints Wind, Rain, Water, Wave", numberOfWindDatapoints, numberOfRainDatapoints, numberOfWaterDatapoints, numberOfWaveDatapoints, flush=True)
         fig, ax = plt.subplots()
         print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, flush=True)
         
