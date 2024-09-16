@@ -220,10 +220,10 @@ class GetBuoyWaves:
                 meanWavePeriod = float(dataLine[10])
                 meanWaveDirection = float(dataLine[11])
 #                 Add conditional to match direction that adcirc comes in
-                if(meanWaveDirection < 180.0):
-                    meanWaveDirection = 180.0 + (180.0 - meanWaveDirection)
-                else:
-                    meanWaveDirection = 180.0 - (meanWaveDirection - 180.0)
+#                 if(meanWaveDirection < 180.0):
+#                     meanWaveDirection = 180.0 + (180.0 - meanWaveDirection)
+#                 else:
+#                     meanWaveDirection = 180.0 - (meanWaveDirection - 180.0)
                 pressure = dataLine[12]
                 airTemperature = dataLine[13]
                 waterTemperature = dataLine[14]
