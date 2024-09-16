@@ -5,7 +5,7 @@
 import scipy.io
 from urllib.request import urlretrieve
 from urllib.error import HTTPError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 from Encoders import NumpyEncoder
         
@@ -71,6 +71,7 @@ class GetBuoyWater:
                                 data = line.split("\t")
 #                                 https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
                                 time = datetime.strptime(data[0] + data[2] + "GMT", "%Y/%m/%d%H:%M%Z")
+                                time.replace(tzinfo=None)
                                 if(time >= startDateObject and time <= endDateObject):
                                     print(time)
                                     predictionTimes.append(datetime.timestamp(time))
