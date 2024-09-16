@@ -71,7 +71,7 @@ class GetBuoyWater:
                                 data = line.split("\t")
 #                                 https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
                                 time = datetime.strptime(data[0] + data[2] + "GMT", "%Y/%m/%d%H:%M%Z")
-                                time.replace(tzinfo=None)
+                                time = time.replace(tzinfo=timezone.utc)
                                 if(time >= startDateObject and time <= endDateObject):
                                     print(time)
                                     predictionTimes.append(datetime.timestamp(time))
