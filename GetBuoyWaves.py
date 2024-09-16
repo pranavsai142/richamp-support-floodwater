@@ -223,7 +223,7 @@ class GetBuoyWaves:
                 if(meanWaveDirection < 180.0):
                     meanWaveDirection = 180.0 + (180.0 - meanWaveDirection)
                 else:
-                    meanWaveDirection = (meanWaveDirection - 180.0)
+                    meanWaveDirection = 180.0 - (meanWaveDirection - 180.0)
                 pressure = dataLine[12]
                 airTemperature = dataLine[13]
                 waterTemperature = dataLine[14]
