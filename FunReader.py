@@ -1,4 +1,3 @@
-import netCDF4 as nc
 import numpy as np
 import haversine
 import json
@@ -34,12 +33,11 @@ from Encoders import NumpyEncoder
 # NOS_ADCIRC_NODES_FILE_NAME = "NOS_Floodwater_Nodes.json"
 # NOS_ADCIRC_WIND_DATA_FILE_NAME = "NOS_Floodwater_Wind_Data.json"
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
-class Reader:
-    def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", BACKGROUND_AXIS=[], format=""):
+class FunReader:
+    def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", BACKGROUND_AXIS=[]):
         self.STATIONS_FILE = STATIONS_FILE
         self.STATION_TO_NODE_DISTANCES_FILE = STATION_TO_NODE_DISTANCES_FILE
         self.NODES_FILE = NODES_FILE
-        self.format = format
         self.BACKGROUND_AXIS = BACKGROUND_AXIS
     def extractLatitudeIndex(self, nodeIndex):
         return int(nodeIndex[1: nodeIndex.find(",")])
@@ -481,14 +479,16 @@ class Reader:
             data["map_data"]["map_" + dataType] = mapValues
         return data
             
-    def getNetcdfProperties(self, NETCDF_FILE, dataType):
-        if(self.format == "POST"):
-            dataset = nc.Dataset(NETCDF_FILE)["Main"]
-        else:
-            dataset = nc.Dataset(NETCDF_FILE)
-        metadata = dataset.__dict__
+    def getProperties(self, OUTPUT_FOLDER, dataType):
 #         print(dataset.variables)
-
+        files = os.listdir(OUTPUT_FOLDER)
+        etaFiles = []
+        for file in files:
+            if file[0:4] == "eta_":
+                etaFiles.append(file)
+        etaFiles.sort()
+        print(etaFiles)
+        quit()
         datasetTimeDescription = dataset.variables["time"].units
 #         Add UTC time marker if not existing in cold start date
         if(not ("Z" in datasetTimeDescription)):
@@ -937,22 +937,21 @@ class Reader:
             json.dump(data, outfile, cls=NumpyEncoder)
         
          
-class GFSRainReader:
-    def __init__(self, GFS_RAIN_FILE="", STATIONS_FILE="", GFS_RAIN_DATA_FILE="", BACKGROUND_AXIS=[]):
-        temp_directory = GFS_RAIN_DATA_FILE[0:GFS_RAIN_DATA_FILE.rfind("/") + 1]
-        self.GFS_RAIN_FILE = GFS_RAIN_FILE
+class EtaReader:
+    def __init__(self, OUTPUT_FOLDER="", STATIONS_FILE="", ETA_DATA_FILE="", BACKGROUND_AXIS=[]):
+        temp_directory = ETA_DATA_FILE[0:ETA_DATA_FILE.rfind("/") + 1]
+        self.OUTPUT_FOLDER = OUTPUT_FOLDER
         self.STATIONS_FILE = STATIONS_FILE
-        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "GFS_Station_To_Node_Distances.json"
-        self.GFS_NODES_FILE = temp_directory + "GFS_Nodes.json"
-        self.GFS_RAIN_DATA_FILE = GFS_RAIN_DATA_FILE
-        self.GFS_NODES_WIND_DATA_FILE = temp_directory + "GFS_Nodes_Wind_Data.json"
+        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Fun_Station_To_Node_Distances.json"
+        self.FUN_NODES_FILE = temp_directory + "Fun_Nodes.json"
+        self.ETA_DATA_FILE = ETA_DATA_FILE
         self.BACKGROUND_AXIS = BACKGROUND_AXIS
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="GFS")
+        self.reader = FunReader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.FUN_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS)
     
-    def generateRainDataForStations(self):
-        print("Rain file", flush=True)
-        print(self.GFS_RAIN_FILE, flush=True)
-        rainDataset, timesRain = self.reader.getNetcdfProperties(self.GFS_RAIN_FILE, "rain")
+    def generateFunDataForStations(self):
+        print("Eta file", flush=True)
+        print(self.ETA_DATA_FILE, flush=True)
+        etaDataset, timesEta = self.reader.getProperties(self.OUTPUT_FOLDER, "eta")
         initializeClosestRainNodes = True
         if(initializeClosestRainNodes):
             thresholdDistance = 20
@@ -966,200 +965,3 @@ class GFSRainReader:
         else:
             self.reader.generateDataFiles(rainDataset, "rain", timesRain, self.GFS_RAIN_DATA_FILE)
         return (datetime.fromtimestamp(timesRain[0], timezone.utc), datetime.fromtimestamp(timesRain[-1], timezone.utc))
-            
-class GFSWindReader:
-    def __init__(self, GFS_WIND_FILE="", STATIONS_FILE="", GFS_WIND_DATA_FILE="", BACKGROUND_AXIS=[]):
-        temp_directory = GFS_WIND_DATA_FILE[0:GFS_WIND_DATA_FILE.rfind("/") + 1]
-        self.GFS_WIND_FILE = GFS_WIND_FILE
-        self.STATIONS_FILE = STATIONS_FILE
-        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "GFS_Station_To_Node_Distances.json"
-        self.GFS_NODES_FILE = temp_directory + "GFS_Nodes.json"
-        self.GFS_WIND_DATA_FILE = GFS_WIND_DATA_FILE
-        self.GFS_NODES_WIND_DATA_FILE = temp_directory + "GFS_Nodes_Wind_Data.json"
-        self.BACKGROUND_AXIS = BACKGROUND_AXIS
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.GFS_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="GFS")
-    
-    def generateWindDataForStations(self):
-        print("Wind file", flush=True)
-        print(self.GFS_WIND_FILE, flush=True)
-        windDataset, timesWind = self.reader.getNetcdfProperties(self.GFS_WIND_FILE, "gfs")
-        initializeClosestWindNodes = True
-        if(initializeClosestWindNodes):
-            thresholdDistance = 20
-#             thresholdDistance = 100
-#             Use higher threshold distance if working with 306 data?
-#             thresholdDistance = 800
-            self.reader.initializeClosestNodes(windDataset, thresholdDistance, "gfs")
-        interpolateValues = True
-        spaceSparseness = 1
-        timeSparseness = 1
-        if(interpolateValues):
-            self.reader.generateDataFilesWithInterpolation(windDataset, "gfs", timesWind, spaceSparseness, timeSparseness, self.GFS_WIND_DATA_FILE)
-        else:
-            self.reader.generateDataFiles(windDataset, "gfs", timesWind, self.GFS_WIND_DATA_FILE)
-        return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
-            
-class Fort74Reader:
-    def __init__(self, ADCIRC_WIND_FILE="", STATIONS_FILE="", ADCIRC_WIND_DATA_FILE="", BACKGROUND_AXIS=[]):
-        temp_directory = ADCIRC_WIND_DATA_FILE[0:ADCIRC_WIND_DATA_FILE.rfind("/") + 1]
-        self.ADCIRC_WIND_FILE = ADCIRC_WIND_FILE
-        self.STATIONS_FILE = STATIONS_FILE
-        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "ADCIRC_Station_To_Node_Distances.json"
-        self.ADCIRC_NODES_FILE = temp_directory + "ADCIRC_Nodes.json"
-        self.ADCIRC_WIND_DATA_FILE = ADCIRC_WIND_DATA_FILE
-        self.ADCIRC_NODES_WIND_DATA_FILE = temp_directory + "ADCIRC_Nodes_Wind_Data.json"
-        self.BACKGROUND_AXIS = BACKGROUND_AXIS
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
-    
-    def generateWindDataForStations(self):
-        print("Wind file", flush=True)
-        print(self.ADCIRC_WIND_FILE, flush=True)
-        windDataset, timesWind = self.reader.getNetcdfProperties(self.ADCIRC_WIND_FILE, "fort")
-        initializeClosestWindNodes = True
-        if(initializeClosestWindNodes):
-            thresholdDistance = 0.1
-            self.reader.initializeClosestNodes(windDataset, thresholdDistance, "fort")
-        spaceSparseness = 1
-        timeSparseness = 1
-        interpolateValues = True
-        if(interpolateValues):
-            self.reader.generateDataFilesWithInterpolation(windDataset, "fort", timesWind, spaceSparseness, timeSparseness, self.ADCIRC_WIND_DATA_FILE)
-        else:
-            self.reader.generateDataFiles(windDataset, "fort", timesWind, self.ADCIRC_WIND_DATA_FILE)
-        return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
-  
-class Fort63Reader:
-    def __init__(self, ADCIRC_WATER_FILE="", STATIONS_FILE="", ADCIRC_WATER_DATA_FILE="", BACKGROUND_AXIS=[]):
-        temp_directory = ADCIRC_WATER_DATA_FILE[0:ADCIRC_WATER_DATA_FILE.rfind("/") + 1]
-        self.ADCIRC_WATER_FILE = ADCIRC_WATER_FILE
-        self.STATIONS_FILE = STATIONS_FILE
-        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "ADCIRC_Station_To_Node_Distances.json"
-        self.ADCIRC_NODES_FILE = temp_directory + "ADCIRC_Nodes.json"
-        self.ADCIRC_WATER_DATA_FILE = ADCIRC_WATER_DATA_FILE
-        self.ADCIRC_NODES_WIND_DATA_FILE = temp_directory + "ADCIRC_Nodes_Water_Data.json"
-        self.BACKGROUND_AXIS = BACKGROUND_AXIS
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
-    
-    def generateWindDataForStations(self):
-        print("Water file", flush=True)
-        print(self.ADCIRC_WATER_FILE, flush=True)
-        waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
-        initializeClosestWaterNodes = True
-        if(initializeClosestWaterNodes):
-#             thresholdDistance = 10
-            thresholdDistance = 0.1
-            self.reader.initializeClosestNodes(waterDataset, thresholdDistance, "water")
-        spaceSparseness = 1
-#         spaceSparseness = 10
-        timeSparseness = 1
-        interpolateValues = True
-        if(interpolateValues):
-            self.reader.generateDataFilesWithInterpolation(waterDataset, "water", timesWater, spaceSparseness, timeSparseness, self.ADCIRC_WATER_DATA_FILE)
-        else:
-            self.reader.generateDataFiles(waterDataset, "water", timesWater, self.ADCIRC_WATER_DATA_FILE)
-        return (datetime.fromtimestamp(timesWater[0], timezone.utc), datetime.fromtimestamp(timesWater[-1], timezone.utc))
-                  
-class PostWindReader:
-    def __init__(self, POST_WIND_FILE="", STATIONS_FILE="", POST_WIND_DATA_FILE="", BACKGROUND_AXIS=[]):
-        temp_directory = POST_WIND_DATA_FILE[0:POST_WIND_DATA_FILE.rfind("/") + 1]
-        self.POST_WIND_FILE = POST_WIND_FILE
-        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Post_Station_To_Node_Distances.json"
-        self.POST_NODES_FILE = temp_directory + "Post_Nodes.json"
-        self.POST_WIND_DATA_FILE = POST_WIND_DATA_FILE
-        self.POST_NODES_WIND_DATA_FILE = temp_directory + "Post_Nodes_Wind_Data.json"
-        self.BACKGROUND_AXIS = BACKGROUND_AXIS
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.POST_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="POST")
-    
-    def generateWindDataForStations(self):
-        print("start, ", datetime.now(), flush=True)
-        print("Wind file", flush=True)
-        print(self.POST_WIND_FILE, flush=True)
-        windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
-        initializeClosestWindNodes = True
-        if(initializeClosestWindNodes):
-            thresholdDistance = 0.05
-            #If working with post low res high altitude, the threshold distance needs to be increased
-            #Because there is no longer a high density of points in the post wind
-#             thresholdDistance = 20
-            self.reader.initializeClosestNodes(windDataset, thresholdDistance, "post")
-        interpolateValues = True
-        spaceSparseness = 10
-#         Uncomment for low res wind post generation
-#         spaceSparseness = 1
-        timeSparseness = 1
-        if(interpolateValues):
-            self.reader.generateDataFilesWithInterpolation(windDataset, "post", timesWind, spaceSparseness, timeSparseness, self.POST_WIND_DATA_FILE)
-        else:
-            self.reader.generateDataFiles(windDataset, "post", timesWind, self.POST_WIND_DATA_FILE)
-        return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
-        print("end, ", datetime.now(), flush=True)
-   
-
-class WaveReader:
-    def __init__(
-        self,
-        WAVE_SWH_FILE="",
-        WAVE_MWD_FILE="",
-        WAVE_MWP_FILE="",
-        WAVE_PWP_FILE="",
-        WAVE_RAD_FILE="",
-        STATIONS_FILE="", 
-        WAVE_SWH_DATA_FILE="",
-        WAVE_MWD_DATA_FILE="",
-        WAVE_MWP_DATA_FILE="",
-        WAVE_PWP_DATA_FILE="",
-        WAVE_RAD_DATA_FILE="", 
-        BACKGROUND_AXIS=[]):
-        temp_directory = WAVE_SWH_DATA_FILE[0:WAVE_SWH_DATA_FILE.rfind("/") + 1]
-        self.WAVE_SWH_FILE=WAVE_SWH_FILE
-        self.WAVE_MWD_FILE=WAVE_MWD_FILE
-        self.WAVE_MWP_FILE=WAVE_MWP_FILE
-        self.WAVE_PWP_FILE=WAVE_PWP_FILE
-        self.WAVE_RAD_FILE=WAVE_RAD_FILE
-        self.WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE
-        self.WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE
-        self.WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE
-        self.WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE
-        self.WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE
-        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "Wave_Station_To_Node_Distances.json"
-        self.WAVE_NODES_FILE = temp_directory + "Wave_Nodes.json"
-        self.BACKGROUND_AXIS = BACKGROUND_AXIS
-        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.WAVE_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
-    
-    def generateWaveDataForStations(self):
-        print("Wave files", flush=True)
-        print(self.WAVE_SWH_FILE, flush=True)
-        print(self.WAVE_MWD_FILE, flush=True)
-        print(self.WAVE_MWP_FILE, flush=True)
-        print(self.WAVE_PWP_FILE, flush=True)
-        print(self.WAVE_RAD_FILE, flush=True)
-        swhDataset, timesSWH = self.reader.getNetcdfProperties(self.WAVE_SWH_FILE, "swh")
-        mwdDataset, timesMWD = self.reader.getNetcdfProperties(self.WAVE_MWD_FILE, "mwd")
-        mwpDataset, timesMWP = self.reader.getNetcdfProperties(self.WAVE_MWP_FILE, "mwp")
-        pwpDataset, timesPWP = self.reader.getNetcdfProperties(self.WAVE_PWP_FILE, "pwp")
-        radDataset, timesRAD = self.reader.getNetcdfProperties(self.WAVE_RAD_FILE, "rad")
-        timesEqual = True
-        if(timesSWH == timesMWD == timesMWP == timesPWP == timesRAD):
-            timesEqual = True
-        if(timesEqual):
-                spaceSparseness = 1
-                timeSparseness = 1
-                initializeClosestWaveNodes = True
-                if(initializeClosestWaveNodes):
-                    thresholdDistance = 0.1
-                    thresholdDistance = 1
-                    self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
-                interpolateValues = True
-                if(interpolateValues):
-                    self.reader.generateDataFilesWithInterpolation(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(mwdDataset, "mwd", timesSWH, spaceSparseness, timeSparseness, self.WAVE_MWD_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(mwpDataset, "mwp", timesSWH, spaceSparseness, timeSparseness, self.WAVE_MWP_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(pwpDataset, "pwp", timesSWH, spaceSparseness, timeSparseness, self.WAVE_PWP_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(radDataset, "rad", timesSWH, spaceSparseness, timeSparseness, self.WAVE_RAD_DATA_FILE)
-                else:
-                    self.reader.generateDataFiles(swhDataset, "swh", timesSWH, self.WAVE_SWH_DATA_FILE)
-                    self.reader.generateDataFiles(mwdDataset, "mwd", timesSWH, self.WAVE_MWD_DATA_FILE)
-                    self.reader.generateDataFiles(mwpDataset, "mwp", timesSWH, self.WAVE_MWP_DATA_FILE)
-                    self.reader.generateDataFiles(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
-                    self.reader.generateDataFiles(radDataset, "rad", timesSWH, self.WAVE_RAD_DATA_FILE)
-                return (datetime.fromtimestamp(timesSWH[0], timezone.utc), datetime.fromtimestamp(timesSWH[-1], timezone.utc))

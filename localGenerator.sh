@@ -40,9 +40,12 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --wavesExists true --waveswh /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_HS.63.nc --wavemwd /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_DIR.63.nc --wavemwp /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_TMM10.63.nc --wavepwp /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_TPS.63.nc --waverad /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/rads.64.nc --waterExists true --water /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir /scratch/workspace/pranav_sai_uri_edu-manrun/temp/
 
+python generateFunGraphs.py --stations OBS_STATIONS.json --obsExists true --etaExists true --output /Volumes/ssd/downloads/output_funwave/ --backgroundChoice RHODE_ISLAND_CHAMP --tempDir /Volumes/ssd/temp/
 
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain /Volumes/ssd/ObservationalWind/Ram_RICHAMP_rain.nc --backgroundChoice RHODE_ISLAND_CHAMP --tempDir /Volumes/ssd/temp/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain /Volumes/ssd/ObservationalWind/henri_gfs_rain.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir /Volumes/ssd/temp/
 
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /Volumes/ssd/downloads/ricv1.august.gfs.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir /Volumes/ssd/temp/
+#python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /Volumes/ssd/downloads/ricv1.august.gfs.fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir /Volumes/ssd/temp/
 
 
 # python generateGraphs.py --stations OBS_STATIONS.json --postExists true --wind RICHAMP_wind.nc --backgroundChoice RHODE_ISLAND_CHAMP
