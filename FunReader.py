@@ -479,7 +479,7 @@ class FunReader:
             data["map_data"]["map_" + dataType] = mapValues
         return data
             
-    def getProperties(self, OUTPUT_FOLDER, dataType):
+    def getProperties(self, OUTPUT_FOLDER, startDateObject, timeDelta, dataType):
 #         print(dataset.variables)
         files = os.listdir(OUTPUT_FOLDER)
         etaFiles = []
@@ -488,6 +488,8 @@ class FunReader:
                 etaFiles.append(file)
         etaFiles.sort()
         print(etaFiles)
+        numTimes = len(etaFiles)
+        print(numTimes, startDateObject, timeDelta)
         quit()
         datasetTimeDescription = dataset.variables["time"].units
 #         Add UTC time marker if not existing in cold start date
@@ -938,7 +940,7 @@ class FunReader:
         
          
 class EtaReader:
-    def __init__(self, OUTPUT_FOLDER="", STATIONS_FILE="", ETA_DATA_FILE="", BACKGROUND_AXIS=[]):
+    def __init__(self, OUTPUT_FOLDER="", STATIONS_FILE="", ETA_DATA_FILE="", BACKGROUND_AXIS=[], startDateObject=None, timeDelta=None):
         temp_directory = ETA_DATA_FILE[0:ETA_DATA_FILE.rfind("/") + 1]
         self.OUTPUT_FOLDER = OUTPUT_FOLDER
         self.STATIONS_FILE = STATIONS_FILE
@@ -946,12 +948,14 @@ class EtaReader:
         self.FUN_NODES_FILE = temp_directory + "Fun_Nodes.json"
         self.ETA_DATA_FILE = ETA_DATA_FILE
         self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.startDateObject = startDateObject
+        self.timeDelta = timeDelta
         self.reader = FunReader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.FUN_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS)
     
     def generateFunDataForStations(self):
         print("Eta file", flush=True)
         print(self.ETA_DATA_FILE, flush=True)
-        etaDataset, timesEta = self.reader.getProperties(self.OUTPUT_FOLDER, "eta")
+        etaDataset, timesEta = self.reader.getProperties(self.OUTPUT_FOLDER, self.startDateObject, self.timeDelta, "eta")
         initializeClosestRainNodes = True
         if(initializeClosestRainNodes):
             thresholdDistance = 20

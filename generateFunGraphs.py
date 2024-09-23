@@ -2,6 +2,7 @@ from FunReader import EtaReader
 from Grapher import Grapher
 from GetBuoyWater import GetBuoyWater
 from GetBuoyWaves import GetBuoyWaves
+from FunInputReader import FunInputReader
 import datetime
 import argparse
 import os
@@ -47,7 +48,10 @@ def main():
             "--stations", help="Stations json file", type=str
     )
     p.add_argument(
-        "--output", help="Output filder", type=str
+        "--input", help="input.txt file", type=str
+    )
+    p.add_argument(
+        "--output", help="Output folder", type=str
     )
     #TODO: Fix rhia
     p.add_argument(
@@ -137,11 +141,12 @@ def main():
         backgroundMap = HAWAII_MAP
         backgroundAxis = HAWAII_AXIS
         
+    startDateObject, timeDelta = FunInputReader(INPUT_FILE=args.input).getTimes()
     print("args.etaExists", args.etaExists, flush=True)
     if(args.etaExists):
         OUTPUT_FOLDER = args.output
         ETA_DATA_FILE = fun_temp_directory + "eta_data_file" + ".json"
-        (etaStartDateObject, etaEndDateObject) = EtaReader(OUTPUT_FOLDER=OUTPUT_FOLDER, STATIONS_FILE=STATIONS_FILE, ETA_DATA_FILE=ETA_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateFunDataForStations()
+        (etaStartDateObject, etaEndDateObject) = EtaReader(OUTPUT_FOLDER=OUTPUT_FOLDER, STATIONS_FILE=STATIONS_FILE, ETA_DATA_FILE=ETA_DATA_FILE, BACKGROUND_AXIS=backgroundAxis, startDateObject=startDateObject, timeDelta=timeDelta).generateFunDataForStations()
         dataToGraph["ETA"] = ETA_DATA_FILE
         
     print("args.obsExists", args.obsExists, flush=True)
