@@ -487,9 +487,42 @@ class FunReader:
             if file[0:4] == "eta_":
                 etaFiles.append(file)
         etaFiles.sort()
-        print(etaFiles)
+#         print(etaFiles)
         numTimes = len(etaFiles)
-        print(numTimes, startDateObject, timeDelta)
+#         print(numTimes, startDateObject, timeDelta)
+        times = []
+        for timeIndex in range(numTimes):
+            times.append(startDateObject + (timeDelta * timeIndex))
+#         print(times)
+#       Generate lat lon grid based on BACKGROUND_AXIS and funwave grid size
+#        First, find and initialize funwave grid size based on reading a data file
+        gridInitialized = False
+        deltaNodesLatitude = 0
+        deltaNodesLongitude = 0
+        etaValues = []
+        for etaFile in etaFiles:
+            with open(OUTPUT_FOLDER + etaFile) as file:
+                lines = file.readlines()
+                for line in lines:
+                    data = line.split("   ")[1::]
+                    etaValue = []
+                    if(not gridInitialized):
+                        deltaNodesLongitude = len(lines)
+                        deltaNodesLatitude = len(data)
+                        gridInitialized = True
+                    for value in data:
+                        etaValue.append(value)
+                    etaValues.append(etaValue)
+        print(deltaNodesLongitude, deltaNodesLatitude)
+        deltaNodesLongitude = deltaNodesLongitude
+        deltaNodesLatitude = deltaNodesLatitude
+#         Then map a linspace of the background bounds to the nodes in the grid
+        print(self.BACKGROUND_AXIS)
+        longitudes = np.linspace(self.BACKGROUND_AXIS[0], self.BACKGROUND_AXIS[1], num=deltaNodesLongitude)
+        latitudes = np.linspace(self.BACKGROUND_AXIS[3], self.BACKGROUND_AXIS[2], num=deltaNodesLatitude)
+        print(max(longitudes), min(latitudes))
+        latitudes = []
+        longitudes = []
         quit()
         datasetTimeDescription = dataset.variables["time"].units
 #         Add UTC time marker if not existing in cold start date
