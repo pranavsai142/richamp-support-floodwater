@@ -150,13 +150,13 @@ def main():
         dataToGraph["ETA"] = ETA_DATA_FILE
         
     print("args.obsExists", args.obsExists, flush=True)
-    if(args.obsExists):
+#     if(args.obsExists):
             
-        if(args.etaExists):
-            print("Parsed start and end date from netCDF, ", waterStartDateObject, waterEndDateObject, flush=True)
-            OBS_WATER_DATA_FILE = wind_temp_directory + "obs_water_data_file" + ".json"
-            GetBuoyWater(STATIONS_FILE=STATIONS_FILE, OBS_WATER_DATA_FILE=OBS_WATER_DATA_FILE, startDateObject=waterStartDateObject, endDateObject=waterEndDateObject)
-            dataToGraph["TIDE"] = OBS_WATER_DATA_FILE
+#         if(args.etaExists):
+#             print("Parsed start and end date from netCDF, ", waterStartDateObject, waterEndDateObject, flush=True)
+#             OBS_WATER_DATA_FILE = wind_temp_directory + "obs_water_data_file" + ".json"
+#             GetBuoyWater(STATIONS_FILE=STATIONS_FILE, OBS_WATER_DATA_FILE=OBS_WATER_DATA_FILE, startDateObject=waterStartDateObject, endDateObject=waterEndDateObject)
+#             dataToGraph["TIDE"] = OBS_WATER_DATA_FILE
 #         if(args.wavesExists):
 #             print("Parsed start and end date from netCDF, ", waveStartDateObject, waveEndDateObject, flush=True)
 #             OBS_WAVE_DATA_FILE = wind_temp_directory + "obs_wave_data_file" + ".json"

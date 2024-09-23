@@ -74,117 +74,15 @@ class FunReader:
             valueY = float(dataset.variables["radstress_y"][index][int(nodeIndex)])
             return(valueX, valueY)
         
-    def getValuesForPoints(self, nodesIndex, dataType, dataset):
-        if(dataType == "post"):
-            pointsValuesX = []
-            pointsValuesY = []
-            dataX = dataset.variables["spd"][::]
-            dataY = dataset.variables["dir"][::]
-            for nodeIndex in nodesIndex:
-                valuesX = []
-                valuesY = []
-                for index in range(len(dataX)):
-                    valuesX.append(dataX[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                    valuesY.append(dataY[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                pointsValuesX.append(valuesX)
-                pointsValuesY.append(valuesY)
-            return (pointsValuesX, pointsValuesY)
-        if(dataType == "gfs"):
-            pointsValuesX = []
-            pointsValuesY = []
-            dataX = dataset.variables["wind_u"][::]
-            dataY = dataset.variables["wind_v"][::]
-            for nodeIndex in nodesIndex:
-                valuesX = []
-                valuesY = []
-                for index in range(len(dataX)):
-                    valuesX.append(dataX[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                    valuesY.append(dataY[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                pointsValuesX.append(valuesX)
-                pointsValuesY.append(valuesY)
-            return (pointsValuesX, pointsValuesY)
-        if(dataType == "fort"):
-            pointsValuesX = []
-            pointsValuesY = []
-            dataX = dataset.variables["windx"][::]
-            dataY = dataset.variables["windy"][::]
-            for nodeIndex in nodesIndex:
-                valuesX = []
-                valuesY = []
-                for index in range(len(dataX)):
-                    valuesX.append(dataX[index][int(nodeIndex)])
-                    valuesY.append(dataY[index][int(nodeIndex)])
-                pointsValuesX.append(valuesX)
-                pointsValuesY.append(valuesY)
-            return (pointsValuesX, pointsValuesY)
-        if(dataType == "rad"):
-            pointsValuesX = []
-            pointsValuesY = []
-            dataX = dataset.variables["radstress_x"][::]
-            dataY = dataset.variables["radstress_y"][::]
-            for nodeIndex in nodesIndex:
-                valuesX = []
-                valuesY = []
-                for index in range(len(dataX)):
-                    valuesX.append(dataX[index][int(nodeIndex)])
-                    valuesY.append(dataY[index][int(nodeIndex)])
-                pointsValuesX.append(valuesX)
-                pointsValuesY.append(valuesY)
-            return (pointsValuesX, pointsValuesY)
-        if(dataType == "rain"):
-            pointsValues = []
-            data = dataset.variables["precipitation"][::]
-            for nodeIndex in nodesIndex:
-                values = []
-                for index in range(len(data)):
-                    values.append(data[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                pointsValues.append(values)
-            return pointsValues
-        if(dataType == "water"):
-            pointsValues = []
-            data = dataset.variables["zeta"][::]
-            for nodeIndex in nodesIndex:
-                values = []
-                for index in range(len(data)):
-                    values.append(data[index][int(nodeIndex)])
-                pointsValues.append(values)
-            return pointsValues
-        if(dataType == "swh"):
-            pointsValues = []
-            data = dataset.variables["swan_HS"][::]
-            for nodeIndex in nodesIndex:
-                values = []
-                for index in range(len(data)):
-                    values.append(data[index][int(nodeIndex)])
-                pointsValues.append(values)
-            return pointsValues
-        if(dataType == "mwd"):
-            pointsValues = []
-            data = dataset.variables["swan_DIR"][::]
-            for nodeIndex in nodesIndex:
-                values = []
-                for index in range(len(data)):
-                    values.append(data[index][int(nodeIndex)])
-                pointsValues.append(values)
-            return pointsValues
-        if(dataType == "mwp"):
-            pointsValues = []
-            data = dataset.variables["swan_TMM10"][::]
-            for nodeIndex in nodesIndex:
-                values = []
-                for index in range(len(data)):
-                    values.append(data[index][int(nodeIndex)])
-                pointsValues.append(values)
-            return pointsValues
-        if(dataType == "pwp"):
-            pointsValues = []
-            data = dataset.variables["swan_TPS"][::]
-            for nodeIndex in nodesIndex:
-                values = []
-                for index in range(len(data)):
-                    values.append(data[index][int(nodeIndex)])
-                pointsValues.append(values)
-            return pointsValues
+    def getValuesForPoints(self, latitudes, longitudes, values, nodesIndex, dataType):
+        pointsValues = []
+        data = values
+        for nodeIndex in nodesIndex:
+            pointValues = []
+            for index in range(len(data)):
+                pointValues.append(data[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
+            pointsValues.append(pointValues)
+        return pointsValues
             
             
     def getValuesGrid(self, spaceSparseness, timeSparseness, dataType, dataset):
@@ -327,46 +225,25 @@ class FunReader:
             return(valuesX, valuesY)
             
             
-    def getCoordinates(self, spaceSparseness, dataset):
+    def getCoordinates(self, latitudes, longitudes):
         nodesIndex = []
         pointsLatitudes = []
         pointsLongitudes = []
         points = []
-        if(self.format == "GFS" or self.format == "POST"):
-            latitudes = dataset.variables["lat"][::]
-            longitudes = dataset.variables["lon"][::]
-            for latitudeIndex, latitude in enumerate(latitudes):
-                for longitudeIndex, longitude in enumerate(longitudes):
-                    nodesIndex.append(str((latitudeIndex, longitudeIndex)))
-                    pointsLatitudes.append(latitude)
-                    pointsLongitudes.append(longitude)
-        elif(self.format == "FORT"):
-            latitudes = dataset.variables["y"][::]
-            longitudes = dataset.variables["x"][::]
-            for index in range(len(latitudes)):
-                nodesIndex.append(str(index))
-                pointsLatitudes.append(latitudes[index])
-                pointsLongitudes.append(longitudes[index])
-        nodesIndex = nodesIndex[::spaceSparseness]
-        pointsLatitudes = pointsLatitudes[::spaceSparseness]
-        pointsLongitudes = pointsLongitudes[::spaceSparseness]
+        for latitudeIndex, latitude in enumerate(latitudes):
+            for longitudeIndex, longitude in enumerate(longitudes):
+                nodesIndex.append(str((latitudeIndex, longitudeIndex)))
+                pointsLatitudes.append(latitude)
+                pointsLongitudes.append(longitude)
         return (pointsLatitudes, pointsLongitudes), nodesIndex
         
-    def getCoordinatesGrid(self, spaceSparseness, dataset):
+    def getCoordinatesGrid(self, latitudes, longitudes):
         nodesIndex = []
         points = []
-        if(self.format == "GFS" or self.format == "POST"):
-            latitudes = dataset.variables["lat"][::spaceSparseness]
-            longitudes = dataset.variables["lon"][::spaceSparseness]
-            for latitudeIndex in range(len(latitudes)):
-                for longitudeIndex in range(len(longitudes)):
-                    nodesIndex.append(str((latitudeIndex, longitudeIndex)))
+        for latitudeIndex in range(len(latitudes)):
+            for longitudeIndex in range(len(longitudes)):
+                nodesIndex.append(str((latitudeIndex, longitudeIndex)))
                     
-        elif(self.format == "FORT"):
-            latitudes = dataset.variables["y"][::]
-            longitudes = dataset.variables["x"][::]
-            for index in range(len(latitudes)):
-                nodesIndex.append(str(index))
         return (latitudes, longitudes), nodesIndex
 
 # Example background axis
@@ -430,51 +307,33 @@ class FunReader:
 #         print(len(triangles), len(badIndices))
         return triangles, maskedIndices
         
-    def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
+    def getMap(self, latitudes, longitudes, values, dataType, times, data):
         print("getting map", dataType, flush=True)
         mapValuesX = []
         mapValuesY = []
-        mapTriangles = []
         mapValues = []
         
         mapNodes = []
         mapNodesLatitudes = []
         mapNodesLongitudes = []
         
-        if(self.format == "GFS" or self.format == "POST"):
-            value = self.getValuesGrid(spaceSparseness, timeSparseness, dataType, dataset)
-            nodes, nodesIndex = self.getCoordinatesGrid(spaceSparseness, dataset)
-        elif(self.format == "FORT"):
-            value = self.getValues(spaceSparseness, timeSparseness, dataType, dataset)
-            nodes, nodesIndex = self.getCoordinates(spaceSparseness, dataset)
-            mapTriangles, mapMaskedTriangles = self.getTriangles(dataset)
-        if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
-            mapValuesX = value[0]
-            mapValuesY = value[1]
-        else:
-            mapValues = value
+        mapValues = values
+        nodes, nodesIndex = self.getCoordinatesGrid(latitudes, longitudes)
+
+
         mapNodesLatitudes = nodes[0]
         mapNodesLongitudes = nodes[1]
         mapNodes = nodesIndex
 #         print(len(points))
         
         data["map_data"] = {}
-        data["map_data"]["map_times"] = times[::timeSparseness]
+        data["map_data"]["map_times"] = times
         data["map_data"]["map_points"] = mapNodes
         data["map_data"]["map_pointsLatitudes"] = mapNodesLatitudes
         data["map_data"]["map_pointsLongitude"] = mapNodesLongitudes
-        if(self.format == "FORT"):
-            data["map_data"]["map_triangles"] = mapTriangles
-            data["map_data"]["map_maskedTriangles"] = mapMaskedTriangles
-        if(dataType == "rad"):
-            data["map_data"]["map_radstressX"] = mapValuesX
-            data["map_data"]["map_radstressY"] = mapValuesY
-        elif(dataType == "gfs" or dataType == "fort"):
+        if(dataType == "gfs" or dataType == "fort"):
             data["map_data"]["map_windsX"] = mapValuesX
             data["map_data"]["map_windsY"] = mapValuesY
-        elif(dataType == "post"):
-            data["map_data"]["map_speeds"] = mapValuesX
-            data["map_data"]["map_directions"] = mapValuesY
         else:
             data["map_data"]["map_" + dataType] = mapValues
         return data
@@ -492,211 +351,60 @@ class FunReader:
 #         print(numTimes, startDateObject, timeDelta)
         times = []
         for timeIndex in range(numTimes):
-            times.append(startDateObject + (timeDelta * timeIndex))
+            times.append((startDateObject + (timeDelta * timeIndex)).timestamp())
 #         print(times)
 #       Generate lat lon grid based on BACKGROUND_AXIS and funwave grid size
 #        First, find and initialize funwave grid size based on reading a data file
         gridInitialized = False
         deltaNodesLatitude = 0
         deltaNodesLongitude = 0
-        etaValues = []
-        for etaFile in etaFiles:
-            with open(OUTPUT_FOLDER + etaFile) as file:
-                lines = file.readlines()
-                for line in lines:
-                    data = line.split("   ")[1::]
+
+        
+        if (dataType == "eta"):
+            etaValues = []
+            for etaFile in etaFiles:
+                with open(OUTPUT_FOLDER + etaFile) as file:
+                    lines = file.readlines()
                     etaValue = []
-                    if(not gridInitialized):
-                        deltaNodesLongitude = len(lines)
-                        deltaNodesLatitude = len(data)
-                        gridInitialized = True
-                    for value in data:
-                        etaValue.append(value)
+                    for line in lines:
+                        etaLine = []
+                        data = line.split("   ")[1::]
+                        if(not gridInitialized):
+                            deltaNodesLongitude = len(data)
+                            deltaNodesLatitude = len(lines)
+                            gridInitialized = True
+                        for value in data:
+                            etaLine.append(float(value))
+                        etaValue.append(etaLine)
                     etaValues.append(etaValue)
-        print(deltaNodesLongitude, deltaNodesLatitude)
-        deltaNodesLongitude = deltaNodesLongitude
-        deltaNodesLatitude = deltaNodesLatitude
+            print(deltaNodesLongitude, deltaNodesLatitude)
+            deltaNodesLongitude = deltaNodesLongitude
+            deltaNodesLatitude = deltaNodesLatitude
+
+            print("etaX0", etaValues[0][0][0], flush=True)
 #         Then map a linspace of the background bounds to the nodes in the grid
+        latitudes = []
+        longitudes = []
         print(self.BACKGROUND_AXIS)
         longitudes = np.linspace(self.BACKGROUND_AXIS[0], self.BACKGROUND_AXIS[1], num=deltaNodesLongitude)
         latitudes = np.linspace(self.BACKGROUND_AXIS[3], self.BACKGROUND_AXIS[2], num=deltaNodesLatitude)
         print(max(longitudes), min(latitudes))
-        latitudes = []
-        longitudes = []
-        quit()
-        datasetTimeDescription = dataset.variables["time"].units
-#         Add UTC time marker if not existing in cold start date
-        if(not ("Z" in datasetTimeDescription)):
-            coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:] + "Z"
-        else:
-            coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
-        coldStartDate = datetime.fromisoformat(coldStartDateText)
-#         coldStartDate = datetime(year=2018, month=2, day=23, hour=5)
-        print("coldStartDate", coldStartDate, flush=True)
-
-        minT = float(dataset.variables["time"][0].data)
-        maxT = float(dataset.variables["time"][-1].data)
-        times = []
-        print(minT, flush=True)
-        print(maxT, flush=True)
-        if(self.format == "POST" or self.format == "GFS"):
-#             print("deltaT of data")
-            windDeltaT = timedelta(minutes=maxT - minT)
-#             print(windDeltaT)
-
-#             print("number of timesteps")
-            timesteps = len(dataset.variables["time"][:])
-#             print(timesteps)
-
-            for index in range(timesteps):
-#                 print("timedelta", timedelta(minutes=float(dataset.variables["time"][index].data)))
-                time = coldStartDate + timedelta(minutes=float(dataset.variables["time"][index].data))
-#                 time.replace(timezone.utc)
-#                 print("tzinfo", time.tzinfo)
-                times.append(time.timestamp())
-#                 print(times)
-#                 quit()
-
-#             print("start of data (seconds since coldstart)")
-            startDate = coldStartDate + timedelta(minutes=float(minT))
-            endDate = coldStartDate + timedelta(minutes=float(maxT))
-            print("startDate", startDate, flush=True)
-            print("endDate", endDate, flush=True)
-#         
-            # GFS Data is grid based system
-#             print("min max latitude and longitude")
-            minLatitude = dataset.variables["lat"][0].data
-            minLongitude = dataset.variables["lon"][0].data
-            maxLatitude = dataset.variables["lat"][-1].data
-            maxLongitude = dataset.variables["lon"][-1].data
-
-#             print("minLatitude", minLatitude)
-#             print("minLongitude", minLongitude)
-#             print("maxLatitude", maxLatitude)
-#             print("maxLongitude", maxLongitude)
-
-            deltaLatitude = maxLatitude - minLatitude
-            deltaLongitude = maxLongitude - minLongitude
-
-            print("deltaLatitude", deltaLatitude, flush=True)
-            print("deltaLongitude", deltaLongitude, flush=True)
-
-            deltaNodesLatitude = len(dataset.variables["lat"][:])
-            deltaNodesLongitude = len(dataset.variables["lon"][:])
-
-            print("deltaNodesLatitude", deltaNodesLatitude, flush=True)
-            print("deltaNodesLongitude", deltaNodesLongitude, flush=True)
-        elif(self.format == "FORT"):
-    #         print("deltaT of data")
-            windDeltaT = timedelta(seconds=maxT - minT)
-     #        print(windDeltaT)
-
-    #         print("number of timesteps")
-            timesteps = len(dataset.variables["time"][:])
-    #         print(timesteps)
-
-            for index in range(timesteps):
-                time = coldStartDate + timedelta(seconds=float(dataset.variables["time"][index].data))
-                times.append(time.timestamp())
-
-    #         print("start of data (seconds since coldstart)")
-            startDate = coldStartDate + timedelta(seconds=float(minT))
-            endDate = coldStartDate + timedelta(seconds=float(maxT))
-    #         print("startDate", startDate)
-    #         print("endDate", endDate)
-        
-            # Grid origin is top right? Maybe not, Node based system!
-            # y is latitude, x is longitude
-            node0 = (float(dataset.variables["y"][0].data), float(dataset.variables["x"][0].data))
-    #         print("node0 (lat, long)", node0)
-
-            numberOfNodes = dataset.variables["x"].shape[0]
-
-#         print("number of nodes", numberOfNodes)
-        
-        if (dataType == "swh"):
-            print("significant wave height at node200000", flush=True)
-        
-            swhX0 = dataset.variables["swan_HS"][0][200000]
-
-            print("swhX0", swhX0, flush=True)
-        elif (dataType == "mwd"):
-            print("mean wave direction at node200000", flush=True)
-        
-            mwdX0 = dataset.variables["swan_DIR"][0][200000]
-
-            print("mwdX0", mwdX0, flush=True)
-        elif (dataType == "mwp"):
-            print("mean wave period at node200000", flush=True)
-        
-            mwpX0 = dataset.variables["swan_TMM10"][0][200000]
-
-            print("mwpX0", mwpX0, flush=True)
-        elif (dataType == "pwp"):
-            print("peak wave period at node200000", flush=True)
-        
-            tpsX0 = dataset.variables["swan_TPS"][0][200000]
-
-            print("tpsX0", tpsX0, flush=True)
-        elif (dataType == "rad"):
-            print("radiation stress gradient at node200000", flush=True)
-        
-            radX0 = dataset.variables["radstress_x"][0][200000]
-            radY0 = dataset.variables["radstress_y"][0][200000]
-
-            print("radX0", radX0, flush=True)
-            print("radY0", radY0, flush=True)
-        elif (dataType == "fort"):
-            print("wind at node0")
-        
-            windX0 = dataset.variables["windx"][0][0]
-            windY0 = dataset.variables["windy"][0][0]
-
-            print("windX0", windX0, flush=True)
-            print("windY0", windY0, flush=True)
-        elif (dataType == "water"):
-            print("water at node0", flush=True)
-            
-            zeta0 = dataset.variables["zeta"][0][0]
-            print("zeta0", zeta0, flush=True)
-            
-        elif (dataType == "rain"):
-            print("rain at (0,0)", flush=True)
-            
-            rain0 = dataset.variables["precipitation"][0][0][0]
-            print("rain", rain0, flush=True)
-        elif (dataType == "gfs"):
-            print("Wind at t=0, point(0, 0)", flush=True)
-            windX0 = dataset.variables["wind_u"][0][0][0]
-            windY0 = dataset.variables["wind_v"][0][0][0]
-            print("windX000", windX0, flush=True)
-            print("windY000", windY0, flush=True)
-        elif (dataType == "post"):
-            speed0 = dataset.variables["spd"][0][0][0]
-            direction0 = dataset.variables["dir"][0][0][0]
-            print("speed0", speed0, flush=True)
-            print("direction0", direction0, flush=True)
-
-        return dataset, times
+        print(times[0])
+        return times, latitudes, longitudes, etaValues
         
         
-    def initializeClosestNodes(self, dataset, thresholdDistance, dataType):
+    def initializeClosestNodes(self, latitudes, longitudes, thresholdDistance, dataType):
         # Find node indexes that are closest to NOS_Stations
         with open(self.STATIONS_FILE) as stations_file:
             stationsDict = json.load(stations_file)
         stationToNodeDistancesDict = {}
-        if(dataType == "rain"):
-            stationKeys = stationsDict["USGS"].keys()
-        elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
-            stationKeys = stationsDict["NDBC"].keys()
-            print(stationKeys)
-        else:
+        if(dataType == "eta"):
             stationKeys = stationsDict["NOS"].keys()
         for stationKey in stationKeys:
             stationToNodeDistancesDict[stationKey] = {}
         # recreate station to node distances calculations dictionary
         print("retreving coordinates for all nodes", flush=True)
-        (nodesLatitudes, nodesLongitudes), nodesIndex = self.getCoordinates(1, dataset)
+        (nodesLatitudes, nodesLongitudes), nodesIndex = self.getCoordinates(latitudes, longitudes)
         for index in range(len(nodesIndex)):
             node = (nodesLatitudes[index], nodesLongitudes[index])
             nodeIndex = nodesIndex[index]
@@ -704,11 +412,7 @@ class FunReader:
             if(node[0] <= 90 and node[0] >= -90):
                 for stationKey in stationKeys:
 #                     print(stationKey)
-                    if(dataType == "rain"):
-                        stationDict = stationsDict["USGS"][stationKey]
-                    elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
-                        stationDict = stationsDict["NDBC"][stationKey]
-                    else:
+                    if(dataType == "eta"):
                         stationDict = stationsDict["NOS"][stationKey]
                     stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
     #                             distance and threshold in kilometers
@@ -730,67 +434,6 @@ class FunReader:
                 print("bad node", nodeIndex, node, flush=True)
             if(index % 100000 == 0):
                 print("index", index, flush=True)
-#         if(self.format == "GFS" or self.format == "POST"):
-#             deltaNodesLatitude = len(dataset.variables["lat"][:])
-#             deltaNodesLongitude = len(dataset.variables["lon"][:])
-#             for longitudeIndex in range(deltaNodesLongitude):
-#                 for latitudeIndex in range(deltaNodesLatitude):
-#                     node = (float(dataset.variables["lat"][latitudeIndex].data), float(dataset.variables["lon"][longitudeIndex].data))
-#                     nodeIndex = str((latitudeIndex, longitudeIndex))
-#                     if(node[0] <= 90 and node[0] >= -90):
-#                         for stationKey in stationsDict["NOS"].keys():
-#                             stationDict = stationsDict["NOS"][stationKey]
-#                             stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
-# #                             distance and threshold in kilometers
-#                             distance = haversine.haversine(stationCoordinates, node)
-# #                             print("stationCoordinates", stationCoordinates)
-# #                             print("distance", distance)
-#                             if(len(stationToNodeDistancesDict[stationKey].keys()) == 0):
-#                                 stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
-#                                 stationToNodeDistancesDict[stationKey]["distance"] = distance
-#                                 stationToNodeDistancesDict[stationKey]["closestNodes"] = []
-#                             elif(stationToNodeDistancesDict[stationKey]["distance"] > distance):
-#                                 stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
-#                                 stationToNodeDistancesDict[stationKey]["distance"] = distance
-#                             if(thresholdDistance > distance):
-# #                                 print("Found a closest node", node, nodeIndex, "distance ", distance, "station", stationKey)
-#                                 stationToNodeDistancesDict[stationKey]["closestNodes"].append(nodeIndex)
-#                     else:
-#                         badNodes.append(nodeIndex)
-#                         print("bad node", nodeIndex, node)
-#                 if(longitudeIndex % 100 == 0):
-#                     print("longitudeIndex", longitudeIndex)
-#                         
-#         if(self.format == "FORT"):
-#             numberOfNodes = dataset.variables["x"].shape[0]
-#             for nodeIndex in range(numberOfNodes):
-#         #     There are nodes in the gulf of mexico between node 400000 - 500000 for rivc1 map
-#         #     for nodeIndex in range(100000):
-#         #         nodeIndex = nodeIndex + 400000
-#                 node = (float(dataset.variables["y"][nodeIndex].data), float(dataset.variables["x"][nodeIndex].data))
-#                 if(node[0] <= 90 and node[0] >= -90):
-#                     for stationKey in stationsDict["NOS"].keys():
-#                         stationDict = stationsDict["NOS"][stationKey]
-#                         stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
-#                         distance = haversine.haversine(stationCoordinates, node)
-#                         if(len(stationToNodeDistancesDict[stationKey].keys()) == 0):
-#                             stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
-#                             stationToNodeDistancesDict[stationKey]["distance"] = distance
-#                             stationToNodeDistancesDict[stationKey]["closestNodes"] = []
-#                         elif(stationToNodeDistancesDict[stationKey]["distance"] > distance):
-#                             stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
-#                             stationToNodeDistancesDict[stationKey]["distance"] = distance
-#                         if(thresholdDistance > distance):
-# #                             print("Found a closest node", node, nodeIndex, "distance ", distance, "station", stationKey)
-#                             stationToNodeDistancesDict[stationKey]["closestNodes"].append(nodeIndex)
-#                 else:
-#                     badNodes.append(nodeIndex)
-#                     print("bad node", nodeIndex, node)
-# #                 Print progress
-#                 if(nodeIndex % 50000 == 0):
-#                     print("nodeIndex", nodeIndex, node)
-
-#         print("stationToNodeDistancesDict", stationToNodeDistancesDict)
 
         with open(self.STATION_TO_NODE_DISTANCES_FILE, "w") as outfile:
             json.dump(stationToNodeDistancesDict, outfile)
@@ -804,18 +447,12 @@ class FunReader:
             stationToNodeDistanceDict = stationToNodeDistancesDict[stationKey]
             nodeIndex = stationToNodeDistanceDict["nodeIndex"]
             closestNodes = stationToNodeDistancesDict[stationKey]["closestNodes"]
-#             nodes["NOS"][nodeIndex] = {}
-#             nodes["NOS"][nodeIndex]["closestNodes"] = closestNodes
-#             nodes["NOS"][nodeIndex]["stationKey"] = stationKey
             nodes["NOS"][stationKey] = {}
             nodes["NOS"][stationKey]["closestNodes"] = closestNodes
             nodes["NOS"][stationKey]["nodeIndex"] = nodeIndex
-            if(self.format == "GFS" or self.format == "POST"):
-                nodes["NOS"][stationKey]["latitude"] = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
-                nodes["NOS"][stationKey]["longitude"] = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
-            if(self.format == "FORT"):
-                nodes["NOS"][stationKey]["latitude"] = float(dataset.variables["y"][int(nodeIndex)].data)
-                nodes["NOS"][stationKey]["longitude"] = float(dataset.variables["x"][int(nodeIndex)].data)
+            nodes["NOS"][stationKey]["latitude"] = float(latitudes[self.extractLatitudeIndex(nodeIndex)])
+            nodes["NOS"][stationKey]["longitude"] = float(longitudes[self.extractLongitudeIndex(nodeIndex)])
+
             
         with open(self.NODES_FILE, "w") as outfile:
             json.dump(nodes, outfile)
@@ -869,7 +506,7 @@ class FunReader:
         with open(DATA_FILE, "w") as outfile:
             json.dump(data, outfile)
         
-    def generateDataFilesWithInterpolation(self, dataset, dataType, times, spaceSparseness, timeSparseness, DATA_FILE):
+    def generateDataFilesWithInterpolation(self, latitudes, longitudes, values, dataType, times, DATA_FILE):
         
         with open(self.NODES_FILE) as outfile:
             nodes = json.load(outfile)
@@ -877,7 +514,7 @@ class FunReader:
             stationsDict = json.load(stations_file)
             
         data = {}
-        data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
+        data = self.getMap(latitudes, longitudes, values, dataType, times, data)
                 
         print("Interpolating", dataType, flush=True)
         nodesIndex = []
@@ -892,21 +529,12 @@ class FunReader:
                 nodesIndex.append(closestNode)
                 x = 0.0
                 y = 0.0
-                if(self.format == "GFS" or self.format == "POST"):
-                    x = float(dataset.variables["lon"][self.extractLongitudeIndex(closestNode)].data)
-                    y = float(dataset.variables["lat"][self.extractLatitudeIndex(closestNode)].data)
-                elif(self.format == "FORT"):
-                    x = float(dataset.variables["x"][int(closestNode)].data)
-                    y = float(dataset.variables["y"][int(closestNode)].data)
+                x = float(longitudes[self.extractLongitudeIndex(closestNode)])
+                y = float(latitudes[self.extractLatitudeIndex(closestNode)])
                 point = (x, y)
                 points.append(point)
         print("getting time series data for closest nodes", flush=True)
-        values = self.getValuesForPoints(nodesIndex, dataType, dataset)
-        if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
-            pointsValuesX.extend(values[0])
-            pointsValuesY.extend(values[1])
-        else:
-            pointsValues.extend(values)
+        pointsValues = self.getValuesForPoints(latitudes, longitudes, values, nodesIndex, dataType)
 #                 for index in range(len(times)):
 # #                     print("getttingTime")
 #                     value = self.getValue(index, closestNode, dataType, dataset)
@@ -920,52 +548,26 @@ class FunReader:
 #                 pointsValuesY.append(valuesY)
 #             Interpolate values
         print("initializing interpolator", flush=True)
-        if(dataType == "rad" or dataType == "gfs" or dataType == "fort" or dataType == "post"):
-            interpolatorX = scipy.interpolate.LinearNDInterpolator(points, pointsValuesX)
-            interpolatorY = scipy.interpolate.LinearNDInterpolator(points, pointsValuesY)
-        else:
-            interpolator = scipy.interpolate.LinearNDInterpolator(points, pointsValues)
+        interpolator = scipy.interpolate.LinearNDInterpolator(points, pointsValues)
         for stationKey in nodes["NOS"].keys():
             nodeIndex = nodes["NOS"][stationKey]["nodeIndex"]
             data[stationKey] = {}
             data[stationKey]["nodeIndex"] = nodeIndex
             latitude = ""
             longitude = ""
-            if(self.format == "GFS" or self.format == "POST"):
-                latitude = float(dataset.variables["lat"][self.extractLatitudeIndex(nodeIndex)].data)
-                longitude = float(dataset.variables["lon"][self.extractLongitudeIndex(nodeIndex)].data)
-            elif(self.format == "FORT"):
-                latitude = float(dataset.variables["y"][int(nodeIndex)].data)
-                longitude = float(dataset.variables["x"][int(nodeIndex)].data)
+            latitude = float(latitudes[self.extractLatitudeIndex(nodeIndex)])
+            longitude = float(longitudes[self.extractLongitudeIndex(nodeIndex)])
             data[stationKey]["latitude"] = latitude
             data[stationKey]["longitude"] = longitude
             data[stationKey]["times"] = times
-            if(dataType == "rain"):
-                stationDict = stationsDict["USGS"][stationKey]
-            elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
-                stationDict = stationsDict["NDBC"][stationKey]   
-            else:
+            if(dataType == "eta"):
                 stationDict = stationsDict["NOS"][stationKey]
             stationLatitude = float(stationDict["latitude"])
             stationLongitude = float(stationDict["longitude"])
             stationCoordinates = (stationLongitude, stationLatitude)
             print("interpolating data for station", stationKey, "at", stationCoordinates, flush=True)
-            if(dataType == "rad" or dataType == "gfs" or dataType == "fort" or dataType == "post"):
-                interpolatedValuesX = interpolatorX(stationLongitude, stationLatitude)
-                interpolatedValuesY = interpolatorY(stationLongitude, stationLatitude)
-            else:
-                interpolatedValues = interpolator(stationLongitude, stationLatitude)
-            if(dataType == "rad"):
-                data[stationKey]["radstressX"] = interpolatedValuesX
-                data[stationKey]["radstressY"] = interpolatedValuesY
-            elif(dataType == "gfs" or dataType == "fort"):
-                data[stationKey]["windsX"] = interpolatedValuesX
-                data[stationKey]["windsY"] = interpolatedValuesY
-            elif(dataType == "post"):
-                data[stationKey]["speeds"] = interpolatedValuesX
-                data[stationKey]["directions"] = interpolatedValuesY
-            else:
-                data[stationKey][dataType] = interpolatedValues
+            interpolatedValues = interpolator(stationLongitude, stationLatitude)
+            data[stationKey][dataType] = interpolatedValues
         
         print("Writing data to", DATA_FILE, flush=True)
         with open(DATA_FILE, "w") as outfile:
@@ -988,17 +590,17 @@ class EtaReader:
     def generateFunDataForStations(self):
         print("Eta file", flush=True)
         print(self.ETA_DATA_FILE, flush=True)
-        etaDataset, timesEta = self.reader.getProperties(self.OUTPUT_FOLDER, self.startDateObject, self.timeDelta, "eta")
-        initializeClosestRainNodes = True
-        if(initializeClosestRainNodes):
+        timesEta, latitudesEta, longitudesEta, valuesEta = self.reader.getProperties(self.OUTPUT_FOLDER, self.startDateObject, self.timeDelta, "eta")
+        initializeClosestFunNodes = True
+        if(initializeClosestFunNodes):
             thresholdDistance = 20
 #             thresholdDistance = 100
-            self.reader.initializeClosestNodes(rainDataset, thresholdDistance, "rain")
+            self.reader.initializeClosestNodes(latitudesEta, longitudesEta, thresholdDistance, "eta")
         interpolateValues = True
         spaceSparseness = 1
         timeSparseness = 1
         if(interpolateValues):
-            self.reader.generateDataFilesWithInterpolation(rainDataset, "rain", timesRain, spaceSparseness, timeSparseness, self.GFS_RAIN_DATA_FILE)
+            self.reader.generateDataFilesWithInterpolation(latitudesEta, longitudesEta, valuesEta, "eta", timesEta, self.ETA_DATA_FILE)
         else:
             self.reader.generateDataFiles(rainDataset, "rain", timesRain, self.GFS_RAIN_DATA_FILE)
-        return (datetime.fromtimestamp(timesRain[0], timezone.utc), datetime.fromtimestamp(timesRain[-1], timezone.utc))
+        return (datetime.fromtimestamp(timesEta[0], timezone.utc), datetime.fromtimestamp(timesEta[-1], timezone.utc))

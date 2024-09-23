@@ -1,7 +1,7 @@
 # Reads FUNWAVE input.txt file and returns start date and timedelta object
 # Pranav 9/25/2023
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
         
 class FunInputReader:
     def __init__(self, INPUT_FILE=None):
@@ -18,7 +18,7 @@ class FunInputReader:
                     deltaY = float(line[line.find("=") + 2: -2])
                     break
         print(totalTime, plotInterval)
-        self.startDateObject = datetime(year=2024, month=1, day=1)
+        self.startDateObject = datetime(year=2024, month=1, day=1, tzinfo=timezone.utc)
         self.timeDelta = timedelta(seconds=plotInterval)
         self.gridDelta = (deltaX, deltaY)
     def getTimes(self):

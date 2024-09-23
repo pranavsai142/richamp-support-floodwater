@@ -48,11 +48,13 @@ class Grapher:
         self.wavesExists = False
         self.rainExists = False
         self.waterExists = False
+        self.etaExists = False
         
         self.windStartDate = None
         self.waveStartDate = None
         self.rainStartDate = None
         self.waterStartDate = None
+        self.etaStartDate = None
         
         self.windType = ""
         
@@ -75,6 +77,8 @@ class Grapher:
             self.rainExists = True
         if("WATER" in dataToGraph):
             self.waterExists = True
+        if("ETA" in dataToGraph):
+            self.etaExists = True
         with open(STATIONS_FILE) as outfile:
             self.obsMetadata = json.load(outfile)
             
@@ -159,6 +163,20 @@ class Grapher:
         
         self.datapointsWaters = []
         
+        self.etaLongitudes = []
+        self.etaLatitudes = []
+        self.etaLabels = []
+        self.etaTimes = []
+        
+        self.maxEta = 5
+        self.mapEtaPoints = []
+        self.mapEtaTimes = []
+        self.mapEtaPointsLatitudes = []
+        self.mapEtaPointsLongitudes = []
+        self.mapEta = []
+        
+        self.datapointsEta = []
+        
         self.rainLongitudes = []
         self.rainLatitudes = []
         self.rainLabels = []
@@ -232,6 +250,9 @@ class Grapher:
         if("BUOY" in dataToGraph):
             with open(dataToGraph["BUOY"]) as outfile:
                 buoyDataset = json.load(outfile)
+        if("ETA" in dataToGraph):
+            with open(dataToGraph["ETA"]) as outfile:
+                etaDataset = json.load(outfile)
                   
         if(self.windExists):
             windTimestampsInitialized = False
@@ -450,7 +471,67 @@ class Grapher:
                             self.tideDatapointsPredictionTimes.append(tidePredictionTimes)
                             self.tideDatapointsPredictionWaters.append(tidePredictionWaters)
             tideLabelsInitialized = True
-                        
+                      
+        if(self.etaExists):
+            with open(dataToGraph["ETA"]) as outfile:
+                etaDataset = json.load(outfile)
+                
+            etaTimestampsInitialized = False
+            for stationKey in etaDataset.keys():
+                if(stationKey == "map_data"):
+                    self.mapEtaTimes = etaDataset["map_data"]["map_times"]
+                    self.mapEtaPoints = etaDataset["map_data"]["map_points"]
+                    self.mapEtaPointsLatitudes = etaDataset["map_data"]["map_pointsLatitudes"]
+                    self.mapEtaPointsLongitudes = etaDataset["map_data"]["map_pointsLongitude"]
+                    self.mapEta = etaDataset["map_data"]["map_eta"]
+                    for index in range(len(self.mapEtaTimes)):
+                        for latitudeIndex in range(len(self.mapEta[index])):
+                            for longitudeIndex in range(len(self.mapEta[index][latitudeIndex])):
+                                pointEta = self.mapEta[index][latitudeIndex][longitudeIndex]
+                                if(pointEta > self.maxEta):
+                                    self.maxEta = pointEta
+                else:
+                    nodeIndex = etaDataset[stationKey]["nodeIndex"]
+                    if(not self.etaExists or (stationKey in etaDataset.keys())):
+                        self.etaLabels.append(nodeIndex)
+                        self.etaLatitudes.append(etaDataset[stationKey]["latitude"])
+                        self.etaLongitudes.append(etaDataset[stationKey]["longitude"])
+                    
+                        if(not tideLabelsInitialized):
+                            self.tideLabels.append(self.obsMetadata["NOS"][stationKey]["name"])
+                            self.tideLatitudes.append(float(self.obsMetadata["NOS"][stationKey]["latitude"]))
+                            self.tideLongitudes.append(float(self.obsMetadata["NOS"][stationKey]["longitude"]))
+    
+                        datapointEta = []
+                        for index in range(len(etaDataset[stationKey]["times"])):
+                            if(self.etaStartDate == None):
+                                self.etaStartDate = datetime.fromtimestamp(int(etaDataset[stationKey]["times"][index]), timezone.utc)
+                            if(not etaTimestampsInitialized):
+                                self.etaTimes.append(self.unixTimeToDeltaHours(etaDataset[stationKey]["times"][index], self.etaStartDate))
+                            datapointEta.append(etaDataset[stationKey]["eta"][index])
+                        etaTimestampsInitialized = True
+                        self.datapointsEta.append(datapointEta)
+                        if(self.tideExists):
+                            tideTimes = []
+                            tideWaters = []
+                #                         Height is not station altitude, it is sea surface height
+                            for index in range(len(tideDataset[stationKey]["times"])):
+                                tideTimes.append(self.unixTimeToDeltaHours(tideDataset[stationKey]["times"][index], self.waterStartDate))
+                                tideWater = tideDataset[stationKey]["water"][index]
+                                tideWaters.append(tideWater)
+                            self.tideDatapointsTimes.append(tideTimes)
+                            self.tideDatapointsWaters.append(tideWaters)
+                            tidePredictionTimes = []
+                            tidePredictionWaters = []
+                #                         Height is not station altitude, it is sea surface height
+                            for index in range(len(tideDataset[stationKey]["prediction_times"])):
+                                tidePredictionTimes.append(self.unixTimeToDeltaHours(tideDataset[stationKey]["prediction_times"][index], self.waterStartDate))
+                                tidePredictionWater = tideDataset[stationKey]["prediction_water"][index]
+                                tidePredictionWaters.append(tidePredictionWater)
+                            self.tideDatapointsPredictionTimes.append(tidePredictionTimes)
+                            self.tideDatapointsPredictionWaters.append(tidePredictionWaters)
+            tideLabelsInitialized = True                      
+  
         if(self.wavesExists):
             swhExists = False
             mwdExists = False
@@ -574,6 +655,7 @@ class Grapher:
         numberOfWindDatapoints = 0
         numberOfRainDatapoints = 0
         numberOfWaterDatapoints = 0
+        numberOfEtaDatapoints = 0
         numberOfWaveDatapoints = 0
 #         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
 #           entries for each type of product
@@ -593,9 +675,11 @@ class Grapher:
             numberOfRainDatapoints = len(self.rainLabels)
         elif(self.waterExists):
             numberOfWaterDatapoints = len(self.waterLabels)
-        print("numberOfDatapoints Wind, Rain, Water, Wave", numberOfWindDatapoints, numberOfRainDatapoints, numberOfWaterDatapoints, numberOfWaveDatapoints, flush=True)
+        elif(self.etaExists):
+            numberOfEtaDatapoints = len(self.etaLabels)
+        print("numberOfDatapoints Wind, Rain, Water, Wave, Eta", numberOfWindDatapoints, numberOfRainDatapoints, numberOfWaterDatapoints, numberOfWaveDatapoints, numberOfEtaDatapoints, flush=True)
         fig, ax = plt.subplots()
-        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, flush=True)
+        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, "maxEta", self.maxEta, flush=True)
         
         ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
         if(self.windExists):
@@ -612,6 +696,8 @@ class Grapher:
                 ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide")
         if(self.waterExists):
             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Water")
+        if(self.etaExists):
+            ax.scatter(self.etaLongitudes, self.etaLatitudes, label="Eta")
         ax.legend(loc="lower right")
 
         for index, label in enumerate(self.obsLabels):
@@ -620,8 +706,6 @@ class Grapher:
                 ax.annotate(self.windLabels[index], (self.windLongitudes[index], self.windLatitudes[index]))
             if(self.wavesExists):
                 ax.annotate(self.waveLabels[index], (self.waveLongitudes[index], self.waveLatitudes[index]))
-            if(self.waterExists):
-                ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
         for index, label in enumerate(self.buoyLabels):
             ax.annotate(label, (self.buoyLongitudes[index], self.buoyLatitudes[index]))
             if(self.wavesExists):
@@ -634,6 +718,8 @@ class Grapher:
             ax.annotate(label, (self.tideLongitudes[index], self.tideLatitudes[index]))
             if(self.waterExists):
                 ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
+            if(self.etaExists):
+                ax.annotate(self.etaLabels[index], (self.etaLongitudes[index], self.etaLatitudes[index]))
             
         plt.title("location of datapoints by data type")
         plt.xlabel("longitude")
@@ -779,6 +865,64 @@ class Grapher:
                 ax=plt.gca()
             )
             plt.savefig(graph_directory + 'map_rain_accumulation.png')
+            plt.close()
+            gc.collect()
+        if(len(self.mapEtaTimes) > 0):
+            vmin = -1
+            vmax = math.ceil(self.maxEta)
+#             vmax = 20
+            levels = 100
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+            for index in range(len(self.mapEtaTimes)):
+                fig, ax = plt.subplots()
+    #             print(self.endWavePointsLongitudes)
+    #             print(self.endWavePointsLatitudes)
+    #             print(self.endSWH)
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
+                contourset = ax.pcolormesh(self.mapEtaPointsLongitudes, self.mapEtaPointsLatitudes, self.mapEta[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+#               Todo: Fix triangulation errors
+#                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+                plt.axis(plotAxis)
+                plt.title("Eta Elevation")
+                plt.xlabel(datetime.fromtimestamp(int(self.mapEtaTimes[index]),timezone.utc))
+    #             plt.gca().invert_yaxis()
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 2),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    label="Meters",
+                    ax=plt.gca()
+                )
+                plt.savefig(graph_directory + 'map_eta_' + str(index) + '.png')
+                plt.close()
+                gc.collect()
+            with imageio.get_writer(graph_directory + 'eta.gif', mode='I') as writer:
+                for index in range(len(self.mapEtaTimes)):
+                    filename = "map_eta_" + str(index) + ".png"
+                    image = imageio.imread(graph_directory + filename)
+                    writer.append_data(image)
+                for index in range(len(self.mapEtaTimes)):
+                    filename = "map_eta_" + str(index) + ".png"
+                    os.remove(graph_directory + filename)
+            mapEtaNoNan = np.nan_to_num(self.mapEta)
+            swathEta = np.max(self.mapEta, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.pcolormesh(self.mapEtaPointsLongitudes, self.mapEtaPointsLatitudes, swathEta, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            plt.axis(plotAxis)
+            plt.title("Eta Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 2),
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                label="Meters",
+                ax=plt.gca()
+            )
+            plt.savefig(graph_directory + 'map_eta_swath.png')
             plt.close()
             gc.collect()
 #         if(len(self.mapWaterTimes) > 0):
@@ -981,6 +1125,20 @@ class Grapher:
                 plt.xlabel("Hours since " + self.waterStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("elevation (meters)")
                 plt.savefig(graph_directory + stationName + '_water.png')
+                plt.close()
+        for index in range(numberOfEtaDatapoints):
+            if(len(self.datapointsEta) > 0):
+                fig, ax = plt.subplots(figsize=(16,9))
+                ax.plot(self.etaTimes, self.datapointsEta[index], label="Forecast")
+                if(self.tideExists):
+                    ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Station")
+                    ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
+                ax.legend(loc="upper left")
+                stationName = self.tideLabels[index]
+                plt.title(stationName + " station eta elevation")
+                plt.xlabel("Hours since " + self.etaStartDate.strftime(self.DATE_FORMAT))
+                plt.ylabel("eta (meters)")
+                plt.savefig(graph_directory + stationName + '_eta.png')
                 plt.close()
         for index in range(numberOfWaveDatapoints):
             if(self.wavesExists):
