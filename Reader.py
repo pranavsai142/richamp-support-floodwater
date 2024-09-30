@@ -1133,33 +1133,68 @@ class WaveReader:
         print(self.WAVE_MWP_FILE, flush=True)
         print(self.WAVE_PWP_FILE, flush=True)
         print(self.WAVE_RAD_FILE, flush=True)
-        swhDataset, timesSWH = self.reader.getNetcdfProperties(self.WAVE_SWH_FILE, "swh")
-        mwdDataset, timesMWD = self.reader.getNetcdfProperties(self.WAVE_MWD_FILE, "mwd")
-        mwpDataset, timesMWP = self.reader.getNetcdfProperties(self.WAVE_MWP_FILE, "mwp")
-        pwpDataset, timesPWP = self.reader.getNetcdfProperties(self.WAVE_PWP_FILE, "pwp")
-        radDataset, timesRAD = self.reader.getNetcdfProperties(self.WAVE_RAD_FILE, "rad")
-        timesEqual = True
-        if(timesSWH == timesMWD == timesMWP == timesPWP == timesRAD):
-            timesEqual = True
-        if(timesEqual):
-                spaceSparseness = 1
-                timeSparseness = 1
-                initializeClosestWaveNodes = True
-                if(initializeClosestWaveNodes):
-                    thresholdDistance = 0.1
-                    thresholdDistance = 1
-                    self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
-                interpolateValues = True
-                if(interpolateValues):
-                    self.reader.generateDataFilesWithInterpolation(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(mwdDataset, "mwd", timesSWH, spaceSparseness, timeSparseness, self.WAVE_MWD_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(mwpDataset, "mwp", timesSWH, spaceSparseness, timeSparseness, self.WAVE_MWP_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(pwpDataset, "pwp", timesSWH, spaceSparseness, timeSparseness, self.WAVE_PWP_DATA_FILE)
-                    self.reader.generateDataFilesWithInterpolation(radDataset, "rad", timesSWH, spaceSparseness, timeSparseness, self.WAVE_RAD_DATA_FILE)
-                else:
-                    self.reader.generateDataFiles(swhDataset, "swh", timesSWH, self.WAVE_SWH_DATA_FILE)
-                    self.reader.generateDataFiles(mwdDataset, "mwd", timesSWH, self.WAVE_MWD_DATA_FILE)
-                    self.reader.generateDataFiles(mwpDataset, "mwp", timesSWH, self.WAVE_MWP_DATA_FILE)
-                    self.reader.generateDataFiles(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
-                    self.reader.generateDataFiles(radDataset, "rad", timesSWH, self.WAVE_RAD_DATA_FILE)
-                return (datetime.fromtimestamp(timesSWH[0], timezone.utc), datetime.fromtimestamp(timesSWH[-1], timezone.utc))
+        swhExists = True
+        mwdExists = True
+        mwpExists = True
+        pwpExists = True
+        radExists = True
+        if(self.WAVE_SWH_FILE == ""):
+            swhExists = False
+        if(self.WAVE_MWD_FILE == ""):
+            mwdExists = False
+        if(self.WAVE_MWP_FILE == ""):
+            mwpExists = False
+        if(self.WAVE_PWP_FILE == ""):
+            pwpExists = False
+        if(self.WAVE_RAD_FILE == ""):
+            radExists = False
+        if(swhExists):
+            swhDataset, timesSWH = self.reader.getNetcdfProperties(self.WAVE_SWH_FILE, "swh")
+            dataset = swhDataset
+            times = timesSWH
+        if(mwdExists):
+            mwdDataset, timesMWD = self.reader.getNetcdfProperties(self.WAVE_MWD_FILE, "mwd")
+            dataset = mwdDataset
+            times = timesMWD
+        if(mwpExists):
+            mwpDataset, timesMWP = self.reader.getNetcdfProperties(self.WAVE_MWP_FILE, "mwp")
+            dataset = mwpDataset
+            times = timesMWP
+        if(pwpExists):
+            pwpDataset, timesPWP = self.reader.getNetcdfProperties(self.WAVE_PWP_FILE, "pwp")
+            dataset = pwpDataset
+            times = timesPWP
+        if(radExists):
+            radDataset, timesRAD = self.reader.getNetcdfProperties(self.WAVE_RAD_FILE, "rad")
+            datset = radDataset
+            times = timesRAD
+#         timesEqual = True
+#         if(timesSWH == timesMWD == timesMWP == timesPWP == timesRAD):
+#             timesEqual = True
+#         if(timesEqual):
+        spaceSparseness = 1
+        timeSparseness = 1
+        initializeClosestWaveNodes = True
+        if(initializeClosestWaveNodes):
+            thresholdDistance = 0.1
+            thresholdDistance = 10
+            self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
+        interpolateValues = True
+        if(interpolateValues):
+            if(swhExists):
+                self.reader.generateDataFilesWithInterpolation(swhDataset, "swh", timesSWH, spaceSparseness, timeSparseness, self.WAVE_SWH_DATA_FILE)
+            if(mwdExists):
+                self.reader.generateDataFilesWithInterpolation(mwdDataset, "mwd", timesMWD, spaceSparseness, timeSparseness, self.WAVE_MWD_DATA_FILE)
+            if(mwpExists):
+                self.reader.generateDataFilesWithInterpolation(mwpDataset, "mwp", timesMWP, spaceSparseness, timeSparseness, self.WAVE_MWP_DATA_FILE)
+            if(pwpExists):
+                self.reader.generateDataFilesWithInterpolation(pwpDataset, "pwp", timesSWH, spaceSparseness, timeSparseness, self.WAVE_PWP_DATA_FILE)
+            if(radExists):
+                self.reader.generateDataFilesWithInterpolation(radDataset, "rad", timesSWH, spaceSparseness, timeSparseness, self.WAVE_RAD_DATA_FILE)
+        else:
+            self.reader.generateDataFiles(swhDataset, "swh", timesSWH, self.WAVE_SWH_DATA_FILE)
+            self.reader.generateDataFiles(mwdDataset, "mwd", timesSWH, self.WAVE_MWD_DATA_FILE)
+            self.reader.generateDataFiles(mwpDataset, "mwp", timesSWH, self.WAVE_MWP_DATA_FILE)
+            self.reader.generateDataFiles(pwpDataset, "pwp", timesSWH, self.WAVE_PWP_DATA_FILE)
+            self.reader.generateDataFiles(radDataset, "rad", timesSWH, self.WAVE_RAD_DATA_FILE)
+        return (datetime.fromtimestamp(times[0], timezone.utc), datetime.fromtimestamp(times[-1], timezone.utc))

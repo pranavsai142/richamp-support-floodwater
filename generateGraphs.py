@@ -42,7 +42,8 @@ EAST_COAST_OUTLINE_MAP = "EastCoastOutline.png"
 EAST_COAST_AXIS = [-83.18359374999999, -56.816406249999986, 45.49399717614716, 24.090563202580892]
 HAWAII_MAP = "Hawaii.png"
 HAWAII_AXIS = [-160.7958984375, -154.2041015625, 23.06539242194311, 16.873745326186384]
-
+NEW_LONDON_MAP = "NewLondon.png"
+NEW_LONDON_AXIS = [-72.30599365234374, -71.89400634765624, 41.34571806834695, 41.245298232693365]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -179,6 +180,9 @@ def main():
     elif(backgroundChoice == "HAWAII"):
         backgroundMap = HAWAII_MAP
         backgroundAxis = HAWAII_AXIS
+    elif(backgroundChoice == "NEW_LONDON"):
+        backgroundMap = NEW_LONDON_MAP
+        backgroundAxis = NEW_LONDON_AXIS
         
     print("args.adcircExists", args.adcircExists, flush=True)
     if(args.adcircExists):

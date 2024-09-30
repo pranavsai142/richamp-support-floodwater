@@ -92,3 +92,21 @@ EAST_COAST
 Hawaii
 "lat long of north east", "(23.06539242194311, -154.2041015625)"
 "lat long of south west", "(16.873745326186384, -160.7958984375)"
+
+Block Island Sound Large
+"lat long of north east", "(42.11417769664206, -70.676025390625)"
+"lat long of south west", "(40.87994188758605, -72.323974609375)"
+
+East Long Island Sound
+"lat long of north east", "(42.11417769664206, -70.676025390625)"
+"lat long of south west", "(40.87994188758605, -72.323974609375)"
+
+Orient Not made
+    { lat: 41.5, lng: -72.0 },
+    { lat: 41.0, lng: -72.5 }
+"lat long of north east", "(41.55901384866571, -71.8380126953125)"
+"lat long of south west", "(40.939517633821744, -72.6619873046875)"
+
+New London
+"lat long of north east", "(41.55433438704312, -71.89400634765624)"
+"lat long of south west", "(41.245298232693365, -72.30599365234374)"
