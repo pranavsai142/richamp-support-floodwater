@@ -925,121 +925,121 @@ class Grapher:
             plt.savefig(graph_directory + 'map_eta_swath.png')
             plt.close()
             gc.collect()
-#         if(len(self.mapWaterTimes) > 0):
-#             vmin = -1
-#             vmax = math.ceil(self.maxWater)
-# #             vmax = 20
-#             levels = 100
-#             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-#             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
-#             for index in range(len(self.mapWaterTimes)):
-#                 fig, ax = plt.subplots()
-#     #             print(self.endWavePointsLongitudes)
-#     #             print(self.endWavePointsLatitudes)
-#     #             print(self.endSWH)
-#                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
-#                 contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-# #               Todo: Fix triangulation errors
-# #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-#                 plt.axis(plotAxis)
-#                 plt.title("Water Elevation")
-#                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
-#     #             plt.gca().invert_yaxis()
-#                 plt.colorbar(
-#                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-#                     ticks=range(vmin, vmax+5, 2),
-#                     boundaries=levelBoundaries,
-#                     values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-#                     label="Meters",
-#                     ax=plt.gca()
-#                 )
-#                 plt.savefig(graph_directory + 'map_water_' + str(index) + '.png')
-#                 plt.close()
-#                 gc.collect()
-#             with imageio.get_writer(graph_directory + 'water.gif', mode='I') as writer:
-#                 for index in range(len(self.mapWaterTimes)):
-#                     filename = "map_water_" + str(index) + ".png"
-#                     image = imageio.imread(graph_directory + filename)
-#                     writer.append_data(image)
-#                 for index in range(len(self.mapWaterTimes)):
-#                     filename = "map_water_" + str(index) + ".png"
-#                     os.remove(graph_directory + filename)
-#             mapWatersNoNan = np.nan_to_num(self.mapWaters)
-#             swathWaters = np.max(self.mapWaters, axis=0)
-#             fig, ax = plt.subplots()
-#             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-#             contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-#             plt.axis(plotAxis)
-#             plt.title("Water Swath")
-# #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-# #             graphs up to 10 m/s, ~20 knots
-#             plt.colorbar(
-#                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-#                 ticks=range(vmin, vmax+5, 2),
-#                 boundaries=levelBoundaries,
-#                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-#                 label="Meters",
-#                 ax=plt.gca()
-#             )
-#             plt.savefig(graph_directory + 'map_water_swath.png')
-#             plt.close()
-#             gc.collect()
-#         if(len(self.mapWaveTimes) > 0):
-#             vmin = 0
-#             vmax = math.ceil(self.maxWave)
-#             levels = 100
-#             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-#             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
-#             for index in range(len(self.mapWaveTimes)):
-#                 fig, ax = plt.subplots()
-#     #             print(self.endWavePointsLongitudes)
-#     #             print(self.endWavePointsLatitudes)
-#     #             print(self.endSWH)
-#                 plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
-#                 contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-#                 plt.axis(plotAxis)
-#                 plt.title("Significant Wave Height")
-#                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
-#     #             plt.gca().invert_yaxis()
-#                 plt.colorbar(
-#                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-#                     ticks=range(vmin, vmax+5, 5),
-#                     boundaries=levelBoundaries,
-#                     values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-#                     label="Meters",
-#                     ax=plt.gca()
-#                 )                
-#                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
-#                 plt.close()
-#                 gc.collect()
-#             with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
-#                 for index in range(len(self.mapWaveTimes)):
-#                     filename = "map_swh_" + str(index) + ".png"
-#                     image = imageio.imread(graph_directory + filename)
-#                     writer.append_data(image)
-#                 for index in range(len(self.mapWaveTimes)):
-#                     filename = "map_swh_" + str(index) + ".png"
-#                     os.remove(graph_directory + filename)
-#             mapSWHNoNan = np.nan_to_num(self.mapSWH)
-#             swathSWH = np.max(mapSWHNoNan, axis=0)
-#             fig, ax = plt.subplots()
-#             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-#             contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-#             plt.axis(plotAxis)
-#             plt.title("Wave Significant Wave Height Swath")
-# #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-# #             graphs up to 10 m/s, ~20 knots
-#             plt.colorbar(
-#                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-#                 ticks=range(vmin, vmax+5, 5),
-#                 boundaries=levelBoundaries,
-#                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-#                 label="Meters",
-#                 ax=plt.gca()
-#             )        
-#             plt.savefig(graph_directory + 'map_swh_swath.png')
-#             plt.close()
-#             gc.collect()
+        if(len(self.mapWaterTimes) > 0):
+            vmin = -1
+            vmax = math.ceil(self.maxWater)
+#             vmax = 20
+            levels = 100
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+            waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
+            for index in range(len(self.mapWaterTimes)):
+                fig, ax = plt.subplots()
+    #             print(self.endWavePointsLongitudes)
+    #             print(self.endWavePointsLatitudes)
+    #             print(self.endSWH)
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
+                contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+#               Todo: Fix triangulation errors
+#                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+                plt.axis(plotAxis)
+                plt.title("Water Elevation")
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
+    #             plt.gca().invert_yaxis()
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 2),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    label="Meters",
+                    ax=plt.gca()
+                )
+                plt.savefig(graph_directory + 'map_water_' + str(index) + '.png')
+                plt.close()
+                gc.collect()
+            with imageio.get_writer(graph_directory + 'water.gif', mode='I') as writer:
+                for index in range(len(self.mapWaterTimes)):
+                    filename = "map_water_" + str(index) + ".png"
+                    image = imageio.imread(graph_directory + filename)
+                    writer.append_data(image)
+                for index in range(len(self.mapWaterTimes)):
+                    filename = "map_water_" + str(index) + ".png"
+                    os.remove(graph_directory + filename)
+            mapWatersNoNan = np.nan_to_num(self.mapWaters)
+            swathWaters = np.max(self.mapWaters, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            plt.axis(plotAxis)
+            plt.title("Water Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 2),
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                label="Meters",
+                ax=plt.gca()
+            )
+            plt.savefig(graph_directory + 'map_water_swath.png')
+            plt.close()
+            gc.collect()
+        if(len(self.mapWaveTimes) > 0):
+            vmin = 0
+            vmax = math.ceil(self.maxWave)
+            levels = 100
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
+            for index in range(len(self.mapWaveTimes)):
+                fig, ax = plt.subplots()
+    #             print(self.endWavePointsLongitudes)
+    #             print(self.endWavePointsLatitudes)
+    #             print(self.endSWH)
+                plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
+                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+                plt.axis(plotAxis)
+                plt.title("Significant Wave Height")
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
+    #             plt.gca().invert_yaxis()
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    label="Meters",
+                    ax=plt.gca()
+                )                
+                plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
+                plt.close()
+                gc.collect()
+            with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
+                for index in range(len(self.mapWaveTimes)):
+                    filename = "map_swh_" + str(index) + ".png"
+                    image = imageio.imread(graph_directory + filename)
+                    writer.append_data(image)
+                for index in range(len(self.mapWaveTimes)):
+                    filename = "map_swh_" + str(index) + ".png"
+                    os.remove(graph_directory + filename)
+            mapSWHNoNan = np.nan_to_num(self.mapSWH)
+            swathSWH = np.max(mapSWHNoNan, axis=0)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+            plt.axis(plotAxis)
+            plt.title("Wave Significant Wave Height Swath")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 5),
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                label="Meters",
+                ax=plt.gca()
+            )        
+            plt.savefig(graph_directory + 'map_swh_swath.png')
+            plt.close()
+            gc.collect()
         # Plot wind speed over time
         for index in range(numberOfWindDatapoints):
             if(len(self.datapointsSpeeds) > 0):
