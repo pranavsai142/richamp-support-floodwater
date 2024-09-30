@@ -15,6 +15,27 @@
       "name": "Block Island, RI",
       "latitude": "40.967",
       "longitude": "-71.124"
+    },
+    "11": {
+      "id": "44060",
+      "source": "NDBC",
+      "name": "Eastern Long Island Sound",
+      "latitude": "41.263",
+      "longitude": "-72.067"
+    },
+    "12": {
+      "id": "LDLC3",
+      "source": "NDBC",
+      "name": "New London Ledge Light, New London Harbor, CT",
+      "latitude": "41.306",
+      "longitude": "-72.077"
+    },
+    "13": {
+      "id": "NLHC3",
+      "source": "NDBC",
+      "name": "New London, CT",
+      "latitude": "41.372",
+      "longitude": "-72.096"
     }
   },
   "NOS": {
@@ -48,6 +69,14 @@
       "name": "Conimicut Light, RI",
       "latitude": "41.71666667",
       "longitude": "-71.34333333",
+      "altitude": "2\n"
+    },
+    "103": {
+     "id": "8461490",
+      "source": "NOS",
+      "name": "New London, CT",
+      "latitude": "41.371667",
+      "longitude": "-72.095000",
       "altitude": "2\n"
     },
     "47": {
