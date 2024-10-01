@@ -108,5 +108,14 @@ Orient Not made
 "lat long of south west", "(40.939517633821744, -72.6619873046875)"
 
 New London
+
+"lat long of north east", "(41.42727255213162, -71.99700317382812)"
+"lat long of south west", "(41.27263562301683, -72.20299682617187)"
+
+New London Norwich
 "lat long of north east", "(41.55433438704312, -71.89400634765624)"
 "lat long of south west", "(41.245298232693365, -72.30599365234374)"
+
+New London Coast Guard
+"lat long of north east", "(41.383650725307994, -72.03350158691408)"
+"lat long of south west", "(41.306326318981746, -72.13649841308596)"
