@@ -51,7 +51,14 @@ NEW_LONDON_COAST_GUARD_OUTLINE_MAP = "NewLondonCoastGuardOutline.png"
 NEW_LONDON_COAST_GUARD_MAP = "NewLondonCoastGuard.png"
 NEW_LONDON_COAST_GUARD_AXIS = [-72.13649841308596, -72.03350158691408, 41.383650725307994, 41.306326318981746]
 LONG_ISLAND_SOUND_EAST_OUTLINE_MAP = "LongIslandSoundEastOutline.png"
-LONG_ISLAND_SOUND_EAST_AXIS = [-72.323974609375, -70.676025390625, 42.11417769664206, 40.87994188758605]
+LONG_ISLAND_SOUND_EAST_MAP = "LongIslandSoundEast.png"
+LONG_ISLAND_SOUND_EAST_AXIS = [-73.37397460937501, -71.72602539062501, 41.8170316891045, 40.577095781586486]
+LONG_ISLAND_MAP = "LongIsland.png"
+LONG_ISLAND_OUTLINE_MAP = "LongIslandOutline.png"
+LONG_ISLAND_AXIS = [-74.34794921875002, -71.05205078125002, 42.23196681807541, 39.74456845975795]
+BLOCK_ISLAND_SOUND_MAP = "BlockIslandSound.png"
+BLOCK_ISLAND_SOUND_OUTLINE_MAP = "BlockIslandSoundOutline.png"
+BLOCK_ISLAND_SOUND_AXIS = [-72.52397460937502, -70.87602539062502, 42.11417769664206, 40.87994188758605]
 
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
@@ -193,7 +200,22 @@ def main():
         backgroundAxis = NEW_LONDON_AXIS
     elif(backgroundChoice == "LONG_ISLAND_SOUND_EAST_OUTLINE"):
         backgroundMap = LONG_ISLAND_SOUND_EAST_OUTLINE_MAP     
-        backgroundAxis = LONG_ISLAND_SOUND_EAST_AXIS   
+        backgroundAxis = LONG_ISLAND_SOUND_EAST_AXIS
+    elif(backgroundChoice == "LONG_ISLAND_SOUND_EAST"):
+        backgroundMap = LONG_ISLAND_SOUND_EAST_MAP     
+        backgroundAxis = LONG_ISLAND_SOUND_EAST_AXIS  
+    elif(backgroundChoice == "LONG_ISLAND"):
+        backgroundMap = LONG_ISLAND_MAP     
+        backgroundAxis = LONG_ISLAND_AXIS  
+    elif(backgroundChoice == "LONG_ISLAND_OUTLINE"):
+        backgroundMap = LONG_ISLAND_OUTLINE_MAP     
+        backgroundAxis = LONG_ISLAND_AXIS 
+    elif(backgroundChoice == "BLOCK_ISLAND_SOUND"):
+        backgroundMap = BLOCK_ISLAND_SOUND_MAP     
+        backgroundAxis = BLOCK_ISLAND_SOUND_AXIS  
+    elif(backgroundChoice == "BLOCK_ISLAND_SOUND_OUTLINE"):
+        backgroundMap = BLOCK_ISLAND_SOUND_OUTLINE_MAP     
+        backgroundAxis = BLOCK_ISLAND_SOUND_AXIS 
         
     print("args.adcircExists", args.adcircExists, flush=True)
     if(args.adcircExists):
@@ -212,8 +234,8 @@ def main():
         GFS_RAIN_FILE = args.rain
         GFS_RAIN_DATA_FILE = wind_temp_directory + "gfs_rain_data_file" + ".json"
         (rainStartDateObject, rainEndDateObject) = GFSRainReader(GFS_RAIN_FILE=GFS_RAIN_FILE, STATIONS_FILE=STATIONS_FILE, GFS_RAIN_DATA_FILE=GFS_RAIN_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateRainDataForStations()
-#         rainStartDateObject = datetime.datetime(year=2023, month=4, day=15)
-#         rainEndDateObject = datetime.datetime(year=2023, month=7, day=18)
+#         rainStartDateObject = datetime.datetime(year=2024, month=7, day=25)
+#         rainEndDateObject = datetime.datetime(year=2024, month=10, day=2)
         dataToGraph["RAIN"] = GFS_RAIN_DATA_FILE
     print("args.postExists", args.postExists, flush=True)
     if(args.postExists):
