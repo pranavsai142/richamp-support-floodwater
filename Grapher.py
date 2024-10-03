@@ -927,10 +927,13 @@ class Grapher:
             gc.collect()
         if(len(self.mapWaterTimes) > 0):
             vmin = -1
+            vminSwath = 0
             vmax = math.ceil(self.maxWater)
+            vmax = 3
 #             vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+            levelBoundariesSwath = np.linspace(vminSwath, vmax, levels + 1)
             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
             for index in range(len(self.mapWaterTimes)):
                 fig, ax = plt.subplots()
@@ -968,16 +971,16 @@ class Grapher:
             swathWaters = np.max(self.mapWaters, axis=0)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=1)
             plt.axis(plotAxis)
             plt.title("Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=range(vmin, vmax+5, 2),
-                boundaries=levelBoundaries,
-                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                ticks=range(vminSwath, vmax+5, 2),
+                boundaries=levelBoundariesSwath,
+                values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 label="Meters",
                 ax=plt.gca()
             )
