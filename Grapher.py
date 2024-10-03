@@ -1002,6 +1002,7 @@ class Grapher:
             fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=1)
+            ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Datapoints")
             if(self.buoyExists):
                     ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=3)
             plt.axis(plotAxis)
@@ -1084,6 +1085,7 @@ class Grapher:
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+            ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
             if(self.tideExists):
                     ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
             plt.axis(plotAxis)
