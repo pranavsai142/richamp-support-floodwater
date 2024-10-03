@@ -198,6 +198,9 @@ def main():
     elif(backgroundChoice == "NEW_LONDON"):
         backgroundMap = NEW_LONDON_MAP
         backgroundAxis = NEW_LONDON_AXIS
+    elif(backgroundChoice == "NEW_LONDON_OUTLINE"):
+        backgroundMap = NEW_LONDON_OUTLINE_MAP
+        backgroundAxis = NEW_LONDON_AXIS
     elif(backgroundChoice == "LONG_ISLAND_SOUND_EAST_OUTLINE"):
         backgroundMap = LONG_ISLAND_SOUND_EAST_OUTLINE_MAP     
         backgroundAxis = LONG_ISLAND_SOUND_EAST_AXIS
