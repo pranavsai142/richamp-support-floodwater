@@ -936,13 +936,26 @@ class Grapher:
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             levelBoundariesSwath = np.linspace(vminSwath, vmax, levels + 1)
-            waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
+#             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
             for index in range(len(self.mapWaterTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
+                currentMaskedTriangles = self.mapWaterMaskedTriangles
+                for triangleIndex, triangle in enumerate(self.mapWaterTriangles):
+                    for pointIndex in triangle:
+                        water = self.mapWaters[index][pointIndex]
+    #                     Check for nan value
+    #                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
+                        if(water == -99999.0):
+    #                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
+    #                         print("point, water", point, water)
+                            currentMaskedTriangles[triangleIndex] = True
+                            break
+                waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=currentMaskedTriangles)
+
                 contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
 #               Todo: Fix triangulation errors
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
@@ -969,11 +982,28 @@ class Grapher:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapWatersNoNan = np.nan_to_num(self.mapWaters)
+            
             swathWaters = np.max(self.mapWaters, axis=0)
+            print(len(swathWaters), len(self.mapWaterMaskedTriangles))
+            for index, triangle in enumerate(self.mapWaterTriangles):
+                for pointIndex in triangle:
+                    water = swathWaters[pointIndex]
+#                     Check for nan value
+#                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
+                    if(water == -99999.0):
+#                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
+#                         print("point, water", point, water)
+                        self.mapWaterMaskedTriangles[index] = True
+                        break
+            waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
+#             print(self.mapWaterTriangles[0])
+#             mapWatersNoNan = np.nan_to_num(self.mapWaters)
+#             swathWaters = np.max(self.mapWaters, axis=0)
             fig, ax = plt.subplots()
-            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=1)
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=3)
+            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=2)
+            if(self.buoyExists):
+                    ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=1)
             plt.axis(plotAxis)
             plt.title("Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
@@ -994,12 +1024,26 @@ class Grapher:
             vmax = math.ceil(self.maxWave)
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
+            # waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
             for index in range(len(self.mapWaveTimes)):
                 fig, ax = plt.subplots()
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
+    
+                currentMaskedTriangles = self.mapWaveMaskedTriangles
+                for triangleIndex, triangle in enumerate(self.mapWaveTriangles):
+                    for pointIndex in triangle:
+                        swh = self.mapSWH[index][pointIndex]
+    #                     Check for nan value
+    #                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
+                        if(swh == -99999.0):
+    #                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
+    #                         print("point, water", point, water)
+                            currentMaskedTriangles[triangleIndex] = True
+                            break
+                waveTriangulation = Triangulation(self.mapWaverPointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=currentMaskedTriangles)
+
                 plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
                 contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
                 plt.axis(plotAxis)
@@ -1025,8 +1069,18 @@ class Grapher:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            mapSWHNoNan = np.nan_to_num(self.mapSWH)
-            swathSWH = np.max(mapSWHNoNan, axis=0)
+            swathSWH = np.max(self.mapSWH, axis=0)
+            for index, triangle in enumerate(self.mapWaveTriangles):
+                for pointIndex in triangle:
+                    swh = swathSWH[pointIndex]
+#                     Check for nan value
+#                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
+                    if(swh == -99999.0):
+#                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
+#                         print("point, water", point, water)
+                        self.mapWaveMaskedTriangles[index] = True
+                        break
+            waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
             fig, ax = plt.subplots()
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
