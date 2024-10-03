@@ -938,12 +938,12 @@ class Grapher:
             levelBoundariesSwath = np.linspace(vminSwath, vmax, levels + 1)
 #             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
             for index in range(len(self.mapWaterTimes)):
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots(figsize=(9,9))
     #             print(self.endWavePointsLongitudes)
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
-                currentMaskedTriangles = self.mapWaterMaskedTriangles
+                currentMaskedTriangles = self.mapWaterMaskedTriangles.copy()
                 for triangleIndex, triangle in enumerate(self.mapWaterTriangles):
                     for pointIndex in triangle:
                         water = self.mapWaters[index][pointIndex]
@@ -999,7 +999,7 @@ class Grapher:
 #             print(self.mapWaterTriangles[0])
 #             mapWatersNoNan = np.nan_to_num(self.mapWaters)
 #             swathWaters = np.max(self.mapWaters, axis=0)
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=3)
             contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=2)
             if(self.buoyExists):
@@ -1010,7 +1010,7 @@ class Grapher:
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=range(vminSwath, vmax+5, 2),
+                ticks=range(vminSwath, vmax+5, 1),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 label="Meters",
@@ -1031,7 +1031,7 @@ class Grapher:
     #             print(self.endWavePointsLatitudes)
     #             print(self.endSWH)
     
-                currentMaskedTriangles = self.mapWaveMaskedTriangles
+                currentMaskedTriangles = self.mapWaveMaskedTriangles.copy()
                 for triangleIndex, triangle in enumerate(self.mapWaveTriangles):
                     for pointIndex in triangle:
                         swh = self.mapSWH[index][pointIndex]
@@ -1177,7 +1177,7 @@ class Grapher:
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
                 if(self.tideExists):
                     ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Station")
-                    ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
+#                     ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
                 ax.legend(loc="upper left")
                 stationName = self.tideLabels[index]
                 plt.title(stationName + " station water elevation")
