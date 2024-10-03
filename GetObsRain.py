@@ -77,6 +77,8 @@ class GetObsRain:
             stationId = stationDict["id"]
             stationName = stationDict["name"]
             url = "https://waterdata.usgs.gov/nwis/dv?cb_00045=on&format=html&site_no=" + stationId + "&legacy=&referred_module=sw&period=&begin_date=" + startDate + "&end_date=" + endDate
+            print(url)
+#             quit()
         #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
             filename = "raintest"
         #     sensorFilename = stationDict["id"] + "_sensor"
@@ -114,15 +116,26 @@ class GetObsRain:
                             if("COUNT" in line):
                                 data = line.split("<th>")
                                 for daysData in data[3::]:
-                                    deltaDaysForMonths.append(int(daysData[0:daysData.find('<')]))
+                                    if("&nbsp;" in daysData):
+                                        deltaDaysForMonths.append(0)
+                                    else:
+                                        deltaDaysForMonths.append(int(daysData[0:daysData.find('<')]))
                             if("MAX" in line):
                                 data = line.split("<th>")
+#                                 print(data)
                                 for maxData in data[2::]:
-                                    maxrowRains.append(float(maxData[0:4]))
+                                    if("&nbsp;" in maxData):
+                                        maxrowRains.append(0.0)
+                                    else:
+                                        maxrowRains.append(float(maxData[0:4]))
                             if("MIN" in line):
                                 data = line.split("<th>")
                                 for minData in data[2::]:
-                                    minrowRains.append(float(minData[0:4]))
+#                                     print(minData)
+                                    if("&nbsp;" in minData):
+                                        minrowRains.append(0.0)
+                                    else:
+                                        minrowRains.append(float(minData[0:4]))
                             if('<tr align="center">' in line):
                                 dayStr = line.split("<th>")[1]
                                 day = int(dayStr[0:dayStr.find('<')])
@@ -140,6 +153,8 @@ class GetObsRain:
 #                                         print("RAIN", rain[17:rain.find("<")])
 #                                         Convert from inches per day to mm per day
                                         rowRains[index].append(float(rain[17:rain.find("<")]) * 25.4)
+#                                         print(rowRains[index][-1])
+#                                 print("len rowRains", len(rowRains[0]))
 #                                     print(rowRains)
 #                                     if(index == 2):
 #                                         quit()
@@ -150,6 +165,8 @@ class GetObsRain:
                 for monthIndex, month in enumerate(months):
                     deltaDaysForMonth = deltaDaysForMonths[monthIndex]
 #                     print(deltaDaysForMonth)
+#                     print("rowRains length for ", month, len(rowRains[monthIndex]))
+#                     print(deltaDaysForMonth)
                     startDay = None
                     endDay = None
                     foundStart = False
@@ -157,6 +174,7 @@ class GetObsRain:
                     rowRainsLength = len(rowRains[monthIndex])
 #                     quit()
                     for index, rain in enumerate(rowRains[monthIndex]):
+#                         print(rowRains[monthIndex])
                         if(rain == -1):
                             if(foundStart):
                                 foundStart = False
@@ -175,15 +193,21 @@ class GetObsRain:
 #                     print("rowRains for month, deltaDaysForMonth", month, startDay, endDay)
                     dayIndex = startDay
 #                     print(dayIndex)
+#                     print(month)
+#                     print("rowRains len for month", len(rowRains[monthIndex]))
+#                     print(dayIndex)
 #                     quit()
 
 #                     TODO: Rework data so obs rain graph looks like a triangle for a day, with area equal to the daily accumulation.
 #                     Basically, there should be an entry for each hour in the day, with the peak being at noon.
 #                     The integral of the total day's worth of rain data (shaped like a triangle) will be equal to the total accumulation for the day
-                    for index, rowDay in enumerate(rowDays):
+#                     print("rowDays len", len(rowDays))
+                    for index in range(deltaDaysForMonth):
+#                         print("monthIndex, dayIndex", monthIndex, dayIndex)
                         rainAccumulation = rowRains[monthIndex][dayIndex - 1]
                         maxRainRate = (rainAccumulation * 2) / 24
                         rainRates = np.linspace(0, maxRainRate, num=12)
+                        rowDay = rowDays[dayIndex - 1]
                         for hour in range(0, 24):
                             dateStr = (month[0] + month[1] + str(rowDay).zfill(2)) + str(hour)
                             date = datetime.strptime(dateStr, "%b%Y%d%H").replace(tzinfo=timezone.utc)

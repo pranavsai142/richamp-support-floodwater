@@ -809,9 +809,11 @@ class Grapher:
             gc.collect()
         if(len(self.mapRainTimes) > 0):
             vmin = 0
-#             vmax = math.ceil(self.maxRain)
+            vmax = math.ceil(self.maxRain)
             vmax = 25
-            vmaxAccumulation = 500
+            vmax = 5
+#             vmaxAccumulation = 500
+            vmaxAccumulation = 10
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             levelBoundariesAccumulation = np.linspace(vmin, vmaxAccumulation, levels + 1)

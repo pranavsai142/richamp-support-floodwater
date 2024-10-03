@@ -97,9 +97,13 @@ Block Island Sound Large
 "lat long of north east", "(42.11417769664206, -70.676025390625)"
 "lat long of south west", "(40.87994188758605, -72.323974609375)"
 
-East Long Island Sound
+Long Island Sound East 2
 "lat long of north east", "(42.11417769664206, -70.676025390625)"
 "lat long of south west", "(40.87994188758605, -72.323974609375)"
+
+Long Island Sound East
+"lat long of north east", "(41.8170316891045, -71.72602539062501)"
+"lat long of south west", "(40.577095781586486, -73.37397460937501)"
 
 Orient Not made
     { lat: 41.5, lng: -72.0 },
@@ -119,3 +123,12 @@ New London Norwich
 New London Coast Guard
 "lat long of north east", "(41.383650725307994, -72.03350158691408)"
 "lat long of south west", "(41.306326318981746, -72.13649841308596)"
+
+
+Long Island
+"lat long of north east", "(42.23196681807541, -71.05205078125002)"
+"lat long of south west", "(39.74456845975795, -74.34794921875002)"
+
+Block Island Sound
+"lat long of north east", "(42.11417769664206, -70.87602539062502)"
+"lat long of south west", "(40.87994188758605, -72.52397460937502)"
