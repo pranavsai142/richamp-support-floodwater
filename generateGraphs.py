@@ -1,10 +1,11 @@
-from Reader import Fort74Reader, Fort63Reader, GFSWindReader, GFSRainReader, PostWindReader, WaveReader
+from Reader import Fort14Reader, Fort74Reader, Fort63Reader, GFSWindReader, GFSRainReader, PostWindReader, WaveReader
 from Grapher import Grapher
 from DiffGrapher import DiffGrapher
 from GetBuoyWind import GetBuoyWind
 from GetBuoyWater import GetBuoyWater
 from GetBuoyWaves import GetBuoyWaves
 from GetObsRain import GetObsRain
+from GetObsElevation import GetObsElevation
 import datetime
 import argparse
 import os
@@ -75,6 +76,9 @@ def main():
         "--rain", help="Rain netcdf file", type=str
     )
     p.add_argument(
+        "--mesh", help="Fort.14 mesh file", type=str
+    )
+    p.add_argument(
         "--waveswh", type=str, help="Wave significant wave height netcdf file"
     )
     p.add_argument(
@@ -110,6 +114,9 @@ def main():
     )
     p.add_argument(
         "--rainExists", type=bool, help="Graph adcirc wave data"
+    )
+    p.add_argument(
+        "--meshExists", type=bool, help="Graph adcirc fort.14 mesh"
     )
     p.add_argument(
         "--backgroundChoice", type=str, help="Options: RHODE_ISLAND, NORTH_ATLANTIC, AMERICA, MIDWEST"
@@ -261,7 +268,20 @@ def main():
 #         waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
         dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
 #         dataToGraph["DIFF"] = ADCIRC_DIFF_WATER_DATA_FILE
-        
+       
+    print("args.meshExists", args.meshExists, flush=True)
+    if(args.meshExists):
+        ADCIRC_MESH_FILE = args.mesh
+#         ADCIRC_WATER_DATA_FILE = water_temp_directory + "sandy_deb_adcirc_water_data_file" + ".json"
+#         ADCIRC_DIFF_WATER_DATA_FILE = water_temp_directory + "sandy_deb_adcirc_water_data_file" + ".json"
+
+        ADCIRC_MESH_DATA_FILE = water_temp_directory + "adcirc_elevation_data_file" + ".json"
+
+        Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
+#         waterStartDateObject = datetime.datetime(year=2018, month=2, day=28, hour=5)
+#         waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
+        dataToGraph["MESH"] = ADCIRC_MESH_DATA_FILE
+#         dataToGraph["DIFF"] = ADCIRC_DIFF_WATER_DATA_FILE 
         
     print("args.wavesExists", args.wavesExists, flush=True)
     if(args.wavesExists):
@@ -325,6 +345,11 @@ def main():
             OBS_WATER_DATA_FILE = wind_temp_directory + "obs_water_data_file" + ".json"
             GetBuoyWater(STATIONS_FILE=STATIONS_FILE, OBS_WATER_DATA_FILE=OBS_WATER_DATA_FILE, startDateObject=waterStartDateObject, endDateObject=waterEndDateObject)
             dataToGraph["TIDE"] = OBS_WATER_DATA_FILE
+        if(args.meshExists):
+            print("Calling get observational elevation data", flush=True)
+            OBS_ASSET_DATA_FILE = wind_temp_directory + "obs_elevation_data_file" + ".json"
+            GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
+            dataToGraph["ASSET"] = OBS_ASSET_DATA_FILE
         if(args.wavesExists):
             print("Parsed start and end date from netCDF, ", waveStartDateObject, waveEndDateObject, flush=True)
             OBS_WAVE_DATA_FILE = wind_temp_directory + "obs_wave_data_file" + ".json"

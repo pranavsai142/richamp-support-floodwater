@@ -232,6 +232,14 @@
       "latitude": "41.3365211486816",
       "longitude": "-72.0191955566406",
       "elevation": "22.4869995117188"
+    },
+    "48": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "Test Asset, CT",
+      "latitude": "41.371667",
+      "longitude": "-72.095000",
+      "elevation": "4.0"
     }
   },
   "NDBC": {

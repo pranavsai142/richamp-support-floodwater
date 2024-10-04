@@ -44,11 +44,13 @@ class Grapher:
         self.gaugeExists = False
         self.tideExists = False
         self.buoyExists = False
+        self.assetExists = False
         self.windExists = False
         self.wavesExists = False
         self.rainExists = False
         self.waterExists = False
         self.etaExists = False
+        self.meshExists = False
         
         self.windStartDate = None
         self.waveStartDate = None
@@ -79,6 +81,10 @@ class Grapher:
             self.waterExists = True
         if("ETA" in dataToGraph):
             self.etaExists = True
+        if("MESH" in dataToGraph):
+            self.meshExists = True
+        if("ASSET" in dataToGraph):
+            self.assetExists = True
         with open(STATIONS_FILE) as outfile:
             self.obsMetadata = json.load(outfile)
             
@@ -222,6 +228,30 @@ class Grapher:
         self.mapWaveMaskedTriangles = []
         self.mapWaveTimes = []
         self.mapSWH = []
+        
+        
+       
+        self.elevationLongitudes = []
+        self.elevationLatitudes = []
+        self.elevationLabels = []
+        
+        self.datapointsElevation = []
+        
+        assetLabelsInitialized = False
+        self.assetLongitudes = []
+        self.assetLatitudes = []
+        self.assetLabels = []
+        
+        self.assetDatapointsElevation = []
+        
+        self.maxElevation = 10
+        self.mapElevationPoints = []
+        self.mapElevationPointsLatitudes = []
+        self.mapElevationPointsLongitudes = []
+        self.mapElevationTriangles = []
+        self.mapElevationMaskedTriangles = []
+        self.mapElevation = []
+    
 
 #        So loading obs, wind, and waves should be able to cover and set all available data
 
@@ -250,6 +280,9 @@ class Grapher:
         if("BUOY" in dataToGraph):
             with open(dataToGraph["BUOY"]) as outfile:
                 buoyDataset = json.load(outfile)
+        if("ASSET" in dataToGraph):
+            with open(dataToGraph["ASSET"]) as outfile:
+                assetDataset = json.load(outfile)
         if("ETA" in dataToGraph):
             with open(dataToGraph["ETA"]) as outfile:
                 etaDataset = json.load(outfile)
@@ -532,6 +565,42 @@ class Grapher:
                             self.tideDatapointsPredictionWaters.append(tidePredictionWaters)
             tideLabelsInitialized = True                      
   
+        if(self.meshExists):
+            with open(dataToGraph["MESH"]) as outfile:
+                meshDataset = json.load(outfile)
+                
+            for stationKey in meshDataset.keys():
+                if(stationKey == "map_data"):
+                    self.mapElevationTriangles = meshDataset["map_data"]["map_triangles"]
+                    self.mapElevationMaskedTriangles = meshDataset["map_data"]["map_maskedTriangles"]
+                    self.mapElevationPoints = meshDataset["map_data"]["map_points"]
+                    self.mapElevationPointsLatitudes = meshDataset["map_data"]["map_pointsLatitudes"]
+                    self.mapElevationPointsLongitudes = meshDataset["map_data"]["map_pointsLongitude"]
+                    self.mapElevation = meshDataset["map_data"]["map_elevation"]
+                    for nodeIndex in range(len(self.mapElevation)):
+                        pointElevation = self.mapElevation[nodeIndex]
+                        if(pointElevation > self.maxElevation):
+                            self.maxElevation = pointElevation
+                else:
+                    nodeIndex = meshDataset[stationKey]["nodeIndex"]
+                    if(not self.meshExists or (stationKey in meshDataset.keys())):
+                        self.elevationLabels.append(nodeIndex)
+                        self.elevationLatitudes.append(meshDataset[stationKey]["latitude"])
+                        self.elevationLongitudes.append(meshDataset[stationKey]["longitude"])
+                
+                        if(not assetLabelsInitialized):
+                            self.assetLabels.append(self.obsMetadata["ASSET"][stationKey]["name"])
+                            self.assetLatitudes.append(float(self.obsMetadata["ASSET"][stationKey]["latitude"]))
+                            self.assetLongitudes.append(float(self.obsMetadata["ASSET"][stationKey]["longitude"]))
+
+                        elevation = meshDataset[stationKey]["elevation"]
+                        self.datapointsElevation.append(elevation)
+                    
+                        if(self.assetExists):
+                            assetElevation = assetDataset[stationKey]["elevation"]
+                            self.assetDatapointsElevation.append(assetElevation)
+            assetLabelsInitialized = True
+  
         if(self.wavesExists):
             swhExists = False
             mwdExists = False
@@ -657,6 +726,7 @@ class Grapher:
         numberOfWaterDatapoints = 0
         numberOfEtaDatapoints = 0
         numberOfWaveDatapoints = 0
+        numberOfElevationDatapoints = 0
 #         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
 #           entries for each type of product
         if(self.buoyExists):
@@ -665,6 +735,8 @@ class Grapher:
             numberOfWaterDatapoints = len(self.tideDatapointsTimes)
         if(self.gaugeExists):
             numberOfRainDatapoints = len(self.gaugeDatapointsTimes)
+        if(self.assetExists):
+            numberOfElevationDatapoints = len(self.assetDatapointsElevation)
         if(self.obsExists):
             numberOfWindDatapoints = len(self.obsDatapointsTimes)
         elif(self.windExists):
@@ -675,27 +747,29 @@ class Grapher:
             numberOfRainDatapoints = len(self.rainLabels)
         elif(self.waterExists):
             numberOfWaterDatapoints = len(self.waterLabels)
+        elif(self.meshExists):
+            numberOfElevationDatapoints = len(self.elevationLabels)
         elif(self.etaExists):
             numberOfEtaDatapoints = len(self.etaLabels)
-        print("numberOfDatapoints Wind, Rain, Water, Wave, Eta", numberOfWindDatapoints, numberOfRainDatapoints, numberOfWaterDatapoints, numberOfWaveDatapoints, numberOfEtaDatapoints, flush=True)
+        print("numberOfDatapoints Wind, Rain, Water, Wave, Eta, Elevation", numberOfWindDatapoints, numberOfRainDatapoints, numberOfWaterDatapoints, numberOfWaveDatapoints, numberOfEtaDatapoints, numberOfElevationDatapoints, flush=True)
         fig, ax = plt.subplots()
-        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, "maxEta", self.maxEta, flush=True)
+        print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, "maxEta", self.maxEta, "maxElevation", self.maxElevation, flush=True)
         
-        ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
         if(self.windExists):
+            ax.scatter(self.obsLongitudes, self.obsLatitudes, label="Obs")
             ax.scatter(self.windLongitudes, self.windLatitudes, label="Wind")
-        if(self.buoyExists):
-                ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy")
         if(self.wavesExists):
+            ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide")
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Waves")
-        if(self.gaugeExists):
-                ax.scatter(self.gaugeLongitudes, self.gaugeLatitudes, label="Gauge")
         if(self.rainExists):
             ax.scatter(self.rainLongitudes, self.rainLatitudes, label="Rain")
-        if(self.tideExists):
-                ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide")
+            ax.scatter(self.gaugeLongitudes, self.gaugeLatitudes, label="Gauge")
         if(self.waterExists):
+            ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy")
             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Water")
+        if(self.meshExists):
+            ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Asset")
+            ax.scatter(self.elevationLongitudes, self.elevationLatitudes, label="Mesh")
         if(self.etaExists):
             ax.scatter(self.etaLongitudes, self.etaLatitudes, label="Eta")
         ax.legend(loc="lower right")
@@ -704,8 +778,6 @@ class Grapher:
             ax.annotate(label, (self.obsLongitudes[index], self.obsLatitudes[index]))
             if(self.windExists):
                 ax.annotate(self.windLabels[index], (self.windLongitudes[index], self.windLatitudes[index]))
-            if(self.wavesExists):
-                ax.annotate(self.waveLabels[index], (self.waveLongitudes[index], self.waveLatitudes[index]))
         for index, label in enumerate(self.buoyLabels):
             ax.annotate(label, (self.buoyLongitudes[index], self.buoyLatitudes[index]))
             if(self.wavesExists):
@@ -718,6 +790,12 @@ class Grapher:
             ax.annotate(label, (self.tideLongitudes[index], self.tideLatitudes[index]))
             if(self.waterExists):
                 ax.annotate(self.waterLabels[index], (self.waterLongitudes[index], self.waterLatitudes[index]))
+            if(self.etaExists):
+                ax.annotate(self.etaLabels[index], (self.etaLongitudes[index], self.etaLatitudes[index]))
+        for index, label in enumerate(self.assetLabels):
+            ax.annotate(label, (self.assetLongitudes[index], self.assetLatitudes[index]))
+            if(self.meshExists):
+                ax.annotate(self.elevationLabels[index], (self.elevationLongitudes[index], self.elevationLatitudes[index]))
             if(self.etaExists):
                 ax.annotate(self.etaLabels[index], (self.etaLongitudes[index], self.etaLatitudes[index]))
             
@@ -867,6 +945,37 @@ class Grapher:
                 ax=plt.gca()
             )
             plt.savefig(graph_directory + 'map_rain_accumulation.png')
+            plt.close()
+            gc.collect()
+        if(len(self.mapElevation) > 0):
+            vmin = -30
+            vmax = 50
+#             vmax = math.ceil(self.maxElevation)
+            levels = 100
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+            # waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
+#             print("triangle len", self.mapElevationTriangles)
+            elevationTriangulation = Triangulation(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, triangles=self.mapElevationTriangles, mask=self.mapElevationMaskedTriangles)
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+#             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", alpha=0.1, marker=".", s=1, zorder=4, color="purple")
+            if(self.assetExists):
+                    ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=3, alpha=0.7, marker=".", s=40, color="black")
+            plt.axis(plotAxis)
+            plt.title("Map Elevation")
+            ax.legend(loc="upper right")
+#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+#             graphs up to 10 m/s, ~20 knots
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ticks=range(vmin, vmax+5, 10),
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                label="Meters",
+                ax=plt.gca()
+            )        
+            plt.savefig(graph_directory + 'map_elevation.png')
             plt.close()
             gc.collect()
         if(len(self.mapEtaTimes) > 0):
@@ -1189,6 +1298,21 @@ class Grapher:
                 plt.ylabel("elevation (meters)")
                 plt.savefig(graph_directory + stationName + '_water.png')
                 plt.close()
+#         No loop because no timeseries
+        if(len(self.datapointsElevation) > 0):
+            fig, ax = plt.subplots(figsize=(16,9))
+            print(len(self.assetLabels), len(self.datapointsElevation))
+            ax.scatter(self.assetLabels, self.datapointsElevation, label="Mesh")
+            if(self.assetExists):
+                ax.scatter(self.assetLabels, self.assetDatapointsElevation, label="Asset")
+#                     ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
+            ax.legend(loc="upper left")
+            stationName = self.assetLabels[index]
+            plt.title("asset elevation")
+            plt.xlabel("asset name")
+            plt.ylabel("elevation (meters)")
+            plt.savefig(graph_directory + "elevation.png")
+            plt.close()
         for index in range(numberOfEtaDatapoints):
             if(len(self.datapointsEta) > 0):
                 fig, ax = plt.subplots(figsize=(16,9))
