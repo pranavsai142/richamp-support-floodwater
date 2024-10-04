@@ -58,10 +58,10 @@ function subset_fort63_richamp(indir, outdir)
             end
         end
     end
-    if ~exist(strcat(outdir,outfile),'file')
-        % create output file if it doesn't exist 
-          ncwriteschema(strcat(outdir,outfile),finfo);
-    end   
+    %if ~exist(strcat(outdir,outfile),'file')
+    %    % create output file if it doesn't exist 
+    ncwriteschema(strcat(outdir,outfile),finfo);
+    %end   
     ncwrite(strcat(outdir,outfile),'time',time);
     ncwrite(strcat(outdir,outfile),'x',x);
     ncwrite(strcat(outdir,outfile),'y',y);
