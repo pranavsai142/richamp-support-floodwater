@@ -181,12 +181,12 @@ class NetcdfOutput:
                                                                      complevel=2, fill_value=netCDF4.default_fillvals["f4"])
 
         # Add attributes to variables
-        self.__base_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
+        self.__base_date = datetime.datetime(1990, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc)
         self.__group_main_var_time.units = "minutes since 1990-01-01 00:00:00 Z"
         self.__group_main_var_time.axis = "T"
         self.__group_main_var_time.coordinates = "time"
 
-        self.__base_date_unix = datetime.datetime(1970, 1, 1, 0, 0, 0)
+        self.__base_date_unix = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc)
         self.__group_main_var_time_unix.units = "seconds since 1970-01-01 00:00:00 Z"
         self.__group_main_var_time_unix.axis = "T"
         self.__group_main_var_time_unix.coordinates = "time"
@@ -219,7 +219,7 @@ class NetcdfOutput:
     def append(self, idx, date, uvel, vvel, lock):
         if lock:
             lock.acquire()
-
+        date = date.replace(tzinfo=datetime.timezone.utc)
         delta = (date - self.__base_date)
         minutes = round((delta.days * 86400 + delta.seconds) / 60)
         delta_unix = (date - self.__base_date_unix)
