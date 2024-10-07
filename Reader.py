@@ -432,6 +432,12 @@ class Reader:
 #         print(len(triangles), len(badIndices))
         return triangles, maskedIndices
         
+#     def getElevations(self, dataset):
+#         elevations = np.array(dataset.variables["adcirc_mesh"][:])
+#         print(len(elevations))
+# #         quit()
+#         return elevations
+        
     def getMap(self, dataset, dataType, times, spaceSparseness, timeSparseness, data):
         print("getting map", dataType, flush=True)
         mapValuesX = []
@@ -450,6 +456,7 @@ class Reader:
             value = self.getValues(spaceSparseness, timeSparseness, dataType, dataset)
             nodes, nodesIndex = self.getCoordinates(spaceSparseness, dataset)
             mapTriangles, mapMaskedTriangles = self.getTriangles(dataset)
+#             mapElevations = self.getElevations(dataset)
         if(dataType == "post" or dataType == "gfs" or dataType == "fort" or dataType == "rad"):
             mapValuesX = value[0]
             mapValuesY = value[1]
@@ -468,6 +475,7 @@ class Reader:
         if(self.format == "FORT"):
             data["map_data"]["map_triangles"] = mapTriangles
             data["map_data"]["map_maskedTriangles"] = mapMaskedTriangles
+#             data["map_data"]["map_elevation"] = mapElevations
         if(dataType == "rad"):
             data["map_data"]["map_radstressX"] = mapValuesX
             data["map_data"]["map_radstressY"] = mapValuesY
@@ -481,6 +489,34 @@ class Reader:
             data["map_data"]["map_" + dataType] = mapValues
         return data
             
+    def getMapWithPoints(self, points, triangles, maskedTriangles, elevations, dataType, data):
+        print("getting map", dataType, flush=True)
+        mapTriangles = []
+        mapValues = []
+        
+        mapNodes = []
+        mapNodesLatitudes = []
+        mapNodesLongitudes = []
+        
+        nodes, nodesIndex = points, list(range(len(points[0])))
+        mapTriangles, mapMaskedTriangles = triangles, maskedTriangles
+#             mapElevations = self.getElevations(dataset)
+
+        mapValues = elevations
+        mapNodesLatitudes = nodes[1]
+        mapNodesLongitudes = nodes[0]
+        mapNodes = nodesIndex
+#         print(len(points))
+        
+        data["map_data"] = {}
+        data["map_data"]["map_points"] = mapNodes
+        data["map_data"]["map_pointsLatitudes"] = mapNodesLatitudes
+        data["map_data"]["map_pointsLongitude"] = mapNodesLongitudes
+        data["map_data"]["map_triangles"] = mapTriangles
+        data["map_data"]["map_maskedTriangles"] = mapMaskedTriangles
+        data["map_data"]["map_" + dataType] = mapValues
+        return data
+        
     def getNetcdfProperties(self, NETCDF_FILE, dataType):
         if(self.format == "POST"):
             dataset = nc.Dataset(NETCDF_FILE)["Main"]
@@ -488,6 +524,7 @@ class Reader:
             dataset = nc.Dataset(NETCDF_FILE)
         metadata = dataset.__dict__
 #         print(dataset.variables)
+#         quit()
 
         datasetTimeDescription = dataset.variables["time"].units
 #         Add UTC time marker if not existing in cold start date
@@ -623,7 +660,12 @@ class Reader:
             print("water at node0", flush=True)
             
             zeta0 = dataset.variables["zeta"][0][0]
+#             elevation0 = dataset.variables["adcirc_mesh"][:]
+#             print(elevation0)
+#             quit()
             print("zeta0", zeta0, flush=True)
+#             print("elevation0", elevation0, flush=True)
+#             quit()
             
         elif (dataType == "rain"):
             print("rain at (0,0)", flush=True)
@@ -644,6 +686,83 @@ class Reader:
 
         return dataset, times
         
+      
+    def initializeClosestNodesForPoints(self, points, thresholdDistance, dataType):
+        # Find node indexes that are closest to NOS_Stations
+        with open(self.STATIONS_FILE) as stations_file:
+            stationsDict = json.load(stations_file)
+        stationToNodeDistancesDict = {}
+        if(dataType == "rain"):
+            stationKeys = stationsDict["USGS"].keys()
+        elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
+            stationKeys = stationsDict["NDBC"].keys()
+#             print(stationKeys)
+        elif(dataType == "elevation"):
+            stationKeys = stationsDict["ASSET"].keys()
+        else:
+            stationKeys = stationsDict["NOS"].keys()
+        for stationKey in stationKeys:
+            stationToNodeDistancesDict[stationKey] = {}
+        # recreate station to node distances calculations dictionary
+        print("retreving coordinates for all nodes", flush=True)
+        (nodesLongitudes, nodesLatitudes), nodesIndex = points, list(range(len(points[0])))
+        for index in range(len(nodesIndex)):
+            node = (nodesLatitudes[index], nodesLongitudes[index])
+            nodeIndex = nodesIndex[index]
+#             print(node)
+            if(node[0] <= 90 and node[0] >= -90):
+                for stationKey in stationKeys:
+#                     print(stationKey)
+                    if(dataType == "rain"):
+                        stationDict = stationsDict["USGS"][stationKey]
+                    elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
+                        stationDict = stationsDict["NDBC"][stationKey]
+                    elif(dataType == "elevation"):
+                        stationDict = stationsDict["ASSET"][stationKey]
+                    else:
+                        stationDict = stationsDict["NOS"][stationKey]
+                    stationCoordinates = (float(stationDict["latitude"]), float(stationDict["longitude"]))
+    #                             distance and threshold in kilometers
+                    distance = haversine.haversine(stationCoordinates, node)
+#                     print("stationCoordinates", stationCoordinates)
+#                     print("distance", distance)
+                    if(len(stationToNodeDistancesDict[stationKey].keys()) == 0):
+                        stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
+                        stationToNodeDistancesDict[stationKey]["distance"] = distance
+                        stationToNodeDistancesDict[stationKey]["closestNodes"] = []
+                    elif(stationToNodeDistancesDict[stationKey]["distance"] > distance):
+                        stationToNodeDistancesDict[stationKey]["nodeIndex"] = nodeIndex
+                        stationToNodeDistancesDict[stationKey]["distance"] = distance
+                    if(thresholdDistance > distance):
+#                         print("Found a closest node", node, nodeIndex, "distance ", distance, "station", stationKey)
+                        stationToNodeDistancesDict[stationKey]["closestNodes"].append(nodeIndex)
+            else:
+                badNodes.append(nodeIndex)
+                print("bad node", nodeIndex, node, flush=True)
+            if(index % 100000 == 0):
+                print("index", index, flush=True)
+
+        with open(self.STATION_TO_NODE_DISTANCES_FILE, "w") as outfile:
+            json.dump(stationToNodeDistancesDict, outfile)
+                
+        with open(self.STATION_TO_NODE_DISTANCES_FILE) as outfile:
+            stationToNodeDistancesDict = json.load(outfile)
+        
+        nodes = {"NOS": {}}
+    
+        for stationKey in stationToNodeDistancesDict.keys():
+            stationToNodeDistanceDict = stationToNodeDistancesDict[stationKey]
+            nodeIndex = stationToNodeDistanceDict["nodeIndex"]
+            closestNodes = stationToNodeDistancesDict[stationKey]["closestNodes"]
+            nodes["NOS"][stationKey] = {}
+            nodes["NOS"][stationKey]["closestNodes"] = closestNodes
+            nodes["NOS"][stationKey]["nodeIndex"] = nodeIndex
+            nodes["NOS"][stationKey]["latitude"] = float(points[1][int(nodeIndex)])
+            nodes["NOS"][stationKey]["longitude"] = float(points[0][int(nodeIndex)])
+            
+        with open(self.NODES_FILE, "w") as outfile:
+            json.dump(nodes, outfile)
+              
         
     def initializeClosestNodes(self, dataset, thresholdDistance, dataType):
         # Find node indexes that are closest to NOS_Stations
@@ -936,6 +1055,76 @@ class Reader:
         with open(DATA_FILE, "w") as outfile:
             json.dump(data, outfile, cls=NumpyEncoder)
         
+    def generateDataFilesWithInterpolationForPoints(self, points, triangles, maskedTriangles, elevations, dataType, DATA_FILE):
+        
+        with open(self.NODES_FILE) as outfile:
+            nodes = json.load(outfile)
+        with open(self.STATIONS_FILE) as stations_file:
+            stationsDict = json.load(stations_file)
+            
+        data = {}
+        data = self.getMapWithPoints(points, triangles, maskedTriangles, elevations, dataType, data)
+#                 
+        print("Interpolating", dataType, flush=True)
+        closestPoints = []
+        nodesIndex = []
+        pointsValues = []
+        for stationKey in nodes["NOS"].keys():
+            print("Getting coordinates for closest nodes around station",  stationKey, flush=True)
+#                 print("getting wind data for node", nodeIndex)
+            for closestNode in nodes["NOS"][stationKey]["closestNodes"]:
+                nodesIndex.append(closestNode)
+                x = 0.0
+                y = 0.0
+                x = float(points[0][int(closestNode)])
+                y = float(points[1][int(closestNode)])
+                point = (x, y)
+                closestPoints.append(point)
+        print("getting time series data for closest nodes", flush=True)
+        for nodeIndex in nodesIndex:
+            pointsValues.append(elevations[nodeIndex])
+#                 for index in range(len(times)):
+# #                     print("getttingTime")
+#                     value = self.getValue(index, closestNode, dataType, dataset)
+#                     if(type(value) is float):
+#                         values.append(value)
+#                     else:
+#                         valuesX.append(value[0])
+#                         valuesY.append(value[1])
+#                 pointsValues.append(values)
+#                 pointsValuesX.append(valuesX)
+#                 pointsValuesY.append(valuesY)
+#             Interpolate values
+        print("initializing interpolator", flush=True)
+        interpolator = scipy.interpolate.LinearNDInterpolator(closestPoints, pointsValues)
+        for stationKey in nodes["NOS"].keys():
+            nodeIndex = nodes["NOS"][stationKey]["nodeIndex"]
+            data[stationKey] = {}
+            data[stationKey]["nodeIndex"] = nodeIndex
+            latitude = 0.0
+            longitude = 0.0
+            latitude = float(points[1][int(nodeIndex)])
+            longitude = float(points[0][int(nodeIndex)])
+            data[stationKey]["latitude"] = latitude
+            data[stationKey]["longitude"] = longitude
+            if(dataType == "rain"):
+                stationDict = stationsDict["USGS"][stationKey]
+            elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
+                stationDict = stationsDict["NDBC"][stationKey]   
+            elif(dataType == "elevation"):
+                stationDict = stationsDict["ASSET"][stationKey]
+            else:
+                stationDict = stationsDict["NOS"][stationKey]
+            stationLatitude = float(stationDict["latitude"])
+            stationLongitude = float(stationDict["longitude"])
+            stationCoordinates = (stationLongitude, stationLatitude)
+            print("interpolating data for station", stationKey, "at", stationCoordinates, flush=True)
+            interpolatedValues = interpolator(stationLongitude, stationLatitude)
+            data[stationKey][dataType] = interpolatedValues
+        
+        print("Writing data to", DATA_FILE, flush=True)
+        with open(DATA_FILE, "w") as outfile:
+            json.dump(data, outfile, cls=NumpyEncoder)
          
 class GFSRainReader:
     def __init__(self, GFS_RAIN_FILE="", STATIONS_FILE="", GFS_RAIN_DATA_FILE="", BACKGROUND_AXIS=[]):
@@ -1094,6 +1283,73 @@ class PostWindReader:
         return (datetime.fromtimestamp(timesWind[0], timezone.utc), datetime.fromtimestamp(timesWind[-1], timezone.utc))
         print("end, ", datetime.now(), flush=True)
    
+class Fort14Reader:
+    def __init__(self, ADCIRC_MESH_FILE="", STATIONS_FILE="", ADCIRC_MESH_DATA_FILE="", BACKGROUND_AXIS=[]):
+        temp_directory = ADCIRC_MESH_DATA_FILE[0:ADCIRC_MESH_DATA_FILE.rfind("/") + 1]
+        self.ADCIRC_MESH_FILE = ADCIRC_MESH_FILE
+        self.STATIONS_FILE = STATIONS_FILE
+        self.STATION_TO_NODE_DISTANCES_FILE = temp_directory + "ADCIRC_Station_To_Node_Distances.json"
+        self.ADCIRC_NODES_FILE = temp_directory + "ADCIRC_Nodes.json"
+        self.ADCIRC_MESH_DATA_FILE = ADCIRC_MESH_DATA_FILE
+        self.ADCIRC_NODES_MESH_DATA_FILE = temp_directory + "ADCIRC_Nodes_Mesh_Data.json"
+        self.BACKGROUND_AXIS = BACKGROUND_AXIS
+        self.reader = Reader(STATIONS_FILE=STATIONS_FILE, STATION_TO_NODE_DISTANCES_FILE=self.STATION_TO_NODE_DISTANCES_FILE, NODES_FILE=self.ADCIRC_NODES_FILE, BACKGROUND_AXIS=self.BACKGROUND_AXIS, format="FORT")
+    
+    def readMeshElevations(self):
+        points = ([], [])
+        elevations = []
+        triangles = []
+        maskedTriangles = []
+        with open(self.ADCIRC_MESH_FILE) as file:
+            lines = file.readlines()
+            data = ((lines[1]).split())
+            numberOfTriangles = int(data[0])
+            numberOfPoints = int(data[1])
+            print("Number of points", numberOfPoints)
+            print("Number of triangles", numberOfTriangles)
+#             quit()
+            if(len(lines) > 0):
+                startLine = 2
+                endLine = 2+numberOfPoints
+                print("reading points")
+                for line in lines[startLine:endLine]:
+                    data = line.split()
+                    points[0].append(float(data[1]))
+                    points[1].append(float(data[2]))
+                    elevations.append(-1 * float(data[3]))
+                startLine = endLine
+                endLine = endLine + numberOfTriangles
+#                 print(lines[startLine])
+                print("reading triangles")
+                for line in lines[startLine:endLine]:
+                    data = line.split()
+                    triangle = []
+                    triangle.append(int(data[2]) - 1)
+                    triangle.append(int(data[3]) - 1)
+                    triangle.append(int(data[4]) - 1)
+                    triangles.append(triangle)
+                    point0 = [points[0][triangle[0]], points[1][triangle[0]]]
+                    point1 = [points[0][triangle[1]], points[1][triangle[1]]]
+                    point2 = [points[0][triangle[2]], points[1][triangle[2]]]
+                    if(self.reader.isOutsideBackground(point0) or self.reader.isOutsideBackground(point1) or self.reader.isOutsideBackground(point2)):
+                        maskedTriangles.append(True)
+                    else:
+                        maskedTriangles.append(False)
+        return points, elevations, triangles, maskedTriangles
+    
+    def generateMeshDataForStations(self):
+        print("Fort 14 file", flush=True)
+        print(self.ADCIRC_MESH_FILE, flush=True)
+        points, elevations, triangles, maskedTriangles = self.readMeshElevations()
+#         waterDataset, timesWater = self.reader.getNetcdfProperties(self.ADCIRC_WATER_FILE, "water")
+        initializeClosestMeshNodes = True
+#         Interpolates elevation data according to available stations for below dataType
+        dataType = "elevation"
+        if(initializeClosestMeshNodes):
+#             thresholdDistance = 10
+            thresholdDistance = 0.1
+            self.reader.initializeClosestNodesForPoints(points, thresholdDistance, dataType)
+        self.reader.generateDataFilesWithInterpolationForPoints(points, triangles, maskedTriangles, elevations, dataType, self.ADCIRC_MESH_DATA_FILE)
 
 class WaveReader:
     def __init__(

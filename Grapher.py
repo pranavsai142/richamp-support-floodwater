@@ -4,6 +4,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import matplotlib.dates as mdates
 from matplotlib.cm import ScalarMappable
 from matplotlib.tri import Triangulation
 from datetime import datetime, timezone
@@ -30,6 +31,7 @@ class Grapher:
         return degrees
     
     def unixTimeToDeltaHours(self, timestamp, startDate):
+        return datetime.fromtimestamp(timestamp, timezone.utc)
         delta = datetime.fromtimestamp(timestamp, timezone.utc) - startDate
         return delta.total_seconds()/3600
     
@@ -956,7 +958,7 @@ class Grapher:
             # waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
 #             print("triangle len", self.mapElevationTriangles)
             elevationTriangulation = Triangulation(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, triangles=self.mapElevationTriangles, mask=self.mapElevationMaskedTriangles)
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
 #             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", alpha=0.1, marker=".", s=1, zorder=4, color="purple")
@@ -1066,6 +1068,11 @@ class Grapher:
                 waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=currentMaskedTriangles)
 
                 contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+                
+#                 Plot points
+                if(self.assetExists):
+                    ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=3, alpha=0.7, marker=".", s=40, color="black")
+
 #               Todo: Fix triangulation errors
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
@@ -1114,6 +1121,9 @@ class Grapher:
             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Datapoints")
             if(self.buoyExists):
                     ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=3)
+            if(self.assetExists):
+                ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
+
             plt.axis(plotAxis)
             plt.title("Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
@@ -1292,15 +1302,18 @@ class Grapher:
                     ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Station")
 #                     ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
                 ax.legend(loc="upper left")
+                ax.format_xdata = mdates.DateFormatter('%d')
+                plt.xticks(fontsize=10)
+                plt.yticks(fontsize=10)
                 stationName = self.tideLabels[index]
-                plt.title(stationName + " station water elevation")
-                plt.xlabel("Hours since " + self.waterStartDate.strftime(self.DATE_FORMAT))
-                plt.ylabel("elevation (meters)")
+                plt.title("Sandy: " + stationName + " station water elevation", fontsize=18)
+                plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT) + ")", fontsize=14)
+                plt.ylabel("elevation (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_water.png')
                 plt.close()
 #         No loop because no timeseries
         if(len(self.datapointsElevation) > 0):
-            fig, ax = plt.subplots(figsize=(16,9))
+            fig, ax = plt.subplots(figsize=(16,13))
             print(len(self.assetLabels), len(self.datapointsElevation))
             ax.scatter(self.assetLabels, self.datapointsElevation, label="Mesh")
             if(self.assetExists):
@@ -1308,9 +1321,11 @@ class Grapher:
 #                     ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
             ax.legend(loc="upper left")
             stationName = self.assetLabels[index]
-            plt.title("asset elevation")
+            plt.title("Asset Elevation vs. Mesh Elevation", fontsize=18)
             plt.xlabel("asset name")
-            plt.ylabel("elevation (meters)")
+            plt.xticks(fontsize=8, rotation=45, ha='right')
+            plt.yticks(fontsize=10)
+            plt.ylabel("elevation (meters)", fontsize=14)
             plt.savefig(graph_directory + "elevation.png")
             plt.close()
         for index in range(numberOfEtaDatapoints):
