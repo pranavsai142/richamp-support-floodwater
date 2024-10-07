@@ -277,7 +277,7 @@ def main():
 
         ADCIRC_MESH_DATA_FILE = water_temp_directory + "adcirc_elevation_data_file" + ".json"
 
-#         Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
+        Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
 #         waterStartDateObject = datetime.datetime(year=2018, month=2, day=28, hour=5)
 #         waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
         dataToGraph["MESH"] = ADCIRC_MESH_DATA_FILE
