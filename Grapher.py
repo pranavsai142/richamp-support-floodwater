@@ -1077,7 +1077,7 @@ class Grapher:
 #               Todo: Fix triangulation errors
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
-                plt.title(TITLE_PREFIX + "Water Elevation")
+                plt.title(self.TITLE_PREFIX + "Water Elevation")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
@@ -1126,7 +1126,7 @@ class Grapher:
                 ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
 
             plt.axis(plotAxis)
-            plt.title(TITLE_PREFIX + "Water Swath")
+            plt.title(self.TITLE_PREFIX + "Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
@@ -1307,7 +1307,7 @@ class Grapher:
                 plt.xticks(fontsize=12)
                 plt.yticks(fontsize=12)
                 stationName = self.tideLabels[index]
-                plt.title(TITLE_PREFIX + stationName + " station water elevation", fontsize=18)
+                plt.title(self.TITLE_PREFIX + stationName + " station water elevation", fontsize=18)
                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("elevation (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_water.png')
