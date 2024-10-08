@@ -13,6 +13,7 @@ import gc
 
 class Grapher:
     DATE_FORMAT = "%m/%d/%y-%HZ"
+    TITLE_PREFIX = "Sandy: "
     
         
     def extractLatitudeIndex(self, nodeIndex):
@@ -1076,7 +1077,7 @@ class Grapher:
 #               Todo: Fix triangulation errors
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
-                plt.title("Water Elevation")
+                plt.title(TITLE_PREFIX + "Water Elevation")
                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
@@ -1125,7 +1126,7 @@ class Grapher:
                 ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
 
             plt.axis(plotAxis)
-            plt.title("Water Swath")
+            plt.title(TITLE_PREFIX + "Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
@@ -1303,11 +1304,11 @@ class Grapher:
 #                     ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
-                plt.xticks(fontsize=10)
-                plt.yticks(fontsize=10)
+                plt.xticks(fontsize=12)
+                plt.yticks(fontsize=12)
                 stationName = self.tideLabels[index]
-                plt.title("Sandy: " + stationName + " station water elevation", fontsize=18)
-                plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT) + ")", fontsize=14)
+                plt.title(TITLE_PREFIX + stationName + " station water elevation", fontsize=18)
+                plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("elevation (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_water.png')
                 plt.close()
@@ -1324,7 +1325,7 @@ class Grapher:
             plt.title("Asset Elevation vs. Mesh Elevation", fontsize=18)
             plt.xlabel("asset name")
             plt.xticks(fontsize=8, rotation=45, ha='right')
-            plt.yticks(fontsize=10)
+            plt.yticks(fontsize=14)
             plt.ylabel("elevation (meters)", fontsize=14)
             plt.savefig(graph_directory + "elevation.png")
             plt.close()

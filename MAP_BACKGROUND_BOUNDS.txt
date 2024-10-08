@@ -124,6 +124,9 @@ New London Coast Guard
 "lat long of north east", "(41.383650725307994, -72.03350158691408)"
 "lat long of south west", "(41.306326318981746, -72.13649841308596)"
 
+New London Metro
+"lat long of north east", "(41.383650725307994, -72.02850158691405)"
+"lat long of south west", "(41.306326318981746, -72.13149841308592)"
 
 Long Island
 "lat long of north east", "(42.23196681807541, -71.05205078125002)"
