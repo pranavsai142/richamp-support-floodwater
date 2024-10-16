@@ -316,10 +316,34 @@
     "58": {
       "id": "1",
       "source": "ASSET",
-      "name": "Town of Groton airport",
+      "name": "Groton-New London Airport",
       "latitude": "41.3304328918457",
       "longitude": "-72.044303894043",
       "elevation": "6.15100002288818"
+    },
+    "59": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "Groton Sub Base",
+      "latitude": "41.3947868347168",
+      "longitude": "-72.0912780761719",
+      "elevation": "11.923999786377"
+    },
+    "60": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "USCG Academy",
+      "latitude": "41.373908996582",
+      "longitude": "-72.0989532470703",
+      "elevation": "54.8709983825684"
+    },
+    "61": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "Groton Utilities Dam/Substation",
+      "latitude": "41.3523750305176",
+      "longitude": "-72.0373840332031",
+      "elevation": "28.9120006561279"
     }
   }
 }

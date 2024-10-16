@@ -1298,10 +1298,7 @@ class Grapher:
         for index in range(numberOfWaterDatapoints):
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots(figsize=(16,9))
-#                 One less 9 to find non water values
-                datapointWater = np.array(self.datapointsWaters[index])
-                datapointWater[datapointWater <= -9999.0] = 0
-                ax.plot(self.waterTimes, datapointWater, label="Forecast")
+                ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
                 if(self.tideExists):
                     ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Station")
 #                     ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label="Prediction")
