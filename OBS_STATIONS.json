@@ -204,7 +204,7 @@
     "44": {
       "id": "1",
       "source": "ASSET",
-      "name": "Town of Groton Public Utilities dam/substation",
+      "name": "Town of Groton Public Utilities dam and substation",
       "latitude": "41.3523750305176",
       "longitude": "-72.0373840332031",
       "elevation": "28.9120006561279"
@@ -340,7 +340,7 @@
     "61": {
       "id": "1",
       "source": "ASSET",
-      "name": "Groton Utilities Dam/Substation",
+      "name": "Groton Utilities Dam and Substation",
       "latitude": "41.3523750305176",
       "longitude": "-72.0373840332031",
       "elevation": "28.9120006561279"
