@@ -262,14 +262,6 @@
       "name": "New London, CT",
       "latitude": "41.372",
       "longitude": "-72.096"
-    },
-    "14": {
-      "id": "1",
-      "source": "ASSET",
-      "name": "Town of Groton airport",
-      "latitude": "41.3304328918457",
-      "longitude": "-72.044303894043",
-      "elevation": "6.15100002288818"
     }
   },
   "NOS": {
@@ -320,6 +312,14 @@
       "latitude": "41.18945",
       "longitude": "-71.56754",
       "altitude": "999\n"
+    },
+    "58": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "Town of Groton airport",
+      "latitude": "41.3304328918457",
+      "longitude": "-72.044303894043",
+      "elevation": "6.15100002288818"
     }
   }
 }
