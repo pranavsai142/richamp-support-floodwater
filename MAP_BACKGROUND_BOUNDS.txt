@@ -135,3 +135,11 @@ Long Island
 Block Island Sound
 "lat long of north east", "(42.11417769664206, -70.87602539062502)"
 "lat long of south west", "(40.87994188758605, -72.52397460937502)"
+
+Gulf Yucatan
+"lat long of north east", "(30.821121549266778, -78.40820312500001)"
+"lat long of south west", "(18.889657344434774, -91.59179687500001)"
+
+Florida
+"lat long of north east", "(30.383786045108156, -79.2041015625)"
+"lat long of south west", "(24.538640329845318, -85.7958984375)"

@@ -32,7 +32,7 @@ class Grapher:
         return degrees
     
     def unixTimeToDeltaHours(self, timestamp, startDate):
-        return datetime.fromtimestamp(timestamp, timezone.utc)
+#         return datetime.fromtimestamp(timestamp, timezone.utc)
         delta = datetime.fromtimestamp(timestamp, timezone.utc) - startDate
         return delta.total_seconds()/3600
     
@@ -732,6 +732,18 @@ class Grapher:
         numberOfElevationDatapoints = 0
 #         TODO: Currently, when graphing multiple products with obs on, OBS_STATIONS must contain the same number of station 
 #           entries for each type of product
+        if(self.windExists):
+            numberOfWindDatapoints = len(self.windLabels)
+        if(self.wavesExists):
+            numberOfWaveDatapoints = len(self.waveLabels)
+        if(self.rainExists):
+            numberOfRainDatapoints = len(self.rainLabels)
+        if(self.waterExists):
+            numberOfWaterDatapoints = len(self.waterLabels)
+        if(self.meshExists):
+            numberOfElevationDatapoints = len(self.elevationLabels)
+        if(self.etaExists):
+            numberOfEtaDatapoints = len(self.etaLabels)
         if(self.buoyExists):
             numberOfWaveDatapoints = len(self.buoyDatapointsTimes)
         if(self.tideExists):
@@ -742,18 +754,6 @@ class Grapher:
             numberOfElevationDatapoints = len(self.assetDatapointsElevation)
         if(self.obsExists):
             numberOfWindDatapoints = len(self.obsDatapointsTimes)
-        elif(self.windExists):
-            numberOfWindDatapoints = len(self.windLabels)
-        elif(self.wavesExists):
-            numberOfWaveDatapoints = len(self.waveLabels)
-        elif(self.rainExists):
-            numberOfRainDatapoints = len(self.rainLabels)
-        elif(self.waterExists):
-            numberOfWaterDatapoints = len(self.waterLabels)
-        elif(self.meshExists):
-            numberOfElevationDatapoints = len(self.elevationLabels)
-        elif(self.etaExists):
-            numberOfEtaDatapoints = len(self.etaLabels)
         print("numberOfDatapoints Wind, Rain, Water, Wave, Eta, Elevation", numberOfWindDatapoints, numberOfRainDatapoints, numberOfWaterDatapoints, numberOfWaveDatapoints, numberOfEtaDatapoints, numberOfElevationDatapoints, flush=True)
         fig, ax = plt.subplots()
         print("maxWind", self.maxWind, "maxRain", self.maxRain, "maxWave", self.maxSWH, "maxWater", self.maxWater, "maxEta", self.maxEta, "maxElevation", self.maxElevation, flush=True)
@@ -893,8 +893,8 @@ class Grapher:
             vmax = math.ceil(self.maxRain)
             vmax = 25
             vmax = 5
-#             vmaxAccumulation = 500
-            vmaxAccumulation = 10
+            vmaxAccumulation = 500
+#             vmaxAccumulation = 10
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             levelBoundariesAccumulation = np.linspace(vmin, vmaxAccumulation, levels + 1)
@@ -1298,6 +1298,8 @@ class Grapher:
         for index in range(numberOfWaterDatapoints):
             if(len(self.datapointsWaters) > 0):
                 fig, ax = plt.subplots(figsize=(16,9))
+#                 One less 9 to find non water values
+                self.datapointsWaters[self.datapointsWaters <= -9999.0] = 0
                 ax.plot(self.waterTimes, self.datapointsWaters[index], label="Forecast")
                 if(self.tideExists):
                     ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Station")

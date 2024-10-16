@@ -262,6 +262,14 @@
       "name": "New London, CT",
       "latitude": "41.372",
       "longitude": "-72.096"
+    },
+    "14": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "Town of Groton airport",
+      "latitude": "41.3304328918457",
+      "longitude": "-72.044303894043",
+      "elevation": "6.15100002288818"
     }
   },
   "NOS": {
@@ -305,7 +313,7 @@
       "longitude": "-72.095000",
       "altitude": "2\n"
     },
-    "47": {
+    "57": {
       "id": "0",
       "source": "NOS",
       "name": "Block Island, RI",

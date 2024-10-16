@@ -64,6 +64,14 @@ BLOCK_ISLAND_SOUND_MAP = "BlockIslandSound.png"
 BLOCK_ISLAND_SOUND_OUTLINE_MAP = "BlockIslandSoundOutline.png"
 BLOCK_ISLAND_SOUND_AXIS = [-72.52397460937502, -70.87602539062502, 42.11417769664206, 40.87994188758605]
 
+GULF_YUCATAN_MAP = "GulfYucatan.png"
+GULF_YUCATAN_OUTLINE_MAP = "GulfYucatanOutline.png"
+GULF_YUCATAN_AXIS = [-91.59179687500001, -78.40820312500001, 30.821121549266778, 18.889657344434774]
+
+FLORIDA_MAP = "Florida.png"
+FLORIDA_OUTLINE_MAP = "FloridaOutline.png"
+FLORIDA_AXIS = [-85.7958984375, -79.2041015625, 30.383786045108156, 24.538640329845318]
+
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
     p.add_argument(
@@ -235,6 +243,18 @@ def main():
     elif(backgroundChoice == "BLOCK_ISLAND_SOUND_OUTLINE"):
         backgroundMap = BLOCK_ISLAND_SOUND_OUTLINE_MAP     
         backgroundAxis = BLOCK_ISLAND_SOUND_AXIS 
+    elif(backgroundChoice == "GULF_YUTACAN"):
+        backgroundMap = GULF_YUTACAN_MAP     
+        backgroundAxis = GULF_YUTACAN_AXIS  
+    elif(backgroundChoice == "GULF_YUTACAN_OUTLINE"):
+        backgroundMap = GULF_YUTACAN_OUTLINE_MAP     
+        backgroundAxis = GULF_YUTACAN_AXIS 
+    elif(backgroundChoice == "FLORIDA"):
+        backgroundMap = FLORIDA_MAP     
+        backgroundAxis = FLORIDA_AXIS  
+    elif(backgroundChoice == "FLORIDA_OUTLINE"):
+        backgroundMap = FLORIDA_OUTLINE_MAP     
+        backgroundAxis = FLORIDA_AXIS
         
     print("args.adcircExists", args.adcircExists, flush=True)
     if(args.adcircExists):

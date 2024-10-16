@@ -1,0 +1,48 @@
+{
+  "NOS": {
+    "1": {
+      "id": "0",
+      "source": "USGS",
+      "name": "Orlando, FL",
+      "latitude": "28.53",
+      "longitude": "-81.37"
+    },
+    "2": {
+      "id": "1",
+      "source": "USGS",
+      "name": "Tampa Bay, FL",
+      "latitude": "27.964",
+      "longitude": "-82.45"
+    },
+    "3": {
+      "id": "2",
+      "source": "USGS",
+      "name": "Cape Canaveral, FL",
+      "latitude": "28.3968",
+      "longitude": "-80.605"
+    }
+  },
+  "USGS": {
+    "4": {
+      "id": "4",
+      "source": "USGS",
+      "name": "Orlando, FL",
+      "latitude": "28.53",
+      "longitude": "-81.37"
+    },
+    "5": {
+      "id": "5",
+      "source": "USGS",
+      "name": "Tampa Bay, FL",
+      "latitude": "27.964",
+      "longitude": "-82.45"
+    },
+    "6": {
+      "id": "6",
+      "source": "USGS",
+      "name": "Cape Canaveral, FL",
+      "latitude": "28.3968",
+      "longitude": "-80.605"
+    }
+  }
+}
