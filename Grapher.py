@@ -1071,7 +1071,7 @@ class Grapher:
                 contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 
 #                 Plot points
-                if(self.assetExists):
+                if(self.meshExists):
                     ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=3, alpha=0.7, marker=".", s=40, color="black")
 
 #               Todo: Fix triangulation errors
@@ -1122,7 +1122,7 @@ class Grapher:
             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Datapoints")
             if(self.buoyExists):
                     ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=3)
-            if(self.assetExists):
+            if(self.meshExists):
                 ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
 
             plt.axis(plotAxis)
