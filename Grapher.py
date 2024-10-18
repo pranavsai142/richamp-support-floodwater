@@ -1307,7 +1307,7 @@ class Grapher:
                 plt.xticks(fontsize=12)
                 plt.yticks(fontsize=12)
                 stationName = self.tideLabels[index]
-                maxElevation = max(self.datapointsWaters[index])
+                maxElevation = str(round(max(self.datapointsWaters[index]), 2))
                 plt.title(self.TITLE_PREFIX + stationName + " station water elevation max: " + maxElevation, fontsize=18)
                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("elevation (meters)", fontsize=14)
