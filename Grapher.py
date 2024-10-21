@@ -1048,8 +1048,8 @@ class Grapher:
         if(len(self.mapWaterTimes) > 0):
             vmin = -1
             vminSwath = 0
-            vmax = math.ceil(self.maxWater)
-            vmax = 3
+#             vmax = math.ceil(self.maxWater)
+            vmax = 5
 #             vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
