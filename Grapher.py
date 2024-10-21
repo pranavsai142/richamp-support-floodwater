@@ -33,6 +33,7 @@ class Grapher:
     
     def unixTimeToDeltaHours(self, timestamp, startDate):
 #         return datetime.fromtimestamp(timestamp, timezone.utc)
+        timestamp = timestamp + (-987120000.0)
         delta = datetime.fromtimestamp(timestamp, timezone.utc) - startDate
         return delta.total_seconds()/3600
     
@@ -1078,7 +1079,8 @@ class Grapher:
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title(self.TITLE_PREFIX + "Water Elevation")
-                plt.xlabel(datetime.fromtimestamp(int(self.mapWaterTimes[index]),timezone.utc))
+                timestamp = int(self.mapWaterTimes[index]),timezone.utc) + (-987120000.0)
+                plt.xlabel(datetime.fromtimestamp(timestamp))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
