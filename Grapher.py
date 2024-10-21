@@ -1083,7 +1083,7 @@ class Grapher:
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title(self.TITLE_PREFIX + "Water Elevation")
-                timestampDelta = int(self.mapWaveTimes[index]) - self.waterStartDate
+                timestampDelta = int(self.mapWaterTimes[index]) - self.waterStartDate
         #         startDateTimestamp - (-987120000.0)
         #         return datetime.fromtimestamp(timestamp, timezone.utc)
                 timestamp = (-987120000.0) + timestampDelta
