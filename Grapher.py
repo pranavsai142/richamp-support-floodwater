@@ -1079,8 +1079,8 @@ class Grapher:
 #                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
                 plt.axis(plotAxis)
                 plt.title(self.TITLE_PREFIX + "Water Elevation")
-                timestamp = int(self.mapWaterTimes[index]),timezone.utc) + (-987120000.0)
-                plt.xlabel(datetime.fromtimestamp(timestamp))
+                timestamp = int(self.mapWaterTimes[index]) + (-987120000.0)
+                plt.xlabel(datetime.fromtimestamp(timestamp, timezone.utc))
     #             plt.gca().invert_yaxis()
                 plt.colorbar(
                     ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
