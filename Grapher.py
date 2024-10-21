@@ -13,7 +13,7 @@ import gc
 
 class Grapher:
     DATE_FORMAT = "%m/%d/%y-%HZ"
-    TITLE_PREFIX = "Sandy: "
+    TITLE_PREFIX = "1938 1m: "
     
         
     def extractLatitudeIndex(self, nodeIndex):
@@ -38,6 +38,7 @@ class Grapher:
 #         startDateTimestamp - (-987120000.0)
 #         return datetime.fromtimestamp(timestamp, timezone.utc)
         timestamp = (-987120000.0) + timestampDelta
+        return datetime.fromtimestamp(timestamp, timezone.utc)
         delta = datetime.fromtimestamp(timestamp, timezone.utc) - startDate
         return delta.total_seconds()/3600
     
