@@ -13,7 +13,7 @@ import gc
 
 class Grapher:
     DATE_FORMAT = "%m/%d/%y-%HZ"
-    TITLE_PREFIX = "1938 1ft: "
+    TITLE_PREFIX = "1938 1m: "
     
         
     def extractLatitudeIndex(self, nodeIndex):
@@ -1049,7 +1049,7 @@ class Grapher:
             vmin = -1
             vminSwath = 0
 #             vmax = math.ceil(self.maxWater)
-            vmax = 4
+            vmax = 5
 #             vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
