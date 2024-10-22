@@ -1049,7 +1049,7 @@ class Grapher:
             vmin = -1
             vminSwath = 0
 #             vmax = math.ceil(self.maxWater)
-            vmax = 4
+            vmax = 3
 #             vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
