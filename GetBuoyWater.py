@@ -101,7 +101,7 @@ class GetBuoyWater:
                 waterDict[key]["prediction_water"] = predictionWaters
         
             except (HTTPError, FileNotFoundError):
-        #         print("oops bad url")
+                print("oops bad url", url)
                 badStations.append(badStations.append(stationDict))
         
         # print(windDict)

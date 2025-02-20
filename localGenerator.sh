@@ -40,7 +40,7 @@
 
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --wavesExists true --waveswh /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_HS.63.nc --wavemwd /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_DIR.63.nc --wavemwp /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_TMM10.63.nc --wavepwp /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/swan_TPS.63.nc --waverad /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/rads.64.nc --waterExists true --water /scratch/workspace/pranav_sai_uri_edu-manrun/AugustSeaLevelRun/forecast/fort.63.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir /scratch/workspace/pranav_sai_uri_edu-manrun/temp/
 
-python generateFunGraphs.py --stations OBS_STATIONS.json --input /Volumes/ssd/downloads/input.txt --obsExists true --etaExists true --output /Volumes/ssd/downloads/output_funwave/ --backgroundChoice RHODE_ISLAND_CHAMP --tempDir /Volumes/ssd/temp/
+# python generateFunGraphs.py --stations OBS_STATIONS.json --input /Volumes/ssd/downloads/input.txt --obsExists true --etaExists true --output /Volumes/ssd/downloads/output_funwave/ --backgroundChoice RHODE_ISLAND_CHAMP --tempDir /Volumes/ssd/temp/
 
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain /Volumes/ssd/ObservationalWind/Ram_RICHAMP_rain.nc --backgroundChoice RHODE_ISLAND_CHAMP --tempDir /Volumes/ssd/temp/
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain /Volumes/ssd/ObservationalWind/henri_gfs_rain.nc --backgroundChoice EAST_COAST_OUTLINE --tempDir /Volumes/ssd/temp/
@@ -97,3 +97,8 @@ python generateFunGraphs.py --stations OBS_STATIONS.json --input /Volumes/ssd/do
 # python generateGraphs.py --stations HAWAII_STATIONS.json --rainExists true --rain hone_rain_gfs.nc --tempDir temp/ --backgroundChoice HAWAII
 
 # python generateGraphs.py --stations HAWAII_STATIONS.json --gfsExists true --wind hone_wind_gfs.nc --tempDir temp/ --backgroundChoice HAWAII
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /Volumes/ssd/ObservationalWind/wave_data/fort.63.nc --tempDir /Volumes/ssd/temp/
+
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /project/pi_iginis_uri_edu/pranav_sai_uri_edu/scenario_files/testSandyWindInp.nc --backgroundChoice RHODE_ISLAND_CHAMP --tempDir temp/
+# 
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /work/pi_iginis_uri_edu/pranav_sai_uri_edu/scenario_files/v18Runs/FinalWaterFiles/sandy.fort.63.nc --backgroundChoice RHODE_ISLAND_CHAMP --tempDir temp/
