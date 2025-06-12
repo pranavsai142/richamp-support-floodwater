@@ -17,28 +17,28 @@ DEEPLINE_DISTANCES = [
 # Station-specific deepline distances with depths
 DEEPLINE_DISTANCES_1 = [
     {"distance": 650, "depth": "7m"},   # Napatree1 (runup_id: 10)
-    {"distance": 12500, "depth": "35m"},
-    {"distance": 2320, "depth": "20m"}
+    {"distance": 2320, "depth": "20m"},
+    {"distance": 12500, "depth": "35m"}
 ]
 DEEPLINE_DISTANCES_2 = [
-    {"distance": 150, "depth": "7m"},   # Napatree2 (runup_id: 20)
+    {"distance": 75, "depth": "7m"},   # Napatree2 (runup_id: 20)
+    {"distance": 2320, "depth": "20m"},
     {"distance": 12500, "depth": "35m"},
-    {"distance": 1600, "depth": "20m"}
 ]
 DEEPLINE_DISTANCES_3 = [
-    {"distance": 75, "depth": "7m"}, # Napatree3 (runup_id: 30)
+    {"distance": 200, "depth": "7m"}, # Napatree3 (runup_id: 30)
+    {"distance": 2320, "depth": "20m"},
     {"distance": 12500, "depth": "35m"},
-    {"distance": 1550, "depth": "20m"}
 ]
 DEEPLINE_DISTANCES_4 = [
-    {"distance": 75, "depth": "7m"},  # Napatree4 (runup_id: 40)
-    {"distance": 12500, "depth": "35m"},
-    {"distance": 1500, "depth": "20m"}
+    {"distance": 250, "depth": "7m"},  # Napatree4 (runup_id: 40)
+    {"distance": 2320, "depth": "20m"},
+    {"distance": 12500, "depth": "35m"}
 ]
 DEEPLINE_DISTANCES_5 = [
-    {"distance": 75, "depth": "7m"},   # Napatree5 (runup_id: 50)
-    {"distance": 12500, "depth": "35m"},
-    {"distance": 1300, "depth": "20m"}
+    {"distance": 350, "depth": "7m"},   # Napatree5 (runup_id: 50)
+    {"distance": 2320, "depth": "20m"},
+    {"distance": 12500, "depth": "35m"}
 ]
 
 

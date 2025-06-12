@@ -2285,7 +2285,7 @@ class Grapher:
                 ax.tick_params(axis='y', labelcolor='blue', labelsize=12)
                 ax2.tick_params(axis='y', labelcolor='red', labelsize=12)
                 ax.tick_params(axis='x', labelsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics", fontsize=14)
+                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics {deeplineElevations}", fontsize=14)
     
                 # Combine legends
                 if(transect == 1):
