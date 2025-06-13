@@ -18,8 +18,8 @@
       "id": "RUNUP",
       "source": "RUNUP",
       "name": "Napatree4 35m Depth Waves",
-      "latitude": "41.207047",
-      "longitude": "-71.813526"
+      "latitude": "41.283817",
+      "longitude": "-71.860601"
     },
     "53d0": {
       "id": "RUNUP",
@@ -39,8 +39,8 @@
       "id": "RUNUP",
       "source": "RUNUP",
       "name": "Napatree5 35m Depth Waves",
-      "latitude": "41.207090",
-      "longitude": "-71.812746"
+      "latitude": "41.282668",
+      "longitude": "-71.863114"
     },
     "33d0": {
       "id": "RUNUP",
@@ -60,8 +60,8 @@
       "id": "RUNUP",
       "source": "RUNUP",
       "name": "Napatree3 35m Depth Waves",
-      "latitude": "41.203309",
-      "longitude": "-71.826269"
+      "latitude": "41.283725",
+      "longitude": "-71.860941"
     },
     "23d0": {
       "id": "RUNUP",
@@ -81,8 +81,8 @@
       "id": "RUNUP",
       "source": "RUNUP",
       "name": "Napatree2 35m Depth Waves",
-      "latitude": "41.198981",
-      "longitude": "-71.854044"
+      "latitude": "41.283070",
+      "longitude": "-71.865597"
     },
     "13d0": {
       "id": "RUNUP",
@@ -102,8 +102,8 @@
       "id": "RUNUP",
       "source": "RUNUP",
       "name": "Napatree1 35m Depth Waves",
-      "latitude": "41.199025",
-      "longitude": "-71.879288"
+      "latitude": "41.283188",
+      "longitude": "-71.868727"
     }
   }
 }
