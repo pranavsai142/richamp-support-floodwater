@@ -236,8 +236,8 @@ class GetRunup:
             waterDict = json.load(datafile)
         with open(WAVE_SWH_DATA_FILE) as datafile:
             swhDict = json.load(datafile)
-        with open(WAVE_MWD_DATA_FILE) as datafile:
-            mwdDict = json.load(datafile)
+#         with open(WAVE_MWD_DATA_FILE) as datafile:
+#             mwdDict = json.load(datafile)
         with open(WAVE_PWP_DATA_FILE) as datafile:
             pwpDict = json.load(datafile)
         with open(ADCIRC_MESH_DATA_FILE) as datafile:
@@ -338,7 +338,7 @@ class GetRunup:
 #             offshorePwp = pwpDict[offshoreKey]["pwp"]
             
             offshoreSwh = swhDict[deeplineKey]["swh"]
-            offshoreMwd = mwdDict[deeplineKey]["mwd"]
+#             offshoreMwd = mwdDict[deeplineKey]["mwd"]
             offshorePwp = pwpDict[deeplineKey]["pwp"]
 
 #             meshDict[slopelineKey]["elevation"]

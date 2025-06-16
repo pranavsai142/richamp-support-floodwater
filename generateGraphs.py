@@ -524,19 +524,19 @@ def main():
         WAVE_PWP_DATA_FILE = wave_temp_directory + "wave_pwp_data_file" + ".json"
         WAVE_RAD_DATA_FILE = wave_temp_directory + "wave_rad_data_file" + ".json"
         STATIONS_FILE = args.stations
-        (waveStartDateObject, waveEndDateObject) = WaveReader(
-            WAVE_SWH_FILE=WAVE_SWH_FILE,
-#             WAVE_MWD_FILE=WAVE_MWD_FILE,
-#             WAVE_MWP_FILE=WAVE_MWP_FILE,
-            WAVE_PWP_FILE=WAVE_PWP_FILE,
-#             WAVE_RAD_FILE=WAVE_RAD_FILE,
-            STATIONS_FILE=STATIONS_FILE, 
-            WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
-#             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
-#             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
-            WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
-#             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
-            BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
+#         (waveStartDateObject, waveEndDateObject) = WaveReader(
+#             WAVE_SWH_FILE=WAVE_SWH_FILE,
+# #             WAVE_MWD_FILE=WAVE_MWD_FILE,
+# #             WAVE_MWP_FILE=WAVE_MWP_FILE,
+#             WAVE_PWP_FILE=WAVE_PWP_FILE,
+# #             WAVE_RAD_FILE=WAVE_RAD_FILE,
+#             STATIONS_FILE=STATIONS_FILE, 
+#             WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
+# #             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
+# #             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
+#             WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
+# #             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
+#             BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
         
 #         waveStartDateObject = datetime.datetime(year=2023, month=12, day=15, hour=0, tzinfo=datetime.timezone.utc)
 #         waveEndDateObject = datetime.datetime(year=2023, month=12, day=20, hour=0, tzinfo=datetime.timezone.utc)
@@ -585,7 +585,7 @@ def main():
                 STATIONS_FILE = STATIONS_FILE,
                 ADCIRC_WATER_DATA_FILE=dataToGraph["WATER"], 
                 WAVE_SWH_DATA_FILE=dataToGraph["SWH"],
-                WAVE_MWD_DATA_FILE=dataToGraph["MWD"],
+#                 WAVE_MWD_DATA_FILE=dataToGraph["MWD"],
                 WAVE_PWP_DATA_FILE=dataToGraph["PWP"],
                 ADCIRC_MESH_DATA_FILE=dataToGraph["MESH"],
                 ADCIRC_STILLWATER_DATA_FILE=dataToGraph["STILLWATER"],
