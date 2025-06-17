@@ -17,6 +17,7 @@ from scipy.optimize import fsolve  # For solving the dispersion relation
        
        
 DAY_IN_UNIX_TIME = 86400
+CALCULATE_DAILY_AVERAGE_SLOPE = False
  
 class GetRunup:
 
@@ -488,45 +489,46 @@ class GetRunup:
 #                 averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
 #                 averageSlopes.append(averageSlope)
                 
-            startOfDayTime = None
-            maxWaterlineKey = None
-            minWaterlineKey = None
-            numIndexes = 0
-            for index, time in enumerate(runupTimes):
-                numIndexes += 1
-                if(startOfDayTime == None):
-                    startOfDayTime = time
-                waterlineKey = waterlineKeys[index]
-                if(maxWaterlineKey == None or waterlineKey > maxWaterlineKey):
-                    maxWaterlineKey = waterlineKey
-                if(minWaterlineKey == None or waterlineKey < minWaterlineKey):
-                    minWaterlineKey = waterlineKey
-                if((time - startOfDayTime) == DAY_IN_UNIX_TIME or index == (len(runupTimes) - 1)):
-                    waterlineStation = normalDict[minWaterlineKey]
-                    waterlineCoordinates = (float(waterlineStation["latitude"]), float(waterlineStation["longitude"]))
-                    waterlineElevation = float(meshDict[minWaterlineKey]["elevation"])
-                
-                    if(minWaterlineKey != maxWaterlineKey):
-                        adjacentWaterlineKey = str(int(maxWaterlineKey))
-                    else:
-                        adjacentWaterlineKey = str(int(minWaterlineKey) + 1)
-                    adjacentWaterlineStation = normalDict[adjacentWaterlineKey]
-                    adjacentWaterlineCoordinates = (float(adjacentWaterlineStation["latitude"]), float(adjacentWaterlineStation["longitude"]))
-                    adjacentWaterlineElevation = meshDict[adjacentWaterlineKey]["elevation"]
-                
-    #                 Now I need to calculate the averageSlope using the waterlineKey point
-
-
-                    waterlineDistance = haversine.haversine(waterlineCoordinates, adjacentWaterlineCoordinates) * 1000
-                    averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
-                    print("END DAY, Slope", time, startOfDayTime, averageSlope)
-                    for averageSlopeIndex in range(numIndexes):
-                        averageSlopes.append(averageSlope)
-#                         print("APPENDING AVERAGE SLOPE", averageSlope)
-                    numIndexes = 0
-                    startOfDayTime = None
-                    minWaterlineKey = None
-                    maxWaterlineKey = None
+            if(CALCULATE_DAILY_AVERAGE_SLOPE):
+                startOfDayTime = None
+                maxWaterlineKey = None
+                minWaterlineKey = None
+                numIndexes = 0
+                for index, time in enumerate(runupTimes):
+                    numIndexes += 1
+                    if(startOfDayTime == None):
+                        startOfDayTime = time
+                    waterlineKey = waterlineKeys[index]
+                    if(maxWaterlineKey == None or waterlineKey > maxWaterlineKey):
+                        maxWaterlineKey = waterlineKey
+                    if(minWaterlineKey == None or waterlineKey < minWaterlineKey):
+                        minWaterlineKey = waterlineKey
+                    if((time - startOfDayTime) == DAY_IN_UNIX_TIME or index == (len(runupTimes) - 1)):
+                        waterlineStation = normalDict[minWaterlineKey]
+                        waterlineCoordinates = (float(waterlineStation["latitude"]), float(waterlineStation["longitude"]))
+                        waterlineElevation = float(meshDict[minWaterlineKey]["elevation"])
+                    
+                        if(minWaterlineKey != maxWaterlineKey):
+                            adjacentWaterlineKey = str(int(maxWaterlineKey))
+                        else:
+                            adjacentWaterlineKey = str(int(minWaterlineKey) + 1)
+                        adjacentWaterlineStation = normalDict[adjacentWaterlineKey]
+                        adjacentWaterlineCoordinates = (float(adjacentWaterlineStation["latitude"]), float(adjacentWaterlineStation["longitude"]))
+                        adjacentWaterlineElevation = meshDict[adjacentWaterlineKey]["elevation"]
+                    
+        #                 Now I need to calculate the averageSlope using the waterlineKey point
+    
+    
+                        waterlineDistance = haversine.haversine(waterlineCoordinates, adjacentWaterlineCoordinates) * 1000
+                        averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
+                        print("END DAY, Slope", time, startOfDayTime, averageSlope)
+                        for averageSlopeIndex in range(numIndexes):
+                            averageSlopes.append(averageSlope)
+    #                         print("APPENDING AVERAGE SLOPE", averageSlope)
+                        numIndexes = 0
+                        startOfDayTime = None
+                        minWaterlineKey = None
+                        maxWaterlineKey = None
                     
 #             print("AVERAGE SLOPES", averageSlopes)
 #             quit()
@@ -571,12 +573,13 @@ class GetRunup:
                 
 #                 Now I need to calculate the averageSlope using the waterlineKey point
 
-
-#                 waterlineDistance = haversine.haversine(waterlineCoordinates, adjacentWaterlineCoordinates) * 1000
-#                 averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
-#                 averageSlopes.append(averageSlope)
+                if(CALCULATE_DAILY_AVERAGE_SLOPE):
+                    averageSlope = averageSlopes[index]
+                else:
+                    waterlineDistance = haversine.haversine(waterlineCoordinates, adjacentWaterlineCoordinates) * 1000
+                    averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
+                    averageSlopes.append(averageSlope)
 #                 Use first calculate average slope
-                averageSlope = averageSlopes[index]
                 
 #                 slopelineDistance = haversine.haversine(slopelineCoordinates, waterlineCoordinates) * 1000
 #                 slopelineDistance = slopelineDistance
