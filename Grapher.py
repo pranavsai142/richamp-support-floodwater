@@ -1303,7 +1303,7 @@ class Grapher:
             plt.axis(plotAxis)
             plt.title("Elevation Map")
 #             plt.title("Map Elevation - " + "surf distance: " + self.runupSurfDistance[index] + " offshore distance: " + self.runupOffshoreDistance[index] + " slope: " + self.runupAverageSlope[index])
-#             ax.legend(loc="upper right")
+            ax.legend(loc="upper right")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
