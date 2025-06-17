@@ -21,12 +21,12 @@ DEEPLINE_DISTANCES_1 = [
     {"distance": 10000, "depth": "40m"}
 ]
 DEEPLINE_DISTANCES_2 = [
-    {"distance": 520, "depth": "7m"},   # Napatree2 (runup_id: 20)
+    {"distance": 535, "depth": "7m"},   # Napatree2 (runup_id: 20)
     {"distance": 2265, "depth": "20m"},
     {"distance": 10000, "depth": "40m"},
 ]
 DEEPLINE_DISTANCES_3 = [
-    {"distance": 410, "depth": "7m"}, # Napatree3 (runup_id: 30)
+    {"distance": 420, "depth": "7m"}, # Napatree3 (runup_id: 30)
     {"distance": 2233, "depth": "20m"},
     {"distance": 10000, "depth": "40m"},
 ]
