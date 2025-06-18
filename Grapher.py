@@ -2035,7 +2035,7 @@ class Grapher:
                         ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsSpeeds[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
-                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+#                     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                     
                     stationName = self.obsLabels[index]
                     maxSpeed = str(round(max(self.datapointsSpeeds[index]), 2)) if self.datapointsSpeeds[index] else "N/A"
@@ -2046,7 +2046,7 @@ class Grapher:
                     ax.set_xlim(x_min, x_max)
                 
                 if index == numberOfWindDatapoints - 1:
-                    ax.set_xlabel(f"Day of Month (Starting: {self.windStartDate.strftime(self.DATE_FORMAT)})", fontsize=12)
+                    ax.set_xlabel("Date", fontsize=12)
             
             # Save wind speed figure
             plt.savefig(graph_directory + 'all_stations_wind_speed.png', dpi=300, bbox_inches='tight')
@@ -2084,7 +2084,7 @@ class Grapher:
                         ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsDirections[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
-                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+#                     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                     
                     stationName = self.obsLabels[index]
                     ax.set_title(f"{stationName} station wind direction", fontsize=16)
@@ -2094,7 +2094,7 @@ class Grapher:
                     ax.set_xlim(x_min, x_max)
                 
                 if index == numberOfWindDatapoints - 1:
-                    ax.set_xlabel(f"Day of Month (Starting: {self.windStartDate.strftime(self.DATE_FORMAT)})", fontsize=12)
+                    ax.set_xlabel("Date", fontsize=12)
             
             # Save wind direction figure
             plt.savefig(graph_directory + 'all_stations_wind_direction.png', dpi=300, bbox_inches='tight')
