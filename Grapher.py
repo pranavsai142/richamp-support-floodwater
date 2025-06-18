@@ -2081,7 +2081,7 @@ class Grapher:
                 if len(self.datapointsDirections) > 0:
                     ax.scatter(self.windTimes, self.datapointsDirections[index], marker=".", label="Forecast")
                     if self.obsExists:
-                        ax.scatter(self.obsDatapointsTimes[index], self.datapointsDirections[index], marker=".", label="Obs")
+                        ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsDirections[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
                     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
