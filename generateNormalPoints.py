@@ -18,29 +18,69 @@ DEEPLINE_DISTANCES = [
 DEEPLINE_DISTANCES_1 = [
     {"distance": 705, "depth": "7m"},   # Napatree1 (runup_id: 10)
     {"distance": 2323, "depth": "20m"},
-    {"distance": 10000, "depth": "40m"}
+    {"distance": 9000, "depth": "40m"}
 ]
 DEEPLINE_DISTANCES_2 = [
     {"distance": 550, "depth": "7m"},   # Napatree2 (runup_id: 20)
     {"distance": 2265, "depth": "20m"},
-    {"distance": 10000, "depth": "40m"},
+    {"distance": 9000, "depth": "40m"},
 ]
 DEEPLINE_DISTANCES_3 = [
     {"distance": 435, "depth": "7m"}, # Napatree3 (runup_id: 30)
     {"distance": 2233, "depth": "20m"},
-    {"distance": 10000, "depth": "40m"},
+    {"distance": 9000, "depth": "40m"},
 ]
 DEEPLINE_DISTANCES_4 = [
     {"distance": 410, "depth": "7m"},  # Napatree4 (runup_id: 40)
     {"distance": 2225, "depth": "20m"},
-    {"distance": 10000, "depth": "40m"}
+    {"distance": 9000, "depth": "40m"}
 ]
 DEEPLINE_DISTANCES_5 = [
     {"distance": 545, "depth": "7m"},   # Napatree5 (runup_id: 50)
     {"distance": 2175, "depth": "20m"},
-    {"distance": 10000, "depth": "40m"}
+    {"distance": 9000, "depth": "40m"}
 ]
 
+
+def generate_deepline_distances(max_distance, spacing, initial_distance=75, num_stations=5):
+    """
+    Generate DEEPLINE_DISTANCES_X lists for specified max distance and spacing.
+    
+    Args:
+        max_distance (float): Maximum distance in meters (e.g., 12475).
+        spacing (float): Distance increment in meters (e.g., 200).
+        initial_distance (float): Starting distance in meters (default: 75).
+        num_stations (int): Number of stations (default: 5 for Napatree1-5).
+    
+    Returns:
+        dict: Dictionary mapping runup_id to deepline distances list.
+        Also sets global variables DEEPLINE_DISTANCES_1, ..., DEEPLINE_DISTANCES_X.
+    """
+    # Generate the distance list
+    distances = []
+    current_distance = initial_distance
+    depth = 1
+    while current_distance <= max_distance:
+        distances.append({"distance": current_distance, "depth": f"{depth}m"})
+        current_distance += spacing
+        depth += 1
+    
+    # Create DEEPLINE_DISTANCES_X for each station
+    deepline_distances_map = {}
+    for station_idx in range(1, num_stations + 1):
+        runup_id = str(station_idx * 10)  # 10, 20, 30, 40, 50
+        # Assign the same distances list to each station
+        globals()[f"DEEPLINE_DISTANCES_{station_idx}"] = distances.copy()
+        deepline_distances_map[runup_id] = globals()[f"DEEPLINE_DISTANCES_{station_idx}"]
+    
+    return deepline_distances_map
+
+# Example usage
+# max_distance = 12475  # Maximum distance in meters
+# spacing = 200         # Spacing between points in meters
+max_distance = 12475  # Maximum distance in meters
+spacing = 200         # Spacing between points in meters
+DEEPLINE_DISTANCES_MAP = generate_deepline_distances(max_distance, spacing)
 
 # if(True):
 #     DEEPLINE_DISTANCES_1 = [

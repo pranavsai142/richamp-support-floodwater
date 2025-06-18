@@ -28,6 +28,10 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 class Grapher:
     DATE_FORMAT = "%m/%d/%y-%HZ"    
     CONVERT_TO_WATER_DEPTH = False
+    
+    DEPTH_LINE_7M = -7.0
+    DEPTH_LINE_20M = -20.0
+    DISTANCE_LINE_9000M = 9000.0
         
     def extractLatitudeIndex(self, nodeIndex):
         return int(nodeIndex[1: nodeIndex.find(",")])
@@ -2449,12 +2453,12 @@ class Grapher:
             for transect in range(1, 6):
                 ax = axes[transect - 1]
                 ax2 = ax.twinx()  # Second y-axis for elevation
-    
+            
                 deeplineDistances = []
                 deeplineElevations = []
                 deeplineSWH = []
                 deeplineDeepwaterSWH = []
-    
+            
                 for index in range(numberOfRunupDatapoints):
                     stationName = self.runupLabels[index]
                     if str(transect) in stationName[0:stationName.index(" ")]:
@@ -2466,27 +2470,64 @@ class Grapher:
                         # Extract distance from name (e.g., "1000m" -> 1000)
                         distance_str = stationName[stationName.rindex(" ") + 1:-1]
                         deeplineDistances.append(int(distance_str))
-    
+            
                 # Plot SWH and deepwater SWH on primary y-axis
                 ax.plot(deeplineDistances, deeplineSWH, label="Max SWH", color='blue')
                 ax.plot(deeplineDistances, deeplineDeepwaterSWH, label="Max Deepwater SWH", color='green')
                 # Plot elevation on secondary y-axis
                 ax2.plot(deeplineDistances, deeplineElevations, label="Elevation", color='red', linestyle="--")
-    
+            
+                # Find distances for depth lines (-7m, -20m) using interpolation or nearest match
+                deeplineElevations = np.array(deeplineElevations)
+                deeplineDistances = np.array(deeplineDistances)
+                
+                # Distance for -7m depth
+                if np.any((deeplineElevations <= DEPTH_LINE_7M + 0.1) & (deeplineElevations >= DEPTH_LINE_7M - 0.1)):
+                    # Find nearest elevation to -7m
+                    idx_7m = np.argmin(np.abs(deeplineElevations - DEPTH_LINE_7M))
+                    distance_7m = deeplineDistances[idx_7m]
+                else:
+                    # Interpolate if exact match not found
+                    try:
+                        distance_7m = np.interp(DEPTH_LINE_7M, deeplineElevations[::-1], deeplineDistances[::-1])
+                    except:
+                        distance_7m = None
+                        print(f"Warning: Could not find or interpolate distance for depth {DEPTH_LINE_7M}m in transect {transect}")
+            
+                # Distance for -20m depth
+                if np.any((deeplineElevations <= DEPTH_LINE_20M + 0.1) & (deeplineElevations >= DEPTH_LINE_20M - 0.1)):
+                    # Find nearest elevation to -20m
+                    idx_20m = np.argmin(np.abs(deeplineElevations - DEPTH_LINE_20M))
+                    distance_20m = deeplineDistances[idx_20m]
+                else:
+                    # Interpolate if exact match not found
+                    try:
+                        distance_20m = np.interp(DEPTH_LINE_20M, deeplineElevations[::-1], deeplineDistances[::-1])
+                    except:
+                        distance_20m = None
+                        print(f"Warning: Could not find or interpolate distance for depth {DEPTH_LINE_20M}m in transect {transect}")
+            
+                # Plot vertical lines
+                if distance_7m is not None:
+                    ax.axvline(x=distance_7m, color='purple', linestyle='--', label='Depth -7m', alpha=0.7)
+                if distance_20m is not None:
+                    ax.axvline(x=distance_20m, color='orange', linestyle='--', label='Depth -20m', alpha=0.7)
+                ax.axvline(x=DISTANCE_LINE_9000M, color='black', linestyle='--', label='9000m', alpha=0.7)
+            
                 # Customize axes
                 ax.set_ylabel("SWH (meters)", fontsize=12, color='blue')
                 ax2.set_ylabel("Elevation (meters)", fontsize=12, color='red')
                 ax.tick_params(axis='y', labelcolor='blue', labelsize=12)
                 ax2.tick_params(axis='y', labelcolor='red', labelsize=12)
                 ax.tick_params(axis='x', labelsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics {deeplineElevations}", fontsize=16)
-    
-                # Combine legends
-                if(transect == 1):
+                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics", fontsize=16)
+            
+                # Combine legends (only for first transect)
+                if transect == 1:
                     lines1, labels1 = ax.get_legend_handles_labels()
                     lines2, labels2 = ax2.get_legend_handles_labels()
                     ax.legend(lines1 + lines2, labels1 + labels2, loc="upper right", fontsize=10)
-    
+            
             plt.xlabel("Distance (meters)", fontsize=14)
             plt.tight_layout()
             plt.savefig(graph_directory + 'Napatree_all_deepline_metrics.png')
