@@ -180,7 +180,7 @@ python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterEx
 
 
 # Obs GFS
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/dec22conv.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/dec22conv.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
 
 # Obs Waves
 # python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --wavesExists true \

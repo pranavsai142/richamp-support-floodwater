@@ -1952,10 +1952,10 @@ class Grapher:
                 ax = axes[index]
                 if len(self.datapointsWaters) > 0:
                     # Plot stillwater, tidewater, water, and observed tide data
-                    if self.stillwaterExists:
-                        ax.plot(self.stillwaterTimes, self.datapointsStillwaters[index], label=r"$\eta_{still}$", linestyle="--")
                     if self.tidewaterExists:
                         ax.plot(self.tidewaterTimes, self.datapointsTidewaters[index], label=r"$\eta_{tide}$", linestyle="--")
+                    if self.stillwaterExists:
+                        ax.plot(self.stillwaterTimes, self.datapointsStillwaters[index], label=r"$\eta_{still}$", linestyle="--")
                     ax.plot(self.waterTimes, self.datapointsWaters[index], label=r"$\eta$")
                     if self.tideExists:
                         ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Obs")
