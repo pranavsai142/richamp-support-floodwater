@@ -1466,12 +1466,16 @@ class Grapher:
             fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=1)
-            ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Datapoints")
-            if(self.buoyExists):
-                    ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=3)
-            if(self.meshExists):
-                ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
-
+#             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Datapoints")
+#             if(self.buoyExists):
+#                     ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=3)
+#             if(self.meshExists):
+#                 ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
+            for waterIndex, tideLabel in enumerate(self.tideLabels):
+                if("Waves" in tideLabel):
+                    ax.scatter(self.waterLongitudes[waterIndex], self.waterLatitudes[waterIndex])
+                    ax.annotate(tideLabel, (self.waterLongitudes[waterIndex], self.waterLatitudes[waterIndex]))
+                    
             plt.axis(plotAxis)
             plt.title(self.titlePrefix + "Water Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
@@ -1875,43 +1879,109 @@ class Grapher:
             plt.close(fig)
             
 #         Graph water values on top of each other
-        if len(self.datapointsWaters) > 0:
-            fig, ax = plt.subplots(figsize=(16, 9))
-    
-            for index in range(numberOfWaterDatapoints):
-                if(not np.isnan(np.min(self.datapointsWaters[index]))):
-                    stationName = self.tideLabels[index]
-                    # Plot forecast data for each station
-                    ax.plot(self.waterTimes, self.datapointsWaters[index], label=f"Forecast {stationName}")
-                    
-                    if(self.stillwaterExists):
-                        ax.plot(self.stillwaterTimes, self.datapointsStillwaters[index], label="Forecast")
-                        
-                    if(self.tidewaterExists):
-                        ax.plot(self.tidewaterTimes, self.datapointsTidewaters[index], label="Forecast")
-                    # Plot tide data if available
-                    if self.tideExists:
-                        ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label=f"Station {stationName}")
-                    
-                    # Note: Prediction data plotting is commented out in the original code, so it remains commented here:
-                    # ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label=f"Prediction {stationName}")
-
-            # Configure the plot
-            ax.legend(loc="upper left", ncol=2, bbox_to_anchor=(1, 1))
-            ax.format_xdata = mdates.DateFormatter('%d')
-            plt.xticks(fontsize=12)
-            plt.yticks(fontsize=12)
-    
-            # Since we're plotting multiple stations, we'll use a more general title
-            plt.title(self.titlePrefix + "Water Elevation for All Stations", fontsize=18)
-            plt.xlabel("Date", fontsize=14)
-            plt.ylabel("Elevation (meters)", fontsize=14)
-    
-            plt.tight_layout()
-            plt.savefig(graph_directory + 'all_stations_water.png')
-            plt.close()
+#         if len(self.datapointsWaters) > 0:
+#             fig, ax = plt.subplots(figsize=(16, 9))
+#     
+#             for index in range(numberOfWaterDatapoints):
+#                 if(not np.isnan(np.min(self.datapointsWaters[index]))):
+#                     stationName = self.tideLabels[index]
+#                     # Plot forecast data for each station
+#                     ax.plot(self.waterTimes, self.datapointsWaters[index], label=f"Forecast {stationName}")
+#                     
+#                     if(self.stillwaterExists):
+#                         ax.plot(self.stillwaterTimes, self.datapointsStillwaters[index], label="Forecast")
+#                         
+#                     if(self.tidewaterExists):
+#                         ax.plot(self.tidewaterTimes, self.datapointsTidewaters[index], label="Forecast")
+#                     # Plot tide data if available
+#                     if self.tideExists:
+#                         ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label=f"Station {stationName}")
+#                     
+#                     # Note: Prediction data plotting is commented out in the original code, so it remains commented here:
+#                     # ax.plot(self.tideDatapointsPredictionTimes[index], self.tideDatapointsPredictionWaters[index], label=f"Prediction {stationName}")
+# 
+#             # Configure the plot
+#             ax.legend(loc="upper left", ncol=2, bbox_to_anchor=(1, 1))
+#             ax.format_xdata = mdates.DateFormatter('%d')
+#             plt.xticks(fontsize=12)
+#             plt.yticks(fontsize=12)
+#     
+#             # Since we're plotting multiple stations, we'll use a more general title
+#             plt.title(self.titlePrefix + "Water Elevation for All Stations", fontsize=18)
+#             plt.xlabel("Date", fontsize=14)
+#             plt.ylabel("Elevation (meters)", fontsize=14)
+#     
+#             plt.tight_layout()
+#             plt.savefig(graph_directory + 'all_stations_water.png')
+#             plt.close()
 
         
+# Graph multipanel all stations water
+
+        # Create a multi-panel figure with one subplot per station
+        fig, axes = plt.subplots(numberOfWaterDatapoints, 1, figsize=(16, 4 * numberOfWaterDatapoints), sharex=True, constrained_layout=True)
+        
+        # Ensure axes is a 1D array for consistent indexing
+        if numberOfWaterDatapoints == 1:
+            axes = [axes]
+        else:
+            axes = axes.flatten()
+        
+        # Find global min and max elevation for shared y-axis limits
+        all_elevations = []
+        for index in range(numberOfWaterDatapoints):
+            if len(self.datapointsWaters) > 0:
+                all_elevations.extend(self.datapointsWaters[index])
+                if self.stillwaterExists:
+                    all_elevations.extend(self.datapointsStillwaters[index])
+                if self.tidewaterExists:
+                    all_elevations.extend(self.datapointsTidewaters[index])
+                if self.tideExists:
+                    all_elevations.extend(self.tideDatapointsWaters[index])
+        
+        global_min = min(all_elevations) if all_elevations else -1.0
+        global_max = max(all_elevations) if all_elevations else 1.0
+        # Add padding to y-limits for better visualization
+        y_padding = (global_max - global_min) * 0.1
+        y_min = global_min - y_padding
+        y_max = global_max + y_padding
+        
+        # Plot data for each station
+        for index in range(numberOfWaterDatapoints):
+            ax = axes[index]
+            if len(self.datapointsWaters) > 0:
+                # Plot stillwater, tidewater, water, and observed tide data
+                if self.stillwaterExists:
+                    ax.plot(self.stillwaterTimes, self.datapointsStillwaters[index], label=r"$\eta_{still}$", linestyle="--")
+                if self.tidewaterExists:
+                    ax.plot(self.tidewaterTimes, self.datapointsTidewaters[index], label=r"$\eta_{tide}$", linestyle="--")
+                ax.plot(self.waterTimes, self.datapointsWaters[index], label=r"$\eta$")
+                if self.tideExists:
+                    ax.plot(self.tideDatapointsTimes[index], self.tideDatapointsWaters[index], label="Obs")
+                
+                # Add legend
+                ax.legend(loc="upper left")
+                
+                # Format x-axis for dates
+                ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                
+                # Set title and labels
+                stationName = self.tideLabels[index]
+                maxElevation = str(round(max(self.datapointsWaters[index]), 2))
+                ax.set_title(f"{self.titlePrefix}{stationName} station water elevation (Max: {maxElevation} m)", fontsize=16)
+                ax.set_ylabel("Elevation (meters)", fontsize=12)
+                
+                # Set shared y-axis limits
+                ax.set_ylim(y_min, y_max)
+            
+            if index == numberOfWaterDatapoints - 1:
+                # Add x-label only to the bottom subplot
+                ax.set_xlabel(f"Day of Month (Starting: {self.waterStartDate.strftime(self.DATE_FORMAT)})", fontsize=12)
+        
+        # Save the figure
+        plt.savefig(graph_directory + 'all_stations_water.png', dpi=300, bbox_inches='tight')
+        plt.close()
+
 #         Graph values generated by GetRunup step
         if(len(self.datapointsRunup) > 0):
             for index in range(numberOfRunupDatapoints):
@@ -2221,7 +2291,7 @@ class Grapher:
                 ax.format_xdata = mdates.DateFormatter('%d')
                 ax.tick_params(axis='both', labelsize=12)
                 ax.set_ylabel(r"$H_0$ (meters)", fontsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater SWH", fontsize=14)
+                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater SWH", fontsize=16)
     
     #         plt.xlabel("Day", fontsize=14)
             plt.tight_layout()
@@ -2243,7 +2313,7 @@ class Grapher:
                 ax.format_xdata = mdates.DateFormatter('%d')
                 ax.tick_params(axis='both', labelsize=12)
                 ax.set_ylabel(r"$H_s$ (meters)", fontsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} SWH", fontsize=14)
+                ax.set_title(f"{self.titlePrefix}Napatree{transect} SWH", fontsize=16)
     
     #         plt.xlabel("Day", fontsize=14)
             plt.tight_layout()
@@ -2285,7 +2355,7 @@ class Grapher:
                 ax.tick_params(axis='y', labelcolor='blue', labelsize=12)
                 ax2.tick_params(axis='y', labelcolor='red', labelsize=12)
                 ax.tick_params(axis='x', labelsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics {deeplineElevations}", fontsize=14)
+                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics {deeplineElevations}", fontsize=16)
     
                 # Combine legends
                 if(transect == 1):

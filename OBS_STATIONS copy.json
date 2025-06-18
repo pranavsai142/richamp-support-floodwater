@@ -72,6 +72,22 @@
       "longitude": "-71.326667",
       "altitude": "10.6\n"
     },
+    "101": {
+      "id": "8454049",
+      "source": "NOS",
+      "name": "Quonset Pt, RI",
+      "latitude": "41.58667",
+      "longitude": "-71.40500",
+      "altitude": "9.13\n"
+    },
+    "102": {
+      "id": "8452944",
+      "source": "NOS",
+      "name": "Conimicut Light, RI",
+      "latitude": "41.71666667",
+      "longitude": "-71.34333333",
+      "altitude": "2\n"
+    },
     "103": {
      "id": "8461490",
       "source": "CO-OPS_8461490_met.csv",
@@ -87,6 +103,38 @@
       "latitude": "41.31055556",
       "longitude": "-71.8583333",
       "altitude": "0.15\n"
+    },
+    "57": {
+      "id": "0",
+      "source": "NOS",
+      "name": "Block Island, RI",
+      "latitude": "41.18945",
+      "longitude": "-71.56754",
+      "altitude": "999\n"
+    },
+    "58": {
+      "id": "1",
+      "source": "ASSET",
+      "name": "Groton-New London Airport",
+      "latitude": "41.3304328918457",
+      "longitude": "-72.044303894043",
+      "elevation": "6.15100002288818"
+    },
+    "59": {
+      "id": "0",
+      "source": "ASSET",
+      "name": "New Bedford Hurricane Barrier",
+      "latitude": "41.615317",
+      "longitude": "-70.921544",
+      "elevation": "0"
+    },
+    "60": {
+      "id": "0",
+      "source": "ASSET",
+      "name": "New Bedford",
+      "latitude": "41.59124",
+      "longitude": "-70.90082",
+      "elevation": "0"
     }
   }
 }
