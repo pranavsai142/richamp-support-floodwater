@@ -1278,7 +1278,7 @@ class Grapher:
             plt.close()
             gc.collect()
         if(len(self.mapElevation) > 0):
-            vmin = -10
+            vmin = -40
             vmax = 10
 #             vmax = math.ceil(self.maxElevation)
             levels = 100
@@ -1291,19 +1291,23 @@ class Grapher:
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", alpha=0.5, marker=".", s=5, zorder=4, color="purple")
 #             if(self.assetExists):
-            ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Location", zorder=3, alpha=0.7, marker=".", s=40, color="red")
+            for assetIndex, assetLabel in enumerate(self.assetLabels):
+                if("m" == assetLabel[-1]):
+                    ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], label="Transects", zorder=3, alpha=0.7, marker=".", s=10, color="black")
+                    if("Waves" in assetLabel):
+                        ax.annotate(assetLabel[:assetLabel.index(" Depth")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
 #             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
 
 #             Below line graphs mesh points
 #             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", zorder=3, alpha=0.7, marker=".", s=1, color="black")
 #           Below line graphs ASSET points without the need for observational asset data to have been generated
-            ax.scatter(self.elevationLongitudes, self.elevationLatitudes, label="Closest Node", zorder=3, alpha=0.7, marker=".", s=20, color="black")
-            for index in range(len(self.datapointsElevation)):
-                ax.annotate(str(round(self.datapointsElevation[index], 2)), (self.elevationLongitudes[index], self.elevationLatitudes[index]))
+#             ax.scatter(self.elevationLongitudes, self.elevationLatitudes, label="Closest Node", zorder=3, alpha=0.7, marker=".", s=20, color="black")
+#             for index in range(len(self.datapointsElevation)):
+#                 ax.annotate(str(round(self.datapointsElevation[index], 2)), (self.elevationLongitudes[index], self.elevationLatitudes[index]))
             plt.axis(plotAxis)
             plt.title("Elevation Map")
 #             plt.title("Map Elevation - " + "surf distance: " + self.runupSurfDistance[index] + " offshore distance: " + self.runupOffshoreDistance[index] + " slope: " + self.runupAverageSlope[index])
-            ax.legend(loc="upper right")
+#             ax.legend(loc="upper right")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
@@ -1720,8 +1724,8 @@ class Grapher:
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], label="Obs")
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + " significant wave height", fontsize=24)
-#                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
+                    plt.title(stationName + " station significant wave height", fontsize=24)
+                    plt.xlabel("Date")                    
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("SWH (meters)")
                     plt.savefig(graph_directory + stationName + '_wave_swh.png')
@@ -1759,8 +1763,8 @@ class Grapher:
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsPWP[index], label="Obs")
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + " peak wave period", fontsize=24)
-#                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
+                    plt.title(stationName + " station peak wave period", fontsize=24)
+                    plt.xlabel("Date")
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("PWP (seconds)")
                     plt.savefig(graph_directory + stationName + '_wave_pwp.png')
