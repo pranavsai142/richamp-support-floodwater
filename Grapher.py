@@ -2063,6 +2063,8 @@ class Grapher:
             
             direction_min = min(all_directions) if all_directions else 0.0
             direction_max = max(all_directions) if all_directions else 360.0
+            direction_min = 0
+            direction_max = 360
             # Add padding to y-limits, respecting 0-360 degree range
             direction_padding = (direction_max - direction_min) * 0.1 if direction_max != direction_min else 10.0
             direction_y_min = max(0.0, direction_min - direction_padding)

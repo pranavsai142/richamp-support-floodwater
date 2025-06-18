@@ -74,19 +74,11 @@
     },
     "101": {
       "id": "8454049",
-      "source": "NOS",
+      "source": "CO-OPS_8454049_met.csv",
       "name": "Quonset Pt, RI",
       "latitude": "41.58667",
       "longitude": "-71.40500",
       "altitude": "9.13\n"
-    },
-    "102": {
-      "id": "8452944",
-      "source": "NOS",
-      "name": "Conimicut Light, RI",
-      "latitude": "41.71666667",
-      "longitude": "-71.34333333",
-      "altitude": "2\n"
     },
     "103": {
      "id": "8461490",
