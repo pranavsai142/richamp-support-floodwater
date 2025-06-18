@@ -1963,7 +1963,7 @@ class Grapher:
                 ax.legend(loc="upper left")
                 
                 # Format x-axis for dates
-                ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+#                 ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                 
                 # Set title and labels
                 stationName = self.tideLabels[index]
@@ -1976,11 +1976,127 @@ class Grapher:
             
             if index == numberOfWaterDatapoints - 1:
                 # Add x-label only to the bottom subplot
-                ax.set_xlabel(f"Day of Month (Starting: {self.waterStartDate.strftime(self.DATE_FORMAT)})", fontsize=12)
+                ax.set_xlabel("Date", fontsize=12)
         
         # Save the figure
         plt.savefig(graph_directory + 'all_stations_water.png', dpi=300, bbox_inches='tight')
         plt.close()
+        
+        
+# Graph multipanel wind
+
+# Collect all time data for shared x-axis limits
+        all_times = []
+        for index in range(numberOfWindDatapoints):
+            if len(self.datapointsSpeeds) > 0 or len(self.datapointsDirections) > 0:
+                all_times.extend(self.windTimes)
+                if self.obsExists:
+                    all_times.extend(self.obsDatapointsTimes[index])
+        
+        x_min = min(all_times) if all_times else self.windStartDate
+        x_max = max(all_times) if all_times else self.windStartDate
+        # Add padding to x-limits (e.g., 5% of the time range)
+        if x_min != x_max:
+            x_padding = (x_max - x_min) * 0.05
+            x_min -= x_padding
+            x_max += x_padding
+        
+        # --- Wind Speed Figure ---
+        # Collect all speed data for shared y-axis limits
+        all_speeds = []
+        for index in range(numberOfWindDatapoints):
+            if len(self.datapointsSpeeds) > 0:
+                all_speeds.extend(self.datapointsSpeeds[index])
+                if self.obsExists:
+                    all_speeds.extend(self.obsDatapointsSpeeds[index])
+        
+        speed_min = min(all_speeds) if all_speeds else 0.0
+        speed_max = max(all_speeds) if all_speeds else 50.0
+        # Add padding to y-limits
+        speed_padding = (speed_max - speed_min) * 0.1 if speed_max != speed_min else 1.0
+        speed_y_min = max(0.0, speed_min - speed_padding)  # Ensure non-negative for wind speed
+        speed_y_max = speed_max + speed_padding
+        
+        # Create figure for wind speed
+        fig_speed, axes_speed = plt.subplots(numberOfWindDatapoints, 1, figsize=(16, 4 * numberOfWindDatapoints), sharex=True, constrained_layout=True)
+        if numberOfWindDatapoints == 1:
+            axes_speed = [axes_speed]
+        else:
+            axes_speed = axes_speed.flatten()
+        
+        # Plot wind speed data
+        for index in range(numberOfWindDatapoints):
+            ax = axes_speed[index]
+            if len(self.datapointsSpeeds) > 0:
+                ax.scatter(self.windTimes, self.datapointsSpeeds[index], marker=".", label="Forecast")
+                if self.obsExists:
+                    ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsSpeeds[index], marker=".", label="Obs")
+                
+                ax.legend(loc="lower right")
+                ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                
+                stationName = self.obsLabels[index]
+                maxSpeed = str(round(max(self.datapointsSpeeds[index]), 2)) if self.datapointsSpeeds[index] else "N/A"
+                ax.set_title(f"{stationName} station wind speed (Max: {maxSpeed} m/s)", fontsize=16)
+                ax.set_ylabel("Wind speed (m/s)", fontsize=12)
+                
+                ax.set_ylim(speed_y_min, speed_y_max)
+                ax.set_xlim(x_min, x_max)
+            
+            if index == numberOfWindDatapoints - 1:
+                ax.set_xlabel(f"Day of Month (Starting: {self.windStartDate.strftime(self.DATE_FORMAT)})", fontsize=12)
+        
+        # Save wind speed figure
+        plt.savefig(graph_directory + 'all_stations_wind_speed.png', dpi=300, bbox_inches='tight')
+        plt.close(fig_speed)
+        
+        # --- Wind Direction Figure ---
+        # Collect all direction data for shared y-axis limits
+        all_directions = []
+        for index in range(numberOfWindDatapoints):
+            if len(self.datapointsDirections) > 0:
+                all_directions.extend(self.datapointsDirections[index])
+                if self.obsExists:
+                    all_directions.extend(self.obsDatapointsDirections[index])
+        
+        direction_min = min(all_directions) if all_directions else 0.0
+        direction_max = max(all_directions) if all_directions else 360.0
+        # Add padding to y-limits, respecting 0-360 degree range
+        direction_padding = (direction_max - direction_min) * 0.1 if direction_max != direction_min else 10.0
+        direction_y_min = max(0.0, direction_min - direction_padding)
+        direction_y_max = min(360.0, direction_max + direction_padding)
+        
+        # Create figure for wind direction
+        fig_direction, axes_direction = plt.subplots(numberOfWindDatapoints, 1, figsize=(16, 4 * numberOfWindDatapoints), sharex=True, constrained_layout=True)
+        if numberOfWindDatapoints == 1:
+            axes_direction = [axes_direction]
+        else:
+            axes_direction = axes_direction.flatten()
+        
+        # Plot wind direction data
+        for index in range(numberOfWindDatapoints):
+            ax = axes_direction[index]
+            if len(self.datapointsDirections) > 0:
+                ax.scatter(self.windTimes, self.datapointsDirections[index], marker=".", label="Forecast")
+                if self.obsExists:
+                    ax.scatter(self.obsDatapointsTimes[index], self.datapointsDirections[index], marker=".", label="Obs")
+                
+                ax.legend(loc="lower right")
+                ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                
+                stationName = self.obsLabels[index]
+                ax.set_title(f"{stationName} station wind direction", fontsize=16)
+                ax.set_ylabel("Wind direction (degrees)", fontsize=12)
+                
+                ax.set_ylim(direction_y_min, direction_y_max)
+                ax.set_xlim(x_min, x_max)
+            
+            if index == numberOfWindDatapoints - 1:
+                ax.set_xlabel(f"Day of Month (Starting: {self.windStartDate.strftime(self.DATE_FORMAT)})", fontsize=12)
+        
+        # Save wind direction figure
+        plt.savefig(graph_directory + 'all_stations_wind_direction.png', dpi=300, bbox_inches='tight')
+        plt.close(fig_direction)
 
 #         Graph values generated by GetRunup step
         if(len(self.datapointsRunup) > 0):
