@@ -1295,11 +1295,14 @@ class Grapher:
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", alpha=0.5, marker=".", s=5, zorder=4, color="purple")
 #             if(self.assetExists):
+            legendInitialized = False
             for assetIndex, assetLabel in enumerate(self.assetLabels):
                 if("m" == assetLabel[-1]):
-                    ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], label="Transects", zorder=3, alpha=0.7, marker=".", s=10, color="black")
                     if("Waves" in assetLabel):
-                        ax.annotate(assetLabel[:assetLabel.index(" Depth")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=20, color="black", label="7m depth" if legendInitialized else None)
+                        ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
+                    else:
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], label="Transects", zorder=3, alpha=0.7, marker=".", s=10, color="black")
 #             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
 
 #             Below line graphs mesh points
@@ -1311,7 +1314,7 @@ class Grapher:
             plt.axis(plotAxis)
             plt.title("Elevation Map")
 #             plt.title("Map Elevation - " + "surf distance: " + self.runupSurfDistance[index] + " offshore distance: " + self.runupOffshoreDistance[index] + " slope: " + self.runupAverageSlope[index])
-#             ax.legend(loc="upper right")
+            ax.legend(loc="upper left")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
@@ -1569,7 +1572,7 @@ class Grapher:
             if(self.tideExists):
                     ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
             plt.axis(plotAxis)
-            plt.title("Wave Significant Wave Height Swath")
+            plt.title("Significant Wave Height Swath")
 #             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
