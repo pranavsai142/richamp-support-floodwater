@@ -1300,11 +1300,11 @@ class Grapher:
             for assetIndex, assetLabel in enumerate(self.assetLabels):
                 if("m" == assetLabel[-1]):
                     if("Waves" in assetLabel):
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=20, color="black", label="7m depth" if !legendLabelInitialized else None)
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=20, color="black", label="7m depth" if not legendLabelInitialized else None)
                         legendLabelInitialized = True
                         ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
                     else:
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=10, color="black", label="Transects" if !transectLabelInitialized else None)
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=10, color="black", label="Transects" if not transectLabelInitialized else None)
                         transectLabelInitialized = True
 #             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
 
