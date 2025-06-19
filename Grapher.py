@@ -1293,16 +1293,17 @@ class Grapher:
             fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-            ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", alpha=0.5, marker=".", s=5, zorder=4, color="purple")
+            ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=5, zorder=4, color="purple")
 #             if(self.assetExists):
-            legendInitialized = False
+            legendLabelInitialized = False
+            transectLabelInitialized = False
             for assetIndex, assetLabel in enumerate(self.assetLabels):
                 if("m" == assetLabel[-1]):
                     if("Waves" in assetLabel):
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=20, color="black", label="7m depth" if legendInitialized else None)
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=20, color="black", label="7m depth" if legendLabelInitialized else None)
                         ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
                     else:
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], label="Transects", zorder=3, alpha=0.7, marker=".", s=10, color="black")
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=10, color="black", label="Transects" if transectLabelInitialized else None)
 #             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
 
 #             Below line graphs mesh points
