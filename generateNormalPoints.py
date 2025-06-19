@@ -78,7 +78,7 @@ def generate_deepline_distances(max_distance, spacing, initial_distance=75, num_
 # Example usage
 # max_distance = 12475  # Maximum distance in meters
 # spacing = 200         # Spacing between points in meters
-max_distance = 12475  # Maximum distance in meters
+max_distance = 15000  # Maximum distance in meters
 spacing = 200         # Spacing between points in meters
 DEEPLINE_DISTANCES_MAP = generate_deepline_distances(max_distance, spacing)
 

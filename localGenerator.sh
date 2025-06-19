@@ -193,32 +193,32 @@
 #  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
  
 #  Wave Map
- python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
---waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/rads.64.nc \
---waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_HS.63.nc \
---wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_DIR.63.nc \
---wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TMM10.63.nc \
---wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
+#  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/rads.64.nc \
+# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_HS.63.nc \
+# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_DIR.63.nc \
+# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TMM10.63.nc \
+# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TPS.63.nc \
+#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
 
 # Napatree Mesh Map
 # python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
 
 
 # Napatree Transect Graph
-# python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
-# --wavesExists true \
-# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/rads.64.nc \
-# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_HS.63.nc \
-# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_DIR.63.nc \
-# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TMM10.63.nc \
-# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TPS.63.nc \
-# --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.63.nc \
-# --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_wind/fort.63.nc \
-# --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_tides/fort.63.nc \
-# --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 \
-# --generateRunup true \
-# --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
+python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
+--wavesExists true \
+--waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/rads.64.nc \
+--waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_HS.63.nc \
+--wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_DIR.63.nc \
+--wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TMM10.63.nc \
+--wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TPS.63.nc \
+--waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.63.nc \
+--stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_wind/fort.63.nc \
+--tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_tides/fort.63.nc \
+--meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 \
+--generateRunup true \
+--tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
 
 
 # python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
