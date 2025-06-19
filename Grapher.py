@@ -1146,7 +1146,7 @@ class Grapher:
         if(len(self.mapWindTimes) > 0):
             vmin = 0
 #             vmax = math.ceil(self.maxWind)
-            vmax = 50
+            vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             if(self.windType == "FORT"):
@@ -1198,7 +1198,7 @@ class Grapher:
                     os.remove(graph_directory + filename)
             mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
             swathWind = np.max(mapSpeedsNoNan, axis=0)
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             if(self.windType == "FORT"):
                 contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
@@ -1387,7 +1387,7 @@ class Grapher:
             vmin = -1
             vminSwath = 0
 #             vmax = math.ceil(self.maxWater)
-            vmax = 3
+            vmax = 2
 #             vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
@@ -1562,7 +1562,7 @@ class Grapher:
                         self.mapWaveMaskedTriangles[index] = True
                         break
             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
@@ -1574,7 +1574,7 @@ class Grapher:
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=range(vmin, vmax+5, 5),
+                ticks=range(vmin, vmax+5, 1),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 label="Meters",
