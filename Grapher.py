@@ -2412,50 +2412,107 @@ class Grapher:
             plt.savefig(graph_directory + 'Napatree_all_runup.png')
             plt.close()
     
-            # Combined deepwater significant wave height (H_0) plots for all transects
+            # --- Figure 1: Combined Deepwater Significant Wave Height (H_0) ---
+            # Collect all deepwater SWH data for consistent y-axis
+            all_deepwater_swh = []
+            for index in range(numberOfRunupDatapoints):
+                all_deepwater_swh.extend(self.datapointsRunupHolmanLow[index])
+            
+            deepwater_swh_min = min(all_deepwater_swh) if all_deepwater_swh else 0.0
+            deepwater_swh_max = max(all_deepwater_swh) if all_deepwater_swh else 10.0
+            # Add 10% padding
+            deepwater_swh_padding = (deepwater_swh_max - deepwater_swh_min) * 0.1 if deepwater_swh_max != deepwater_swh_min else 0.5
+            deepwater_swh_y_min = max(0.0, deepwater_swh_min - deepwater_swh_padding)  # Non-negative for SWH
+            deepwater_swh_y_max = deepwater_swh_max + deepwater_swh_padding
+            
             fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
             for transect in range(1, 6):
                 ax = axes[transect - 1]
-    
+            
                 for index in range(numberOfRunupDatapoints):
                     stationName = self.runupLabels[index]
                     if str(transect) in stationName[0:stationName.index(" ")]:
                         ax.plot(self.runupTimes, self.datapointsRunupHolmanLow[index], label=stationName)
-    
+            
                 ax.legend(loc="upper left", fontsize=10)
-                ax.format_xdata = mdates.DateFormatter('%d')
+                ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                 ax.tick_params(axis='both', labelsize=12)
                 ax.set_ylabel(r"$H_0$ (meters)", fontsize=12)
                 ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater SWH", fontsize=16)
-    
-    #         plt.xlabel("Day", fontsize=14)
+                ax.set_ylim(deepwater_swh_y_min, deepwater_swh_y_max)  # Set consistent y-axis
+            
+            plt.xlabel("Day", fontsize=14)
             plt.tight_layout()
             plt.savefig(graph_directory + 'Napatree_all_deepwater_swh.png')
             plt.close()
-    
-            # Combined significant wave height (H_s) plots for all transects
+            
+            # --- Figure 2: Combined Significant Wave Height (H_s) ---
+            # Collect all SWH data for consistent y-axis
+            all_swh = []
+            for index in range(numberOfRunupDatapoints):
+                if self.runupLabels[index] in self.buoyLabels:
+                    swhIndex = self.buoyLabels.index(self.runupLabels[index])
+                    all_swh.extend(self.datapointsSWH[swhIndex])
+            
+            swh_min = min(all_swh) if all_swh else 0.0
+            swh_max = max(all_swh) if all_swh else 10.0
+            # Add 10% padding
+            swh_padding = (swh_max - swh_min) * 0.1 if swh_max != swh_min else 0.5
+            swh_y_min = max(0.0, swh_min - swh_padding)  # Non-negative for SWH
+            swh_y_max = swh_max + swh_padding
+            
             fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
             for transect in range(1, 6):
                 ax = axes[transect - 1]
-    
+            
                 for index in range(numberOfRunupDatapoints):
                     stationName = self.runupLabels[index]
-                    if str(transect) in stationName[0:stationName.index(" ")]:  # Match deepline indices
-                        swhIndex = self.buoyLabels.index(stationName)
-                        ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
-    
+                    if str(transect) in stationName[0:stationName.index(" ")]:
+                        if stationName in self.buoyLabels:
+                            swhIndex = self.buoyLabels.index(stationName)
+                            ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
+            
                 ax.legend(loc="upper left", fontsize=10)
-                ax.format_xdata = mdates.DateFormatter('%d')
+                ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                 ax.tick_params(axis='both', labelsize=12)
                 ax.set_ylabel(r"$H_s$ (meters)", fontsize=12)
                 ax.set_title(f"{self.titlePrefix}Napatree{transect} SWH", fontsize=16)
-    
-    #         plt.xlabel("Day", fontsize=14)
+                ax.set_ylim(swh_y_min, swh_y_max)  # Set consistent y-axis
+            
+            plt.xlabel("Day", fontsize=14)
             plt.tight_layout()
             plt.savefig(graph_directory + 'Napatree_all_swh.png')
             plt.close()
-    
-            # Combined elevation, max SWH, and max deepwater SWH plots for all transects
+            
+            # --- Figure 3: Combined Elevation, Max SWH, and Max Deepwater SWH ---
+            # Collect all data for consistent y-axes
+            all_swh_metrics = []
+            all_deepwater_swh_metrics = []
+            all_elevations = []
+            for transect in range(1, 6):
+                for index in range(numberOfRunupDatapoints):
+                    stationName = self.runupLabels[index]
+                    if str(transect) in stationName[0:stationName.index(" ")]:
+                        if stationName in self.buoyLabels:
+                            swhIndex = self.buoyLabels.index(stationName)
+                            all_swh_metrics.append(np.max(self.datapointsSWH[swhIndex]))
+                        if stationName in self.assetLabels:
+                            elevationIndex = self.assetLabels.index(stationName)
+                            all_elevations.append(self.datapointsElevation[elevationIndex])
+                        all_deepwater_swh_metrics.append(np.max(self.datapointsRunupHolmanLow[index]))
+            
+            swh_metrics_min = min(all_swh_metrics + all_deepwater_swh_metrics) if all_swh_metrics or all_deepwater_swh_metrics else 0.0
+            swh_metrics_max = max(all_swh_metrics + all_deepwater_swh_metrics) if all_swh_metrics or all_deepwater_swh_metrics else 10.0
+            swh_metrics_padding = (swh_metrics_max - swh_metrics_min) * 0.1 if swh_metrics_max != swh_metrics_min else 0.5
+            swh_metrics_y_min = max(0.0, swh_metrics_min - swh_metrics_padding)
+            swh_metrics_y_max = swh_metrics_max + swh_metrics_padding
+            
+            elevation_min = min(all_elevations) if all_elevations else -30.0
+            elevation_max = max(all_elevations) if all_elevations else 10.0
+            elevation_padding = (elevation_max - elevation_min) * 0.1 if elevation_max != elevation_min else 1.0
+            elevation_y_min = elevation_min - elevation_padding
+            elevation_y_max = elevation_max + elevation_padding
+            
             fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
             for transect in range(1, 6):
                 ax = axes[transect - 1]
@@ -2469,10 +2526,12 @@ class Grapher:
                 for index in range(numberOfRunupDatapoints):
                     stationName = self.runupLabels[index]
                     if str(transect) in stationName[0:stationName.index(" ")]:
-                        swhIndex = self.buoyLabels.index(stationName)
-                        deeplineSWH.append(np.max(self.datapointsSWH[swhIndex]))
-                        elevationIndex = self.assetLabels.index(stationName)
-                        deeplineElevations.append(self.datapointsElevation[elevationIndex])
+                        if stationName in self.buoyLabels:
+                            swhIndex = self.buoyLabels.index(stationName)
+                            deeplineSWH.append(np.max(self.datapointsSWH[swhIndex]))
+                        if stationName in self.assetLabels:
+                            elevationIndex = self.assetLabels.index(stationName)
+                            deeplineElevations.append(self.datapointsElevation[elevationIndex])
                         deeplineDeepwaterSWH.append(np.max(self.datapointsRunupHolmanLow[index]))
                         # Extract distance from name (e.g., "1000m" -> 1000)
                         distance_str = stationName[stationName.rindex(" ") + 1:-1]
@@ -2490,11 +2549,9 @@ class Grapher:
                 
                 # Distance for -7m depth
                 if np.any((deeplineElevations <= DEPTH_LINE_7M + 0.1) & (deeplineElevations >= DEPTH_LINE_7M - 0.1)):
-                    # Find nearest elevation to -7m
                     idx_7m = np.argmin(np.abs(deeplineElevations - DEPTH_LINE_7M))
                     distance_7m = deeplineDistances[idx_7m]
                 else:
-                    # Interpolate if exact match not found
                     try:
                         distance_7m = np.interp(DEPTH_LINE_7M, deeplineElevations[::-1], deeplineDistances[::-1])
                     except:
@@ -2503,11 +2560,9 @@ class Grapher:
             
                 # Distance for -20m depth
                 if np.any((deeplineElevations <= DEPTH_LINE_20M + 0.1) & (deeplineElevations >= DEPTH_LINE_20M - 0.1)):
-                    # Find nearest elevation to -20m
                     idx_20m = np.argmin(np.abs(deeplineElevations - DEPTH_LINE_20M))
                     distance_20m = deeplineDistances[idx_20m]
                 else:
-                    # Interpolate if exact match not found
                     try:
                         distance_20m = np.interp(DEPTH_LINE_20M, deeplineElevations[::-1], deeplineDistances[::-1])
                     except:
@@ -2527,7 +2582,11 @@ class Grapher:
                 ax.tick_params(axis='y', labelcolor='blue', labelsize=12)
                 ax2.tick_params(axis='y', labelcolor='red', labelsize=12)
                 ax.tick_params(axis='x', labelsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepline Metrics", fontsize=16)
+                ax.set_title(f"{self.titlePrefix} stations Deepline Metrics", fontsize=16)
+                
+                # Set consistent y-axes
+                ax.set_ylim(swh_metrics_y_min, swh_metrics_y_max)
+                ax2.set_ylim(elevation_y_min, elevation_y_max)
             
                 # Combine legends (only for first transect)
                 if transect == 1:
@@ -2539,7 +2598,6 @@ class Grapher:
             plt.tight_layout()
             plt.savefig(graph_directory + 'Napatree_all_deepline_metrics.png')
             plt.close()
-
 # 
 # # Graph all runup
 # 
