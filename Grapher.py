@@ -17,6 +17,10 @@ SMALL_SIZE = 14
 MEDIUM_SIZE = 18
 BIGGER_SIZE = 22
 
+DEPTH_LINE_7M = -7.0
+DEPTH_LINE_20M = -20.0
+DISTANCE_LINE_9000M = 9000.0
+
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
 plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
@@ -29,9 +33,6 @@ class Grapher:
     DATE_FORMAT = "%m/%d/%y-%HZ"    
     CONVERT_TO_WATER_DEPTH = False
     
-    DEPTH_LINE_7M = -7.0
-    DEPTH_LINE_20M = -20.0
-    DISTANCE_LINE_9000M = 9000.0
         
     def extractLatitudeIndex(self, nodeIndex):
         return int(nodeIndex[1: nodeIndex.find(",")])
