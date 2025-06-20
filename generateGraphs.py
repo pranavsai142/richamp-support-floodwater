@@ -468,7 +468,7 @@ def main():
 
         ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
 
-        (waterStartDateObject, waterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+#         (waterStartDateObject, waterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
 #         waterStartDateObject = datetime.datetime(year=2022, month=12, day=20, hour=0, tzinfo=datetime.timezone.utc)
 #         waterEndDateObject = datetime.datetime(year=2022, month=12, day=25, hour=0, tzinfo=datetime.timezone.utc)
         dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
@@ -478,14 +478,14 @@ def main():
     if(args.stillwaterExists):
         ADCIRC_STILLWATER_FILE = args.stillwater
         ADCIRC_STILLWATER_DATA_FILE = water_temp_directory + "adcirc_stillwater_data_file" + ".json"
-        (stillwaterStartDateObject, stillwaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_STILLWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_STILLWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+#         (stillwaterStartDateObject, stillwaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_STILLWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_STILLWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
         dataToGraph["STILLWATER"] = ADCIRC_STILLWATER_DATA_FILE
 
     print("args.tidewaterExists", args.tidewaterExists, flush=True)
     if(args.tidewaterExists):
         ADCIRC_TIDEWATER_FILE = args.tidewater
         ADCIRC_TIDEWATER_DATA_FILE = water_temp_directory + "adcirc_tidewater_data_file" + ".json"
-        (tidewaterStartDateObject, tidewaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_TIDEWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_TIDEWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+#         (tidewaterStartDateObject, tidewaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_TIDEWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_TIDEWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
         dataToGraph["TIDEWATER"] = ADCIRC_TIDEWATER_DATA_FILE
 
 
