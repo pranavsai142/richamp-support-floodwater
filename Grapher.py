@@ -1283,7 +1283,7 @@ class Grapher:
             plt.close()
             gc.collect()
         if(len(self.mapElevation) > 0):
-            vmin = -40
+            vmin = -15
             vmax = 10
 #             vmax = math.ceil(self.maxElevation)
             levels = 100
@@ -2202,7 +2202,7 @@ class Grapher:
                 ax.format_xdata = mdates.DateFormatter('%d')
                 stationName = self.runupLabels[index]
                 maxSetup = str(round(max(self.datapointsSetupStockdonLow[index]), 2)) + ", " + str(round(max(self.datapointsSetupStockdon[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station setup (SWAN, Stockdon): " + maxSetup, fontsize=24)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station Setup max (SWAN, Stockdon): " + maxSetup, fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Setup (meters)")
                 plt.xlabel("Date")
@@ -2305,7 +2305,7 @@ class Grapher:
                         ax.format_xdata = mdates.DateFormatter('%d')
                         stationName = self.tideLabels[datapointsWaterRunupIndex]
 #                         print("stationName of corresponding water station: ", stationName)
-                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " elevation max (water, swash): " + maxElevation)
+                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level Max ($\eta$, $\eta + \frac{S}{2}$): " + maxElevation)
                         plt.xlabel("Date")
                         plt.ylabel("Elevation (meters)")
                         
@@ -2435,13 +2435,13 @@ class Grapher:
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanLow[index], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel(r"$H_0$ (meters)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater SWH", fontsize=16)
             ax.set_ylim(deepwater_swh_y_min, deepwater_swh_y_max)
         
-        plt.xlabel("Day", fontsize=14)
+        plt.xlabel("Date", fontsize=14)
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_deepwater_swh.png')
         plt.close()
@@ -2472,13 +2472,15 @@ class Grapher:
                         ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel(r"$H_s$ (meters)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{index} SWH", fontsize=16)
             ax.set_ylim(swh_y_min, swh_y_max)
+            
+
         
-        plt.xlabel("Day", fontsize=14)
+        plt.xlabel("Date", fontsize=14)
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_swh.png')
         plt.close()
