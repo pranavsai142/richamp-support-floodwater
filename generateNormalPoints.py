@@ -3,6 +3,8 @@ import copy
 import math
 import datetime
 
+GENERATE_TRANSECT_POINTS = False
+
 HYPERRESOLUTION = 1
 HYPERPOINTS = 120
 MIN_SLOPELINE_DISTANCE = 200  # Minimum slopeline distance in meters
@@ -78,9 +80,10 @@ def generate_deepline_distances(max_distance, spacing, initial_distance=75, num_
 # Example usage
 # max_distance = 12475  # Maximum distance in meters
 # spacing = 200         # Spacing between points in meters
-max_distance = 15000  # Maximum distance in meters
-spacing = 200         # Spacing between points in meters
-DEEPLINE_DISTANCES_MAP = generate_deepline_distances(max_distance, spacing)
+if(GENERATE_TRANSECT_POINTS):
+    max_distance = 15000  # Maximum distance in meters
+    spacing = 200         # Spacing between points in meters
+    DEEPLINE_DISTANCES_MAP = generate_deepline_distances(max_distance, spacing)
 
 # if(True):
 #     DEEPLINE_DISTANCES_1 = [

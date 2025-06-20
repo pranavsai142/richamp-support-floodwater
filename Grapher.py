@@ -2202,9 +2202,10 @@ class Grapher:
                 ax.format_xdata = mdates.DateFormatter('%d')
                 stationName = self.runupLabels[index]
                 maxSetup = str(round(max(self.datapointsSetupStockdonLow[index]), 2)) + ", " + str(round(max(self.datapointsSetupStockdon[index]), 2))
-                plt.title(self.titlePrefix + stationName + " station setup max (SWAN, Stockdon): " + maxSetup, fontsize=24)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station setup (SWAN, Stockdon): " + maxSetup, fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
-                plt.ylabel("setup (meters)")
+                plt.ylabel("Setup (meters)")
+                plt.xlabel("Date")
                 plt.savefig(graph_directory + stationName + '_setup.png')
                 plt.close()
                 
@@ -2266,7 +2267,7 @@ class Grapher:
             
                 
 #                 Graph water_swash
-                if(len(self.datapointsWaters) > 0 and False):
+                if(len(self.datapointsWaters) > 0):
                     # Assuming self.findMatchingIndices is defined as per your earlier request
                     datapointsWaterRunupIndices = self.findMatchingIndices(self.tideLabels, self.runupLabels[index][0:9])
 #                     print("Finding Water stations corresponding to runup station")
@@ -2304,9 +2305,9 @@ class Grapher:
                         ax.format_xdata = mdates.DateFormatter('%d')
                         stationName = self.tideLabels[datapointsWaterRunupIndex]
 #                         print("stationName of corresponding water station: ", stationName)
-                        plt.title(self.titlePrefix + stationName + " station elevation max (water, swash): " + maxElevation, fontsize=18)
-                        plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT))
-                        plt.ylabel("elevation (meters)")
+                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " elevation max (water, swash): " + maxElevation)
+                        plt.xlabel("Date")
+                        plt.ylabel("Elevation (meters)")
                         
                         # Adjust layout to prevent label cutoff
                         plt.tight_layout()
