@@ -1933,7 +1933,7 @@ class Grapher:
 # Graph multipanel all stations water
 
         # Create a multi-panel figure with one subplot per station
-        if(numberOfWaterDatapoints > 0 or False):
+        if(numberOfWaterDatapoints > 0 and False):
             fig, axes = plt.subplots(numberOfWaterDatapoints, 1, figsize=(16, 4 * numberOfWaterDatapoints), sharex=True, constrained_layout=True)
             
             # Ensure axes is a 1D array for consistent indexing
@@ -2001,7 +2001,7 @@ class Grapher:
 # Graph multipanel wind
 
 # Collect all time data for shared x-axis limits
-        if(numberOfWindDatapoints > 0 or False):
+        if(numberOfWindDatapoints > 0 and False):
             all_times = []
             for index in range(numberOfWindDatapoints):
                 if len(self.datapointsSpeeds) > 0 or len(self.datapointsDirections) > 0:
