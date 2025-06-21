@@ -2380,38 +2380,56 @@ class Grapher:
                 plt.close()
 
 
-            # Combined runup plots for all transects
-            fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
-            for transect in range(1, 6):
-                ax = axes[transect - 1]
-                dune_heights = []
-                unique_heights = set()
-    
-                for index in range(numberOfRunupDatapoints):
-                    stationName = self.runupLabels[index]
-                    if str(transect) in stationName[0:stationName.index(" ")]:
-    #                     print("found label", self.runupLabels[index])
-    #                     print("runup values", self.datapointsRunupHolmanMid[index])
-                        dune_heights = self.datapointsDuneHeights[index]
-                        ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
-                        unique_heights.update(dune_heights)
-    
-                # Plot horizontal lines for each unique dune height
-                for height in unique_heights:
-                    if(transect >= 5):
-                        ax.axhline(y=height, linestyle='--', color='red', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
-                    else:
-                        ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
-    
-                ax.legend(loc="upper left", fontsize=10)
-                ax.format_xdata = mdates.DateFormatter('%d')
-                ax.tick_params(axis='both', labelsize=12)
-                ax.set_ylabel("Runup (meters)", fontsize=12)
-                ax.set_title(f"{self.titlePrefix}Napatree{transect} Runup", fontsize=14)
-    
-            plt.tight_layout()
-            plt.savefig(graph_directory + 'Napatree_all_runup.png')
-            plt.close()
+        # --- Combined Runup Plots for All Transects ---
+        # Collect all runup and dune height data for consistent y-axis
+        all_y_values = []
+        for transect in range(1, 6):
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    all_y_values.extend(self.datapointsRunupHolmanMid[index])
+                    all_y_values.extend(self.datapointsDuneHeights[index])
+        
+        y_min = min(all_y_values) if all_y_values else 0.0
+        y_max = max(all_y_values) if all_y_values else 10.0
+        # Add 10% padding
+        y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.5
+        y_min = max(0.0, y_min - y_padding)  # Ensure non-negative for runup
+        y_max = y_max + y_padding
+        
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+            dune_heights = []
+            unique_heights = set()
+        
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    dune_heights = self.datapointsDuneHeights[index]
+                    ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
+                    unique_heights.update(dune_heights)
+        
+            # Plot horizontal lines for each unique dune height
+            for height in unique_heights:
+                if transect >= 5:
+                    ax.axhline(y=height, linestyle='--', color='red', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
+                else:
+                    ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
+        
+            ax.legend(loc="upper left", fontsize=10)
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylabel("Runup (meters)", fontsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Runup", fontsize=14)
+            ax.set_ylim(y_min, y_max)  # Set consistent y-axis limits
+        
+        # Set x-axis label on the bottom subplot
+        axes[-1].set_xlabel("Day", fontsize=14)
+        
+        plt.tight_layout()
+        plt.savefig(graph_directory + 'Napatree_all_runup.png')
+        plt.close()
     
         # --- Figure 1: Combined Deepwater Significant Wave Height (H_0) ---
         # Collect all deepwater SWH data for consistent y-axis
