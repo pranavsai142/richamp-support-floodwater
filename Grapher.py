@@ -2421,14 +2421,14 @@ class Grapher:
                     ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel("Runup (meters)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Runup", fontsize=14)
             ax.set_ylim(y_min, y_max)  # Set consistent y-axis limits
         
         # Set x-axis label on the bottom subplot
-        axes[-1].set_xlabel("Day", fontsize=14)
+        axes[-1].set_xlabel("Date", fontsize=14)
         
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_runup.png')
