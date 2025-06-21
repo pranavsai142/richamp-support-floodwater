@@ -2204,7 +2204,7 @@ class Grapher:
                 ax.format_xdata = mdates.DateFormatter('%d')
                 stationName = self.runupLabels[index]
                 maxSetup = str(round(max(self.datapointsSetupStockdonLow[index]), 2)) + ", " + str(round(max(self.datapointsSetupStockdon[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " Setup (Max - SWAN, Stockdon:  " + maxSetup + " meters)", fontsize=24)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " Setup (Max SWAN, Stockdon: " + maxSetup + " meters)", fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Setup (meters)")
                 plt.xlabel("Date")
@@ -2307,7 +2307,7 @@ class Grapher:
                         ax.format_xdata = mdates.DateFormatter('%d')
                         stationName = self.tideLabels[datapointsWaterRunupIndex]
 #                         print("stationName of corresponding water station: ", stationName)
-                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max - $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " meters)")
+                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " meters)")
                         plt.xlabel("Date")
                         plt.ylabel("Elevation (meters)")
                         
