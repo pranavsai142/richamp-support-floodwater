@@ -1735,7 +1735,7 @@ class Grapher:
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], label="Obs")
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + " Significant Wave Height (Max: " + max(self.datapointsSWH[index]) + " meters )")
+                    plt.title(stationName + " Significant Wave Height (Max: " + str(round(max(self.datapointsSWH[index]), 2)) + " meters )")
                     plt.xlabel("Date")                    
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("SWH (meters)")
@@ -1774,7 +1774,7 @@ class Grapher:
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsPWP[index], label="Obs")
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + " Peak Wave Period (Max: " + max(self.datapointsPWP[index]) + " seconds )")
+                    plt.title(stationName + " Peak Wave Period (Max: " + str(round(max(self.datapointsPWP[index]), 2)) + " seconds )")
                     plt.xlabel("Date")
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("PWP (seconds)")
