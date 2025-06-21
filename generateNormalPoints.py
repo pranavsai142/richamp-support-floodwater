@@ -3,7 +3,7 @@ import copy
 import math
 import datetime
 
-GENERATE_TRANSECT_POINTS = False
+GENERATE_TRANSECT_POINTS = True
 
 HYPERRESOLUTION = 1
 HYPERPOINTS = 120
@@ -81,7 +81,7 @@ def generate_deepline_distances(max_distance, spacing, initial_distance=75, num_
 # max_distance = 12475  # Maximum distance in meters
 # spacing = 200         # Spacing between points in meters
 if(GENERATE_TRANSECT_POINTS):
-    max_distance = 15000  # Maximum distance in meters
+    max_distance = 25000  # Maximum distance in meters
     spacing = 200         # Spacing between points in meters
     DEEPLINE_DISTANCES_MAP = generate_deepline_distances(max_distance, spacing)
 
