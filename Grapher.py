@@ -2506,6 +2506,45 @@ class Grapher:
         plt.savefig(graph_directory + 'Napatree_all_swh.png')
         plt.close()
         
+        # --- Combined Peak Wave Period (T_p) ---
+        # Collect all PWP data for consistent y-axis
+        all_pwp = []
+        for index in range(numberOfRunupDatapoints):
+            if self.runupLabels[index] in self.buoyLabels:
+                pwpIndex = self.buoyLabels.index(self.runupLabels[index])
+                all_pwp.extend(self.datapointsPWP[pwpIndex])
+        
+        pwp_min = min(all_pwp) if all_pwp else 0.0
+        pwp_max = max(all_pwp) if all_pwp else 20.0  # Reasonable max for wave periods
+        pwp_padding = (pwp_max - pwp_min) * 0.1 if pwp_max != pwp_min else 0.5
+        pwp_y_min = max(0.0, pwp_min - pwp_padding)  # Non-negative for wave periods
+        pwp_y_max = pwp_max + pwp_padding
+        
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+        
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    if stationName in self.buoyLabels:
+                        pwpIndex = self.buoyLabels.index(stationName)
+                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
+        
+            ax.legend(loc="upper left", fontsize=10)
+            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylabel(r"$T_p$ (seconds)", fontsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} PWP", fontsize=16)
+            ax.set_ylim(pwp_y_min, pwp_y_max)  # Consistent y-axis limits
+        
+        # Set x-axis label on the bottom subplot
+        axes[-1].set_xlabel("Date", fontsize=14)
+        
+        plt.tight_layout()
+        plt.savefig(graph_directory + 'Napatree_all_pwp.png')
+        plt.close()
+        
         # --- Figure 3: Combined Elevation, Max SWH, and Max Deepwater SWH ---
         # Collect all data for consistent y-axes
         all_swh_metrics = []
