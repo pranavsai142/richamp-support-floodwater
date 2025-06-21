@@ -21,6 +21,8 @@ DEPTH_LINE_7M = -7.0
 DEPTH_LINE_20M = -20.0
 DISTANCE_LINE_9000M = 9000.0
 
+GRAPH_SWASH = False
+
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
 plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
@@ -2267,7 +2269,7 @@ class Grapher:
             
                 
 #                 Graph water_swash
-                if(len(self.datapointsWaters) > 0):
+                if(len(self.datapointsWaters) > 0 and GRAPH_SWASH):
                     # Assuming self.findMatchingIndices is defined as per your earlier request
                     datapointsWaterRunupIndices = self.findMatchingIndices(self.tideLabels, self.runupLabels[index][0:9])
 #                     print("Finding Water stations corresponding to runup station")
