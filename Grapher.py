@@ -2392,11 +2392,12 @@ class Grapher:
                     all_y_values.extend(self.datapointsRunupHolmanMid[index])
                     all_y_values.extend(self.datapointsDuneHeights[index])
         
-        y_min = min(all_y_values) if all_y_values else 0.0
+        # Compute global min and max
+        y_min = min(all_y_values) if all_y_values else -10.0  # Fallback if no data
         y_max = max(all_y_values) if all_y_values else 10.0
         # Add 10% padding
         y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.5
-        y_min = max(0.0, y_min - y_padding)  # Ensure non-negative for runup
+        y_min = y_min - y_padding  # Allow negative values
         y_max = y_max + y_padding
         
         fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
@@ -2432,7 +2433,7 @@ class Grapher:
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_runup.png')
         plt.close()
-    
+
         # --- Figure 1: Combined Deepwater Significant Wave Height (H_0) ---
         # Collect all deepwater SWH data for consistent y-axis
         all_deepwater_swh = []
