@@ -2730,7 +2730,7 @@ class Grapher:
                     deeplineDemElevations[np.isnan(deeplineDemElevations)] = 0.0  # Fallback: replace NaN with 0
         
             # Plot elevation lines
-            ax.plot(deeplineDistances, deeplineElevations, label="Elevation", color='red', linestyle="--")
+            ax.plot(deeplineDistances, deeplineElevations, label="Mesh", color='red', linestyle="--")
             ax.plot(deeplineDistances, deeplineDemElevations, label="DEM", color='black', linestyle="-")
         
             # Customize axes
