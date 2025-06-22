@@ -1394,7 +1394,7 @@ class Grapher:
             gc.collect()
         if(len(self.mapWaterTimes) > 0):
             vmin = -1
-            vminSwath = 0
+            vminSwath = 1
 #             vmax = math.ceil(self.maxWater)
             vmax = 2
 #             vmax = 20
@@ -1499,7 +1499,7 @@ class Grapher:
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=range(vminSwath, vmax+5, 1),
+                ticks=np.arange(vminSwath, vmax, 0.5),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 label="Meters",
