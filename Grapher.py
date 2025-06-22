@@ -1298,17 +1298,17 @@ class Grapher:
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=5, zorder=4, color="purple")
 #             if(self.assetExists):
-            legendLabelInitialized = False
-            transectLabelInitialized = False
-            for assetIndex, assetLabel in enumerate(self.assetLabels):
-                if("m" == assetLabel[-1]):
-                    if("Waves" in assetLabel):
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=20, color="black", label="7m depth" if not legendLabelInitialized else None)
-                        legendLabelInitialized = True
-                        ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
-                    else:
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=10, color="black", label="Transects" if not transectLabelInitialized else None)
-                        transectLabelInitialized = True
+#             legendLabelInitialized = False
+#             transectLabelInitialized = False
+#             for assetIndex, assetLabel in enumerate(self.assetLabels):
+#                 if("m" == assetLabel[-1]):
+#                     if("Waves" in assetLabel):
+#                         ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=20, color="black", label="7m depth" if not legendLabelInitialized else None)
+#                         legendLabelInitialized = True
+#                         ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
+#                     else:
+#                         ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=10, color="black", label="Transects" if not transectLabelInitialized else None)
+#                         transectLabelInitialized = True
 #             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
 
 #             Below line graphs mesh points
@@ -1737,7 +1737,8 @@ class Grapher:
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], label="Obs")
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + " Significant Wave Height (Max: " + str(round(max(self.datapointsSWH[index]), 2)) + " meters )")
+                    stationTitle = str(round(max(self.datapointsSWH[index]), 2)) + ", " + str(round(max(self.buoyDatapointsSWH[index]), 2)) 
+                    plt.title(stationName + r" Significant Wave Height (Max $H_s$, Obs: " + stationTitle + " meters)")
                     plt.xlabel("Date")                    
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("SWH (meters)")
@@ -1776,7 +1777,8 @@ class Grapher:
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsPWP[index], label="Obs")
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + " Peak Wave Period (Max: " + str(round(max(self.datapointsPWP[index]), 2)) + " seconds )")
+                    stationTitle = str(round(max(self.datapointsPWP[index]), 2)) + ", " + str(round(max(self.buoyDatapointsPWP[index]), 2)) 
+                    plt.title(stationName + r" Peak Wave Period (Max $T_p$, Obs: " + stationTitle + " seconds)")
                     plt.xlabel("Date")
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("PWP (seconds)")

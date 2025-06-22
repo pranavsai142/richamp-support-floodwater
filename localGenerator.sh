@@ -238,7 +238,6 @@ python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
 --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.14 \
 --generateRunup true \
 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_runup_temp/ --backgroundChoice NAPATREE
-
 # python generateGraphs.py --obsExists true --stations RUNUP_NAPATREE_STATIONS.json --meshExists true --mesh /Users/pranav/projects/trackfiles/v18.fort.14 --backgroundChoice NAPATREE --tempDir temp
 
 # python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
