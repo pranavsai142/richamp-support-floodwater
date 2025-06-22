@@ -4,6 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+requests = "*"
+utm = "*"
+netcdf4 = "*"
+haversine = "*"
+imageio = "*"
+geographiclib = "*"
 
 [dev-packages]
 

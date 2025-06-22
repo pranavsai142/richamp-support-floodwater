@@ -2652,6 +2652,65 @@ class Grapher:
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_deepline_metrics.png')
         plt.close()
+        
+        # --- Combined Elevation Profiles for All Transects ---
+        # Collect all elevation data for consistent y-axis
+        all_elevations = []
+        all_dem_elevations = []
+        for transect in range(1, 6):
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    if stationName in self.assetLabels:
+                        elevationIndex = self.assetLabels.index(stationName)
+                        all_elevations.append(self.datapointsElevation[elevationIndex])
+                        all_dem_elevations.append(self.assetDatapointsElevation[elevationIndex])
+        
+        # Compute global y-axis limits
+        elevation_min = min(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else -30.0
+        elevation_max = max(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else 10.0
+        elevation_padding = (elevation_max - elevation_min) * 0.1 if elevation_max != elevation_min else 1.0
+        elevation_y_min = elevation_min - elevation_padding
+        elevation_y_max = elevation_max + elevation_padding
+        
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+        
+            deeplineDistances = []
+            deeplineElevations = []
+            deeplineDemElevations = []
+        
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    if stationName in self.assetLabels:
+                        elevationIndex = self.assetLabels.index(stationName)
+                        deeplineElevations.append(self.datapointsElevation[elevationIndex])
+                        deeplineDemElevations.append(self.assetDatapointsElevation[elevationIndex])
+                        distance_str = stationName[stationName.rindex(" ") + 1:-1]
+                        deeplineDistances.append(int(distance_str))
+        
+            # Plot elevation lines
+            ax.plot(deeplineDistances, deeplineElevations, label="Elevation", color='red', linestyle="--")
+            ax.plot(deeplineDistances, deeplineDemElevations, label="DEM", color='black', linestyle="-")
+        
+            # Customize axes
+            ax.set_ylabel("Elevation (meters)", fontsize=12)
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Elevation Profile", fontsize=16)
+            ax.set_ylim(elevation_y_min, elevation_y_max)  # Consistent y-axis limits
+        
+            # Add legend
+            ax.legend(loc="upper right", fontsize=10)
+        
+            # Set x-axis label on the bottom subplot
+            if transect == 5:
+                ax.set_xlabel("Distance (meters)", fontsize=14)
+        
+        plt.tight_layout()
+        plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
+        plt.close()
 # 
 # # Graph all runup
 # 
