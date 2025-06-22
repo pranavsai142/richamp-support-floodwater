@@ -16,16 +16,12 @@ class GetObsElevation:
         start_time = time.time()
         # Initialize API endpoints and parameters
         BASE_URL = "https://portal.opentopography.org/API/globaldem"
-        GEOID_URL = "https://geodesy.noaa.gov/api/geoid/ght"
         temp_directory = OBS_ASSET_DATA_FILE[0:OBS_ASSET_DATA_FILE.rfind("/") + 1]
         BATHYMETRY_FILE = os.path.join(temp_directory, "bathymetry.txt")
 
         # Load stations data
         with open(STATIONS_FILE) as stations_file:
             stationsDict = json.load(stations_file)
-
-        # Cache for geoid heights to avoid duplicate API calls
-        self.geoid_cache = {}
 
         # Loading animation
         def loading_animation(message, stop_event):
@@ -49,32 +45,6 @@ class GetObsElevation:
             sys.stdout.write(f'\r[{bar}] {percent:.1f}%')
             sys.stdout.flush()
 
-        # Query NGS Geoid API for geoid height
-        def get_geoid_height(lat, lon, model="GEOID18"):
-            cache_key = (round(lat, 6), round(lon, 6))
-            if cache_key in self.geoid_cache:
-                return self.geoid_cache[cache_key]
-
-            try:
-                params = {
-                    "lat": lat,
-                    "lon": lon,
-                    "model": model
-                }
-                response = requests.get(GEOID_URL, params=params, timeout=5)
-                if response.status_code != 200:
-                    raise Exception(f"Geoid API error: Status code {response.status_code}")
-                data = response.json()
-                geoid_height = float(data["geoidHeight"])
-                error = float(data["error"])
-                print(f"Geoid height for ({lat:.6f}, {lon:.6f}): {geoid_height:.3f} m (error: {error:.3f} m)")
-                self.geoid_cache[cache_key] = geoid_height
-                return geoid_height
-            except Exception as e:
-                print(f"Failed to fetch geoid height for ({lat:.6f}, {lon:.6f}): {e}. Using default 0.0 m.")
-                self.geoid_cache[cache_key] = 0.0
-                return 0.0
-
         # Determine bathymetry bounding box (all points)
         lats = []
         lons = []
@@ -86,18 +56,20 @@ class GetObsElevation:
                 lats.append(lat)
                 lons.append(lon)
             except (KeyError, ValueError):
-                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning NaN elevation.")
+                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning elevation 0.0.")
                 continue
 
         if not lats or not lons:
-            raise ValueError("No valid station coordinates found in STATIONS_FILE for bathymetry query.")
-
-        # Define bathymetry bounding box with 0.1-degree padding
-        bathy_padding = 0.1
-        bathy_north = max(lats) + bathy_padding
-        bathy_south = min(lats) - bathy_padding
-        bathy_east = max(lons) + bathy_padding
-        bathy_west = min(lons) - bathy_padding
+            print("Warning: No valid coordinates found. All elevations will be 0.0.")
+            bathy_success = False
+        else:
+            # Define bathymetry bounding box with 0.1-degree padding
+            bathy_padding = 0.1
+            bathy_north = max(lats) + bathy_padding
+            bathy_south = min(lats) - bathy_padding
+            bathy_east = max(lons) + bathy_padding
+            bathy_west = min(lons) - bathy_padding
+            bathy_success = True
 
         # Download bathymetry data
         def downloadBathymetryData(north, south, east, west, dem_type="GEBCOIceTopo", output_format="AAIGrid", api_key="6dd04fe1048e9dfbfc6652feb1b733b1"):
@@ -155,77 +127,75 @@ class GetObsElevation:
 
         def InterpolatePoint(grid, Y, X, point, method='linear'):
             if grid.size == 0:
+                print(f"Interpolation failed for point {point}: Empty grid")
                 return np.nan
             grid = np.ma.masked_invalid(grid) if not np.ma.is_masked(grid) else grid
             try:
-                interpolator = RegularGridInterpolator((Y, X), grid, method=method, bounds_error=False, fill_value=None)
+                interpolator = RegularGridInterpolator((Y, X), grid, method=method, bounds_error=False, fill_value=np.nan)
                 value = interpolator(np.flip(point))  # Flip point since interpolator expects (y,x)
-                return float(value) if not np.ma.is_masked(value) else np.nan
+                value_float = float(value) if not np.ma.is_masked(value) and not np.isnan(value) else np.nan
+                print(f"Interpolated depth at {point}: {value_float:.3f} m" if not np.isnan(value_float) else f"Interpolated depth at {point}: NaN")
+                return value_float
             except ValueError as e:
                 print(f"Interpolation error at point {point}: {e}")
                 return np.nan
 
-        def filterElevation(elevation, lat, lon, station_key):
+        def filterElevation(elevation, station_key):
             """
-            Convert GEBCO bathymetry depths (positive downward, MSL) to NAVD88 elevations and cap outliers:
+            Filter elevation values to cap extreme outliers:
             - Depths below -50 meters are set to -10 meters.
             - Heights above 1000 meters are set to 10 meters.
+            - Set NaN to 0.0.
             """
             if np.isnan(elevation):
-                print(f"Station {station_key}: Elevation is NaN, returning NaN")
-                return np.nan
-
-            # GEBCO depth (positive downward) to MSL elevation (negative for depths)
-            elevation_msl = -elevation
-            print(f"Station {station_key}: Raw GEBCO depth {elevation:.3f} m, MSL elevation {elevation_msl:.3f} m")
-
-            # Convert to NAVD88 using geoid height
-            geoid_height = get_geoid_height(lat, lon)
-            elevation_navd88 = elevation_msl + geoid_height
-            print(f"Station {station_key}: Geoid height {geoid_height:.3f} m, NAVD88 elevation {elevation_navd88:.3f} m")
-
-            # Apply outlier filter
-            if elevation_navd88 < -50:
-                print(f"Station {station_key}: NAVD88 elevation {elevation_navd88:.3f} m capped at -10.0 m")
+                print(f"Station {station_key}: Elevation is NaN, setting to 0.0")
+                return 0.0
+            if elevation < -50:
+                print(f"Station {station_key}: Elevation {elevation:.3f} m capped at -10.0 m")
                 return -10.0
-            if elevation_navd88 > 1000:
-                print(f"Station {station_key}: NAVD88 elevation {elevation_navd88:.3f} m capped at 10.0 m")
+            if elevation > 1000:
+                print(f"Station {station_key}: Elevation {elevation:.3f} m capped at 10.0 m")
                 return 10.0
-            print(f"Station {station_key}: Final NAVD88 elevation {elevation_navd88:.3f} m")
-            return float(elevation_navd88)
+            print(f"Station {station_key}: Final elevation {elevation:.3f} m")
+            return float(elevation)
 
         def readBathymetryData():
             try:
                 with open(BATHYMETRY_FILE, 'r') as file:
                     lines = file.readlines()
-                    longitudeDelta = int(lines[0][13::].strip())
-                    latitudeDelta = int(lines[1][13::].strip())
-                    minLongitude = float(lines[2][13::].strip())
-                    minLatitude = float(lines[3][13::].strip())
-                    coordinateDelta = float(lines[4][13::].strip())
-                    noDataValue = float(lines[5][13::].strip())
+                    longitudeDelta = int(lines[0][13:].strip())
+                    latitudeDelta = int(lines[1][13:].strip())
+                    minLongitude = float(lines[2][13:].strip())
+                    minLatitude = float(lines[3][13:].strip())
+                    coordinateDelta = float(lines[4][13:].strip())
+                    noDataValue = float(lines[5][13:].strip())
 
                     maxLongitude = minLongitude + (longitudeDelta * coordinateDelta)
                     maxLatitude = minLatitude + (latitudeDelta * coordinateDelta)
 
                     longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
-                    latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)
+                    latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
 
                     bathymetryValues = []
-                    for line in lines[6::]:
+                    for line in lines[6:]:
                         data = np.array(line.split(), dtype=float)
                         bathymetryValues.append(data)
+                    bathymetryValues = np.array(bathymetryValues)
                     bathymetryValues = np.ma.masked_equal(bathymetryValues, noDataValue)
-                    return np.array(bathymetryValues), np.array(latitudes), np.array(longitudes)
+                    print(f"Bathymetry grid shape: {bathymetryValues.shape}, sample value: {bathymetryValues[0,0]:.3f} m, min: {np.min(bathymetryValues):.3f} m, max: {np.max(bathymetryValues):.3f} m")
+                    return bathymetryValues, latitudes, longitudes
             except Exception as e:
                 print(f"Error reading bathymetry data: {e}")
                 return None, None, None
 
-        # Download bathymetry data once
-        bathy_success = downloadBathymetryData(bathy_north, bathy_south, bathy_east, bathy_west)
+        # Download bathymetry data if valid coordinates exist
         bathymetryValues, bathy_latitudes, bathy_longitudes = (None, None, None)
         if bathy_success:
-            bathymetryValues, bathy_latitudes, bathy_longitudes = readBathymetryData()
+            bathy_success = downloadBathymetryData(bathy_north, bathy_south, bathy_east, bathy_west)
+            if bathy_success:
+                bathymetryValues, bathy_latitudes, bathy_longitudes = readBathymetryData()
+            else:
+                print("Warning: Bathymetry download failed. All elevations will be 0.0.")
 
         # Initialize output dictionary
         elevationDict = {}
@@ -233,30 +203,32 @@ class GetObsElevation:
         # Process each station
         for key in stationsDict["ASSET"].keys():
             stationDict = stationsDict["ASSET"][key]
+            elevationDict[key] = {"elevation": 0.0}  # Default elevation
+
             try:
                 lat = float(stationDict["latitude"])
                 lon = float(stationDict["longitude"])
             except (KeyError, ValueError):
-                elevationDict[key] = {"elevation": np.nan}
+                print(f"Station {key}: Invalid coordinates, elevation set to 0.0")
                 continue
 
-            elevationDict[key] = {}
             elevation = np.nan
 
             # Use bathymetry data if available
             if bathy_success and bathymetryValues is not None:
                 elevation = InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lon, lat))
 
-            # Apply elevation filter with NAVD88 conversion
-            elevationDict[key]["elevation"] = filterElevation(elevation, lat, lon, key)
+            # Apply elevation filter
+            elevationDict[key]["elevation"] = filterElevation(elevation, key)
 
-        # Ensure all stations are in output
+        # Ensure all ASSET entries have an elevation
         for key in stationsDict["ASSET"].keys():
             if key not in elevationDict:
-                elevationDict[key] = {"elevation": np.nan}
+                elevationDict[key] = {"elevation": 0.0}
+                print(f"Station {key}: No elevation found, set to 0.0")
 
         # Log performance metrics
-        print(f"\nCompleted in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, 1 bathymetry API call, and {len(self.geoid_cache)} geoid API calls for {len(stationsDict['ASSET'])} stations.")
+        print(f"\nCompleted in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_success else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
 
         # Save to output file
         with open(OBS_ASSET_DATA_FILE, "w") as outfile:
