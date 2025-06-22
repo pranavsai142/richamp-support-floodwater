@@ -224,7 +224,7 @@
 
 # Dec 2023 Figures
 
-Transect Graph/ Mesh Map, and Runup
+# Transect Graph/ Mesh Map, and Runup
 python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
 --wavesExists true \
 --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/rads.64.nc \

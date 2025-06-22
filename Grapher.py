@@ -2597,33 +2597,50 @@ class Grapher:
                     distance_str = stationName[stationName.rindex(" ") + 1:-1]
                     deeplineDistances.append(int(distance_str))
         
+            # Sort by distance to ensure processing from closest to farthest
+            sorted_indices = np.argsort(deeplineDistances)
+            deeplineDistances = np.array(deeplineDistances)[sorted_indices]
+            deeplineElevations = np.array(deeplineElevations)[sorted_indices]
+            deeplineSWH = np.array(deeplineSWH)[sorted_indices]
+            deeplineDeepwaterSWH = np.array(deeplineDeepwaterSWH)[sorted_indices]
+        
             ax.plot(deeplineDistances, deeplineSWH, label="Max SWH", color='blue')
             ax.plot(deeplineDistances, deeplineDeepwaterSWH, label="Max Deepwater SWH", color='green')
             ax2.plot(deeplineDistances, deeplineElevations, label="Elevation", color='red', linestyle="--")
         
-            deeplineElevations = np.array(deeplineElevations)
-            deeplineDistances = np.array(deeplineDistances)
-            
-            if np.any((deeplineElevations <= DEPTH_LINE_7M + 0.1) & (deeplineElevations >= DEPTH_LINE_7M - 0.1)):
-                idx_7m = np.argmin(np.abs(deeplineElevations - DEPTH_LINE_7M))
+            # Find first point closest to 0 distance for -7m depth
+            mask_7m = (deeplineElevations <= DEPTH_LINE_7M + 0.1) & (deeplineElevations >= DEPTH_LINE_7M - 0.1)
+            if np.any(mask_7m):
+                idx_7m = np.where(mask_7m)[0][0]  # First qualifying index
                 distance_7m = deeplineDistances[idx_7m]
             else:
                 try:
-                    distance_7m = np.interp(DEPTH_LINE_7M, deeplineElevations[::-1], deeplineDistances[::-1])
+                    # Interpolate to find first crossing
+                    distance_7m = np.interp(DEPTH_LINE_7M, deeplineElevations, deeplineDistances)
+                    if not (deeplineDistances[0] <= distance_7m <= deeplineDistances[-1]):
+                        distance_7m = None
+                        print(f"Warning: Interpolated distance for depth {DEPTH_LINE_7M}m out of range in transect {transect}")
                 except:
                     distance_7m = None
-                    print(f"Warning: Could not find or interpolate distance for depth {DEPTH_LINE_7M}m in transect {transect}")
+                    print(f"Warning: Could not interpolate distance for depth {DEPTH_LINE_7M}m in transect {transect}")
         
-            if np.any((deeplineElevations <= DEPTH_LINE_20M + 0.1) & (deeplineElevations >= DEPTH_LINE_20M - 0.1)):
-                idx_20m = np.argmin(np.abs(deeplineElevations - DEPTH_LINE_20M))
+            # Find first point closest to 0 distance for -20m depth
+            mask_20m = (deeplineElevations <= DEPTH_LINE_20M + 0.1) & (deeplineElevations >= DEPTH_LINE_20M - 0.1)
+            if np.any(mask_20m):
+                idx_20m = np.where(mask_20m)[0][0]  # First qualifying index
                 distance_20m = deeplineDistances[idx_20m]
             else:
                 try:
-                    distance_20m = np.interp(DEPTH_LINE_20M, deeplineElevations[::-1], deeplineDistances[::-1])
+                    # Interpolate to find first crossing
+                    distance_20m = np.interp(DEPTH_LINE_20M, deeplineElevations, deeplineDistances)
+                    if not (deeplineDistances[0] <= distance_20m <= deeplineDistances[-1]):
+                        distance_20m = None
+                        print(f"Warning: Interpolated distance for depth {DEPTH_LINE_20M}m out of range in transect {transect}")
                 except:
                     distance_20m = None
-                    print(f"Warning: Could not find or interpolate distance for depth {DEPTH_LINE_20M}m in transect {transect}")
+                    print(f"Warning: Could not interpolate distance for depth {DEPTH_LINE_20M}m in transect {transect}")
         
+            # Plot vertical lines
             if distance_7m is not None:
                 ax.axvline(x=distance_7m, color='purple', linestyle='--', label='Depth -7m', alpha=0.7)
             if distance_20m is not None:
