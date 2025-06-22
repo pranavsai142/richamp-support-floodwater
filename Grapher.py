@@ -2665,7 +2665,7 @@ class Grapher:
         plt.close()
         
         # --- Combined Elevation Profiles for All Transects ---
-        # Collect all elevation data for consistent y-axis
+        # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
         all_dem_elevations = []
         for transect in range(1, 6):
@@ -2674,10 +2674,14 @@ class Grapher:
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
-                        all_elevations.append(self.datapointsElevation[elevationIndex])
-                        all_dem_elevations.append(self.assetDatapointsElevation[elevationIndex])
+                        elev = self.datapointsElevation[elevationIndex]
+                        dem_elev = self.assetDatapointsElevation[elevationIndex]
+                        if not np.isnan(elev):
+                            all_elevations.append(elev)
+                        if not np.isnan(dem_elev):
+                            all_dem_elevations.append(dem_elev)
         
-        # Compute global y-axis limits
+        # Compute global y-axis limits, handling empty lists
         elevation_min = min(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else -30.0
         elevation_max = max(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else 10.0
         elevation_padding = (elevation_max - elevation_min) * 0.1 if elevation_max != elevation_min else 1.0
@@ -2692,6 +2696,7 @@ class Grapher:
             deeplineElevations = []
             deeplineDemElevations = []
         
+            # Collect data for the transect
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
@@ -2701,6 +2706,28 @@ class Grapher:
                         deeplineDemElevations.append(self.assetDatapointsElevation[elevationIndex])
                         distance_str = stationName[stationName.rindex(" ") + 1:-1]
                         deeplineDistances.append(int(distance_str))
+        
+            # Convert to numpy arrays and sort by distance
+            deeplineDistances = np.array(deeplineDistances)
+            deeplineElevations = np.array(deeplineElevations)
+            deeplineDemElevations = np.array(deeplineDemElevations)
+            sorted_indices = np.argsort(deeplineDistances)
+            deeplineDistances = deeplineDistances[sorted_indices]
+            deeplineElevations = deeplineElevations[sorted_indices]
+            deeplineDemElevations = deeplineDemElevations[sorted_indices]
+        
+            # Interpolate NaN values in deeplineDemElevations
+            if np.any(np.isnan(deeplineDemElevations)):
+                valid_mask = ~np.isnan(deeplineDemElevations)
+                if np.sum(valid_mask) >= 2:  # Need at least 2 valid points for interpolation
+                    deeplineDemElevations = np.interp(
+                        deeplineDistances,
+                        deeplineDistances[valid_mask],
+                        deeplineDemElevations[valid_mask]
+                    )
+                else:
+                    print(f"Warning: Insufficient valid DEM elevation data for interpolation in transect {transect}")
+                    deeplineDemElevations[np.isnan(deeplineDemElevations)] = 0.0  # Fallback: replace NaN with 0
         
             # Plot elevation lines
             ax.plot(deeplineDistances, deeplineElevations, label="Elevation", color='red', linestyle="--")

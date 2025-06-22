@@ -56,11 +56,11 @@ class GetObsElevation:
                 lats.append(lat)
                 lons.append(lon)
             except (KeyError, ValueError):
-                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning elevation 0.0.")
+                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning elevation NaN.")
                 continue
 
         if not lats or not lons:
-            print("Warning: No valid coordinates found. All elevations will be 0.0.")
+            print("Warning: No valid coordinates found. Bathymetry query skipped.")
             bathy_success = False
         else:
             # Define bathymetry bounding box with 0.1-degree padding
@@ -142,20 +142,19 @@ class GetObsElevation:
 
         def filterElevation(elevation, station_key):
             """
-            Filter elevation values to cap extreme outliers:
-            - Depths below -50 meters are set to -10 meters.
-            - Heights above 1000 meters are set to 10 meters.
-            - Set NaN to 0.0.
+            Filter elevation values to handle outliers:
+            - Depths below -50 meters or heights above 1000 meters are set to NaN.
+            - Keep NaN for invalid elevations.
             """
             if np.isnan(elevation):
-                print(f"Station {station_key}: Elevation is NaN, setting to 0.0")
-                return 0.0
+                print(f"Station {station_key}: Elevation is NaN")
+                return np.nan
             if elevation < -50:
-                print(f"Station {station_key}: Elevation {elevation:.3f} m capped at -10.0 m")
-                return -10.0
+                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (below -50 m)")
+                return np.nan
             if elevation > 1000:
-                print(f"Station {station_key}: Elevation {elevation:.3f} m capped at 10.0 m")
-                return 10.0
+                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (above 1000 m)")
+                return np.nan
             print(f"Station {station_key}: Final elevation {elevation:.3f} m")
             return float(elevation)
 
@@ -195,7 +194,7 @@ class GetObsElevation:
             if bathy_success:
                 bathymetryValues, bathy_latitudes, bathy_longitudes = readBathymetryData()
             else:
-                print("Warning: Bathymetry download failed. All elevations will be 0.0.")
+                print("Warning: Bathymetry download failed. Elevations will be NaN where not found.")
 
         # Initialize output dictionary
         elevationDict = {}
@@ -203,13 +202,12 @@ class GetObsElevation:
         # Process each station
         for key in stationsDict["ASSET"].keys():
             stationDict = stationsDict["ASSET"][key]
-            elevationDict[key] = {"elevation": 0.0}  # Default elevation
-
             try:
                 lat = float(stationDict["latitude"])
                 lon = float(stationDict["longitude"])
             except (KeyError, ValueError):
-                print(f"Station {key}: Invalid coordinates, elevation set to 0.0")
+                elevationDict[key] = {"elevation": np.nan}
+                print(f"Station {key}: Invalid coordinates, elevation set to NaN")
                 continue
 
             elevation = np.nan
@@ -219,17 +217,11 @@ class GetObsElevation:
                 elevation = InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lon, lat))
 
             # Apply elevation filter
-            elevationDict[key]["elevation"] = filterElevation(elevation, key)
-
-        # Ensure all ASSET entries have an elevation
-        for key in stationsDict["ASSET"].keys():
-            if key not in elevationDict:
-                elevationDict[key] = {"elevation": 0.0}
-                print(f"Station {key}: No elevation found, set to 0.0")
+            elevationDict[key] = {"elevation": filterElevation(elevation, key)}
 
         # Log performance metrics
         print(f"\nCompleted in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_success else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
 
         # Save to output file
         with open(OBS_ASSET_DATA_FILE, "w") as outfile:
-            json.dump(elevationDict, outfile)
+            json.dump(elevationDict, outfile, allow_nan=True)
