@@ -45,6 +45,7 @@ class GetBuoyWind:
             stationId = stationDict["id"]
             stationName = stationDict["name"]
             url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Wind.mat?STATION_ID%2Ctime%2CWind_Speed%2CWind_Direction%2CWind_Gust&STATION_ID%3E=%22" + stationId + "%22&BEGIN_DATE%3E=%22" + startDate + "%22&END_DATE%3E=%22" + endDate + "%22&time%3E=" + startDateFormat + "T00%3A00%3A00Z"
+            print("querying url: ", url)
             heightURL = "https://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetObservation&version=1.0.0&observedProperty=water_surface_height_above_reference_datum&offering=urn:ioos:station:NOAA.NOS.CO-OPS:" + stationId + "&responseFormat=text/csv&eventTime=" + heightStartDate + "/" + heightEndDate + "&unit=Meters"
         #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
             matFilename = temp_directory + stationDict["id"] + ".mat"
