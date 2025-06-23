@@ -239,7 +239,7 @@ python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
 --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_tides/fort.63.nc \
 --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.14 \
 --generateRunup true \
---tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_runup_temp/ --backgroundChoice NAPATREE --graphDirectory Runup2023Instant/
+--tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_runup_temp/ --backgroundChoice NAPATREE --graphDirectory Runup2023DailyAverage/
 
 # Transect Graph/
 # python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
