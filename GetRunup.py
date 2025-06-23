@@ -17,7 +17,7 @@ from scipy.optimize import fsolve  # For solving the dispersion relation
        
        
 DAY_IN_UNIX_TIME = 86400
-CALCULATE_DAILY_AVERAGE_SLOPE = False
+CALCULATE_DAILY_AVERAGE_SLOPE = True
  
 class GetRunup:
 
