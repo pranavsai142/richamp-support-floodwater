@@ -276,7 +276,7 @@
 
 
 # Transect Graph/
-python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
+python generateGraphs.py --stations NAPATREE_NORMAL_TRANSECT_STATIONS.json \
 --wavesExists true \
 --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/rads.64.nc \
 --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_HS.63.nc \
