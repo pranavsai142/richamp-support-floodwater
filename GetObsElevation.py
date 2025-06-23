@@ -45,6 +45,41 @@ class GetObsElevation:
             sys.stdout.write(f'\r[{bar}] {percent:.1f}%')
             sys.stdout.flush()
 
+        # Check if bathymetry file exists and covers the required area
+        def check_bathymetry_file(west, south, east, north):
+            if not os.path.exists(BATHYMETRY_FILE):
+                print(f"No bathymetry file found at {BATHYMETRY_FILE}. API call required.")
+                return False
+            try:
+                with open(BATHYMETRY_FILE, 'r') as file:
+                    lines = file.readlines()
+                    if len(lines) < 6:
+                        print(f"Bathymetry file {BATHYMETRY_FILE} is incomplete (too few lines). API call required.")
+                        return False
+                    longitudeDelta = int(lines[0][13:].strip())
+                    latitudeDelta = int(lines[1][13:].strip())
+                    minLongitude = float(lines[2][13:].strip())
+                    minLatitude = float(lines[3][13:].strip())
+                    coordinateDelta = float(lines[4][13:].strip())
+                    noDataValue = float(lines[5][13:].strip())
+                    # Verify data lines are sufficient
+                    if len(lines) < 6 + latitudeDelta:
+                        print(f"Bathymetry file {BATHYMETRY_FILE} has insufficient data lines ({len(lines)-6} vs {latitudeDelta}). API call required.")
+                        return False
+                    maxLongitude = minLongitude + (longitudeDelta * coordinateDelta)
+                    maxLatitude = minLatitude + (latitudeDelta * coordinateDelta)
+                    # Check if file's bounding box contains the required box
+                    if (west >= minLongitude and east <= maxLongitude and
+                            south >= minLatitude and north <= maxLatitude):
+                        print(f"Existing bathymetry file covers required area: ({minLongitude:.6f}, {minLatitude:.6f}, {maxLongitude:.6f}, {maxLatitude:.6f}). Skipping API call.")
+                        return True
+                    else:
+                        print(f"Existing bathymetry file does not cover required area: ({west:.6f}, {south:.6f}, {east:.6f}, {north:.6f}). API call required.")
+                        return False
+            except Exception as e:
+                print(f"Error reading bathymetry file metadata: {e}. API call required.")
+                return False
+
         # Determine bathymetry bounding box (all points)
         lats = []
         lons = []
@@ -53,6 +88,10 @@ class GetObsElevation:
             try:
                 lat = float(stationDict["latitude"])
                 lon = float(stationDict["longitude"])
+                # Basic coordinate validation
+                if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+                    print(f"Warning: Station {key} has invalid coordinates (lat={lat}, lon={lon}). Assigning elevation NaN.")
+                    continue
                 lats.append(lat)
                 lons.append(lon)
             except (KeyError, ValueError):
@@ -62,6 +101,7 @@ class GetObsElevation:
         if not lats or not lons:
             print("Warning: No valid coordinates found. Bathymetry query skipped.")
             bathy_success = False
+            bathy_called = False
         else:
             # Define bathymetry bounding box with 0.1-degree padding
             bathy_padding = 0.1
@@ -70,8 +110,9 @@ class GetObsElevation:
             bathy_east = max(lons) + bathy_padding
             bathy_west = min(lons) - bathy_padding
             bathy_success = True
+            bathy_called = False
 
-        # Download bathymetry data
+        # Download bathymetry data if needed
         def downloadBathymetryData(north, south, east, west, dem_type="GEBCOIceTopo", output_format="AAIGrid", api_key="6dd04fe1048e9dfbfc6652feb1b733b1"):
             lat_delta = north - south
             lon_delta = east - west
@@ -125,6 +166,21 @@ class GetObsElevation:
                 stop_event.set()
                 animation_thread.join()
 
+        # Check if bathymetry file can be reused
+        bathymetryValues, bathy_latitudes, bathy_longitudes = (None, None, None)
+        if bathy_success:
+            if not check_bathymetry_file(bathy_west, bathy_south, bathy_east, bathy_north):
+                bathy_success = downloadBathymetryData(bathy_north, bathy_south, bathy_east, bathy_west)
+                bathy_called = True
+            else:
+                bathy_called = False
+            if bathy_success:
+                bathymetryValues, bathy_latitudes, bathy_longitudes = readBathymetryData()
+            else:
+                print("Warning: Bathymetry data unavailable. Elevations will be NaN where not found.")
+        else:
+            bathy_called = False
+
         def InterpolatePoint(grid, Y, X, point, method='linear'):
             if grid.size == 0:
                 print(f"Interpolation failed for point {point}: Empty grid")
@@ -162,6 +218,9 @@ class GetObsElevation:
             try:
                 with open(BATHYMETRY_FILE, 'r') as file:
                     lines = file.readlines()
+                    if len(lines) < 6:
+                        print(f"Error reading bathymetry data: File {BATHYMETRY_FILE} has too few lines.")
+                        return None, None, None
                     longitudeDelta = int(lines[0][13:].strip())
                     latitudeDelta = int(lines[1][13:].strip())
                     minLongitude = float(lines[2][13:].strip())
@@ -172,29 +231,31 @@ class GetObsElevation:
                     maxLongitude = minLongitude + (longitudeDelta * coordinateDelta)
                     maxLatitude = minLatitude + (latitudeDelta * coordinateDelta)
 
+                    if len(lines) < 6 + latitudeDelta:
+                        print(f"Error reading bathymetry data: File {BATHYMETRY_FILE} has insufficient data lines ({len(lines)-6} vs {latitudeDelta}).")
+                        return None, None, None
+
                     longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
                     latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
 
                     bathymetryValues = []
                     for line in lines[6:]:
                         data = np.array(line.split(), dtype=float)
+                        if len(data) != longitudeDelta:
+                            print(f"Error reading bathymetry data: Line {len(bathymetryValues)+7} has {len(data)} values, expected {longitudeDelta}.")
+                            return None, None, None
                         bathymetryValues.append(data)
                     bathymetryValues = np.array(bathymetryValues)
                     bathymetryValues = np.ma.masked_equal(bathymetryValues, noDataValue)
+                    # Verify grid contains valid data
+                    if bathymetryValues.size == 0 or np.all(bathymetryValues.mask):
+                        print(f"Error reading bathymetry data: Grid is empty or all values are masked.")
+                        return None, None, None
                     print(f"Bathymetry grid shape: {bathymetryValues.shape}, sample value: {bathymetryValues[0,0]:.3f} m, min: {np.min(bathymetryValues):.3f} m, max: {np.max(bathymetryValues):.3f} m")
                     return bathymetryValues, latitudes, longitudes
             except Exception as e:
                 print(f"Error reading bathymetry data: {e}")
                 return None, None, None
-
-        # Download bathymetry data if valid coordinates exist
-        bathymetryValues, bathy_latitudes, bathy_longitudes = (None, None, None)
-        if bathy_success:
-            bathy_success = downloadBathymetryData(bathy_north, bathy_south, bathy_east, bathy_west)
-            if bathy_success:
-                bathymetryValues, bathy_latitudes, bathy_longitudes = readBathymetryData()
-            else:
-                print("Warning: Bathymetry download failed. Elevations will be NaN where not found.")
 
         # Initialize output dictionary
         elevationDict = {}
@@ -205,9 +266,14 @@ class GetObsElevation:
             try:
                 lat = float(stationDict["latitude"])
                 lon = float(stationDict["longitude"])
+                # Basic coordinate validation
+                if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+                    print(f"Warning: Station {key} has invalid coordinates (lat={lat}, lon={lon}). Assigning elevation NaN.")
+                    elevationDict[key] = {"elevation": np.nan}
+                    continue
             except (KeyError, ValueError):
+                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning elevation NaN.")
                 elevationDict[key] = {"elevation": np.nan}
-                print(f"Station {key}: Invalid coordinates, elevation set to NaN")
                 continue
 
             elevation = np.nan
@@ -220,7 +286,7 @@ class GetObsElevation:
             elevationDict[key] = {"elevation": filterElevation(elevation, key)}
 
         # Log performance metrics
-        print(f"\nCompleted in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_success else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
+        print(f"\nCompleted in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_called else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
 
         # Save to output file
         with open(OBS_ASSET_DATA_FILE, "w") as outfile:
