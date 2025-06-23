@@ -489,7 +489,7 @@ class GetRunup:
 #                 averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
 #                 averageSlopes.append(averageSlope)
                 
-            if(not CALCULATE_DAILY_AVERAGE_SLOPE):
+            if(CALCULATE_DAILY_AVERAGE_SLOPE):
                 startOfDayTime = None
                 maxWaterlineKey = None
                 minWaterlineKey = None
@@ -573,7 +573,7 @@ class GetRunup:
                 
 #                 Now I need to calculate the averageSlope using the waterlineKey point
 
-                if(not CALCULATE_DAILY_AVERAGE_SLOPE):
+                if(CALCULATE_DAILY_AVERAGE_SLOPE):
                     averageSlope = averageSlopes[index]
                 else:
                     waterlineDistance = haversine.haversine(waterlineCoordinates, adjacentWaterlineCoordinates) * 1000
