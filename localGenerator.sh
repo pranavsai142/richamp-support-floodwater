@@ -164,7 +164,7 @@ python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
 --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_tides/fort.63.nc \
 --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 \
 --generateRunup true \
---tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2022_runup_temp/ --backgroundChoice NAPATREE --graphDirectory Runup2022DailyAverage/
+--tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2022_runup_temp/ --backgroundChoice NAPATREE --graphDirectory Runup2022Instant/
 
 # python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWater2022/
 
