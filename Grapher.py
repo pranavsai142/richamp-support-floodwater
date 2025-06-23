@@ -2430,7 +2430,8 @@ class Grapher:
         
             # Plot horizontal lines for dune heights
             for height in unique_heights:
-                if transect >= 2:
+#                 if transect >= 2: For 2023, 5 for 2022
+                if transect >= 5:
                     ax.axhline(y=height, linestyle='--', color='red', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
                 else:
                     ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
