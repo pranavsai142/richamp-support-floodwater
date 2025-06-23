@@ -22,6 +22,7 @@ DEPTH_LINE_20M = -20.0
 DISTANCE_LINE_9000M = 9000.0
 
 GRAPH_SWASH = True
+GRAPH_MULTIPANEL = False
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
@@ -1297,18 +1298,18 @@ class Grapher:
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=5, zorder=4, color="purple")
-#             if(self.assetExists):
-#             legendLabelInitialized = False
-#             transectLabelInitialized = False
-#             for assetIndex, assetLabel in enumerate(self.assetLabels):
-#                 if("m" == assetLabel[-1]):
-#                     if("Waves" in assetLabel):
-#                         ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=20, color="black", label="7m depth" if not legendLabelInitialized else None)
-#                         legendLabelInitialized = True
-#                         ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
-#                     else:
-#                         ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=10, color="black", label="Transects" if not transectLabelInitialized else None)
-#                         transectLabelInitialized = True
+            if(self.assetExists):
+            legendLabelInitialized = False
+            transectLabelInitialized = False
+            for assetIndex, assetLabel in enumerate(self.assetLabels):
+                if("m" == assetLabel[-1]):
+                    if("Waves" in assetLabel):
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=20, color="black", label="7m depth" if not legendLabelInitialized else None)
+                        legendLabelInitialized = True
+                        ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
+                    else:
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=10, color="black", label="Transects" if not transectLabelInitialized else None)
+                        transectLabelInitialized = True
 #             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
 
 #             Below line graphs mesh points
@@ -1733,11 +1734,12 @@ class Grapher:
                 if(len(self.datapointsSWH[index]) > 0):
                     fig, ax = plt.subplots(figsize=(16,9))
                     ax.scatter(self.waveTimes, self.datapointsSWH[index], marker=".", label=r"$H_s$")
+                    stationTitle = str(round(max(self.datapointsSWH[index]), 2))
                     if(self.buoyExists):
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], label="Obs")
+                        stationTitle = str(round(max(self.datapointsSWH[index]), 2)) + ", " + str(round(max(self.buoyDatapointsSWH[index]), 2)) 
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    stationTitle = str(round(max(self.datapointsSWH[index]), 2)) + ", " + str(round(max(self.buoyDatapointsSWH[index]), 2)) 
                     plt.title(stationName + r" Significant Wave Height (Max $H_s$, Obs: " + stationTitle + " meters)")
                     plt.xlabel("Date")                    
                     ax.format_xdata = mdates.DateFormatter('%d')
@@ -1773,11 +1775,12 @@ class Grapher:
                 if(len(self.datapointsPWP[index]) > 0):
                     fig, ax = plt.subplots(figsize=(16,9))
                     ax.scatter(self.waveTimes, self.datapointsPWP[index], marker=".", label=r"$T_p$")
+                    stationTitle = str(round(max(self.datapointsPWP[index]), 2))
                     if(self.buoyExists):
                         ax.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsPWP[index], label="Obs")
+                        stationTitle = str(round(max(self.datapointsPWP[index]), 2)) + ", " + str(round(max(self.buoyDatapointsPWP[index]), 2)) 
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    stationTitle = str(round(max(self.datapointsPWP[index]), 2)) + ", " + str(round(max(self.buoyDatapointsPWP[index]), 2)) 
                     plt.title(stationName + r" Peak Wave Period (Max $T_p$, Obs: " + stationTitle + " seconds)")
                     plt.xlabel("Date")
                     ax.format_xdata = mdates.DateFormatter('%d')
@@ -1938,7 +1941,7 @@ class Grapher:
 # Graph multipanel all stations water
 
         # Create a multi-panel figure with one subplot per station
-        if(numberOfWaterDatapoints > 0 and False):
+        if(numberOfWaterDatapoints > 0 and GRAPH_MULTIPANEL):
             fig, axes = plt.subplots(numberOfWaterDatapoints, 1, figsize=(16, 4 * numberOfWaterDatapoints), sharex=True, constrained_layout=True)
             
             # Ensure axes is a 1D array for consistent indexing
@@ -2006,7 +2009,7 @@ class Grapher:
 # Graph multipanel wind
 
 # Collect all time data for shared x-axis limits
-        if(numberOfWindDatapoints > 0 and False):
+        if(numberOfWindDatapoints > 0 and GRAPH_MULTIPANEL):
             all_times = []
             for index in range(numberOfWindDatapoints):
                 if len(self.datapointsSpeeds) > 0 or len(self.datapointsDirections) > 0:
