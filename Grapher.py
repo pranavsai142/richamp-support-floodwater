@@ -22,7 +22,7 @@ DEPTH_LINE_7M = -7.0
 DEPTH_LINE_20M = -20.0
 DISTANCE_LINE_9000M = 9000.0
 
-GRAPH_SWASH = False
+GRAPH_SWASH = True
 GRAPH_MULTIPANEL = False
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
