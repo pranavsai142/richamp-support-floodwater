@@ -4,12 +4,12 @@
 #SBATCH --output=uri_post_init.out
 #SBATCH --error=uri_post_init.err
 ##SBATCH -p lowpri
-#SBATCH -p uri-cpu
+## SBATCH -p uri-cpu
 #SBATCH -c 1
 #SBATCH --mem=16G
 #SBATCH -t 08:00:00
-##SBATCH --reservation=richamp
-##SBATCH --partition=uri-richamp
+#SBATCH --reservation=richamp
+#SBATCH --partition=uri-richamp
 #SBATCH --mail-user=pranav.sai@uri.edu
 #SBATCH --mail-type=END
 
