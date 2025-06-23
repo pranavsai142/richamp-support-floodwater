@@ -1993,7 +1993,7 @@ class Grapher:
                     ax.legend(loc="upper left")
                     
                     # Format x-axis for dates
-                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                    ax.format_xdata = mdates.DateFormatter('%d')
                     
                     # Set title and labels
                     stationName = self.tideLabels[index]
@@ -2059,7 +2059,7 @@ class Grapher:
                         ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsSpeeds[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
-                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                    ax.format_xdata = mdates.DateFormatter('%d')
                     
                     stationName = self.obsLabels[index]
                     ax.set_title(f"{self.titlePrefix}{stationName} Wind Speed (Max GFS, Obs: {max_gfs}, {max_obs} m/s)", fontsize=16)
@@ -2103,7 +2103,7 @@ class Grapher:
                         ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsDirections[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
-                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                    ax.format_xdata = mdates.DateFormatter('%d')
                     
                     stationName = self.obsLabels[index]
                     ax.set_title(f"{self.titlePrefix}{stationName} Wind Direction", fontsize=16)
@@ -2436,7 +2436,7 @@ class Grapher:
                     ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel("Runup (meters)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Runup (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} m)", fontsize=14)
@@ -2478,7 +2478,7 @@ class Grapher:
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanLow[index], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel("Deepwater Significant Wave Height (meters)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater Significant Wave Height (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} m)", fontsize=16)
@@ -2524,7 +2524,7 @@ class Grapher:
                         ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel("Significant Wave Height (meters)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Significant Wave Height (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} m)", fontsize=16)
@@ -2570,7 +2570,7 @@ class Grapher:
                         ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel("Peak Wave Period (seconds)", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Peak Wave Period (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} sec)", fontsize=16)
