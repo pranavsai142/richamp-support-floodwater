@@ -961,8 +961,8 @@ class Reader:
             stationsDict = json.load(stations_file)
             
         data = {}
-        if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "rain"):
-#         if(False):
+#         if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "rain"):
+        if(False):
             data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
                 
         print("Interpolating", dataType, flush=True)
