@@ -215,6 +215,9 @@ def main():
     p.add_argument(
         "--generateRunup", type=bool, help="Generate runup predictions from runup stations"
     )
+    p.add_argument(
+        "--graphDirectory", type=str, help="Graph directory"
+    )
     args = p.parse_args()
     args.epsg = 4326
     print("Generating Wind Graphs!", flush=True)
@@ -603,12 +606,17 @@ def main():
 #     Grapher(graphObs=args.obs, graphRain=False, WIND_TYPE="POST", OBS_WIND_DATA_FILE=OBS_WIND_DATA_FILE, STATIONS_FILE=STATIONS_FILE, WIND_DATA_FILE=POST_WIND_DATA_FILE, RAIN_DATA_FILE=GFS_RAIN_DATA_FILE).generateGraphs()
         
 #     print("Parsed start and end date from netCDF, ", startDateObject, endDateObject)
+    if(args.graphDirectory):
+        graphDirectory = args.graphDirectory
+    else:
+        graphDirectory = "graphs/"
     Grapher(
         dataToGraph=dataToGraph, 
         STATIONS_FILE=STATIONS_FILE, 
         backgroundMap=backgroundMap,
         backgroundAxis=backgroundAxis,
-        titlePrefix=titlePrefix).generateGraphs()
+        titlePrefix=titlePrefix,
+        GRAPH_DIRECTORY=graphDirectory).generateGraphs()
 
 if __name__ == "__main__":
     main()

@@ -62,16 +62,19 @@ class GetObsElevation:
                     minLatitude = float(lines[3][13:].strip())
                     coordinateDelta = float(lines[4][13:].strip())
                     noDataValue = float(lines[5][13:].strip())
-                    # Verify data lines are sufficient
+                    # Verify data lines
                     if len(lines) < 6 + latitudeDelta:
                         print(f"Bathymetry file {BATHYMETRY_FILE} has insufficient data lines ({len(lines)-6} vs {latitudeDelta}). API call required.")
                         return False
                     maxLongitude = minLongitude + (longitudeDelta * coordinateDelta)
                     maxLatitude = minLatitude + (latitudeDelta * coordinateDelta)
-                    # Check if file's bounding box contains the required box
-                    if (west >= minLongitude and east <= maxLongitude and
-                            south >= minLatitude and north <= maxLatitude):
-                        print(f"Existing bathymetry file covers required area: ({minLongitude:.6f}, {minLatitude:.6f}, {maxLongitude:.6f}, {maxLatitude:.6f}). Skipping API call.")
+                    # Log file's bounding box for debugging
+                    print(f"File bounding box: (west={minLongitude:.6f}, south={minLatitude:.6f}, east={maxLongitude:.6f}, north={maxLatitude:.6f})")
+                    # Check coverage with small tolerance for floating-point precision
+                    tolerance = 1e-6
+                    if (west >= minLongitude - tolerance and east <= maxLongitude + tolerance and
+                            south >= minLatitude - tolerance and north <= maxLatitude + tolerance):
+                        print(f"Existing bathymetry file covers required area: ({west:.6f}, {south:.6f}, {east:.6f}, {north:.6f}). Skipping API call.")
                         return True
                     else:
                         print(f"Existing bathymetry file does not cover required area: ({west:.6f}, {south:.6f}, {east:.6f}, {north:.6f}). API call required.")
@@ -113,8 +116,10 @@ class GetObsElevation:
                             return None, None, None
                         bathymetryValues.append(data)
                     bathymetryValues = np.array(bathymetryValues)
-                    bathymetryValues = np.ma.masked_equal(bathymetryValues, noDataValue)
-                    # Verify grid contains valid data
+                    # Negate values to convert negative depths (below MSL) to positive depths
+                    bathymetryValues = -bathymetryValues
+                    bathymetryValues = np.ma.masked_equal(bathymetryValues, -noDataValue)
+                    # Verify grid
                     if bathymetryValues.size == 0 or np.all(bathymetryValues.mask):
                         print(f"Error reading bathymetry data: Grid is empty or all values are masked.")
                         return None, None, None
@@ -283,7 +288,8 @@ class GetObsElevation:
 
             # Use bathymetry data if available
             if bathy_success and bathymetryValues is not None:
-                elevation = InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lon, lat))
+                # Negate depth to get elevation (positive depth → negative elevation)
+                elevation = -InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lon, lat))
 
             # Apply elevation filter
             elevationDict[key] = {"elevation": filterElevation(elevation, key)}

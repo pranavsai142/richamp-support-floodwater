@@ -141,7 +141,8 @@ class Grapher:
     # Usage example:
     # plot_extended_lines(self, ax, runupIndex, index, runupLabel)
 
-    def __init__(self, dataToGraph={}, STATIONS_FILE="", backgroundMap="", backgroundAxis=[], titlePrefix=""):
+    def __init__(self, dataToGraph={}, STATIONS_FILE="", backgroundMap="", backgroundAxis=[], titlePrefix="", GRAPH_DIRECTORY="graphs/"):
+        self.GRAPH_DIRECTORY = GRAPH_DIRECTORY
         print("Initializing grapher", flush=True)
         self.obsExists = False
         self.gaugeExists = False
@@ -1050,7 +1051,9 @@ class Grapher:
                 
 
     def generateGraphs(self):
-        graph_directory = "graphs/"
+        graph_directory = self.GRAPH_DIRECTORY
+        if not os.path.exists(graph_directory):
+            os.makedirs(graph_directory)
         
         numberOfWindDatapoints = 0
         numberOfRainDatapoints = 0
