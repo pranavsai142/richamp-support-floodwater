@@ -1944,8 +1944,8 @@ class Grapher:
         
 # Graph multipanel all stations water
 
-        # Create a multi-panel figure with one subplot per station
-        if(numberOfWaterDatapoints > 0 and GRAPH_MULTIPANEL):
+        # --- Multipanel Water Plot ---
+        if(numberOfWaterDatapoints > 0 and GRAPH_MULTIPANEL):  # Removed 'and False' to enable the plot
             fig, axes = plt.subplots(numberOfWaterDatapoints, 1, figsize=(16, 4 * numberOfWaterDatapoints), sharex=True, constrained_layout=True)
             
             # Ensure axes is a 1D array for consistent indexing
@@ -1958,17 +1958,16 @@ class Grapher:
             all_elevations = []
             for index in range(numberOfWaterDatapoints):
                 if len(self.datapointsWaters) > 0:
-                    all_elevations.extend(self.datapointsWaters[index])
+                    all_elevations.extend([x for x in self.datapointsWaters[index] if not np.isnan(x)])
                     if self.stillwaterExists:
-                        all_elevations.extend(self.datapointsStillwaters[index])
+                        all_elevations.extend([x for x in self.datapointsStillwaters[index] if not np.isnan(x)])
                     if self.tidewaterExists:
-                        all_elevations.extend(self.datapointsTidewaters[index])
+                        all_elevations.extend([x for x in self.datapointsTidewaters[index] if not np.isnan(x)])
                     if self.tideExists:
-                        all_elevations.extend(self.tideDatapointsWaters[index])
+                        all_elevations.extend([x for x in self.tideDatapointsWaters[index] if not np.isnan(x)])
             
             global_min = min(all_elevations) if all_elevations else -1.0
             global_max = max(all_elevations) if all_elevations else 1.0
-            # Add padding to y-limits for better visualization
             y_padding = (global_max - global_min) * 0.1
             y_min = global_min - y_padding
             y_max = global_max + y_padding
@@ -1977,6 +1976,10 @@ class Grapher:
             for index in range(numberOfWaterDatapoints):
                 ax = axes[index]
                 if len(self.datapointsWaters) > 0:
+                    # Compute max values for title
+                    max_eta = round(np.nanmax(self.datapointsWaters[index]), 2) if len(self.datapointsWaters[index]) > 0 else "-"
+                    max_obs = round(np.nanmax(self.tideDatapointsWaters[index]), 2) if self.tideExists and len(self.tideDatapointsWaters[index]) > 0 else "-"
+                    
                     # Plot stillwater, tidewater, water, and observed tide data
                     if self.tidewaterExists:
                         ax.plot(self.tidewaterTimes, self.datapointsTidewaters[index], label=r"$\eta_{tide}$", linestyle="--")
@@ -1990,30 +1993,25 @@ class Grapher:
                     ax.legend(loc="upper left")
                     
                     # Format x-axis for dates
-    #                 ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                     
                     # Set title and labels
                     stationName = self.tideLabels[index]
-                    maxElevation = str(round(max(self.datapointsWaters[index]), 2))
-                    ax.set_title(f"{self.titlePrefix}{stationName} station water elevation (Max: {maxElevation} m)", fontsize=16)
+                    ax.set_title(f"{self.titlePrefix}{stationName} Water Level (Max η, Obs: {max_eta}, {max_obs} m)", fontsize=16)
                     ax.set_ylabel("Elevation (meters)", fontsize=12)
                     
                     # Set shared y-axis limits
                     ax.set_ylim(y_min, y_max)
                 
                 if index == numberOfWaterDatapoints - 1:
-                    # Add x-label only to the bottom subplot
                     ax.set_xlabel("Date", fontsize=12)
             
             # Save the figure
             plt.savefig(graph_directory + 'all_stations_water.png', dpi=300, bbox_inches='tight')
             plt.close()
-            
         
-# Graph multipanel wind
-
-# Collect all time data for shared x-axis limits
-        if(numberOfWindDatapoints > 0 and GRAPH_MULTIPANEL):
+        # --- Multipanel Wind Plots ---
+        if(numberOfWindDatapoints > 0 and GRAPH_MULTIPANEL):  # Removed 'and False' to ensure consistency
             all_times = []
             for index in range(numberOfWindDatapoints):
                 if len(self.datapointsSpeeds) > 0 or len(self.datapointsDirections) > 0:
@@ -2023,29 +2021,25 @@ class Grapher:
             
             x_min = min(all_times) if all_times else self.windStartDate
             x_max = max(all_times) if all_times else self.windStartDate
-            # Add padding to x-limits (e.g., 5% of the time range)
             if x_min != x_max:
                 x_padding = (x_max - x_min) * 0.05
                 x_min -= x_padding
                 x_max += x_padding
             
             # --- Wind Speed Figure ---
-            # Collect all speed data for shared y-axis limits
             all_speeds = []
             for index in range(numberOfWindDatapoints):
                 if len(self.datapointsSpeeds) > 0:
-                    all_speeds.extend(self.datapointsSpeeds[index])
+                    all_speeds.extend([x for x in self.datapointsSpeeds[index] if not np.isnan(x)])
                     if self.obsExists:
-                        all_speeds.extend(self.obsDatapointsSpeeds[index])
+                        all_speeds.extend([x for x in self.obsDatapointsSpeeds[index] if not np.isnan(x)])
             
             speed_min = min(all_speeds) if all_speeds else 0.0
             speed_max = max(all_speeds) if all_speeds else 50.0
-            # Add padding to y-limits
             speed_padding = (speed_max - speed_min) * 0.1 if speed_max != speed_min else 1.0
-            speed_y_min = max(0.0, speed_min - speed_padding)  # Ensure non-negative for wind speed
+            speed_y_min = max(0.0, speed_min - speed_padding)
             speed_y_max = speed_max + speed_padding
             
-            # Create figure for wind speed
             fig_speed, axes_speed = plt.subplots(numberOfWindDatapoints, 1, figsize=(16, 4 * numberOfWindDatapoints), sharex=True, constrained_layout=True)
             if numberOfWindDatapoints == 1:
                 axes_speed = [axes_speed]
@@ -2056,16 +2050,19 @@ class Grapher:
             for index in range(numberOfWindDatapoints):
                 ax = axes_speed[index]
                 if len(self.datapointsSpeeds) > 0:
-                    ax.scatter(self.windTimes, self.datapointsSpeeds[index], marker=".", label="Forecast")
+                    # Compute max values for title
+                    max_gfs = round(np.nanmax(self.datapointsSpeeds[index]), 2) if len(self.datapointsSpeeds[index]) > 0 else "-"
+                    max_obs = round(np.nanmax(self.obsDatapointsSpeeds[index]), 2) if self.obsExists and len(self.obsDatapointsSpeeds[index]) > 0 else "-"
+                    
+                    ax.scatter(self.windTimes, self.datapointsSpeeds[index], marker=".", label="GFS")
                     if self.obsExists:
                         ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsSpeeds[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
-#                     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                     
                     stationName = self.obsLabels[index]
-                    maxSpeed = str(round(max(self.datapointsSpeeds[index]), 2)) if self.datapointsSpeeds[index] else "N/A"
-                    ax.set_title(f"{stationName} station wind speed (Max: {maxSpeed} m/s)", fontsize=16)
+                    ax.set_title(f"{self.titlePrefix}{stationName} Wind Speed (Max GFS, Obs: {max_gfs}, {max_obs} m/s)", fontsize=16)
                     ax.set_ylabel("Wind speed (m/s)", fontsize=12)
                     
                     ax.set_ylim(speed_y_min, speed_y_max)
@@ -2074,31 +2071,25 @@ class Grapher:
                 if index == numberOfWindDatapoints - 1:
                     ax.set_xlabel("Date", fontsize=12)
             
-            # Save wind speed figure
             plt.savefig(graph_directory + 'all_stations_wind_speed.png', dpi=300, bbox_inches='tight')
             plt.close(fig_speed)
             
             # --- Wind Direction Figure ---
-            # Collect all direction data for shared y-axis limits
             all_directions = []
             for index in range(numberOfWindDatapoints):
                 if len(self.datapointsDirections) > 0:
-                    all_directions.extend(self.datapointsDirections[index])
+                    all_directions.extend([x for x in self.datapointsDirections[index] if not np.isnan(x)])
                     if self.obsExists:
-                        all_directions.extend(self.obsDatapointsDirections[index])
+                        all_directions.extend([x for x in self.obsDatapointsDirections[index] if not np.isnan(x)])
             
-            direction_min = min(all_directions) if all_directions else 0.0
-            direction_max = max(all_directions) if all_directions else 360.0
             direction_min = 0
             direction_max = 360
-            # Add padding to y-limits, respecting 0-360 degree range
-            direction_padding = (direction_max - direction_min) * 0.1 if direction_max != direction_min else 10.0
+            direction_padding = (direction_max - direction_min) * 0.1
             direction_y_min = max(0.0, direction_min - direction_padding)
             direction_y_max = min(360.0, direction_max + direction_padding)
             
-            # Create figure for wind direction
             fig_direction, axes_direction = plt.subplots(numberOfWindDatapoints, 1, figsize=(16, 4 * numberOfWindDatapoints), sharex=True, constrained_layout=True)
-            if numberOfWindDatapoints == 1:
+            if numberOfWaterDatapoints == 1:
                 axes_direction = [axes_direction]
             else:
                 axes_direction = axes_direction.flatten()
@@ -2107,15 +2098,15 @@ class Grapher:
             for index in range(numberOfWindDatapoints):
                 ax = axes_direction[index]
                 if len(self.datapointsDirections) > 0:
-                    ax.scatter(self.windTimes, self.datapointsDirections[index], marker=".", label="Forecast")
+                    ax.scatter(self.windTimes, self.datapointsDirections[index], marker=".", label="GFS")
                     if self.obsExists:
                         ax.scatter(self.obsDatapointsTimes[index], self.obsDatapointsDirections[index], marker=".", label="Obs")
                     
                     ax.legend(loc="lower right")
-#                     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
                     
                     stationName = self.obsLabels[index]
-                    ax.set_title(f"{stationName} station wind direction", fontsize=16)
+                    ax.set_title(f"{self.titlePrefix}{stationName} Wind Direction", fontsize=16)
                     ax.set_ylabel("Wind direction (degrees)", fontsize=12)
                     
                     ax.set_ylim(direction_y_min, direction_y_max)
@@ -2124,7 +2115,6 @@ class Grapher:
                 if index == numberOfWindDatapoints - 1:
                     ax.set_xlabel("Date", fontsize=12)
             
-            # Save wind direction figure
             plt.savefig(graph_directory + 'all_stations_wind_direction.png', dpi=300, bbox_inches='tight')
             plt.close(fig_direction)
 
