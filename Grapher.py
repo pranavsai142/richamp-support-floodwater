@@ -1298,7 +1298,7 @@ class Grapher:
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=5, zorder=4, color="purple")
-            if(self.assetExists):
+#             if(self.assetExists):
             legendLabelInitialized = False
             transectLabelInitialized = False
             for assetIndex, assetLabel in enumerate(self.assetLabels):
