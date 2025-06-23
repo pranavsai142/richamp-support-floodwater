@@ -80,39 +80,86 @@ class GetObsElevation:
                 print(f"Error reading bathymetry file metadata: {e}. API call required.")
                 return False
 
-        # Determine bathymetry bounding box (all points)
-        lats = []
-        lons = []
-        for key in stationsDict["ASSET"].keys():
-            stationDict = stationsDict["ASSET"][key]
+        # Read bathymetry data from file
+        def readBathymetryData():
             try:
-                lat = float(stationDict["latitude"])
-                lon = float(stationDict["longitude"])
-                # Basic coordinate validation
-                if not (-90 <= lat <= 90 and -180 <= lon <= 180):
-                    print(f"Warning: Station {key} has invalid coordinates (lat={lat}, lon={lon}). Assigning elevation NaN.")
-                    continue
-                lats.append(lat)
-                lons.append(lon)
-            except (KeyError, ValueError):
-                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning elevation NaN.")
-                continue
+                with open(BATHYMETRY_FILE, 'r') as file:
+                    lines = file.readlines()
+                    if len(lines) < 6:
+                        print(f"Error reading bathymetry data: File {BATHYMETRY_FILE} has too few lines.")
+                        return None, None, None
+                    longitudeDelta = int(lines[0][13:].strip())
+                    latitudeDelta = int(lines[1][13:].strip())
+                    minLongitude = float(lines[2][13:].strip())
+                    minLatitude = float(lines[3][13:].strip())
+                    coordinateDelta = float(lines[4][13:].strip())
+                    noDataValue = float(lines[5][13:].strip())
 
-        if not lats or not lons:
-            print("Warning: No valid coordinates found. Bathymetry query skipped.")
-            bathy_success = False
-            bathy_called = False
-        else:
-            # Define bathymetry bounding box with 0.1-degree padding
-            bathy_padding = 0.1
-            bathy_north = max(lats) + bathy_padding
-            bathy_south = min(lats) - bathy_padding
-            bathy_east = max(lons) + bathy_padding
-            bathy_west = min(lons) - bathy_padding
-            bathy_success = True
-            bathy_called = False
+                    maxLongitude = minLongitude + (longitudeDelta * coordinateDelta)
+                    maxLatitude = minLatitude + (latitudeDelta * coordinateDelta)
 
-        # Download bathymetry data if needed
+                    if len(lines) < 6 + latitudeDelta:
+                        print(f"Error reading bathymetry data: File {BATHYMETRY_FILE} has insufficient data lines ({len(lines)-6} vs {latitudeDelta}).")
+                        return None, None, None
+
+                    longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
+                    latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
+
+                    bathymetryValues = []
+                    for line in lines[6:]:
+                        data = np.array(line.split(), dtype=float)
+                        if len(data) != longitudeDelta:
+                            print(f"Error reading bathymetry data: Line {len(bathymetryValues)+7} has {len(data)} values, expected {longitudeDelta}.")
+                            return None, None, None
+                        bathymetryValues.append(data)
+                    bathymetryValues = np.array(bathymetryValues)
+                    bathymetryValues = np.ma.masked_equal(bathymetryValues, noDataValue)
+                    # Verify grid contains valid data
+                    if bathymetryValues.size == 0 or np.all(bathymetryValues.mask):
+                        print(f"Error reading bathymetry data: Grid is empty or all values are masked.")
+                        return None, None, None
+                    print(f"Bathymetry grid shape: {bathymetryValues.shape}, sample value: {bathymetryValues[0,0]:.3f} m, min: {np.min(bathymetryValues):.3f} m, max: {np.max(bathymetryValues):.3f} m")
+                    return bathymetryValues, latitudes, longitudes
+            except Exception as e:
+                print(f"Error reading bathymetry data: {e}")
+                return None, None, None
+
+        # Interpolate elevation at a point
+        def InterpolatePoint(grid, Y, X, point, method='linear'):
+            if grid.size == 0:
+                print(f"Interpolation failed for point {point}: Empty grid")
+                return np.nan
+            grid = np.ma.masked_invalid(grid) if not np.ma.is_masked(grid) else grid
+            try:
+                interpolator = RegularGridInterpolator((Y, X), grid, method=method, bounds_error=False, fill_value=np.nan)
+                value = interpolator(np.flip(point))  # Flip point since interpolator expects (y,x)
+                value_float = float(value) if not np.ma.is_masked(value) and not np.isnan(value) else np.nan
+                print(f"Interpolated depth at {point}: {value_float:.3f} m" if not np.isnan(value_float) else f"Interpolated depth at {point}: NaN")
+                return value_float
+            except ValueError as e:
+                print(f"Interpolation error at point {point}: {e}")
+                return np.nan
+
+        # Filter elevation values
+        def filterElevation(elevation, station_key):
+            """
+            Filter elevation values to handle outliers:
+            - Depths below -100 meters or heights above 1000 meters are set to NaN.
+            - Keep NaN for invalid elevations.
+            """
+            if np.isnan(elevation):
+                print(f"Station {station_key}: Elevation is NaN")
+                return np.nan
+            if elevation < -100:
+                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (below -100 m)")
+                return np.nan
+            if elevation > 1000:
+                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (above 1000 m)")
+                return np.nan
+            print(f"Station {station_key}: Final elevation {elevation:.3f} m")
+            return float(elevation)
+
+        # Download bathymetry data
         def downloadBathymetryData(north, south, east, west, dem_type="GEBCOIceTopo", output_format="AAIGrid", api_key="6dd04fe1048e9dfbfc6652feb1b733b1"):
             lat_delta = north - south
             lon_delta = east - west
@@ -166,6 +213,38 @@ class GetObsElevation:
                 stop_event.set()
                 animation_thread.join()
 
+        # Determine bathymetry bounding box (all points)
+        lats = []
+        lons = []
+        for key in stationsDict["ASSET"].keys():
+            stationDict = stationsDict["ASSET"][key]
+            try:
+                lat = float(stationDict["latitude"])
+                lon = float(stationDict["longitude"])
+                # Basic coordinate validation
+                if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+                    print(f"Warning: Station {key} has invalid coordinates (lat={lat}, lon={lon}). Assigning elevation NaN.")
+                    continue
+                lats.append(lat)
+                lons.append(lon)
+            except (KeyError, ValueError):
+                print(f"Warning: Station {key} missing or invalid latitude/longitude. Assigning elevation NaN.")
+                continue
+
+        if not lats or not lons:
+            print("Warning: No valid coordinates found. Bathymetry query skipped.")
+            bathy_success = False
+            bathy_called = False
+        else:
+            # Define bathymetry bounding box with 0.1-degree padding
+            bathy_padding = 0.1
+            bathy_north = max(lats) + bathy_padding
+            bathy_south = min(lats) - bathy_padding
+            bathy_east = max(lons) + bathy_padding
+            bathy_west = min(lons) - bathy_padding
+            bathy_success = True
+            bathy_called = False
+
         # Check if bathymetry file can be reused
         bathymetryValues, bathy_latitudes, bathy_longitudes = (None, None, None)
         if bathy_success:
@@ -180,82 +259,6 @@ class GetObsElevation:
                 print("Warning: Bathymetry data unavailable. Elevations will be NaN where not found.")
         else:
             bathy_called = False
-
-        def InterpolatePoint(grid, Y, X, point, method='linear'):
-            if grid.size == 0:
-                print(f"Interpolation failed for point {point}: Empty grid")
-                return np.nan
-            grid = np.ma.masked_invalid(grid) if not np.ma.is_masked(grid) else grid
-            try:
-                interpolator = RegularGridInterpolator((Y, X), grid, method=method, bounds_error=False, fill_value=np.nan)
-                value = interpolator(np.flip(point))  # Flip point since interpolator expects (y,x)
-                value_float = float(value) if not np.ma.is_masked(value) and not np.isnan(value) else np.nan
-                print(f"Interpolated depth at {point}: {value_float:.3f} m" if not np.isnan(value_float) else f"Interpolated depth at {point}: NaN")
-                return value_float
-            except ValueError as e:
-                print(f"Interpolation error at point {point}: {e}")
-                return np.nan
-
-        def filterElevation(elevation, station_key):
-            """
-            Filter elevation values to handle outliers:
-            - Depths below -100 meters or heights above 1000 meters are set to NaN.
-            - Keep NaN for invalid elevations.
-            """
-            if np.isnan(elevation):
-                print(f"Station {station_key}: Elevation is NaN")
-                return np.nan
-            if elevation < -100:
-                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (below -100 m)")
-                return np.nan
-            if elevation > 1000:
-                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (above 1000 m)")
-                return np.nan
-            print(f"Station {station_key}: Final elevation {elevation:.3f} m")
-            return float(elevation)
-
-        def readBathymetryData():
-            try:
-                with open(BATHYMETRY_FILE, 'r') as file:
-                    lines = file.readlines()
-                    if len(lines) < 6:
-                        print(f"Error reading bathymetry data: File {BATHYMETRY_FILE} has too few lines.")
-                        return None, None, None
-                    longitudeDelta = int(lines[0][13:].strip())
-                    latitudeDelta = int(lines[1][13:].strip())
-                    minLongitude = float(lines[2][13:].strip())
-                    minLatitude = float(lines[3][13:].strip())
-                    coordinateDelta = float(lines[4][13:].strip())
-                    noDataValue = float(lines[5][13:].strip())
-
-                    maxLongitude = minLongitude + (longitudeDelta * coordinateDelta)
-                    maxLatitude = minLatitude + (latitudeDelta * coordinateDelta)
-
-                    if len(lines) < 6 + latitudeDelta:
-                        print(f"Error reading bathymetry data: File {BATHYMETRY_FILE} has insufficient data lines ({len(lines)-6} vs {latitudeDelta}).")
-                        return None, None, None
-
-                    longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
-                    latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
-
-                    bathymetryValues = []
-                    for line in lines[6:]:
-                        data = np.array(line.split(), dtype=float)
-                        if len(data) != longitudeDelta:
-                            print(f"Error reading bathymetry data: Line {len(bathymetryValues)+7} has {len(data)} values, expected {longitudeDelta}.")
-                            return None, None, None
-                        bathymetryValues.append(data)
-                    bathymetryValues = np.array(bathymetryValues)
-                    bathymetryValues = np.ma.masked_equal(bathymetryValues, noDataValue)
-                    # Verify grid contains valid data
-                    if bathymetryValues.size == 0 or np.all(bathymetryValues.mask):
-                        print(f"Error reading bathymetry data: Grid is empty or all values are masked.")
-                        return None, None, None
-                    print(f"Bathymetry grid shape: {bathymetryValues.shape}, sample value: {bathymetryValues[0,0]:.3f} m, min: {np.min(bathymetryValues):.3f} m, max: {np.max(bathymetryValues):.3f} m")
-                    return bathymetryValues, latitudes, longitudes
-            except Exception as e:
-                print(f"Error reading bathymetry data: {e}")
-                return None, None, None
 
         # Initialize output dictionary
         elevationDict = {}

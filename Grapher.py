@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 import imageio
 import gc
 from geographiclib.geodesic import Geodesic
+import re
 
 
 SMALL_SIZE = 14
@@ -1740,7 +1741,7 @@ class Grapher:
                         stationTitle = str(round(max(self.datapointsSWH[index]), 2)) + ", " + str(round(max(self.buoyDatapointsSWH[index]), 2)) 
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + r" Significant Wave Height (Max $H_s$, Obs: " + stationTitle + " meters)")
+                    plt.title(stationName + r" Significant Wave Height (Max $H_s$, Obs: " + stationTitle + " m)")
                     plt.xlabel("Date")                    
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("SWH (meters)")
@@ -1781,7 +1782,7 @@ class Grapher:
                         stationTitle = str(round(max(self.datapointsPWP[index]), 2)) + ", " + str(round(max(self.buoyDatapointsPWP[index]), 2)) 
                     ax.legend(loc="lower right")
                     stationName = self.buoyLabels[index]
-                    plt.title(stationName + r" Peak Wave Period (Max $T_p$, Obs: " + stationTitle + " seconds)")
+                    plt.title(stationName + r" Peak Wave Period (Max $T_p$, Obs: " + stationTitle + " sec)")
                     plt.xlabel("Date")
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("PWP (seconds)")
@@ -2209,7 +2210,7 @@ class Grapher:
                 ax.format_xdata = mdates.DateFormatter('%d')
                 stationName = self.runupLabels[index]
                 maxSetup = str(round(max(self.datapointsSetupStockdonLow[index]), 2)) + ", " + str(round(max(self.datapointsSetupStockdon[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " Setup (Max SWAN, Stockdon: " + maxSetup + " meters)", fontsize=24)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " Setup (Max SWAN, Stockdon: " + maxSetup + " m)", fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Setup (meters)")
                 plt.xlabel("Date")
@@ -2312,7 +2313,7 @@ class Grapher:
                         ax.format_xdata = mdates.DateFormatter('%d')
                         stationName = self.tideLabels[datapointsWaterRunupIndex]
 #                         print("stationName of corresponding water station: ", stationName)
-                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " meters)")
+                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " m)")
                         plt.xlabel("Date")
                         plt.ylabel("Elevation (meters)")
                         
@@ -2387,22 +2388,28 @@ class Grapher:
                 plt.close()
 
 
+        # Function to parse depth and distance from station label
+        def parse_station_label(stationName):
+            # Example: "Napatree1 7m Depth Waves 75m"
+            depth_match = re.search(r'(\d+\.?\d*m)\s+Depth', stationName)
+            distance_match = re.search(r'Waves\s+(\d+\.?\d*m)', stationName)
+            depth = depth_match.group(1) if depth_match else None
+            distance = distance_match.group(1) if distance_match else None
+            return depth, distance
+        
         # --- Combined Runup Plots for All Transects ---
-        # Collect all runup and dune height data for consistent y-axis
         all_y_values = []
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
-                    all_y_values.extend(self.datapointsRunupHolmanMid[index])
-                    all_y_values.extend(self.datapointsDuneHeights[index])
+                    all_y_values.extend([x for x in self.datapointsRunupHolmanMid[index] if not np.isnan(x)])
+                    all_y_values.extend([x for x in self.datapointsDuneHeights[index] if not np.isnan(x)])
         
-        # Compute global min and max
-        y_min = min(all_y_values) if all_y_values else -10.0  # Fallback if no data
+        y_min = min(all_y_values) if all_y_values else -10.0
         y_max = max(all_y_values) if all_y_values else 10.0
-        # Add 10% padding
         y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.5
-        y_min = y_min - y_padding  # Allow negative values
+        y_min = y_min - y_padding
         y_max = y_max + y_padding
         
         fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
@@ -2411,14 +2418,24 @@ class Grapher:
             dune_heights = []
             unique_heights = set()
         
+            # Collect max values for 7m, 20m, 9km
+            max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
+                    depth, distance = parse_station_label(stationName)
+                    if depth == "7m":
+                        max_7m = round(np.nanmax(self.datapointsRunupHolmanMid[index]), 2) if len(self.datapointsRunupHolmanMid[index]) > 0 else "-"
+                    elif depth == "20m":
+                        max_20m = round(np.nanmax(self.datapointsRunupHolmanMid[index]), 2) if len(self.datapointsRunupHolmanMid[index]) > 0 else "-"
+                    if distance == "9000m":
+                        max_9km = round(np.nanmax(self.datapointsRunupHolmanMid[index]), 2) if len(self.datapointsRunupHolmanMid[index]) > 0 else "-"
+        
                     dune_heights = self.datapointsDuneHeights[index]
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
-                    unique_heights.update(dune_heights)
+                    unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
-            # Plot horizontal lines for each unique dune height
+            # Plot horizontal lines for dune heights
             for height in unique_heights:
                 if transect >= 5:
                     ax.axhline(y=height, linestyle='--', color='red', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
@@ -2426,24 +2443,21 @@ class Grapher:
                     ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
             ax.tick_params(axis='both', labelsize=12)
             ax.set_ylabel("Runup (meters)", fontsize=12)
-            ax.set_title(f"{self.titlePrefix}Napatree{transect} Runup", fontsize=14)
-            ax.set_ylim(y_min, y_max)  # Set consistent y-axis limits
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Runup (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} m)", fontsize=14)
+            ax.set_ylim(y_min, y_max)
         
-        # Set x-axis label on the bottom subplot
         axes[-1].set_xlabel("Date", fontsize=14)
-        
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_runup.png')
         plt.close()
-
-        # --- Figure 1: Combined Deepwater Significant Wave Height (H_0) ---
-        # Collect all deepwater SWH data for consistent y-axis
+        
+        # --- Figure 1: Combined Deepwater Significant Wave Height ---
         all_deepwater_swh = []
         for index in range(numberOfRunupDatapoints):
-            all_deepwater_swh.extend(self.datapointsRunupHolmanLow[index])
+            all_deepwater_swh.extend([x for x in self.datapointsRunupHolmanLow[index] if not np.isnan(x)])
         
         deepwater_swh_min = min(all_deepwater_swh) if all_deepwater_swh else 0.0
         deepwater_swh_max = max(all_deepwater_swh) if all_deepwater_swh else 10.0
@@ -2455,30 +2469,39 @@ class Grapher:
         for transect in range(1, 6):
             ax = axes[transect - 1]
         
+            # Collect max values for 7m, 20m, 9km
+            max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
+                    depth, distance = parse_station_label(stationName)
+                    if depth == "7m":
+                        max_7m = round(np.nanmax(self.datapointsRunupHolmanLow[index]), 2) if len(self.datapointsRunupHolmanLow[index]) > 0 else "-"
+                    elif depth == "20m":
+                        max_20m = round(np.nanmax(self.datapointsRunupHolmanLow[index]), 2) if len(self.datapointsRunupHolmanLow[index]) > 0 else "-"
+                    if distance == "9000m":
+                        max_9km = round(np.nanmax(self.datapointsRunupHolmanLow[index]), 2) if len(self.datapointsRunupHolmanLow[index]) > 0 else "-"
+        
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanLow[index], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
             ax.tick_params(axis='both', labelsize=12)
-            ax.set_ylabel(r"$H_0$ (meters)", fontsize=12)
-            ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater SWH", fontsize=16)
+            ax.set_ylabel("Deepwater Significant Wave Height (meters)", fontsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Deepwater Significant Wave Height (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} m)", fontsize=16)
             ax.set_ylim(deepwater_swh_y_min, deepwater_swh_y_max)
         
-        plt.xlabel("Date", fontsize=14)
+        axes[-1].set_xlabel("Date", fontsize=14)
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_deepwater_swh.png')
         plt.close()
         
-        # --- Figure 2: Combined Significant Wave Height (H_s) ---
-        # Collect all SWH data for consistent y-axis
+        # --- Figure 2: Combined Significant Wave Height ---
         all_swh = []
         for index in range(numberOfRunupDatapoints):
             if self.runupLabels[index] in self.buoyLabels:
                 swhIndex = self.buoyLabels.index(self.runupLabels[index])
-                all_swh.extend(self.datapointsSWH[swhIndex])
+                all_swh.extend([x for x in self.datapointsSWH[swhIndex] if not np.isnan(x)])
         
         swh_min = min(all_swh) if all_swh else 0.0
         swh_max = max(all_swh) if all_swh else 10.0
@@ -2487,65 +2510,80 @@ class Grapher:
         swh_y_max = swh_max + swh_padding
         
         fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
-        for index in range(1, 6):
-            ax = axes[index - 1]
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
         
-            for index2 in range(numberOfRunupDatapoints):
-                stationName = self.runupLabels[index2]
-                if str(index) in stationName[0:stationName.index(" ")]:
+            # Collect max values for 7m, 20m, 9km
+            max_7m = max_20m = max_9km = "-"
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
                     if stationName in self.buoyLabels:
                         swhIndex = self.buoyLabels.index(stationName)
+                        depth, distance = parse_station_label(stationName)
+                        if depth == "7m":
+                            max_7m = round(np.nanmax(self.datapointsSWH[swhIndex]), 2) if len(self.datapointsSWH[swhIndex]) > 0 else "-"
+                        elif depth == "20m":
+                            max_20m = round(np.nanmax(self.datapointsSWH[swhIndex]), 2) if len(self.datapointsSWH[swhIndex]) > 0 else "-"
+                        if distance == "9000m":
+                            max_9km = round(np.nanmax(self.datapointsSWH[swhIndex]), 2) if len(self.datapointsSWH[swhIndex]) > 0 else "-"
+        
                         ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
             ax.tick_params(axis='both', labelsize=12)
-            ax.set_ylabel(r"$H_s$ (meters)", fontsize=12)
-            ax.set_title(f"{self.titlePrefix}Napatree{index} SWH", fontsize=16)
+            ax.set_ylabel("Significant Wave Height (meters)", fontsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Significant Wave Height (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} m)", fontsize=16)
             ax.set_ylim(swh_y_min, swh_y_max)
-            
-
         
-        plt.xlabel("Date", fontsize=14)
+        axes[-1].set_xlabel("Date", fontsize=14)
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_swh.png')
         plt.close()
         
-        # --- Combined Peak Wave Period (T_p) ---
-        # Collect all PWP data for consistent y-axis
+        # --- Combined Peak Wave Period ---
         all_pwp = []
         for index in range(numberOfRunupDatapoints):
             if self.runupLabels[index] in self.buoyLabels:
                 pwpIndex = self.buoyLabels.index(self.runupLabels[index])
-                all_pwp.extend(self.datapointsPWP[pwpIndex])
+                all_pwp.extend([x for x in self.datapointsPWP[pwpIndex] if not np.isnan(x)])
         
         pwp_min = min(all_pwp) if all_pwp else 0.0
-        pwp_max = max(all_pwp) if all_pwp else 20.0  # Reasonable max for wave periods
+        pwp_max = max(all_pwp) if all_pwp else 20.0
         pwp_padding = (pwp_max - pwp_min) * 0.1 if pwp_max != pwp_min else 0.5
-        pwp_y_min = max(0.0, pwp_min - pwp_padding)  # Non-negative for wave periods
+        pwp_y_min = max(0.0, pwp_min - pwp_padding)
         pwp_y_max = pwp_max + pwp_padding
         
         fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
         for transect in range(1, 6):
             ax = axes[transect - 1]
         
+            # Collect max values for 7m, 20m, 9km
+            max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     if stationName in self.buoyLabels:
                         pwpIndex = self.buoyLabels.index(stationName)
+                        depth, distance = parse_station_label(stationName)
+                        if depth == "7m":
+                            max_7m = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
+                        elif depth == "20m":
+                            max_20m = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
+                        if distance == "9000m":
+                            max_9km = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
+        
                         ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
         
             ax.legend(loc="upper left", fontsize=10)
-            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
             ax.tick_params(axis='both', labelsize=12)
-            ax.set_ylabel(r"$T_p$ (seconds)", fontsize=12)
-            ax.set_title(f"{self.titlePrefix}Napatree{transect} PWP", fontsize=16)
-            ax.set_ylim(pwp_y_min, pwp_y_max)  # Consistent y-axis limits
+            ax.set_ylabel("Peak Wave Period (seconds)", fontsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Peak Wave Period (Max 7m, 20m, 9km: {max_7m}, {max_20m}, {max_9km} sec)", fontsize=16)
+            ax.set_ylim(pwp_y_min, pwp_y_max)
         
-        # Set x-axis label on the bottom subplot
         axes[-1].set_xlabel("Date", fontsize=14)
-        
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_pwp.png')
         plt.close()
