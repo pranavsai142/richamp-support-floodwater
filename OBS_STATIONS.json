@@ -64,14 +64,6 @@
       "longitude": "-71.3988",
       "altitude": "21.0\n"
     },
-    "83": {
-      "id": "8452660",
-      "source": "CO-OPS_8452660_met.csv",
-      "name": "Newport, RI",
-      "latitude": "41.505",
-      "longitude": "-71.326667",
-      "altitude": "10.6\n"
-    },
     "101": {
       "id": "8454049",
       "source": "CO-OPS_8454049_met.csv",
