@@ -307,7 +307,7 @@
 # --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE_BEACH
 
 
-python generateGraphs.py --stations OBS_STATIONS>json --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPFilesHenriAdvisory17_1ft/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPFilesHenriAdvisory17_1ft/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP
 
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --postExists true --wind /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPHenriAdvisory18-June23/RICHAMP_wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP
 
