@@ -201,7 +201,8 @@ class GetBuoyWater:
                 usgs_start_date = startDateObject.strftime("%Y-%m-%dT%H:%M:%S.000-05:00")
                 usgs_end_date = endDateObject.strftime("%Y-%m-%dT%H:%M:%S.999-05:00")
                 url = f"https://nwis.waterservices.usgs.gov/nwis/iv/?sites={stationId}&agencyCd=USGS&startDT={usgs_start_date}&endDT={usgs_end_date}¶meterCd=00065&format=rdb"
-            
+                print(url)
+                quit()
                 # Step 2: Download and load the data
                 filename = temp_directory + stationDict["id"] + "_usgs.txt"
                 try:
