@@ -1504,7 +1504,7 @@ class Grapher:
 #             graphs up to 10 m/s, ~20 knots
             plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                ticks=np.arange(vminSwath, vmax, 0.5),
+                ticks=np.arange(vminSwath, vmax + 0.5, 0.5),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 label="Meters",
