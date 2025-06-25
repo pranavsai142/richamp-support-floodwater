@@ -257,9 +257,9 @@
 # --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_runup_temp/ --backgroundChoice NAPATREE --graphDirectory Runup2023Average/
 
 # Water swath
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWater2023/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWater2023/
 
-# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWaterSwath2023/
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWaterSwath2023/
 
 
 # Obs GFS and swath
