@@ -198,21 +198,26 @@ class GetBuoyWater:
                 print("Pulling Data from USGS Station")
             
                 # Step 1: Construct the USGS URL dynamically
-                usgs_start_date = startDateObject.strftime("%Y-%m-%dT%H:%M:%S.000-05:00")
-                usgs_end_date = endDateObject.strftime("%Y-%m-%dT%H:%M:%S.999-05:00")
-                url = f"https://nwis.waterservices.usgs.gov/nwis/iv/?sites={stationId}&agencyCd=USGS&startDT={usgs_start_date}&endDT={usgs_end_date}¶meterCd=00065&format=rdb"
-                print(url)
-                quit()
+                # Ensure startDT is at the beginning of the start date (00:00:00.000)
+                usgs_start_date = startDateObject.strftime("%Y-%m-%dT00:00:00.000-05:00")
+                # Ensure endDT is at the end of the end date (23:59:59.999)
+                usgs_end_date = endDateObject.strftime("%Y-%m-%dT23:59:59.999-05:00")
+                url = f"https://nwis.waterservices.usgs.gov/nwis/iv/?sites={stationId}&agencyCd=USGS&startDT={usgs_start_date}&endDT={usgs_end_date}&parameterCd=00065&format=rdb"
+                print(f"Generated USGS URL: {url}")
+            
                 # Step 2: Download and load the data
                 filename = temp_directory + stationDict["id"] + "_usgs.txt"
                 try:
+                    # Download the data
+                    safe_urlretrieve(url, filename)
+            
                     # Read the tab-delimited USGS data, skipping header lines (starting with '#') and the metadata row
                     # The metadata row ('5s 15s 20d 6s 14n 10s') is typically the line after the header names
                     data = pd.read_csv(
                         filename,
                         sep="\t",
                         comment="#",
-                        skiprows=[0],  # Skip the metadata row after the header (adjust based on inspection)
+                        skiprows=[0],  # Skip the metadata row after the header
                         parse_dates=["datetime"],
                         date_format="%Y-%m-%d %H:%M"
                     )
