@@ -2374,9 +2374,10 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxAverageSlope = str(round(max(self.runupAverageSlopes[index]), 2))
-                plt.title(self.titlePrefix + stationName + " station average slope (waterline to surf) max: " + maxAverageSlope, fontsize=18)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" average $\beta_f$")
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
-                plt.ylabel("average slope", fontsize=14)
+                plt.ylabel("Slope")
+                plt.ylabel("Date")
                 plt.savefig(graph_directory + stationName + '_slope.png')
                 plt.close()
 
