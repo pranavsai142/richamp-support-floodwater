@@ -2377,7 +2377,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" instant $\beta_f$")
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Slope")
-                plt.ylabel("Date")
+                plt.xlabel("Date")
                 plt.savefig(graph_directory + stationName + '_slope.png')
                 plt.close()
 
