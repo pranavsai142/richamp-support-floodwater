@@ -2306,7 +2306,7 @@ class Grapher:
                         ax.format_xdata = mdates.DateFormatter('%d')
                         stationName = self.tideLabels[datapointsWaterRunupIndex]
 #                         print("stationName of corresponding water station: ", stationName)
-                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " m)")
+                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " m)", fontsize=24)
                         plt.xlabel("Date")
                         plt.ylabel("Elevation (meters)")
                         
@@ -2374,7 +2374,7 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxAverageSlope = str(round(max(self.runupAverageSlopes[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" average $\beta_f$")
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" instant $\beta_f$", fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Slope")
                 plt.xlabel("Date")
