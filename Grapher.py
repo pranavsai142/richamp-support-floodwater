@@ -2374,7 +2374,7 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxAverageSlope = str(round(max(self.runupAverageSlopes[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" average $\beta_f$")
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" instant $\beta_f$")
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Slope")
                 plt.ylabel("Date")
