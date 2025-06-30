@@ -397,7 +397,7 @@ class GetRunup:
             offshoreSwh = deepwaterSwh  # As requested
             offshoreSteepness = offshoreSwh / offshoreWavelength  # Updated steepness using deepwater values
 
-            slopelineElevation = float(meshDict[slopelineKey]["elevation"])
+#             slopelineElevation = float(meshDict[slopelineKey]["elevation"])
 
             # Now offshoreSwh represents the deepwater significant wave height
             waterlineKeys = []
