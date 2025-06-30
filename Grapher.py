@@ -2426,9 +2426,9 @@ class Grapher:
             # Plot slopes for the selected station
             for base_name, slopes in slopes_by_name.items():
                 if slopes['true'] is not None:
-                    ax.plot(self.runupTimes, slopes['true'], label=f"Daily Average $\beta_f$", color='blue', linestyle='-')
+                    ax.plot(self.runupTimes, slopes['true'], label=r"Daily Average $\beta_f$", color='blue', linestyle='-')
                 if slopes['false'] is not None:
-                    ax.plot(self.runupTimes, slopes['false'], label=f"Instantaneous $\beta_f$", color='red', linestyle='--')
+                    ax.plot(self.runupTimes, slopes['false'], label=r"Instantaneous $\beta_f$", color='red', linestyle='--')
                 break  # Plot only one station per transect
             
             ax.legend(loc="upper left", fontsize=10)
