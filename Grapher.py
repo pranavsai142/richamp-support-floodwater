@@ -2426,15 +2426,15 @@ class Grapher:
             # Plot slopes for the selected station
             for base_name, slopes in slopes_by_name.items():
                 if slopes['true'] is not None:
-                    ax.plot(self.runupTimes, slopes['true'], label=f"{base_name} (Daily Average $\beta_f$)", color='blue', linestyle='-')
+                    ax.plot(self.runupTimes, slopes['true'], label=f"Daily Average $\beta_f$", color='blue', linestyle='-')
                 if slopes['false'] is not None:
-                    ax.plot(self.runupTimes, slopes['false'], label=f"{base_name} (Instantaneous $\beta_f$)", color='red', linestyle='--')
+                    ax.plot(self.runupTimes, slopes['false'], label=f"Instantaneous $\beta_f$", color='red', linestyle='--')
                 break  # Plot only one station per transect
             
             ax.legend(loc="upper left", fontsize=10)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.format_xdata = mdates.DateFormatter('%d')
             ax.tick_params(axis='both', labelsize=12)
-            ax.set_ylabel("\u03B2_f", fontsize=12)
+            ax.set_ylabel("Slope", fontsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Foreshore Beach Slope", fontsize=14)
             ax.set_ylim(y_min, y_max)
         
