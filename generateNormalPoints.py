@@ -599,45 +599,44 @@ def generate_deepline_points(json_data):
     
     for runup_id, runup_data in list(json_data['RUNUP'].items()):
         station_id = runup_id[0:2]
-        print(station_id)
+        print(f"Processing station_id: {station_id}, runup_id: {runup_id}")
         shoreline_lat, shoreline_lon = float(runup_data['latitude']), float(runup_data['longitude'])
         surf_lat, surf_lon = float(runup_data['surfLatitude']), float(runup_data['surfLongitude'])
         bearing = calculate_bearing(shoreline_lat, shoreline_lon, surf_lat, surf_lon)
         deepline_distances = DEEPLINE_DISTANCES_MAP.get(station_id, DEEPLINE_DISTANCES_1)
         dune_heights = DUNE_HEIGHTS_MAP.get(station_id, DUNE_HEIGHTS_1)
         
-        # Ensure deeplineKey exists
         if 'deeplineKey' not in runup_data:
             runup_data['deeplineKey'] = f"{station_id}d"
         
         for idx, deepline_info in enumerate(deepline_distances):
             distance = deepline_info['distance']
             depth = deepline_info['depth']
-            
             deepline_key = f"{runup_data['deeplineKey']}d{idx}"
-            new_runup_key = f"{runup_id}d{idx}"  # Use full runup_id, e.g., "10d1", "20d1"
+            base_name = f"{runup_data['name'].split(' ')[0]} {depth} Depth Waves {distance}m"
             
-            new_runup[new_runup_key] = runup_data.copy()
-            new_runup[new_runup_key]['deeplineKey'] = deepline_key
-            # Include distance in the name
-            new_runup[new_runup_key]['name'] = f"{runup_data['name'].split(' ')[0]} {depth} Depth Waves {distance}m"
-            new_runup[new_runup_key]['duneHeights'] = dune_heights
-            
-            new_lat, new_lon = calculate_new_point(shoreline_lat, shoreline_lon, bearing, distance)
-            new_runup[new_runup_key]['deeplineLatitude'] = f"{new_lat:.6f}"
-            new_runup[new_runup_key]['deeplineLongitude'] = f"{new_lon:.6f}"
-            
-            deepline_point = {
-                "id": "RUNUP",
-                "source": "RUNUP",
-                "name": f"{runup_data['name'].split(' ')[0]} {depth} Depth Waves {distance}m",
-                "latitude": f"{new_lat:.6f}",
-                "longitude": f"{new_lon:.6f}"
-            }
-            
-            # Write deepline point to ASSET, NDBC, NOS sections
-            for section in ['ASSET', 'NDBC', 'NOS']:
-                json_data[section][deepline_key] = deepline_point
+            # Create two RUNUP entries: one with calculateDailyAverageSlope: true, one with false
+            for slope_mode in [True, False]:
+                new_runup_key = f"{runup_id}d{idx}_{'true' if slope_mode else 'false'}"
+                new_runup[new_runup_key] = runup_data.copy()
+                new_runup[new_runup_key]['deeplineKey'] = deepline_key
+                # Include runup_id in name for clarity
+                new_runup[new_runup_key]['name'] = f"{base_name} {new_runup_key}"
+                new_runup[new_runup_key]['duneHeights'] = dune_heights
+                new_lat, new_lon = calculate_new_point(shoreline_lat, shoreline_lon, bearing, distance)
+                new_runup[new_runup_key]['deeplineLatitude'] = f"{new_lat:.6f}"
+                new_runup[new_runup_key]['deeplineLongitude'] = f"{new_lon:.6f}"
+                new_runup[new_runup_key]['calculateDailyAverageSlope'] = slope_mode
+                
+                deepline_point = {
+                    "id": "RUNUP",
+                    "source": "RUNUP",
+                    "name": f"{base_name}",  # ASSET/NDBC/NOS use base name without runup_id
+                    "latitude": f"{new_lat:.6f}",
+                    "longitude": f"{new_lon:.6f}"
+                }
+                for section in ['ASSET', 'NDBC', 'NOS']:
+                    json_data[section][deepline_key] = deepline_point
     
     json_data['RUNUP'] = new_runup
 

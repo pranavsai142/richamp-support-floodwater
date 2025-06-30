@@ -2391,6 +2391,58 @@ class Grapher:
             distance = distance_match.group(1) if distance_match else None
             return depth, distance
         
+        
+        # Collect all y-values for dynamic y-limits
+        all_y_values = []
+        for index in range(len(self.runupLabels)):
+            all_y_values.extend([x for x in self.runupAverageSlopes[index] if not np.isnan(x)])
+        
+        y_min = min(all_y_values) if all_y_values else -0.1
+        y_max = max(all_y_values) if all_y_values else 0.1
+        y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.01
+        y_min = y_min - y_padding
+        y_max = y_max + y_padding
+        
+        # Create 5x1 subplots
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+            
+            # Find one station per transect (7m depth)
+            slopes_by_name = {}
+            for index, station_name in enumerate(self.runupLabels):
+                if str(transect) not in station_name[0:station_name.index(" ")]:
+                    continue
+                if '7m Depth Waves' in station_name:
+                    base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
+                    if base_name not in slopes_by_name:
+                        slopes_by_name[base_name] = {'true': None, 'false': None}
+                    if station_name.endswith('_true'):
+                        slopes_by_name[base_name]['true'] = self.runupAverageSlopes[index]
+                    elif station_name.endswith('_false'):
+                        slopes_by_name[base_name]['false'] = self.runupAverageSlopes[index]
+            
+            # Plot slopes for the selected station
+            for base_name, slopes in slopes_by_name.items():
+                if slopes['true'] is not None:
+                    ax.plot(self.runupTimes, slopes['true'], label=f"{base_name} (Daily Average $\beta_f$)", color='blue', linestyle='-')
+                if slopes['false'] is not None:
+                    ax.plot(self.runupTimes, slopes['false'], label=f"{base_name} (Instantaneous $\beta_f$)", color='red', linestyle='--')
+                break  # Plot only one station per transect
+            
+            ax.legend(loc="upper left", fontsize=10)
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylabel("\u03B2_f", fontsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Foreshore Beach Slope", fontsize=14)
+            ax.set_ylim(y_min, y_max)
+        
+        axes[-1].set_xlabel("Date", fontsize=14)
+        plt.tight_layout()
+        plt.savefig(f"{graph_directory}/Napatree_all_slope.png")
+        plt.close()
+    
         # --- Combined Runup Plots for All Transects ---
         all_y_values = []
         for transect in range(1, 6):

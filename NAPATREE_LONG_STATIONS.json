@@ -2212,13 +2212,13 @@
     }
   },
   "RUNUP": {
-    "40d0": {
+    "40d0_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "41",
       "offshoreKey": "42",
       "deeplineKey": "43d0",
-      "name": "Napatree4 7m Depth Waves 410m",
+      "name": "Napatree4 7m Depth Waves 410m 40d0_true",
       "latitude": "41.30913",
       "longitude": "-71.87615",
       "tangentLatitude": "41.30924",
@@ -2238,15 +2238,45 @@
         }
       ],
       "deeplineLatitude": "41.305782",
-      "deeplineLongitude": "-71.874093"
+      "deeplineLongitude": "-71.874093",
+      "calculateDailyAverageSlope": true
     },
-    "40d1": {
+    "40d0_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "41",
+      "offshoreKey": "42",
+      "deeplineKey": "43d0",
+      "name": "Napatree4 7m Depth Waves 410m 40d0_false",
+      "latitude": "41.30913",
+      "longitude": "-71.87615",
+      "tangentLatitude": "41.30924",
+      "tangentLongitude": "-71.87583",
+      "surfLatitude": "41.303351",
+      "surfLongitude": "-71.872599",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 3.89
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 3.92
+        }
+      ],
+      "deeplineLatitude": "41.305782",
+      "deeplineLongitude": "-71.874093",
+      "calculateDailyAverageSlope": false
+    },
+    "40d1_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "41",
       "offshoreKey": "42",
       "deeplineKey": "43d1",
-      "name": "Napatree4 20m Depth Waves 2225m",
+      "name": "Napatree4 20m Depth Waves 2225m 40d1_true",
       "latitude": "41.30913",
       "longitude": "-71.87615",
       "tangentLatitude": "41.30924",
@@ -2266,15 +2296,45 @@
         }
       ],
       "deeplineLatitude": "41.290962",
-      "deeplineLongitude": "-71.864989"
+      "deeplineLongitude": "-71.864989",
+      "calculateDailyAverageSlope": true
     },
-    "40d2": {
+    "40d1_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "41",
+      "offshoreKey": "42",
+      "deeplineKey": "43d1",
+      "name": "Napatree4 20m Depth Waves 2225m 40d1_false",
+      "latitude": "41.30913",
+      "longitude": "-71.87615",
+      "tangentLatitude": "41.30924",
+      "tangentLongitude": "-71.87583",
+      "surfLatitude": "41.303351",
+      "surfLongitude": "-71.872599",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 3.89
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 3.92
+        }
+      ],
+      "deeplineLatitude": "41.290962",
+      "deeplineLongitude": "-71.864989",
+      "calculateDailyAverageSlope": false
+    },
+    "40d2_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "41",
       "offshoreKey": "42",
       "deeplineKey": "43d2",
-      "name": "Napatree4 40m Depth Waves 9000m",
+      "name": "Napatree4 40m Depth Waves 9000m 40d2_true",
       "latitude": "41.30913",
       "longitude": "-71.87615",
       "tangentLatitude": "41.30924",
@@ -2294,15 +2354,45 @@
         }
       ],
       "deeplineLatitude": "41.235634",
-      "deeplineLongitude": "-71.831041"
+      "deeplineLongitude": "-71.831041",
+      "calculateDailyAverageSlope": true
     },
-    "50d0": {
+    "40d2_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "41",
+      "offshoreKey": "42",
+      "deeplineKey": "43d2",
+      "name": "Napatree4 40m Depth Waves 9000m 40d2_false",
+      "latitude": "41.30913",
+      "longitude": "-71.87615",
+      "tangentLatitude": "41.30924",
+      "tangentLongitude": "-71.87583",
+      "surfLatitude": "41.303351",
+      "surfLongitude": "-71.872599",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 3.89
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 3.92
+        }
+      ],
+      "deeplineLatitude": "41.235634",
+      "deeplineLongitude": "-71.831041",
+      "calculateDailyAverageSlope": false
+    },
+    "50d0_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "51",
       "offshoreKey": "42",
       "deeplineKey": "53d0",
-      "name": "Napatree5 7m Depth Waves 545m",
+      "name": "Napatree5 7m Depth Waves 545m 50d0_true",
       "latitude": "41.307588",
       "longitude": "-71.879751",
       "tangentLatitude": "41.307614",
@@ -2322,15 +2412,45 @@
         }
       ],
       "deeplineLatitude": "41.303207",
-      "deeplineLongitude": "-71.876825"
+      "deeplineLongitude": "-71.876825",
+      "calculateDailyAverageSlope": true
     },
-    "50d1": {
+    "50d0_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "51",
+      "offshoreKey": "42",
+      "deeplineKey": "53d0",
+      "name": "Napatree5 7m Depth Waves 545m 50d0_false",
+      "latitude": "41.307588",
+      "longitude": "-71.879751",
+      "tangentLatitude": "41.307614",
+      "tangentLongitude": "-71.879688",
+      "surfLatitude": "41.301188",
+      "surfLongitude": "-71.875477",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 3.32
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 3.22
+        }
+      ],
+      "deeplineLatitude": "41.303207",
+      "deeplineLongitude": "-71.876825",
+      "calculateDailyAverageSlope": false
+    },
+    "50d1_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "51",
       "offshoreKey": "42",
       "deeplineKey": "53d1",
-      "name": "Napatree5 20m Depth Waves 2175m",
+      "name": "Napatree5 20m Depth Waves 2175m 50d1_true",
       "latitude": "41.307588",
       "longitude": "-71.879751",
       "tangentLatitude": "41.307614",
@@ -2350,15 +2470,45 @@
         }
       ],
       "deeplineLatitude": "41.290104",
-      "deeplineLongitude": "-71.868077"
+      "deeplineLongitude": "-71.868077",
+      "calculateDailyAverageSlope": true
     },
-    "50d2": {
+    "50d1_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "51",
+      "offshoreKey": "42",
+      "deeplineKey": "53d1",
+      "name": "Napatree5 20m Depth Waves 2175m 50d1_false",
+      "latitude": "41.307588",
+      "longitude": "-71.879751",
+      "tangentLatitude": "41.307614",
+      "tangentLongitude": "-71.879688",
+      "surfLatitude": "41.301188",
+      "surfLongitude": "-71.875477",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 3.32
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 3.22
+        }
+      ],
+      "deeplineLatitude": "41.290104",
+      "deeplineLongitude": "-71.868077",
+      "calculateDailyAverageSlope": false
+    },
+    "50d2_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "51",
       "offshoreKey": "42",
       "deeplineKey": "53d2",
-      "name": "Napatree5 40m Depth Waves 9000m",
+      "name": "Napatree5 40m Depth Waves 9000m 50d2_true",
       "latitude": "41.307588",
       "longitude": "-71.879751",
       "tangentLatitude": "41.307614",
@@ -2378,15 +2528,45 @@
         }
       ],
       "deeplineLatitude": "41.235233",
-      "deeplineLongitude": "-71.831486"
+      "deeplineLongitude": "-71.831486",
+      "calculateDailyAverageSlope": true
     },
-    "30d0": {
+    "50d2_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "51",
+      "offshoreKey": "42",
+      "deeplineKey": "53d2",
+      "name": "Napatree5 40m Depth Waves 9000m 50d2_false",
+      "latitude": "41.307588",
+      "longitude": "-71.879751",
+      "tangentLatitude": "41.307614",
+      "tangentLongitude": "-71.879688",
+      "surfLatitude": "41.301188",
+      "surfLongitude": "-71.875477",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 3.32
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 3.22
+        }
+      ],
+      "deeplineLatitude": "41.235233",
+      "deeplineLongitude": "-71.831486",
+      "calculateDailyAverageSlope": false
+    },
+    "30d0_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "31",
       "offshoreKey": "42",
       "deeplineKey": "33d0",
-      "name": "Napatree3 7m Depth Waves 435m",
+      "name": "Napatree3 7m Depth Waves 435m 30d0_true",
       "latitude": "41.310243",
       "longitude": "-71.872394",
       "tangentLatitude": "41.310266",
@@ -2406,15 +2586,45 @@
         }
       ],
       "deeplineLatitude": "41.306522",
-      "deeplineLongitude": "-71.870786"
+      "deeplineLongitude": "-71.870786",
+      "calculateDailyAverageSlope": true
     },
-    "30d1": {
+    "30d0_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "31",
+      "offshoreKey": "42",
+      "deeplineKey": "33d0",
+      "name": "Napatree3 7m Depth Waves 435m 30d0_false",
+      "latitude": "41.310243",
+      "longitude": "-71.872394",
+      "tangentLatitude": "41.310266",
+      "tangentLongitude": "-71.872291",
+      "surfLatitude": "41.303533",
+      "surfLongitude": "-71.869495",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 4.02
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 4.06
+        }
+      ],
+      "deeplineLatitude": "41.306522",
+      "deeplineLongitude": "-71.870786",
+      "calculateDailyAverageSlope": false
+    },
+    "30d1_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "31",
       "offshoreKey": "42",
       "deeplineKey": "33d1",
-      "name": "Napatree3 20m Depth Waves 2233m",
+      "name": "Napatree3 20m Depth Waves 2233m 30d1_true",
       "latitude": "41.310243",
       "longitude": "-71.872394",
       "tangentLatitude": "41.310266",
@@ -2434,15 +2644,45 @@
         }
       ],
       "deeplineLatitude": "41.291142",
-      "deeplineLongitude": "-71.864143"
+      "deeplineLongitude": "-71.864143",
+      "calculateDailyAverageSlope": true
     },
-    "30d2": {
+    "30d1_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "31",
+      "offshoreKey": "42",
+      "deeplineKey": "33d1",
+      "name": "Napatree3 20m Depth Waves 2233m 30d1_false",
+      "latitude": "41.310243",
+      "longitude": "-71.872394",
+      "tangentLatitude": "41.310266",
+      "tangentLongitude": "-71.872291",
+      "surfLatitude": "41.303533",
+      "surfLongitude": "-71.869495",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 4.02
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 4.06
+        }
+      ],
+      "deeplineLatitude": "41.291142",
+      "deeplineLongitude": "-71.864143",
+      "calculateDailyAverageSlope": false
+    },
+    "30d2_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "31",
       "offshoreKey": "42",
       "deeplineKey": "33d2",
-      "name": "Napatree3 40m Depth Waves 9000m",
+      "name": "Napatree3 40m Depth Waves 9000m 30d2_true",
       "latitude": "41.310243",
       "longitude": "-71.872394",
       "tangentLatitude": "41.310266",
@@ -2462,15 +2702,45 @@
         }
       ],
       "deeplineLatitude": "41.233253",
-      "deeplineLongitude": "-71.839169"
+      "deeplineLongitude": "-71.839169",
+      "calculateDailyAverageSlope": true
     },
-    "20d0": {
+    "30d2_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "31",
+      "offshoreKey": "42",
+      "deeplineKey": "33d2",
+      "name": "Napatree3 40m Depth Waves 9000m 30d2_false",
+      "latitude": "41.310243",
+      "longitude": "-71.872394",
+      "tangentLatitude": "41.310266",
+      "tangentLongitude": "-71.872291",
+      "surfLatitude": "41.303533",
+      "surfLongitude": "-71.869495",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 4.02
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 4.06
+        }
+      ],
+      "deeplineLatitude": "41.233253",
+      "deeplineLongitude": "-71.839169",
+      "calculateDailyAverageSlope": false
+    },
+    "20d0_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "21",
       "offshoreKey": "42",
       "deeplineKey": "23d0",
-      "name": "Napatree2 7m Depth Waves 550m",
+      "name": "Napatree2 7m Depth Waves 550m 20d0_true",
       "latitude": "41.310801",
       "longitude": "-71.869413",
       "tangentLatitude": "41.310817",
@@ -2490,15 +2760,45 @@
         }
       ],
       "deeplineLatitude": "41.305881",
-      "deeplineLongitude": "-71.868736"
+      "deeplineLongitude": "-71.868736",
+      "calculateDailyAverageSlope": true
     },
-    "20d1": {
+    "20d0_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "21",
+      "offshoreKey": "42",
+      "deeplineKey": "23d0",
+      "name": "Napatree2 7m Depth Waves 550m 20d0_false",
+      "latitude": "41.310801",
+      "longitude": "-71.869413",
+      "tangentLatitude": "41.310817",
+      "tangentLongitude": "-71.869263",
+      "surfLatitude": "41.304358",
+      "surfLongitude": "-71.868526",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 4.81
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 4.82
+        }
+      ],
+      "deeplineLatitude": "41.305881",
+      "deeplineLongitude": "-71.868736",
+      "calculateDailyAverageSlope": false
+    },
+    "20d1_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "21",
       "offshoreKey": "42",
       "deeplineKey": "23d1",
-      "name": "Napatree2 20m Depth Waves 2265m",
+      "name": "Napatree2 20m Depth Waves 2265m 20d1_true",
       "latitude": "41.310801",
       "longitude": "-71.869413",
       "tangentLatitude": "41.310817",
@@ -2518,15 +2818,45 @@
         }
       ],
       "deeplineLatitude": "41.290539",
-      "deeplineLongitude": "-71.866624"
+      "deeplineLongitude": "-71.866624",
+      "calculateDailyAverageSlope": true
     },
-    "20d2": {
+    "20d1_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "21",
+      "offshoreKey": "42",
+      "deeplineKey": "23d1",
+      "name": "Napatree2 20m Depth Waves 2265m 20d1_false",
+      "latitude": "41.310801",
+      "longitude": "-71.869413",
+      "tangentLatitude": "41.310817",
+      "tangentLongitude": "-71.869263",
+      "surfLatitude": "41.304358",
+      "surfLongitude": "-71.868526",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 4.81
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 4.82
+        }
+      ],
+      "deeplineLatitude": "41.290539",
+      "deeplineLongitude": "-71.866624",
+      "calculateDailyAverageSlope": false
+    },
+    "20d2_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "21",
       "offshoreKey": "42",
       "deeplineKey": "23d2",
-      "name": "Napatree2 40m Depth Waves 9000m",
+      "name": "Napatree2 40m Depth Waves 9000m 20d2_true",
       "latitude": "41.310801",
       "longitude": "-71.869413",
       "tangentLatitude": "41.310817",
@@ -2546,15 +2876,45 @@
         }
       ],
       "deeplineLatitude": "41.230291",
-      "deeplineLongitude": "-71.858342"
+      "deeplineLongitude": "-71.858342",
+      "calculateDailyAverageSlope": true
     },
-    "10d0": {
+    "20d2_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "21",
+      "offshoreKey": "42",
+      "deeplineKey": "23d2",
+      "name": "Napatree2 40m Depth Waves 9000m 20d2_false",
+      "latitude": "41.310801",
+      "longitude": "-71.869413",
+      "tangentLatitude": "41.310817",
+      "tangentLongitude": "-71.869263",
+      "surfLatitude": "41.304358",
+      "surfLongitude": "-71.868526",
+      "offshoreLatitude": "41.19892",
+      "offshoreLongitude": "-71.80623",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 4.81
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 4.82
+        }
+      ],
+      "deeplineLatitude": "41.230291",
+      "deeplineLongitude": "-71.858342",
+      "calculateDailyAverageSlope": false
+    },
+    "10d0_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "11",
       "offshoreKey": "42",
       "deeplineKey": "13d0",
-      "name": "Napatree1 7m Depth Waves 705m",
+      "name": "Napatree1 7m Depth Waves 705m 10d0_true",
       "latitude": "41.310943",
       "longitude": "-71.865238",
       "tangentLatitude": "41.310939",
@@ -2574,15 +2934,45 @@
         }
       ],
       "deeplineLatitude": "41.304631",
-      "deeplineLongitude": "-71.866032"
+      "deeplineLongitude": "-71.866032",
+      "calculateDailyAverageSlope": true
     },
-    "10d1": {
+    "10d0_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "11",
+      "offshoreKey": "42",
+      "deeplineKey": "13d0",
+      "name": "Napatree1 7m Depth Waves 705m 10d0_false",
+      "latitude": "41.310943",
+      "longitude": "-71.865238",
+      "tangentLatitude": "41.310939",
+      "tangentLongitude": "-71.865137",
+      "surfLatitude": "41.302815",
+      "surfLongitude": "-71.866260",
+      "offshoreLatitude": "41.302815",
+      "offshoreLongitude": "-71.866260",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 6.04
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 6.08
+        }
+      ],
+      "deeplineLatitude": "41.304631",
+      "deeplineLongitude": "-71.866032",
+      "calculateDailyAverageSlope": false
+    },
+    "10d1_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "11",
       "offshoreKey": "42",
       "deeplineKey": "13d1",
-      "name": "Napatree1 20m Depth Waves 2323m",
+      "name": "Napatree1 20m Depth Waves 2323m 10d1_true",
       "latitude": "41.310943",
       "longitude": "-71.865238",
       "tangentLatitude": "41.310939",
@@ -2602,15 +2992,45 @@
         }
       ],
       "deeplineLatitude": "41.290144",
-      "deeplineLongitude": "-71.867853"
+      "deeplineLongitude": "-71.867853",
+      "calculateDailyAverageSlope": true
     },
-    "10d2": {
+    "10d1_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "11",
+      "offshoreKey": "42",
+      "deeplineKey": "13d1",
+      "name": "Napatree1 20m Depth Waves 2323m 10d1_false",
+      "latitude": "41.310943",
+      "longitude": "-71.865238",
+      "tangentLatitude": "41.310939",
+      "tangentLongitude": "-71.865137",
+      "surfLatitude": "41.302815",
+      "surfLongitude": "-71.866260",
+      "offshoreLatitude": "41.302815",
+      "offshoreLongitude": "-71.866260",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 6.04
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 6.08
+        }
+      ],
+      "deeplineLatitude": "41.290144",
+      "deeplineLongitude": "-71.867853",
+      "calculateDailyAverageSlope": false
+    },
+    "10d2_true": {
       "id": "RUNUP",
       "source": "RUNUP",
       "surfKey": "11",
       "offshoreKey": "42",
       "deeplineKey": "13d2",
-      "name": "Napatree1 40m Depth Waves 9000m",
+      "name": "Napatree1 40m Depth Waves 9000m 10d2_true",
       "latitude": "41.310943",
       "longitude": "-71.865238",
       "tangentLatitude": "41.310939",
@@ -2630,7 +3050,37 @@
         }
       ],
       "deeplineLatitude": "41.230362",
-      "deeplineLongitude": "-71.875359"
+      "deeplineLongitude": "-71.875359",
+      "calculateDailyAverageSlope": true
+    },
+    "10d2_false": {
+      "id": "RUNUP",
+      "source": "RUNUP",
+      "surfKey": "11",
+      "offshoreKey": "42",
+      "deeplineKey": "13d2",
+      "name": "Napatree1 40m Depth Waves 9000m 10d2_false",
+      "latitude": "41.310943",
+      "longitude": "-71.865238",
+      "tangentLatitude": "41.310939",
+      "tangentLongitude": "-71.865137",
+      "surfLatitude": "41.302815",
+      "surfLongitude": "-71.866260",
+      "offshoreLatitude": "41.302815",
+      "offshoreLongitude": "-71.866260",
+      "duneHeights": [
+        {
+          "timestamp": 1702440000,
+          "height": 6.04
+        },
+        {
+          "timestamp": 1702958400,
+          "height": 6.08
+        }
+      ],
+      "deeplineLatitude": "41.230362",
+      "deeplineLongitude": "-71.875359",
+      "calculateDailyAverageSlope": false
     }
   }
 }

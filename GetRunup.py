@@ -270,6 +270,7 @@ class GetRunup:
                 generalKey = key[0:-1]
             else:
                 generalKey = key
+            CALCULATE_DAILY_AVERAGE_SLOPE = stationDict["calculateDailyAverageSlope"]
             normalDict = stationsDict["NORMAL"][generalKey]
             tangentDict = stationsDict["TANGENT"][generalKey]
             stationId = stationDict["id"]
