@@ -37,7 +37,8 @@ NARRAGANSETT_MAP = "Narragansett.png"
 NARRAGANSETT_AXIS = [-71.54599363138901, -71.13424867207856, 41.45457197608142, 41.14524327341847]
 BLOCK_ISLAND_MAP = "BlockIsland.png"
 BLOCK_ISLAND_AXIS = [-71.64599363138898, -71.23424867207852, 41.45457197608142, 41.14524327341847]
-RHODE_ISLAND_CHAMP_MAP = "RhodeIslandChamp.png"
+# RHODE_ISLAND_CHAMP_MAP = "RhodeIslandChamp.png"
+RHODE_ISLAND_CHAMP_MAP = "RhodeIslandChampGreyscale.png"
 RHODE_ISLAND_CHAMP_AXIS = [-71.9050164752, -71.1307245329, 42.000010143316864, 41.1192500979]
 EAST_COAST_MAP = "EastCoast.png"
 EAST_COAST_OUTLINE_MAP = "EastCoastOutline.png"
@@ -62,7 +63,8 @@ LONG_ISLAND_MAP = "LongIsland.png"
 LONG_ISLAND_OUTLINE_MAP = "LongIslandOutline.png"
 LONG_ISLAND_AXIS = [-74.34794921875002, -71.05205078125002, 42.23196681807541, 39.74456845975795]
 BLOCK_ISLAND_SOUND_MAP = "BlockIslandSound.png"
-BLOCK_ISLAND_SOUND_OUTLINE_MAP = "BlockIslandSoundOutline.png"
+# BLOCK_ISLAND_SOUND_OUTLINE_MAP = "BlockIslandSoundOutline.png"
+BLOCK_ISLAND_SOUND_OUTLINE_MAP = "BlockIslandSoundOutlineGreyscale.png"
 BLOCK_ISLAND_SOUND_AXIS = [-72.52397460937502, -70.87602539062502, 42.11417769664206, 40.87994188758605]
 
 GULF_YUCATAN_MAP = "GulfYucatan.png"
@@ -107,6 +109,7 @@ LITTLE_NARRAGANSETT_BAY_AXIS = [-71.89574920654297, -71.84425079345704, 41.33933
 
 
 NAPATREE_MAP = "Napatree.png"
+NAPATREE_MAP = "NapatreeGreyscale.png"
 NAPATREE_OUTLINE_MAP = "NapatreeOutline.png"
 NAPATREE_AXIS = [-71.88687460327148, -71.86112539672851, 41.31967002720852, 41.30032853828529]
 
@@ -459,7 +462,7 @@ def main():
     if(args.postExists):
         POST_WIND_FILE = args.wind
         POST_WIND_DATA_FILE = wind_temp_directory + "post_wind_data_file" + ".json"
-#         (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        (windStartDateObject, windEndDateObject) = PostWindReader(POST_WIND_FILE=POST_WIND_FILE, STATIONS_FILE=STATIONS_FILE, POST_WIND_DATA_FILE=POST_WIND_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
         dataToGraph["POST"] = POST_WIND_DATA_FILE
 
     
@@ -471,7 +474,7 @@ def main():
 
         ADCIRC_WATER_DATA_FILE = water_temp_directory + "adcirc_water_data_file" + ".json"
 
-#         (waterStartDateObject, waterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        (waterStartDateObject, waterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_WATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_WATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
 #         waterStartDateObject = datetime.datetime(year=2022, month=12, day=20, hour=0, tzinfo=datetime.timezone.utc)
 #         waterEndDateObject = datetime.datetime(year=2022, month=12, day=25, hour=0, tzinfo=datetime.timezone.utc)
         dataToGraph["WATER"] = ADCIRC_WATER_DATA_FILE
@@ -481,14 +484,14 @@ def main():
     if(args.stillwaterExists):
         ADCIRC_STILLWATER_FILE = args.stillwater
         ADCIRC_STILLWATER_DATA_FILE = water_temp_directory + "adcirc_stillwater_data_file" + ".json"
-#         (stillwaterStartDateObject, stillwaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_STILLWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_STILLWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        (stillwaterStartDateObject, stillwaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_STILLWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_STILLWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
         dataToGraph["STILLWATER"] = ADCIRC_STILLWATER_DATA_FILE
 
     print("args.tidewaterExists", args.tidewaterExists, flush=True)
     if(args.tidewaterExists):
         ADCIRC_TIDEWATER_FILE = args.tidewater
         ADCIRC_TIDEWATER_DATA_FILE = water_temp_directory + "adcirc_tidewater_data_file" + ".json"
-#         (tidewaterStartDateObject, tidewaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_TIDEWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_TIDEWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
+        (tidewaterStartDateObject, tidewaterEndDateObject) = Fort63Reader(ADCIRC_WATER_FILE=ADCIRC_TIDEWATER_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_WATER_DATA_FILE=ADCIRC_TIDEWATER_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateWindDataForStations()
         dataToGraph["TIDEWATER"] = ADCIRC_TIDEWATER_DATA_FILE
 
 
@@ -500,7 +503,7 @@ def main():
 
         ADCIRC_MESH_DATA_FILE = water_temp_directory + "adcirc_elevation_data_file" + ".json"
 
-#         Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
+        Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
 #         waterStartDateObject = datetime.datetime(year=2018, month=2, day=28, hour=5)
 #         waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
         dataToGraph["MESH"] = ADCIRC_MESH_DATA_FILE
@@ -527,19 +530,19 @@ def main():
         WAVE_PWP_DATA_FILE = wave_temp_directory + "wave_pwp_data_file" + ".json"
         WAVE_RAD_DATA_FILE = wave_temp_directory + "wave_rad_data_file" + ".json"
         STATIONS_FILE = args.stations
-#         (waveStartDateObject, waveEndDateObject) = WaveReader(
-#             WAVE_SWH_FILE=WAVE_SWH_FILE,
-# #             WAVE_MWD_FILE=WAVE_MWD_FILE,
-# #             WAVE_MWP_FILE=WAVE_MWP_FILE,
-#             WAVE_PWP_FILE=WAVE_PWP_FILE,
-# #             WAVE_RAD_FILE=WAVE_RAD_FILE,
-#             STATIONS_FILE=STATIONS_FILE, 
-#             WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
-# #             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
-# #             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
-#             WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
-# #             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
-#             BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
+        (waveStartDateObject, waveEndDateObject) = WaveReader(
+            WAVE_SWH_FILE=WAVE_SWH_FILE,
+#             WAVE_MWD_FILE=WAVE_MWD_FILE,
+#             WAVE_MWP_FILE=WAVE_MWP_FILE,
+            WAVE_PWP_FILE=WAVE_PWP_FILE,
+#             WAVE_RAD_FILE=WAVE_RAD_FILE,
+            STATIONS_FILE=STATIONS_FILE, 
+            WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
+#             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
+#             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
+            WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
+#             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
+            BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
         
 #         waveStartDateObject = datetime.datetime(year=2023, month=12, day=15, hour=0, tzinfo=datetime.timezone.utc)
 #         waveEndDateObject = datetime.datetime(year=2023, month=12, day=20, hour=0, tzinfo=datetime.timezone.utc)
