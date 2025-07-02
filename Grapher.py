@@ -1209,42 +1209,42 @@ class Grapher:
                 plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
                 plt.close()
                 gc.collect()
-                with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
-                    for index in range(len(self.mapWindTimes)):
-                        filename = "map_wind_" + str(index) + ".png"
-                        image = imageio.imread(graph_directory + filename)
-                        writer.append_data(image)
-                    for index in range(len(self.mapWindTimes)):
-                        filename = "map_wind_" + str(index) + ".png"
-                        os.remove(graph_directory + filename)
-                mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
-                swathWind = np.max(mapSpeedsNoNan, axis=0)
-                fig, ax = plt.subplots(figsize=(9,9))
-                # Create the blended colormap for the colorbar
-                blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
-                
-                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-                if(self.windType == "FORT"):
-                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-                else:
-                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-                
-                plt.axis(plotAxis)
-                plt.title("Wind Swath")
-                
-                # Use the blended colormap for the colorbar
-                plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
-                    ticks=range(vmin, vmax+5, 5),
-                    boundaries=levelBoundaries,
-                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                    label="Meters/Second",
-                    ax=plt.gca()
-                )
-                
-                plt.savefig(graph_directory + 'map_wind_swath.png')
-                plt.close()
-                gc.collect()
+            with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
+                for index in range(len(self.mapWindTimes)):
+                    filename = "map_wind_" + str(index) + ".png"
+                    image = imageio.imread(graph_directory + filename)
+                    writer.append_data(image)
+                for index in range(len(self.mapWindTimes)):
+                    filename = "map_wind_" + str(index) + ".png"
+                    os.remove(graph_directory + filename)
+            mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
+            swathWind = np.max(mapSpeedsNoNan, axis=0)
+            fig, ax = plt.subplots(figsize=(9,9))
+            # Create the blended colormap for the colorbar
+            blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+            
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            if(self.windType == "FORT"):
+                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            else:
+                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            
+            plt.axis(plotAxis)
+            plt.title("Wind Swath")
+            
+            # Use the blended colormap for the colorbar
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
+                ticks=range(vmin, vmax+5, 5),
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                label="Meters/Second",
+                ax=plt.gca()
+            )
+            
+            plt.savefig(graph_directory + 'map_wind_swath.png')
+            plt.close()
+            gc.collect()
         if(len(self.mapRainTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxRain)
