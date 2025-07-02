@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.dates as mdates
+import matplotlib.colors as mcolors
 from matplotlib.cm import ScalarMappable
 from matplotlib.tri import Triangulation
 from datetime import datetime, timezone
