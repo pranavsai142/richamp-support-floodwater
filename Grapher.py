@@ -1151,51 +1151,63 @@ class Grapher:
         aspectRatio = (self.backgroundAxis[1] - self.backgroundAxis[0]) / (self.backgroundAxis[2] - self.backgroundAxis[3])
 #         img = mpimg.imread('subsetFlipped.png')
 #         img = mpimg.imread('NorthAtlanticBasin3.png')
-        if(len(self.mapWindTimes) > 0):
-            vmin = 0
-#             vmax = math.ceil(self.maxWind)
-            vmax = 20
-            levels = 100
-            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+
+    # Create a new colormap with alpha-blended colors
+    def create_blended_cmap(cmap, alpha=0.5):
+        # Get the colors from the original colormap
+        colors = cmap(np.linspace(0, 1, 256))
+        # Blend each color with white (alpha blending)
+        white = np.array([1, 1, 1, 1])
+        blended_colors = alpha * colors + (1 - alpha) * white
+        # Ensure alpha channel is 1 for the colormap
+        blended_colors[:, 3] = 1
+        # Create a new colormap
+        return mcolors.ListedColormap(blended_colors)
+        
+    if(len(self.mapWindTimes) > 0):
+        vmin = 0
+        vmax = 20
+        levels = 100
+        levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+        
+        # Get the original colormap
+        original_cmap = plt.cm.get_cmap('jet')
+        
+        
+        # Create the blended colormap for the colorbar
+        blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+        
+        if(self.windType == "FORT"):
+            windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, mask=self.mapWindMaskedTriangles)
+        
+        for index in range(len(self.mapWindTimes)):
+            fig, ax = plt.subplots()
+            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+            
             if(self.windType == "FORT"):
-                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, mask=self.mapWindMaskedTriangles)
-            for index in range(len(self.mapWindTimes)):
-                fig, ax = plt.subplots()
-#                 plt.figure(figsize=(6, 6))
-    #             print(self.endWindPointsLongitudes)
-    #             print(self.endWindPointsLatitudes)
-    #             print(self.endSpeeds)
-                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-#                 plt.imshow(img, alpha=0.5, extent=[-76.59179620444773, -63.41595750651321, 46.70943547053439, 36.92061410517965], zorder=2)
-                if(self.windType == "FORT"):
-#                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.5, label="Forecast", marker=".")
-                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
-                elif(self.windType == "POST"):
-#                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=100)
-#                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-                elif(self.windType == "GFS"):
-#                     plt.scatter(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, c=self.mapSpeeds[index], alpha=0.3, label="Forecast", marker=".", s=3600)
-#                     contourset = ax.tricontourf(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
-#                     print(len(self.mapWindPointsLongitudes), len(self.mapWindPointsLatitudes), len(self.mapSpeeds[index]))
-                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-                plt.axis(plotAxis)
-#                 plt.axis([-76.59179620444773, -63.41595750651321, 36.92061410517965, 46.70943547053439])
-                plt.title("Wind Speed")
-                plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-#                 plt.xlabel(datetime.fromtimestamp(timestamp, timezone.utc))
-    #             graphs up to 10 m/s, ~20 knots
-                plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
-                    ticks=range(vmin, vmax+5, 5),
-                    boundaries=levelBoundaries,
-                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                    label="Meters/Second",
-                    ax=plt.gca()
-                )
-                plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
-                plt.close()
-                gc.collect()
+                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            elif(self.windType == "POST"):
+                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            elif(self.windType == "GFS"):
+                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            
+            plt.axis(plotAxis)
+            plt.title("Wind Speed")
+            plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+            
+            # Use the blended colormap for the colorbar
+            plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
+                ticks=range(vmin, vmax+5, 5),
+                boundaries=levelBoundaries,
+                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                label="Meters/Second",
+                ax=plt.gca()
+            )
+            
+            plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
+            plt.close()
+            gc.collect()
             with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
                 for index in range(len(self.mapWindTimes)):
                     filename = "map_wind_" + str(index) + ".png"
@@ -1207,23 +1219,28 @@ class Grapher:
             mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
             swathWind = np.max(mapSpeedsNoNan, axis=0)
             fig, ax = plt.subplots(figsize=(9,9))
+            # Create the blended colormap for the colorbar
+            blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+            
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             if(self.windType == "FORT"):
-                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
             else:
-                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            
             plt.axis(plotAxis)
             plt.title("Wind Swath")
-#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-#             graphs up to 10 m/s, ~20 knots
+            
+            # Use the blended colormap for the colorbar
             plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
                 ticks=range(vmin, vmax+5, 5),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 label="Meters/Second",
                 ax=plt.gca()
             )
+            
             plt.savefig(graph_directory + 'map_wind_swath.png')
             plt.close()
             gc.collect()
@@ -1400,66 +1417,64 @@ class Grapher:
         if(len(self.mapWaterTimes) > 0):
             vmin = -1
             vminSwath = 1
-#             vmax = math.ceil(self.maxWater)
             vmax = 2
-#             vmax = 20
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             levelBoundariesSwath = np.linspace(vminSwath, vmax, levels + 1)
-#             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
+        
+            # Get the original colormap
+            original_cmap = plt.cm.get_cmap('jet')
+        
+            # Create blended colormaps for the colorbars
+            blended_cmap_elevation = create_blended_cmap(original_cmap, alpha=0.6)  # For water elevation plots
+            blended_cmap_swath = create_blended_cmap(original_cmap, alpha=0.5)      # For swath plot
+        
             for index in range(len(self.mapWaterTimes)):
                 fig, ax = plt.subplots(figsize=(9,9))
-    #             print(self.endWavePointsLongitudes)
-    #             print(self.endWavePointsLatitudes)
-    #             print(self.endSWH)
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
                 currentMaskedTriangles = self.mapWaterMaskedTriangles.copy()
                 for triangleIndex, triangle in enumerate(self.mapWaterTriangles):
                     for pointIndex in triangle:
                         water = self.mapWaters[index][pointIndex]
-    #                     Check for nan value
-    #                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
                         if(water == -99999.0):
-    #                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
-    #                         print("point, water", point, water)
                             currentMaskedTriangles[triangleIndex] = True
                             break
                 waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=currentMaskedTriangles)
-
-                contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-                
-#                 Plot points
+        
+                contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+        
+                # Plot points
                 if(self.meshExists):
                     ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=3, alpha=0.7, marker=".", s=40, color="black")
-                    
+        
                 if(self.obsExists):
                     ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Obs", zorder=3, alpha=0.7, marker=".", s=40, color="black")
                     for tideIndex in range(len(self.tideLabels)):
                         ax.annotate(self.tideLabels[tideIndex], (self.tideLongitudes[tideIndex], self.tideLatitudes[tideIndex]))
-                    
+        
                 if(self.runupExists):
                     for runupIndex, runupLabel in enumerate(self.runupLabels):
                         self.plotExtendedLines(ax, runupIndex, index, runupLabel)
-#                         print("datapointsWaterlineLongitudes", type(self.datapointsWaterlineLongitudes[runupIndex][index]))
-#                         ax.plot(self.datapointsWaterlineLongitudes[runupIndex][index], self.datapointsWaterlineLatitudes[runupIndex][index], label=runupLabel, zorder=3, alpha=0.7, marker=".", color="green")
-#                         ax.plot(self.datapointsRunupLongitudes[runupIndex][index], self.datapointsRunupLatitudes[runupIndex][index], label=runupLabel, zorder=3, alpha=0.7, marker=".", color="red")
-#               Todo: Fix triangulation errors
-#                 contourset = ax.tripcolor(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, self.mapWaters[index], shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
+        
                 plt.axis(plotAxis)
                 plt.title(self.titlePrefix + "Water Elevation")
                 plt.xlabel(datetime.fromtimestamp(self.mapWaterTimes[index], timezone.utc))
-    #             plt.gca().invert_yaxis()
+        
+                # Use the blended colormap for the colorbar (alpha=0.6)
                 plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap_elevation),
                     ticks=range(vmin, vmax+5, 2),
                     boundaries=levelBoundaries,
                     values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                     label="Meters",
                     ax=plt.gca()
                 )
+        
                 plt.savefig(graph_directory + 'map_water_' + str(index) + '.png')
                 plt.close()
                 gc.collect()
+        
+            # Create GIF
             with imageio.get_writer(graph_directory + 'water.gif', mode='I') as writer:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
@@ -1468,48 +1483,40 @@ class Grapher:
                 for index in range(len(self.mapWaterTimes)):
                     filename = "map_water_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
-            
+        
+            # Water Swath Plot
             swathWaters = np.max(self.mapWaters, axis=0)
             print(len(swathWaters), len(self.mapWaterMaskedTriangles))
             for index, triangle in enumerate(self.mapWaterTriangles):
                 for pointIndex in triangle:
                     water = swathWaters[pointIndex]
-#                     Check for nan value
-#                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
                     if(water == -99999.0):
-#                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
-#                         print("point, water", point, water)
                         self.mapWaterMaskedTriangles[index] = True
                         break
             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
-#             print(self.mapWaterTriangles[0])
-#             mapWatersNoNan = np.nan_to_num(self.mapWaters)
-#             swathWaters = np.max(self.mapWaters, axis=0)
+        
             fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap="jet", vmin=vminSwath, vmax=vmax, zorder=1)
-#             ax.scatter(self.waterLongitudes, self.waterLatitudes, label="Datapoints")
-#             if(self.buoyExists):
-#                     ax.scatter(self.buoyLongitudes, self.buoyLatitudes, label="Buoy", zorder=3)
-#             if(self.meshExists):
-#                 ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=4, alpha=0.7, marker=".", s=40, color="black")
+            contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap=original_cmap, vmin=vminSwath, vmax=vmax, zorder=1)
+        
             for waterIndex, tideLabel in enumerate(self.tideLabels):
                 if("Waves" in tideLabel):
                     ax.scatter(self.waterLongitudes[waterIndex], self.waterLatitudes[waterIndex])
                     ax.annotate(tideLabel, (self.waterLongitudes[waterIndex], self.waterLatitudes[waterIndex]))
-                    
+        
             plt.axis(plotAxis)
             plt.title(self.titlePrefix + "Water Swath")
-#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-#             graphs up to 10 m/s, ~20 knots
+        
+            # Use the blended colormap for the colorbar (alpha=0.5)
             plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap_swath),
                 ticks=np.arange(vminSwath, vmax + 0.5, 0.5),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 label="Meters",
                 ax=plt.gca()
             )
+        
             plt.savefig(graph_directory + 'map_water_swath.png')
             plt.close()
             gc.collect()
@@ -1519,43 +1526,46 @@ class Grapher:
             vmax = 5
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-            # waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
+        
+            # Get the original colormap
+            original_cmap = plt.cm.get_cmap('jet')
+        
+            # Create blended colormap for the colorbars
+            blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)  # For both wave height and swath plots
+        
             for index in range(len(self.mapWaveTimes)):
                 fig, ax = plt.subplots()
-    #             print(self.endWavePointsLongitudes)
-    #             print(self.endWavePointsLatitudes)
-    #             print(self.endSWH)
-    
                 currentMaskedTriangles = self.mapWaveMaskedTriangles.copy()
                 for triangleIndex, triangle in enumerate(self.mapWaveTriangles):
                     for pointIndex in triangle:
                         swh = self.mapSWH[index][pointIndex]
-    #                     Check for nan value
-    #                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
                         if(swh == -99999.0):
-    #                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
-    #                         print("point, water", point, water)
                             currentMaskedTriangles[triangleIndex] = True
                             break
                 waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=currentMaskedTriangles)
-
-                plt.imshow(img, extent=self.backgroundAxis, aspect=aspectRatio)
-                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax)
+        
+                plt.imshow(img, extent=self.backgroundAxis, alpha=0.5, aspect=aspectRatio, zorder=2)
+                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+        
                 plt.axis(plotAxis)
                 plt.title("Significant Wave Height")
-                plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]),timezone.utc))
-    #             plt.gca().invert_yaxis()
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]), timezone.utc))
+        
+                # Use the blended colormap for the colorbar
                 plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
                     ticks=range(vmin, vmax+5, 5),
                     boundaries=levelBoundaries,
                     values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                     label="Meters",
                     ax=plt.gca()
-                )                
+                )
+        
                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
                 plt.close()
                 gc.collect()
+        
+            # Create GIF
             with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
@@ -1564,36 +1574,38 @@ class Grapher:
                 for index in range(len(self.mapWaveTimes)):
                     filename = "map_swh_" + str(index) + ".png"
                     os.remove(graph_directory + filename)
+        
+            # Wave Swath Plot
             swathSWH = np.max(self.mapSWH, axis=0)
             for index, triangle in enumerate(self.mapWaveTriangles):
                 for pointIndex in triangle:
                     swh = swathSWH[pointIndex]
-#                     Check for nan value
-#                     point = (self.mapWaterPointsLongitudes[pointIndex], self.mapWaterPointsLatitudes[pointIndex])
                     if(swh == -99999.0):
-#                     if(point[0] < -72.1 and point[0] > -72.15 and point[1] > 41.4 and point[1] < 41.42):
-#                         print("point, water", point, water)
                         self.mapWaveMaskedTriangles[index] = True
                         break
             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
+        
             fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, alpha=0.5, vmin=vmin, vmax=vmax, zorder=1)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+        
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
             if(self.tideExists):
-                    ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
+                ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
+        
             plt.axis(plotAxis)
             plt.title("Significant Wave Height Swath")
-#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-#             graphs up to 10 m/s, ~20 knots
+        
+            # Use the blended colormap for the colorbar
             plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
                 ticks=range(vmin, vmax+5, 1),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 label="Meters",
                 ax=plt.gca()
-            )        
+            )
+        
             plt.savefig(graph_directory + 'map_swh_swath.png')
             plt.close()
             gc.collect()
