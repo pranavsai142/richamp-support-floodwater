@@ -1152,98 +1152,98 @@ class Grapher:
 #         img = mpimg.imread('subsetFlipped.png')
 #         img = mpimg.imread('NorthAtlanticBasin3.png')
 
-    # Create a new colormap with alpha-blended colors
-    def create_blended_cmap(cmap, alpha=0.5):
-        # Get the colors from the original colormap
-        colors = cmap(np.linspace(0, 1, 256))
-        # Blend each color with white (alpha blending)
-        white = np.array([1, 1, 1, 1])
-        blended_colors = alpha * colors + (1 - alpha) * white
-        # Ensure alpha channel is 1 for the colormap
-        blended_colors[:, 3] = 1
-        # Create a new colormap
-        return mcolors.ListedColormap(blended_colors)
-        
-    if(len(self.mapWindTimes) > 0):
-        vmin = 0
-        vmax = 20
-        levels = 100
-        levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-        
-        # Get the original colormap
-        original_cmap = plt.cm.get_cmap('jet')
-        
-        
-        # Create the blended colormap for the colorbar
-        blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
-        
-        if(self.windType == "FORT"):
-            windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, mask=self.mapWindMaskedTriangles)
-        
-        for index in range(len(self.mapWindTimes)):
-            fig, ax = plt.subplots()
-            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+        # Create a new colormap with alpha-blended colors
+        def create_blended_cmap(cmap, alpha=0.5):
+            # Get the colors from the original colormap
+            colors = cmap(np.linspace(0, 1, 256))
+            # Blend each color with white (alpha blending)
+            white = np.array([1, 1, 1, 1])
+            blended_colors = alpha * colors + (1 - alpha) * white
+            # Ensure alpha channel is 1 for the colormap
+            blended_colors[:, 3] = 1
+            # Create a new colormap
+            return mcolors.ListedColormap(blended_colors)
             
-            if(self.windType == "FORT"):
-                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-            elif(self.windType == "POST"):
-                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-            elif(self.windType == "GFS"):
-                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+        if(len(self.mapWindTimes) > 0):
+            vmin = 0
+            vmax = 20
+            levels = 100
+            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             
-            plt.axis(plotAxis)
-            plt.title("Wind Speed")
-            plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+            # Get the original colormap
+            original_cmap = plt.cm.get_cmap('jet')
             
-            # Use the blended colormap for the colorbar
-            plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
-                ticks=range(vmin, vmax+5, 5),
-                boundaries=levelBoundaries,
-                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                label="Meters/Second",
-                ax=plt.gca()
-            )
             
-            plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
-            plt.close()
-            gc.collect()
-            with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
-                for index in range(len(self.mapWindTimes)):
-                    filename = "map_wind_" + str(index) + ".png"
-                    image = imageio.imread(graph_directory + filename)
-                    writer.append_data(image)
-                for index in range(len(self.mapWindTimes)):
-                    filename = "map_wind_" + str(index) + ".png"
-                    os.remove(graph_directory + filename)
-            mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
-            swathWind = np.max(mapSpeedsNoNan, axis=0)
-            fig, ax = plt.subplots(figsize=(9,9))
             # Create the blended colormap for the colorbar
             blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
             
-            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             if(self.windType == "FORT"):
-                contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-            else:
-                contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+                windTriangulation = Triangulation(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, triangles=self.mapWindTriangles, mask=self.mapWindMaskedTriangles)
             
-            plt.axis(plotAxis)
-            plt.title("Wind Swath")
-            
-            # Use the blended colormap for the colorbar
-            plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
-                ticks=range(vmin, vmax+5, 5),
-                boundaries=levelBoundaries,
-                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                label="Meters/Second",
-                ax=plt.gca()
-            )
-            
-            plt.savefig(graph_directory + 'map_wind_swath.png')
-            plt.close()
-            gc.collect()
+            for index in range(len(self.mapWindTimes)):
+                fig, ax = plt.subplots()
+                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+                
+                if(self.windType == "FORT"):
+                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+                elif(self.windType == "POST"):
+                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+                elif(self.windType == "GFS"):
+                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, self.mapSpeeds[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+                
+                plt.axis(plotAxis)
+                plt.title("Wind Speed")
+                plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
+                
+                # Use the blended colormap for the colorbar
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    label="Meters/Second",
+                    ax=plt.gca()
+                )
+                
+                plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
+                plt.close()
+                gc.collect()
+                with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
+                    for index in range(len(self.mapWindTimes)):
+                        filename = "map_wind_" + str(index) + ".png"
+                        image = imageio.imread(graph_directory + filename)
+                        writer.append_data(image)
+                    for index in range(len(self.mapWindTimes)):
+                        filename = "map_wind_" + str(index) + ".png"
+                        os.remove(graph_directory + filename)
+                mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
+                swathWind = np.max(mapSpeedsNoNan, axis=0)
+                fig, ax = plt.subplots(figsize=(9,9))
+                # Create the blended colormap for the colorbar
+                blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+                
+                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+                if(self.windType == "FORT"):
+                    contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+                else:
+                    contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+                
+                plt.axis(plotAxis)
+                plt.title("Wind Swath")
+                
+                # Use the blended colormap for the colorbar
+                plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
+                    ticks=range(vmin, vmax+5, 5),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    label="Meters/Second",
+                    ax=plt.gca()
+                )
+                
+                plt.savefig(graph_directory + 'map_wind_swath.png')
+                plt.close()
+                gc.collect()
         if(len(self.mapRainTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxRain)
