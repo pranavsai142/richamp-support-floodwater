@@ -265,7 +265,7 @@
 
 
 # Obs GFS and swath
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/dec23wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2023/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/dec23wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2023/
 
 # Obs Waves
 # python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --wavesExists true \
@@ -291,6 +291,9 @@ python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExis
 # --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.14 \
 # --generateRunup true \
 # --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_transectlong_temp/ --backgroundChoice NAPATREE --graphDirectory Transect2023DailyAverage/
+
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPFilesHenriAdvisory17_1m/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory HenriObsWater
+
 
 # python generateGraphs.py --obsExists true --stations RUNUP_NAPATREE_STATIONS.json --meshExists true --mesh /Users/pranav/projects/trackfiles/v18.fort.14 --backgroundChoice NAPATREE --tempDir temp --graphDirectory test/
 
