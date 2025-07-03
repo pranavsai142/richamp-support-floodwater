@@ -1219,7 +1219,7 @@ class Grapher:
                     os.remove(graph_directory + filename)
             mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
             swathWind = np.max(mapSpeedsNoNan, axis=0)
-            fig, ax = plt.subplots(figsize=(9,9))
+            fig, ax = plt.subplots(figsize=(18,18))
             # Create the blended colormap for the colorbar
             blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
             
@@ -1316,7 +1316,7 @@ class Grapher:
             # waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
 #             print("triangle len", self.mapElevationTriangles)
             elevationTriangulation = Triangulation(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, triangles=self.mapElevationTriangles, mask=self.mapElevationMaskedTriangles)
-            fig, ax = plt.subplots(figsize=(9,9))
+            fig, ax = plt.subplots(figsize=(18,18))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=5, zorder=4, color="purple")
@@ -1431,7 +1431,7 @@ class Grapher:
             blended_cmap_swath = create_blended_cmap(original_cmap, alpha=0.5)      # For swath plot
         
             for index in range(len(self.mapWaterTimes)):
-                fig, ax = plt.subplots(figsize=(9,9))
+                fig, ax = plt.subplots(figsize=(18,18))
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
                 currentMaskedTriangles = self.mapWaterMaskedTriangles.copy()
                 for triangleIndex, triangle in enumerate(self.mapWaterTriangles):
@@ -1496,7 +1496,7 @@ class Grapher:
                         break
             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
         
-            fig, ax = plt.subplots(figsize=(9,9))
+            fig, ax = plt.subplots(figsize=(18,18))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tripcolor(waterTriangulation, swathWaters, shading='gouraud', cmap=original_cmap, vmin=vminSwath, vmax=vmax, zorder=1)
         
@@ -1586,7 +1586,7 @@ class Grapher:
                         break
             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
         
-            fig, ax = plt.subplots(figsize=(9,9))
+            fig, ax = plt.subplots(figsize=(18,18))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
         
@@ -3352,7 +3352,7 @@ class Grapher:
 #             levelBoundariesSwath = np.linspace(vminSwath, vmax, levels + 1)
 # #             waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=self.mapWaterMaskedTriangles)
 #             for index in range(len(self.runupTimes)):
-#                 fig, ax = plt.subplots(figsize=(9,9))
+#                 fig, ax = plt.subplots(figsize=(18,18))
 #     #             print(self.endWavePointsLongitudes)
 #     #             print(self.endWavePointsLatitudes)
 #     #             print(self.endSWH)
