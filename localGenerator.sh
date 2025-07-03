@@ -292,7 +292,7 @@
 # --generateRunup true \
 # --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_transectlong_temp/ --backgroundChoice NAPATREE --graphDirectory Transect2023DailyAverage/
 
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPHenriAdvisory18-June23/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory HenriObsWaterAdvisory19/
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPHenriAdvisory18-June23/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory HenriObsWaterAdvisory18/
 
 
 # python generateGraphs.py --obsExists true --stations RUNUP_NAPATREE_STATIONS.json --meshExists true --mesh /Users/pranav/projects/trackfiles/v18.fort.14 --backgroundChoice NAPATREE --tempDir temp --graphDirectory test/
