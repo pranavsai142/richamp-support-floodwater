@@ -221,7 +221,7 @@
 #  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
 
 # Napatree Mesh Map
-python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory NapatreeMesh/
+# python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory NapatreeMesh/
 
 
 # Napatree Transect Graph
@@ -265,7 +265,7 @@ python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json --meshExists t
 
 
 # Obs GFS and swath
-# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/dec23wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2023/
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/dec23wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2023/
 
 # Obs Waves
 # python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --wavesExists true \
