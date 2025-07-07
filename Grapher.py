@@ -1316,50 +1316,56 @@ class Grapher:
         if(len(self.mapElevation) > 0):
             vmin = -15
             vmax = 10
-#             vmax = math.ceil(self.maxElevation)
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-            # waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
-#             print("triangle len", self.mapElevationTriangles)
             elevationTriangulation = Triangulation(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, triangles=self.mapElevationTriangles, mask=self.mapElevationMaskedTriangles)
+    
             fig, ax = plt.subplots(figsize=(18,18))
+    
+            # Get the original colormap
+            original_cmap = plt.cm.get_cmap('jet')
+    
+            # Create the blended colormap for the colorbar
+            blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+    
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap="jet", vmin=vmin, vmax=vmax, zorder=1)
-            ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=5, zorder=4, color="purple")
-#             if(self.assetExists):
+            contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=15, zorder=4, color="purple")  # Increased s=5 to s=15
+    
             legendLabelInitialized = False
             transectLabelInitialized = False
             for assetIndex, assetLabel in enumerate(self.assetLabels):
                 if("m" == assetLabel[-1]):
                     if("Waves" in assetLabel):
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=20, color="black", label="7m depth" if not legendLabelInitialized else None)
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=60, color="black", label="7m depth" if not legendLabelInitialized else None)  # Increased s=20 to s=60
                         legendLabelInitialized = True
-                        ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]))
+                        ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]), fontsize=22)  # Set annotation fontsize
                     else:
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=10, color="black", label="Transects" if not transectLabelInitialized else None)
+                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=30, color="black", label="Transects" if not transectLabelInitialized else None)  # Increased s=10 to s=30
                         transectLabelInitialized = True
-#             ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Obs Locations", zorder=3, alpha=0.7, marker=".", s=20, color="black")
-
-#             Below line graphs mesh points
-#             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, label="Nodes", zorder=3, alpha=0.7, marker=".", s=1, color="black")
-#           Below line graphs ASSET points without the need for observational asset data to have been generated
-#             ax.scatter(self.elevationLongitudes, self.elevationLatitudes, label="Closest Node", zorder=3, alpha=0.7, marker=".", s=20, color="black")
-#             for index in range(len(self.datapointsElevation)):
-#                 ax.annotate(str(round(self.datapointsElevation[index], 2)), (self.elevationLongitudes[index], self.elevationLatitudes[index]))
+    
             plt.axis(plotAxis)
-            plt.title("Elevation Map")
-#             plt.title("Map Elevation - " + "surf distance: " + self.runupSurfDistance[index] + " offshore distance: " + self.runupOffshoreDistance[index] + " slope: " + self.runupAverageSlope[index])
-            ax.legend(loc="upper left")
-#             plt.xlabel(datetime.fromtimestamp(int(self.mapWindTimes[index]), timezone.utc))
-#             graphs up to 10 m/s, ~20 knots
-            plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=contourset.cmap),
+            plt.title("Elevation Map", fontsize=30)
+    
+            # Create the colorbar and set font properties
+            cbar = plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
                 ticks=range(vmin, vmax+5, 10),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                label="Meters",
                 ax=plt.gca()
-            )        
+            )
+            cbar.ax.tick_params(labelsize=22)  # Set colorbar tick label font size
+            cbar.set_label("Meters", fontsize=22)  # Set colorbar label font size
+    
+            # Set axis tick label font sizes
+            plt.xticks(fontsize=22)
+            plt.yticks(fontsize=22)
+    
+            # Set legend font size
+            if ax.get_legend():
+                ax.legend(loc="upper left", fontsize=22)
+    
             plt.savefig(graph_directory + 'map_elevation.png')
             plt.close()
             gc.collect()
