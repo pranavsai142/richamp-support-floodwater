@@ -1241,8 +1241,8 @@ class Grapher:
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 ax=plt.gca()
             )
-            cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
-            cbar.set_label("Meters/Second", fontsize=18)  # Set colorbar label font size
+            cbar.ax.tick_params(labelsize=22)  # Set colorbar tick label font size
+            cbar.set_label("Meters/Second", fontsize=22)  # Set colorbar label font size
 
             # Set axis tick label font sizes
             plt.xticks(fontsize=22)
@@ -1531,8 +1531,8 @@ class Grapher:
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 ax=plt.gca()
             )
-            cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
-            cbar.set_label("Meters", fontsize=18)  # Set colorbar label font size
+            cbar.ax.tick_params(labelsize=22)  # Set colorbar tick label font size
+            cbar.set_label("Meters", fontsize=22)  # Set colorbar label font size
 
     
 
@@ -1627,8 +1627,8 @@ class Grapher:
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 ax=plt.gca()
             )
-            cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
-            cbar.set_label("Meters", fontsize=18)  # Set colorbar label font size
+            cbar.ax.tick_params(labelsize=22)  # Set colorbar tick label font size
+            cbar.set_label("Meters", fontsize=22)  # Set colorbar label font size
         
             plt.xticks(fontsize=22)
             plt.yticks(fontsize=22)  # Corrected from duplicate xticks
