@@ -1220,30 +1220,34 @@ class Grapher:
             mapSpeedsNoNan = np.nan_to_num(self.mapSpeeds)
             swathWind = np.max(mapSpeedsNoNan, axis=0)
             fig, ax = plt.subplots(figsize=(18,18))
+
             # Create the blended colormap for the colorbar
             blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
-            
+
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
             if(self.windType == "FORT"):
                 contourset = ax.tricontourf(windTriangulation, self.mapSpeeds[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
             else:
                 contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-            
+
             plt.axis(plotAxis)
             plt.title("Wind Swath", fontsize=30)
-            
-            # Use the blended colormap for the colorbar
-            plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),  # Use blended_cmap here
+
+            # Create the colorbar and set font properties
+            cbar = plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
                 ticks=range(vmin, vmax+5, 5),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                label="Meters/Second",
                 ax=plt.gca()
             )
+            cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
+            cbar.set_label("Meters/Second", fontsize=18)  # Set colorbar label font size
+
+            # Set axis tick label font sizes
             plt.xticks(fontsize=18)
-            plt.xticks(fontsize=18)
-            plt.colorbar.tick_params(labelsize=18)
+            plt.yticks(fontsize=18)  # Corrected from duplicate xticks
+
             plt.savefig(graph_directory + 'map_wind_swath.png')
             plt.close()
             gc.collect()
@@ -1508,21 +1512,24 @@ class Grapher:
                     ax.annotate(tideLabel, (self.waterLongitudes[waterIndex], self.waterLatitudes[waterIndex]))
         
             plt.axis(plotAxis)
-            plt.title(self.titlePrefix + "Water Swath")
+            plt.title(self.titlePrefix + "Water Swath", fontsize=30)
         
             # Use the blended colormap for the colorbar (alpha=0.5)
-            plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap_swath),
-                ticks=np.arange(vminSwath, vmax + 0.5, 0.5),
+            cbar = plt.colorbar(
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
+                ticks=range(vminSwath, vmax+5, 5),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
-                label="Meters",
                 ax=plt.gca()
             )
-        
-            plt.savefig(graph_directory + 'map_water_swath.png')
-            plt.close()
-            gc.collect()
+            cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
+            cbar.set_label("Meters", fontsize=18)  # Set colorbar label font size
+
+    
+
+            # Set axis tick label font sizes
+            plt.xticks(fontsize=18)
+            plt.yticks(fontsize=18)  # Corrected from duplicate xticks
         if(len(self.mapWaveTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxSWH)
@@ -1597,21 +1604,25 @@ class Grapher:
                 ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
         
             plt.axis(plotAxis)
-            plt.title("Significant Wave Height Swath")
+            plt.title("Significant Wave Height Swath", fontsize=30)
         
             # Use the blended colormap for the colorbar
-            plt.colorbar(
+            # Use the blended colormap for the colorbar (alpha=0.5)
+            cbar = plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
-                ticks=range(vmin, vmax+5, 1),
+                ticks=range(vmin, vmax+5, 5),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                label="Meters",
                 ax=plt.gca()
             )
+            cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
+            cbar.set_label("Meters", fontsize=18)  # Set colorbar label font size
         
             plt.savefig(graph_directory + 'map_swh_swath.png')
             plt.close()
             gc.collect()
+        
+
         # Plot wind speed over time
         for index in range(numberOfWindDatapoints):
             if(len(self.datapointsSpeeds) > 0):
