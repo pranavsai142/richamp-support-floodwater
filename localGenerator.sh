@@ -261,7 +261,7 @@
 # Water swath
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWater2023/
 
-# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWaterSwath2023/
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWaterSwath2023/
 
 
 # Obs GFS and swath
@@ -292,7 +292,7 @@
 # --generateRunup true \
 # --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/dec2023_transectlong_temp/ --backgroundChoice NAPATREE --graphDirectory Transect2023DailyAverage/
 
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPHenriAdvisory18-June23/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory HenriObsWaterAdvisory18/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPHenriAdvisory18-June23/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory HenriObsWaterAdvisory18/
 
 
 # python generateGraphs.py --obsExists true --stations RUNUP_NAPATREE_STATIONS.json --meshExists true --mesh /Users/pranav/projects/trackfiles/v18.fort.14 --backgroundChoice NAPATREE --tempDir temp --graphDirectory test/
