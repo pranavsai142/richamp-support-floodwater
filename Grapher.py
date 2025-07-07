@@ -1245,8 +1245,8 @@ class Grapher:
             cbar.set_label("Meters/Second", fontsize=18)  # Set colorbar label font size
 
             # Set axis tick label font sizes
-            plt.xticks(fontsize=18)
-            plt.yticks(fontsize=18)  # Corrected from duplicate xticks
+            plt.xticks(fontsize=22)
+            plt.yticks(fontsize=22)  # Corrected from duplicate xticks
 
             plt.savefig(graph_directory + 'map_wind_swath.png')
             plt.close()
@@ -1476,6 +1476,9 @@ class Grapher:
                     label="Meters",
                     ax=plt.gca()
                 )
+                # Set axis tick label font sizes
+                plt.xticks(fontsize=22)
+                plt.yticks(fontsize=22)  # Corrected from duplicate xticks
         
                 plt.savefig(graph_directory + 'map_water_' + str(index) + '.png')
                 plt.close()
@@ -1528,8 +1531,11 @@ class Grapher:
     
 
             # Set axis tick label font sizes
-            plt.xticks(fontsize=18)
-            plt.yticks(fontsize=18)  # Corrected from duplicate xticks
+            plt.xticks(fontsize=22)
+            plt.yticks(fontsize=22)  # Corrected from duplicate xticks
+            plt.savefig(graph_directory + 'map_water_swath.png')
+            plt.close()
+            gc.collect()
         if(len(self.mapWaveTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxSWH)
@@ -1618,6 +1624,9 @@ class Grapher:
             cbar.ax.tick_params(labelsize=18)  # Set colorbar tick label font size
             cbar.set_label("Meters", fontsize=18)  # Set colorbar label font size
         
+            plt.xticks(fontsize=22)
+            plt.yticks(fontsize=22)  # Corrected from duplicate xticks
+            
             plt.savefig(graph_directory + 'map_swh_swath.png')
             plt.close()
             gc.collect()
