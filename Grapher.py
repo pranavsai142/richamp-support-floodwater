@@ -1230,7 +1230,7 @@ class Grapher:
                 contourset = ax.pcolormesh(self.mapWindPointsLongitudes, self.mapWindPointsLatitudes, swathWind, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
             
             plt.axis(plotAxis)
-            plt.title("Wind Swath")
+            plt.title("Wind Swath", fontsize=30)
             
             # Use the blended colormap for the colorbar
             plt.colorbar(
@@ -1241,7 +1241,9 @@ class Grapher:
                 label="Meters/Second",
                 ax=plt.gca()
             )
-            
+            plt.xticks(fontsize=18)
+            plt.xticks(fontsize=18)
+            plt.colorbar.tick_params(labelsize=18)
             plt.savefig(graph_directory + 'map_wind_swath.png')
             plt.close()
             gc.collect()
