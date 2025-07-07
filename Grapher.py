@@ -1525,7 +1525,7 @@ class Grapher:
         
             # Use the blended colormap for the colorbar (alpha=0.5)
             cbar = plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
+                ScalarMappable(norm=contourset.norm, cmap=blended_cmap_swath),
                 ticks=range(vminSwath, vmax+5, 5),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
