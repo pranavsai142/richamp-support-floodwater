@@ -436,26 +436,26 @@ def datetime_to_timestamp(dt_str):
     return int(dt.timestamp())
 
 # Station-specific dune heights with GMT datetime strings
-DUNE_HEIGHTS_1 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 6.04},
-    {"datetime": "2023-12-19 04:00:00", "height": 6.08}
-]
-DUNE_HEIGHTS_2 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 4.81},
-    {"datetime": "2023-12-19 04:00:00", "height": 4.82}
-]
-DUNE_HEIGHTS_3 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 4.02},
-    {"datetime": "2023-12-19 04:00:00", "height": 4.06}
-]
-DUNE_HEIGHTS_4 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 3.89},
-    {"datetime": "2023-12-19 04:00:00", "height": 3.92}
-]
-DUNE_HEIGHTS_5 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 3.32},
-    {"datetime": "2023-12-19 04:00:00", "height": 3.22}
-]
+# DUNE_HEIGHTS_1 = [
+#     {"datetime": "2023-12-13 04:00:00", "height": 6.04},
+#     {"datetime": "2023-12-19 04:00:00", "height": 6.08}
+# ]
+# DUNE_HEIGHTS_2 = [
+#     {"datetime": "2023-12-13 04:00:00", "height": 4.81},
+#     {"datetime": "2023-12-19 04:00:00", "height": 4.82}
+# ]
+# DUNE_HEIGHTS_3 = [
+#     {"datetime": "2023-12-13 04:00:00", "height": 4.02},
+#     {"datetime": "2023-12-19 04:00:00", "height": 4.06}
+# ]
+# DUNE_HEIGHTS_4 = [
+#     {"datetime": "2023-12-13 04:00:00", "height": 3.89},
+#     {"datetime": "2023-12-19 04:00:00", "height": 3.92}
+# ]
+# DUNE_HEIGHTS_5 = [
+#     {"datetime": "2023-12-13 04:00:00", "height": 3.32},
+#     {"datetime": "2023-12-19 04:00:00", "height": 3.22}
+# ]
 
 DUNE_HEIGHTS_1 = [
     {"datetime": "2022-12-20 04:00:00", "height": 3.82}
@@ -474,11 +474,11 @@ DUNE_HEIGHTS_5 = [
 ]
 
 # Convert datetime strings to timestamps for JSON output
-# DUNE_HEIGHTS_1 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_1]
-# DUNE_HEIGHTS_2 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_2]
-# DUNE_HEIGHTS_3 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_3]
-# DUNE_HEIGHTS_4 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_4]
-# DUNE_HEIGHTS_5 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_5]
+DUNE_HEIGHTS_1 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_1]
+DUNE_HEIGHTS_2 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_2]
+DUNE_HEIGHTS_3 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_3]
+DUNE_HEIGHTS_4 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_4]
+DUNE_HEIGHTS_5 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_5]
 
 # Dictionary to map runup_id to dune heights
 DUNE_HEIGHTS_MAP = {
