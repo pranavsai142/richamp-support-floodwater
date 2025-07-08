@@ -2356,7 +2356,7 @@ class Grapher:
 #                         plt.savefig(graph_directory + stationName + '_water_swash.png', dpi=300)
 #                         plt.close()
 
-                if(len(self.datapointsSwashStockdonLow) > 0 and GRAPH_SWASH):
+                if(GRAPH_SWASH):
                     fig, ax = plt.subplots(figsize=(16, 9))
                 
                     # Plot the water elevation time series using datapointsSwashStockdonLow
@@ -2572,7 +2572,7 @@ class Grapher:
         
             # Plot η line if available
             if eta_values is not None:
-                ax.plot(self.runupTimes, eta_values, linestyle='-', color='blue', label='η')
+                ax.plot(self.runupTimes, eta_values, linestyle='-', label='η')
         
             # Plot horizontal lines for dune heights
             for height in unique_heights:
