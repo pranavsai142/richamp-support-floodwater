@@ -2365,7 +2365,7 @@ class Grapher:
                     # Calculate total swash: sqrt(S_incident^2 + S_infragravity^2)
 #                     total_swash = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + 
 #                                           np.array(self.datapointsSwashStockdonInfragravity[index])**2)
-                    total_swash = (self.datapointsSwashHolmanLow[index] * 2)/1.1
+                    total_swash = (self.datapointsSwashHolmanLow[index] * 2) * (1/1.1)
                 
                     # Define the upper and lower bounds for the swash area
                     lower_bound = self.datapointsSwashStockdonLow[index] - 0.5 * total_swash
