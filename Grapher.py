@@ -2376,7 +2376,7 @@ class Grapher:
                     ax.fill_between(self.runupTimes, lower_bound, upper_bound_1_1, color='lightblue', alpha=0.4, label="Swash Extent")
                 
                     # Add dotted lines for original and new extents
-                    ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$\frac{S}{2}$", linewidth=1.5)
+                    ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$+\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
@@ -2390,7 +2390,7 @@ class Grapher:
                     ax.legend(loc="upper left")
                     ax.format_xdata = mdates.DateFormatter('%d')
                     stationName = self.runupLabels[index]  # Use runupLabels for station name
-                    plt.title(self.titlePrefix + stationName + 
+                    plt.title(self.titlePrefix + stationName[0:9] + 
                               r" Water Level (Max $\eta$, $+\frac{S}{2}$, $+1.1\frac{S}{2}$: " + maxElevation + " m)", fontsize=24)
                     plt.xlabel("Date")
                     plt.ylabel("Elevation (meters)")
