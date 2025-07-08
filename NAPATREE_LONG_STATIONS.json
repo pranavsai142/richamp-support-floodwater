@@ -2229,12 +2229,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.89
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.92
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.84
         }
       ],
       "deeplineLatitude": "41.305782",
@@ -2258,12 +2254,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.89
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.92
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.84
         }
       ],
       "deeplineLatitude": "41.290962",
@@ -2287,12 +2279,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.89
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.92
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.84
         }
       ],
       "deeplineLatitude": "41.235634",
@@ -2316,12 +2304,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.32
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.22
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.11
         }
       ],
       "deeplineLatitude": "41.303207",
@@ -2345,12 +2329,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.32
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.22
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.11
         }
       ],
       "deeplineLatitude": "41.290104",
@@ -2374,12 +2354,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.32
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.22
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.11
         }
       ],
       "deeplineLatitude": "41.235233",
@@ -2403,12 +2379,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.02
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.06
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.4
         }
       ],
       "deeplineLatitude": "41.306522",
@@ -2432,12 +2404,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.02
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.06
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.4
         }
       ],
       "deeplineLatitude": "41.291142",
@@ -2461,12 +2429,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.02
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.06
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.4
         }
       ],
       "deeplineLatitude": "41.233253",
@@ -2490,12 +2454,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.81
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.82
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.37
         }
       ],
       "deeplineLatitude": "41.305881",
@@ -2519,12 +2479,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.81
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.82
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.37
         }
       ],
       "deeplineLatitude": "41.290539",
@@ -2548,12 +2504,8 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.81
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.82
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.37
         }
       ],
       "deeplineLatitude": "41.230291",
@@ -2577,12 +2529,8 @@
       "offshoreLongitude": "-71.866260",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 6.04
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 6.08
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.82
         }
       ],
       "deeplineLatitude": "41.304631",
@@ -2606,12 +2554,8 @@
       "offshoreLongitude": "-71.866260",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 6.04
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 6.08
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.82
         }
       ],
       "deeplineLatitude": "41.290144",
@@ -2635,12 +2579,8 @@
       "offshoreLongitude": "-71.866260",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 6.04
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 6.08
+          "datetime": "2022-12-20 04:00:00",
+          "height": 3.82
         }
       ],
       "deeplineLatitude": "41.230362",
