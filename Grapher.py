@@ -1607,16 +1607,16 @@ class Grapher:
                         break
             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
         
-            fig, ax = plt.subplots(figsize=(18,18))
+            fig, ax = plt.subplots(figsize=(9,9))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1, alpha=0.5)
         
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
             if(self.tideExists):
                 ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
         
             plt.axis(plotAxis)
-            plt.title("Significant Wave Height Swath", fontsize=28)
+            plt.title("Significant Wave Height Swath")
         
             # Use the blended colormap for the colorbar
             # Use the blended colormap for the colorbar (alpha=0.5)
@@ -1627,11 +1627,11 @@ class Grapher:
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 ax=plt.gca()
             )
-            cbar.ax.tick_params(labelsize=28)  # Set colorbar tick label font size
-            cbar.set_label("Meters", fontsize=28)  # Set colorbar label font size
-        
-            plt.xticks(fontsize=22)
-            plt.yticks(fontsize=22)  # Corrected from duplicate xticks
+#             cbar.ax.tick_params(labelsize=28)  # Set colorbar tick label font size
+#             cbar.set_label("Meters", fontsize=28)  # Set colorbar label font size
+#         
+#             plt.xticks(fontsize=22)
+#             plt.yticks(fontsize=22)  # Corrected from duplicate xticks
             
             plt.savefig(graph_directory + 'map_swh_swath.png')
             plt.close()
