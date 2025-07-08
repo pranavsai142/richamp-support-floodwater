@@ -1609,20 +1609,20 @@ class Grapher:
         
             fig, ax = plt.subplots(figsize=(18,18))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1, alpha=0.5)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
         
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
             if(self.tideExists):
                 ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
         
             plt.axis(plotAxis)
-            plt.title("Significant Wave Height Swath", fontsize=30)
+            plt.title("Significant Wave Height Swath", fontsize=28)
         
             # Use the blended colormap for the colorbar
             # Use the blended colormap for the colorbar (alpha=0.5)
             cbar = plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
-                ticks=range(vmin, vmax+5, 5),
+                ticks=range(vmin, vmax+5, 1),
                 boundaries=levelBoundaries,
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 ax=plt.gca()
