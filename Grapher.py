@@ -1555,47 +1555,47 @@ class Grapher:
             # Create blended colormap for the colorbars
             blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)  # For both wave height and swath plots
         
-            for index in range(len(self.mapWaveTimes)):
-                fig, ax = plt.subplots()
-                currentMaskedTriangles = self.mapWaveMaskedTriangles.copy()
-                for triangleIndex, triangle in enumerate(self.mapWaveTriangles):
-                    for pointIndex in triangle:
-                        swh = self.mapSWH[index][pointIndex]
-                        if(swh == -99999.0):
-                            currentMaskedTriangles[triangleIndex] = True
-                            break
-                waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=currentMaskedTriangles)
-        
-                plt.imshow(img, extent=self.backgroundAxis, alpha=0.5, aspect=aspectRatio, zorder=2)
-                contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-        
-                plt.axis(plotAxis)
-                plt.title("Significant Wave Height")
-                plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]), timezone.utc))
-        
-                # Use the blended colormap for the colorbar
-                plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
-                    ticks=range(vmin, vmax+5, 5),
-                    boundaries=levelBoundaries,
-                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                    label="Meters",
-                    ax=plt.gca()
-                )
-        
-                plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
-                plt.close()
-                gc.collect()
-        
-            # Create GIF
-            with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
-                for index in range(len(self.mapWaveTimes)):
-                    filename = "map_swh_" + str(index) + ".png"
-                    image = imageio.imread(graph_directory + filename)
-                    writer.append_data(image)
-                for index in range(len(self.mapWaveTimes)):
-                    filename = "map_swh_" + str(index) + ".png"
-                    os.remove(graph_directory + filename)
+#             for index in range(len(self.mapWaveTimes)):
+#                 fig, ax = plt.subplots()
+#                 currentMaskedTriangles = self.mapWaveMaskedTriangles.copy()
+#                 for triangleIndex, triangle in enumerate(self.mapWaveTriangles):
+#                     for pointIndex in triangle:
+#                         swh = self.mapSWH[index][pointIndex]
+#                         if(swh == -99999.0):
+#                             currentMaskedTriangles[triangleIndex] = True
+#                             break
+#                 waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=currentMaskedTriangles)
+#         
+#                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.5, aspect=aspectRatio, zorder=2)
+#                 contourset = ax.tricontourf(waveTriangulation, self.mapSWH[index], levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+#         
+#                 plt.axis(plotAxis)
+#                 plt.title("Significant Wave Height")
+#                 plt.xlabel(datetime.fromtimestamp(int(self.mapWaveTimes[index]), timezone.utc))
+#         
+#                 # Use the blended colormap for the colorbar
+#                 plt.colorbar(
+#                     ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
+#                     ticks=range(vmin, vmax+5, 5),
+#                     boundaries=levelBoundaries,
+#                     values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+#                     label="Meters",
+#                     ax=plt.gca()
+#                 )
+#         
+#                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
+#                 plt.close()
+#                 gc.collect()
+#         
+#             # Create GIF
+#             with imageio.get_writer(graph_directory + 'wave.gif', mode='I') as writer:
+#                 for index in range(len(self.mapWaveTimes)):
+#                     filename = "map_swh_" + str(index) + ".png"
+#                     image = imageio.imread(graph_directory + filename)
+#                     writer.append_data(image)
+#                 for index in range(len(self.mapWaveTimes)):
+#                     filename = "map_swh_" + str(index) + ".png"
+#                     os.remove(graph_directory + filename)
         
             # Wave Swath Plot
             swathSWH = np.max(self.mapSWH, axis=0)
@@ -1607,16 +1607,16 @@ class Grapher:
                         break
             waveTriangulation = Triangulation(self.mapWavePointsLongitudes, self.mapWavePointsLatitudes, triangles=self.mapWaveTriangles, mask=self.mapWaveMaskedTriangles)
         
-            fig, ax = plt.subplots(figsize=(9,9))
+            fig, ax = plt.subplots(figsize=(18,18))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1, alpha=0.5)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, linewidths=5, vmin=vmin, vmax=vmax, zorder=1, alpha=0.5)
         
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
             if(self.tideExists):
                 ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Tide", zorder=3)
         
             plt.axis(plotAxis)
-            plt.title("Significant Wave Height Swath")
+            plt.title("Significant Wave Height Swath", fontsize=28)
         
             # Use the blended colormap for the colorbar
             # Use the blended colormap for the colorbar (alpha=0.5)
@@ -1627,11 +1627,11 @@ class Grapher:
                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
                 ax=plt.gca()
             )
-#             cbar.ax.tick_params(labelsize=28)  # Set colorbar tick label font size
-#             cbar.set_label("Meters", fontsize=28)  # Set colorbar label font size
-#         
-#             plt.xticks(fontsize=22)
-#             plt.yticks(fontsize=22)  # Corrected from duplicate xticks
+            cbar.ax.tick_params(labelsize=28)  # Set colorbar tick label font size
+            cbar.set_label("Meters", fontsize=28)  # Set colorbar label font size
+        
+            plt.xticks(fontsize=22)
+            plt.yticks(fontsize=22)  # Corrected from duplicate xticks
             
             plt.savefig(graph_directory + 'map_swh_swath.png')
             plt.close()
