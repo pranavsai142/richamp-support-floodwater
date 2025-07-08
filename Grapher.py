@@ -2363,8 +2363,9 @@ class Grapher:
                     ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label=r"$\eta$", color='blue', linewidth=2)
                 
                     # Calculate total swash: sqrt(S_incident^2 + S_infragravity^2)
-                    total_swash = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + 
-                                          np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+#                     total_swash = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + 
+#                                           np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+                    total_swash = (self.datapointsSwashHolmanLow[index] * 2)/1.1
                 
                     # Define the upper and lower bounds for the swash area
                     lower_bound = self.datapointsSwashStockdonLow[index] - 0.5 * total_swash
@@ -2377,7 +2378,7 @@ class Grapher:
                     # Add dotted lines for original and new extents
                     ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
-                    ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
+                    ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
                     # Calculate the maximum elevation including the swash
                     max_water_elevation = max(self.datapointsSwashStockdonLow[index])
@@ -2390,7 +2391,7 @@ class Grapher:
                     ax.format_xdata = mdates.DateFormatter('%d')
                     stationName = self.runupLabels[index]  # Use runupLabels for station name
                     plt.title(self.titlePrefix + stationName + 
-                              r" Water Level (Max $\eta$, $\frac{S}{2} + \eta$, $1.1\frac{S}{2} + \eta$: " + maxElevation + " m)", fontsize=24)
+                              r" Water Level (Max $\eta$, $+\frac{S}{2}$, $+1.1\frac{S}{2}$: " + maxElevation + " m)", fontsize=24)
                     plt.xlabel("Date")
                     plt.ylabel("Elevation (meters)")
                 

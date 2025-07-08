@@ -661,6 +661,7 @@ class GetRunup:
 #                 Define runupHolmanMid as 1.1(S/2) + eta
                 runupHolmanMid = adcircRunup
                 stockdonSwashLow = waterlineWaterValue
+                swashHolmanLow = stockdonRunupNoSetup
 #                 runupHolmanMid = stockdonRunup
                 
 #                 runupValues.append(stockdonRunup)
