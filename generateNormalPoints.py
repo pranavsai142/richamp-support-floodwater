@@ -668,7 +668,7 @@ def generate_deepline_points(json_data):
             base_name = f"{runup_data['name'].split(' ')[0]} {depth} Depth Waves {distance}m"
             
             # Create two RUNUP entries: one with calculateDailyAverageSlope: true, one with false
-            for slope_mode in [False]:
+            for slope_mode in [True]:
                 new_runup_key = f"{runup_id}d{idx}"
                 new_runup[new_runup_key] = runup_data.copy()
                 new_runup[new_runup_key]['deeplineKey'] = deepline_key
