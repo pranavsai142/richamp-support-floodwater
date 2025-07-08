@@ -1609,7 +1609,7 @@ class Grapher:
         
             fig, ax = plt.subplots(figsize=(18,18))
             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            contourset = ax.tricontourf(waveTriangulation, swathSWH, levelBoundaries, cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1, alpha=0.5)
             ax.tricontour(waveTriangulation, swathSWH, levels=np.arange(vmin, vmax + 1, 0.5), colors='black', linewidths=3, zorder=1)
             ax.scatter(self.waveLongitudes, self.waveLatitudes, label="Datapoints")
             if(self.tideExists):
