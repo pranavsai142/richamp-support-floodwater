@@ -23,8 +23,8 @@ DEPTH_LINE_7M = -7.0
 DEPTH_LINE_20M = -20.0
 DISTANCE_LINE_9000M = 9000.0
 
-GRAPH_SWASH = False
-GRAPH_MULTIPANEL = True
+GRAPH_SWASH = True
+GRAPH_MULTIPANEL = False
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
@@ -2484,14 +2484,19 @@ class Grapher:
         plt.savefig(f"{graph_directory}/Napatree_all_slope.png")
         plt.close()
     
-        # --- Combined Runup Plots for All Transects ---
+        # --- Combined Runup Plots for All Transects --- 
+        
         all_y_values = []
+        eta_values = None  # Store the first valid η dataset
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     all_y_values.extend([x for x in self.datapointsRunupHolmanMid[index] if not np.isnan(x)])
                     all_y_values.extend([x for x in self.datapointsDuneHeights[index] if not np.isnan(x)])
+                    # Capture the first valid η dataset
+                    if eta_values is None and len(self.datapointsSwashStockdonLow[index]) > 0:
+                        eta_values = self.datapointsSwashStockdonLow[index]
         
         y_min = min(all_y_values) if all_y_values else -10.0
         y_max = max(all_y_values) if all_y_values else 10.0
@@ -2522,10 +2527,13 @@ class Grapher:
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
                     unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
+            # Plot η line if available
+            if eta_values is not None:
+                ax.plot(self.runupTimes, eta_values, linestyle='-', color='blue', label='η')
+        
             # Plot horizontal lines for dune heights
             for height in unique_heights:
-                if transect >= 2: #For 2023, 5 for 2022
-#                 if transect >= 5:
+                if transect >= 2:  # For 2023, 5 for 2022
                     ax.axhline(y=height, linestyle='--', color='red', label=f'Dune Height {height:.2f}m' if height == list(unique_heights)[0] else None)
                 else:
                     ax.axhline(y=height, linestyle='--', color='grey', label=f'Dune Height {height:.2f}m' if height == list(unique_heights)[0] else None)
