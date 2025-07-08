@@ -1550,7 +1550,7 @@ class Grapher:
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
         
             # Get the original colormap
-            original_cmap = plt.cm.get_cmap('viridis')
+            original_cmap = plt.cm.get_cmap('jet')
         
             # Create blended colormap for the colorbars
             blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)  # For both wave height and swath plots
