@@ -2308,55 +2308,98 @@ class Grapher:
                 plt.close()
             
                 
-#                 Graph water_swash
-                if(len(self.datapointsWaters) > 0 and GRAPH_SWASH):
-                    # Assuming self.findMatchingIndices is defined as per your earlier request
-                    datapointsWaterRunupIndices = self.findMatchingIndices(self.tideLabels, self.runupLabels[index][0:9])
-#                     print("Finding Water stations corresponding to runup station")
-#                     print("Searching for water labels with string: ", self.runupLabels[index][0:9])
-#                     print("Found indices count:", len(datapointsWaterRunupIndices))
-                    for datapointsWaterRunupIndex in datapointsWaterRunupIndices:
-                        
-                        fig, ax = plt.subplots(figsize=(16, 9))
-                        
-                        # Plot the water elevation time series
-                        ax.plot(self.waterTimes, self.datapointsWaters[datapointsWaterRunupIndex], label=r"$\eta$", color='blue', linewidth=2)
-                        
-                        # Calculate total swash: sqrt(S_incident^2 + S_infragravity^2)
-                        total_swash = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + 
-                                              np.array(self.datapointsSwashStockdonInfragravity[index])**2)
-                        
-                        # Define the upper and lower bounds for the swash area
-                        lower_bound = self.datapointsWaters[datapointsWaterRunupIndex] - 0.5 * total_swash
-                        upper_bound = self.datapointsWaters[datapointsWaterRunupIndex] + 0.5 * total_swash
-                        
-                        # Fill the area between upper and lower bounds to highlight swash extent
-                        ax.fill_between(self.waterTimes, lower_bound, upper_bound, color='lightblue', alpha=0.4, label="Swash Extent")
-                        
-                        # Add dotted lines for maximum and minimum extents
-                        ax.plot(self.waterTimes, upper_bound, '--', color='red', label="+S/2", linewidth=1.5)
-                        ax.plot(self.waterTimes, lower_bound, '--', color='green', label="-S/2", linewidth=1.5)
-                        
-                        # Calculate the maximum elevation including the swash
-                        max_water_elevation = max(self.datapointsWaters[datapointsWaterRunupIndex])
-                        max_swash_upper = max(upper_bound)
-                        maxElevation = str(round(max_water_elevation, 2)) + ", " + str(round(max_swash_upper, 2))
-                        
-                        # Customize the plot
-                        ax.legend(loc="upper left")
-                        ax.format_xdata = mdates.DateFormatter('%d')
-                        stationName = self.tideLabels[datapointsWaterRunupIndex]
-#                         print("stationName of corresponding water station: ", stationName)
-                        plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Water Level (Max $\eta$, $\eta + \frac{S}{2}$: " + maxElevation + " m)", fontsize=24)
-                        plt.xlabel("Date")
-                        plt.ylabel("Elevation (meters)")
-                        
-                        # Adjust layout to prevent label cutoff
-                        plt.tight_layout()
-                        
-                        # Save and close the plot
-                        plt.savefig(graph_directory + stationName + '_water_swash.png', dpi=300)
-                        plt.close()
+#                 if(len(self.datapointsWaters) > 0 and GRAPH_SWASH):
+#                     # Assuming self.findMatchingIndices is defined as per your earlier request
+#                     datapointsWaterRunupIndices = self.findMatchingIndices(self.tideLabels, self.runupLabels[index][0:9])
+#                     for datapointsWaterRunupIndex in datapointsWaterRunupIndices:
+#                         fig, ax = plt.subplots(figsize=(16, 9))
+#                 
+#                         # Plot the water elevation time series
+#                         ax.plot(self.waterTimes, self.datapointsWaters[datapointsWaterRunupIndex], label=r"$\eta$", color='blue', linewidth=2)
+#                 
+#                         # Calculate total swash: sqrt(S_incident^2 + S_infragravity^2)
+#                         total_swash = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + 
+#                                               np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+#                 
+#                         # Define the upper and lower bounds for the swash area
+#                         lower_bound = self.datapointsWaters[datapointsWaterRunupIndex] - 0.5 * total_swash
+#                         upper_bound = self.datapointsWaters[datapointsWaterRunupIndex] + 0.5 * total_swash
+#                         upper_bound_1_1 = 1.1 * upper_bound  # New 1.1 * upper_bound line
+#                 
+#                         # Fill the area between lower_bound and upper_bound_1_1 to highlight swash extent
+#                         ax.fill_between(self.waterTimes, lower_bound, upper_bound_1_1, color='lightblue', alpha=0.4, label="Swash Extent")
+#                 
+#                         # Add dotted lines for original and new extents
+#                         ax.plot(self.waterTimes, upper_bound, '--', color='red', label=r"$\frac{S}{2}$", linewidth=1.5)
+#                         ax.plot(self.waterTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
+#                         ax.plot(self.waterTimes, upper_bound_1_1, '--', color='purple', label=r"$1.1\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
+#                 
+#                         # Calculate the maximum elevation including the swash
+#                         max_water_elevation = max(self.datapointsWaters[datapointsWaterRunupIndex])
+#                         max_swash_upper = max(upper_bound)
+#                         max_swash_upper_1_1 = max(upper_bound_1_1)  # Max of new 1.1 * upper_bound
+#                         maxElevation = f"{round(max_water_elevation, 2)}, {round(max_swash_upper, 2)}, {round(max_swash_upper_1_1, 2)}"
+#                 
+#                         # Customize the plot
+#                         ax.legend(loc="upper left")
+#                         ax.format_xdata = mdates.DateFormatter('%d')
+#                         stationName = self.tideLabels[datapointsWaterRunupIndex]
+#                         plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + 
+#                                   r" Water Level (Max $\eta$, $\frac{S}{2} + \eta$, $1.1\frac{S}{2} + \eta$: " + maxElevation + " m)", fontsize=24)
+#                         plt.xlabel("Date")
+#                         plt.ylabel("Elevation (meters)")
+#                 
+#                         # Adjust layout to prevent label cutoff
+#                         plt.tight_layout()
+#                 
+#                         # Save and close the plot
+#                         plt.savefig(graph_directory + stationName + '_water_swash.png', dpi=300)
+#                         plt.close()
+
+                if(len(self.datapointsSwashStockdonLow) > 0 and GRAPH_SWASH):
+                    fig, ax = plt.subplots(figsize=(16, 9))
+                
+                    # Plot the water elevation time series using datapointsSwashStockdonLow
+                    ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label=r"$\eta$", color='blue', linewidth=2)
+                
+                    # Calculate total swash: sqrt(S_incident^2 + S_infragravity^2)
+                    total_swash = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + 
+                                          np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+                
+                    # Define the upper and lower bounds for the swash area
+                    lower_bound = self.datapointsSwashStockdonLow[index] - 0.5 * total_swash
+                    upper_bound = self.datapointsSwashStockdonLow[index] + 0.5 * total_swash
+                    upper_bound_1_1 = 1.1 * upper_bound  # New 1.1 * upper_bound line
+                
+                    # Fill the area between lower_bound and upper_bound_1_1 to highlight swash extent
+                    ax.fill_between(self.runupTimes, lower_bound, upper_bound_1_1, color='lightblue', alpha=0.4, label="Swash Extent")
+                
+                    # Add dotted lines for original and new extents
+                    ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$\frac{S}{2}$", linewidth=1.5)
+                    ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
+                    ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"$1.1\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
+                
+                    # Calculate the maximum elevation including the swash
+                    max_water_elevation = max(self.datapointsSwashStockdonLow[index])
+                    max_swash_upper = max(upper_bound)
+                    max_swash_upper_1_1 = max(upper_bound_1_1)  # Max of new 1.1 * upper_bound
+                    maxElevation = f"{round(max_water_elevation, 2)}, {round(max_swash_upper, 2)}, {round(max_swash_upper_1_1, 2)}"
+                
+                    # Customize the plot
+                    ax.legend(loc="upper left")
+                    ax.format_xdata = mdates.DateFormatter('%d')
+                    stationName = self.runupLabels[index][0:9]  # Use runupLabels for station name
+                    plt.title(self.titlePrefix + stationName + 
+                              r" Water Level (Max $\eta$, $\frac{S}{2} + \eta$, $1.1\frac{S}{2} + \eta$: " + maxElevation + " m)", fontsize=24)
+                    plt.xlabel("Date")
+                    plt.ylabel("Elevation (meters)")
+                
+                    # Adjust layout to prevent label cutoff
+                    plt.tight_layout()
+                
+                    # Save and close the plot
+                    plt.savefig(graph_directory + stationName + '_water_swash.png', dpi=300)
+                    plt.close()
            
        
 #               Graph wavelength
