@@ -2369,7 +2369,7 @@ class Grapher:
                     # Define the upper and lower bounds for the swash area
                     lower_bound = self.datapointsSwashStockdonLow[index] - 0.5 * total_swash
                     upper_bound = self.datapointsSwashStockdonLow[index] + 0.5 * total_swash
-                    upper_bound_1_1 = 1.1 * upper_bound  # New 1.1 * upper_bound line
+                    upper_bound_1_1 = self.datapointsSwashStockdonLow[index] + 0.5 * 1.1 * total_swash  # New 1.1 * upper_bound line
                 
                     # Fill the area between lower_bound and upper_bound_1_1 to highlight swash extent
                     ax.fill_between(self.runupTimes, lower_bound, upper_bound_1_1, color='lightblue', alpha=0.4, label="Swash Extent")
