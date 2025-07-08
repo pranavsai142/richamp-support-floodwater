@@ -203,13 +203,13 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/dec22conv.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2022/
 
 # Obs Waves
-python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
---waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/rads.64.nc \
---waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_HS.63.nc \
---wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_DIR.63.nc \
---wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TMM10.63.nc \
---wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWave2022/
+# python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/rads.64.nc \
+# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_HS.63.nc \
+# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_DIR.63.nc \
+# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TMM10.63.nc \
+# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/swan_TPS.63.nc \
+#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWave2022/
  
 #  Wave swath
 #  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
@@ -268,13 +268,13 @@ python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/dec23wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2023/
 
 # Obs Waves
-# python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --wavesExists true \
-# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/rads.64.nc \
-# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_HS.63.nc \
-# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_DIR.63.nc \
-# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_TMM10.63.nc \
-# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_TPS.63.nc \
-#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWave2023/
+python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+--waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/rads.64.nc \
+--waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_HS.63.nc \
+--wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_DIR.63.nc \
+--wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_TMM10.63.nc \
+--wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_TPS.63.nc \
+ --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWave2023/
 
 
 # Transect Graph/
