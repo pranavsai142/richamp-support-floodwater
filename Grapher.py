@@ -2377,7 +2377,7 @@ class Grapher:
                     # Add dotted lines for original and new extents
                     ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
-                    ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"$1.1\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
+                    ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
                     # Calculate the maximum elevation including the swash
                     max_water_elevation = max(self.datapointsSwashStockdonLow[index])
@@ -2388,7 +2388,7 @@ class Grapher:
                     # Customize the plot
                     ax.legend(loc="upper left")
                     ax.format_xdata = mdates.DateFormatter('%d')
-                    stationName = self.runupLabels[index][0:9]  # Use runupLabels for station name
+                    stationName = self.runupLabels[index]  # Use runupLabels for station name
                     plt.title(self.titlePrefix + stationName + 
                               r" Water Level (Max $\eta$, $\frac{S}{2} + \eta$, $1.1\frac{S}{2} + \eta$: " + maxElevation + " m)", fontsize=24)
                     plt.xlabel("Date")
