@@ -2572,7 +2572,7 @@ class Grapher:
         
             # Plot η line if available
             if eta_values is not None:
-                ax.plot(self.runupTimes, eta_values, linestyle='-', label='η')
+                ax.plot(self.runupTimes, eta_values, linestyle='-', color='black', label='η')
         
             # Plot horizontal lines for dune heights
             for height in unique_heights:
