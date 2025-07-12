@@ -317,7 +317,9 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --postExists true --wind /project/pi_iginis_uri_edu/pranav_sai_uri_edu/RICHAMPHenriAdvisory18-June23/RICHAMP_wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP
 
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --postExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/RICHAMP/RICHAMP_wind.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/RICHAMP/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NORTH_PROVIDENCE --graphDirectory barrierOpen/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/RICHAMP/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NORTH_PROVIDENCE --graphDirectory barrierOpen/
+python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/RICHAMPHenriBarrierClosedGFS/RICHAMP_fort63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp2/ --backgroundChoice NORTH_PROVIDENCE --graphDirectory barrierClosed/
+
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --rainExists true --rain /scratch3/workspace/pranav_sai_uri_edu-runup/RICHAMP/RICHAMP_rain.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP
 
 
