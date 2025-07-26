@@ -80,6 +80,14 @@
       "longitude": "-71.40500",
       "altitude": "9.13\n"
     },
+    "103": {
+     "id": "8461490",
+      "source": "CO-OPS_8461490_met.csv",
+      "name": "New London, CT",
+      "latitude": "41.371667",
+      "longitude": "-72.095000",
+      "altitude": "2\n"
+    },
     "104": {
      "id": "411838071513000",
       "source": "USGS",
