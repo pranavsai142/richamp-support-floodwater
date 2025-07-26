@@ -3,7 +3,7 @@ import copy
 import math
 import datetime
 
-GENERATE_TRANSECT_POINTS = False
+GENERATE_TRANSECT_POINTS = True
 
 HYPERRESOLUTION = 1
 HYPERPOINTS = 120
