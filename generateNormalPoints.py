@@ -673,7 +673,7 @@ def generate_deepline_points(json_data):
                 new_runup[new_runup_key] = runup_data.copy()
                 new_runup[new_runup_key]['deeplineKey'] = deepline_key
                 # Include runup_id in name for clarity
-                new_runup[new_runup_key]['name'] = f"{base_name} {new_runup_key}"
+                new_runup[new_runup_key]['name'] = f"{base_name}"
                 new_runup[new_runup_key]['duneHeights'] = dune_heights
                 new_lat, new_lon = calculate_new_point(shoreline_lat, shoreline_lon, bearing, distance)
                 new_runup[new_runup_key]['deeplineLatitude'] = f"{new_lat:.6f}"
