@@ -2229,17 +2229,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.89
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.92
+          "timestamp": 1671508800,
+          "height": 3.84
         }
       ],
       "deeplineLatitude": "41.305782",
       "deeplineLongitude": "-71.874093",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "40d1": {
       "id": "RUNUP",
@@ -2258,17 +2254,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.89
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.92
+          "timestamp": 1671508800,
+          "height": 3.84
         }
       ],
       "deeplineLatitude": "41.290962",
       "deeplineLongitude": "-71.864989",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "40d2": {
       "id": "RUNUP",
@@ -2287,17 +2279,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.89
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.92
+          "timestamp": 1671508800,
+          "height": 3.84
         }
       ],
       "deeplineLatitude": "41.235634",
       "deeplineLongitude": "-71.831041",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "50d0": {
       "id": "RUNUP",
@@ -2316,17 +2304,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.32
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.22
+          "timestamp": 1671508800,
+          "height": 3.11
         }
       ],
       "deeplineLatitude": "41.303207",
       "deeplineLongitude": "-71.876825",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "50d1": {
       "id": "RUNUP",
@@ -2345,17 +2329,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.32
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.22
+          "timestamp": 1671508800,
+          "height": 3.11
         }
       ],
       "deeplineLatitude": "41.290104",
       "deeplineLongitude": "-71.868077",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "50d2": {
       "id": "RUNUP",
@@ -2374,17 +2354,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 3.32
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 3.22
+          "timestamp": 1671508800,
+          "height": 3.11
         }
       ],
       "deeplineLatitude": "41.235233",
       "deeplineLongitude": "-71.831486",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "30d0": {
       "id": "RUNUP",
@@ -2403,17 +2379,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.02
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.06
+          "timestamp": 1671508800,
+          "height": 3.4
         }
       ],
       "deeplineLatitude": "41.306522",
       "deeplineLongitude": "-71.870786",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "30d1": {
       "id": "RUNUP",
@@ -2432,17 +2404,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.02
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.06
+          "timestamp": 1671508800,
+          "height": 3.4
         }
       ],
       "deeplineLatitude": "41.291142",
       "deeplineLongitude": "-71.864143",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "30d2": {
       "id": "RUNUP",
@@ -2461,17 +2429,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.02
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.06
+          "timestamp": 1671508800,
+          "height": 3.4
         }
       ],
       "deeplineLatitude": "41.233253",
       "deeplineLongitude": "-71.839169",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "20d0": {
       "id": "RUNUP",
@@ -2490,17 +2454,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.81
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.82
+          "timestamp": 1671508800,
+          "height": 3.37
         }
       ],
       "deeplineLatitude": "41.305881",
       "deeplineLongitude": "-71.868736",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "20d1": {
       "id": "RUNUP",
@@ -2519,17 +2479,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.81
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.82
+          "timestamp": 1671508800,
+          "height": 3.37
         }
       ],
       "deeplineLatitude": "41.290539",
       "deeplineLongitude": "-71.866624",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "20d2": {
       "id": "RUNUP",
@@ -2548,17 +2504,13 @@
       "offshoreLongitude": "-71.80623",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 4.81
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 4.82
+          "timestamp": 1671508800,
+          "height": 3.37
         }
       ],
       "deeplineLatitude": "41.230291",
       "deeplineLongitude": "-71.858342",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "10d0": {
       "id": "RUNUP",
@@ -2577,17 +2529,13 @@
       "offshoreLongitude": "-71.866260",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 6.04
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 6.08
+          "timestamp": 1671508800,
+          "height": 3.82
         }
       ],
       "deeplineLatitude": "41.304631",
       "deeplineLongitude": "-71.866032",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "10d1": {
       "id": "RUNUP",
@@ -2606,17 +2554,13 @@
       "offshoreLongitude": "-71.866260",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 6.04
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 6.08
+          "timestamp": 1671508800,
+          "height": 3.82
         }
       ],
       "deeplineLatitude": "41.290144",
       "deeplineLongitude": "-71.867853",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     },
     "10d2": {
       "id": "RUNUP",
@@ -2635,17 +2579,13 @@
       "offshoreLongitude": "-71.866260",
       "duneHeights": [
         {
-          "timestamp": 1702440000,
-          "height": 6.04
-        },
-        {
-          "timestamp": 1702958400,
-          "height": 6.08
+          "timestamp": 1671508800,
+          "height": 3.82
         }
       ],
       "deeplineLatitude": "41.230362",
       "deeplineLongitude": "-71.875359",
-      "calculateDailyAverageSlope": true
+      "calculateDailyAverageSlope": false
     }
   }
 }

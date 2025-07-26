@@ -436,42 +436,46 @@ def datetime_to_timestamp(dt_str):
     return int(dt.timestamp())
 
 # Station-specific dune heights with GMT datetime strings
-DUNE_HEIGHTS_1 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 6.04},
-    {"datetime": "2023-12-19 04:00:00", "height": 6.08}
-]
-DUNE_HEIGHTS_2 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 4.81},
-    {"datetime": "2023-12-19 04:00:00", "height": 4.82}
-]
-DUNE_HEIGHTS_3 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 4.02},
-    {"datetime": "2023-12-19 04:00:00", "height": 4.06}
-]
-DUNE_HEIGHTS_4 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 3.89},
-    {"datetime": "2023-12-19 04:00:00", "height": 3.92}
-]
-DUNE_HEIGHTS_5 = [
-    {"datetime": "2023-12-13 04:00:00", "height": 3.32},
-    {"datetime": "2023-12-19 04:00:00", "height": 3.22}
-]
 
+# 2023
 # DUNE_HEIGHTS_1 = [
-#     {"datetime": "2022-12-20 04:00:00", "height": 3.82}
+#     {"datetime": "2023-12-13 04:00:00", "height": 6.04},
+#     {"datetime": "2023-12-19 04:00:00", "height": 6.08}
 # ]
 # DUNE_HEIGHTS_2 = [
-#     {"datetime": "2022-12-20 04:00:00", "height": 3.37}
+#     {"datetime": "2023-12-13 04:00:00", "height": 4.81},
+#     {"datetime": "2023-12-19 04:00:00", "height": 4.82}
 # ]
 # DUNE_HEIGHTS_3 = [
-#     {"datetime": "2022-12-20 04:00:00", "height": 3.40}
+#     {"datetime": "2023-12-13 04:00:00", "height": 4.02},
+#     {"datetime": "2023-12-19 04:00:00", "height": 4.06}
 # ]
 # DUNE_HEIGHTS_4 = [
-#     {"datetime": "2022-12-20 04:00:00", "height": 3.84}
+#     {"datetime": "2023-12-13 04:00:00", "height": 3.89},
+#     {"datetime": "2023-12-19 04:00:00", "height": 3.92}
 # ]
 # DUNE_HEIGHTS_5 = [
-#     {"datetime": "2022-12-20 04:00:00", "height": 3.11}
+#     {"datetime": "2023-12-13 04:00:00", "height": 3.32},
+#     {"datetime": "2023-12-19 04:00:00", "height": 3.22}
 # ]
+
+
+# 2022
+DUNE_HEIGHTS_1 = [
+    {"datetime": "2022-12-20 04:00:00", "height": 3.82}
+]
+DUNE_HEIGHTS_2 = [
+    {"datetime": "2022-12-20 04:00:00", "height": 3.37}
+]
+DUNE_HEIGHTS_3 = [
+    {"datetime": "2022-12-20 04:00:00", "height": 3.40}
+]
+DUNE_HEIGHTS_4 = [
+    {"datetime": "2022-12-20 04:00:00", "height": 3.84}
+]
+DUNE_HEIGHTS_5 = [
+    {"datetime": "2022-12-20 04:00:00", "height": 3.11}
+]
 
 # Convert datetime strings to timestamps for JSON output
 DUNE_HEIGHTS_1 = [{"timestamp": datetime_to_timestamp(h["datetime"]), "height": h["height"]} for h in DUNE_HEIGHTS_1]
@@ -668,7 +672,7 @@ def generate_deepline_points(json_data):
             base_name = f"{runup_data['name'].split(' ')[0]} {depth} Depth Waves {distance}m"
             
             # Create two RUNUP entries: one with calculateDailyAverageSlope: true, one with false
-            for slope_mode in [True]:
+            for slope_mode in [False]:
                 new_runup_key = f"{runup_id}d{idx}"
                 new_runup[new_runup_key] = runup_data.copy()
                 new_runup[new_runup_key]['deeplineKey'] = deepline_key
