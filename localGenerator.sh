@@ -152,7 +152,7 @@
 # --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec172023RunupRun/forecast_RI_track/swan_TPS.63.nc \
 #  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE
 
-# python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
+python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
 --wavesExists true \
 --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/rads.64.nc \
 --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_HS.63.nc \
