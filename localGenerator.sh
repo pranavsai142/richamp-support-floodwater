@@ -186,7 +186,7 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/dec22conv.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWind2022/
 
 # Watch Hill Mesh
-python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE_OFFSHORE
+python generateGraphs.py --stations NAPATREE_NORMAL_TRANSECT_STATIONS.json --obsExists true --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE_OFFSHORE
 
 
 # Correctly format multipanel graphs and create figures
