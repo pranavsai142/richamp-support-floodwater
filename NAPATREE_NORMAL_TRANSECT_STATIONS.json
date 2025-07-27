@@ -27300,6 +27300,7 @@
       ],
       "deeplineLatitude": "41.308518",
       "deeplineLongitude": "-71.875774",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d0s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27327,6 +27328,7 @@
       ],
       "deeplineLatitude": "41.306885",
       "deeplineLongitude": "-71.874770",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d1s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27354,6 +27356,7 @@
       ],
       "deeplineLatitude": "41.305251",
       "deeplineLongitude": "-71.873767",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d2s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27381,6 +27384,7 @@
       ],
       "deeplineLatitude": "41.303618",
       "deeplineLongitude": "-71.872763",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d3s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27408,6 +27412,7 @@
       ],
       "deeplineLatitude": "41.301985",
       "deeplineLongitude": "-71.871760",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d4s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27435,6 +27440,7 @@
       ],
       "deeplineLatitude": "41.300352",
       "deeplineLongitude": "-71.870757",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d5s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27462,6 +27468,7 @@
       ],
       "deeplineLatitude": "41.298719",
       "deeplineLongitude": "-71.869753",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d6s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27489,6 +27496,7 @@
       ],
       "deeplineLatitude": "41.297086",
       "deeplineLongitude": "-71.868750",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d7s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27516,6 +27524,7 @@
       ],
       "deeplineLatitude": "41.295453",
       "deeplineLongitude": "-71.867747",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d8s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27543,6 +27552,7 @@
       ],
       "deeplineLatitude": "41.293820",
       "deeplineLongitude": "-71.866744",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d9s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27570,6 +27580,7 @@
       ],
       "deeplineLatitude": "41.292187",
       "deeplineLongitude": "-71.865741",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d10s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27597,6 +27608,7 @@
       ],
       "deeplineLatitude": "41.290553",
       "deeplineLongitude": "-71.864738",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d11s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27624,6 +27636,7 @@
       ],
       "deeplineLatitude": "41.288920",
       "deeplineLongitude": "-71.863735",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d12s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27651,6 +27664,7 @@
       ],
       "deeplineLatitude": "41.287287",
       "deeplineLongitude": "-71.862732",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d13s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27678,6 +27692,7 @@
       ],
       "deeplineLatitude": "41.285654",
       "deeplineLongitude": "-71.861729",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d14s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27705,6 +27720,7 @@
       ],
       "deeplineLatitude": "41.284021",
       "deeplineLongitude": "-71.860726",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d15s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27732,6 +27748,7 @@
       ],
       "deeplineLatitude": "41.282388",
       "deeplineLongitude": "-71.859724",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d16s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27759,6 +27776,7 @@
       ],
       "deeplineLatitude": "41.280754",
       "deeplineLongitude": "-71.858721",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d17s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27786,6 +27804,7 @@
       ],
       "deeplineLatitude": "41.279121",
       "deeplineLongitude": "-71.857718",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d18s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27813,6 +27832,7 @@
       ],
       "deeplineLatitude": "41.277488",
       "deeplineLongitude": "-71.856716",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d19s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27840,6 +27860,7 @@
       ],
       "deeplineLatitude": "41.275855",
       "deeplineLongitude": "-71.855713",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d20s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27867,6 +27888,7 @@
       ],
       "deeplineLatitude": "41.274222",
       "deeplineLongitude": "-71.854711",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d21s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27894,6 +27916,7 @@
       ],
       "deeplineLatitude": "41.272588",
       "deeplineLongitude": "-71.853708",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d22s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27921,6 +27944,7 @@
       ],
       "deeplineLatitude": "41.270955",
       "deeplineLongitude": "-71.852706",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d23s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27948,6 +27972,7 @@
       ],
       "deeplineLatitude": "41.269322",
       "deeplineLongitude": "-71.851703",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d24s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -27975,6 +28000,7 @@
       ],
       "deeplineLatitude": "41.267688",
       "deeplineLongitude": "-71.850701",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d25s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28002,6 +28028,7 @@
       ],
       "deeplineLatitude": "41.266055",
       "deeplineLongitude": "-71.849699",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d26s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28029,6 +28056,7 @@
       ],
       "deeplineLatitude": "41.264422",
       "deeplineLongitude": "-71.848697",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d27s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28056,6 +28084,7 @@
       ],
       "deeplineLatitude": "41.262789",
       "deeplineLongitude": "-71.847694",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d28s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28083,6 +28112,7 @@
       ],
       "deeplineLatitude": "41.261155",
       "deeplineLongitude": "-71.846692",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d29s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28110,6 +28140,7 @@
       ],
       "deeplineLatitude": "41.259522",
       "deeplineLongitude": "-71.845690",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d30s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28137,6 +28168,7 @@
       ],
       "deeplineLatitude": "41.257889",
       "deeplineLongitude": "-71.844688",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d31s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28164,6 +28196,7 @@
       ],
       "deeplineLatitude": "41.256255",
       "deeplineLongitude": "-71.843686",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d32s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28191,6 +28224,7 @@
       ],
       "deeplineLatitude": "41.254622",
       "deeplineLongitude": "-71.842684",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d33s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28218,6 +28252,7 @@
       ],
       "deeplineLatitude": "41.252989",
       "deeplineLongitude": "-71.841683",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d34s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28245,6 +28280,7 @@
       ],
       "deeplineLatitude": "41.251355",
       "deeplineLongitude": "-71.840681",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d35s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28272,6 +28308,7 @@
       ],
       "deeplineLatitude": "41.249722",
       "deeplineLongitude": "-71.839679",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d36s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28299,6 +28336,7 @@
       ],
       "deeplineLatitude": "41.248089",
       "deeplineLongitude": "-71.838677",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d37s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28326,6 +28364,7 @@
       ],
       "deeplineLatitude": "41.246455",
       "deeplineLongitude": "-71.837676",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d38s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28353,6 +28392,7 @@
       ],
       "deeplineLatitude": "41.244822",
       "deeplineLongitude": "-71.836674",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d39s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28380,6 +28420,7 @@
       ],
       "deeplineLatitude": "41.243188",
       "deeplineLongitude": "-71.835672",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d40s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28407,6 +28448,7 @@
       ],
       "deeplineLatitude": "41.241555",
       "deeplineLongitude": "-71.834671",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d41s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28434,6 +28476,7 @@
       ],
       "deeplineLatitude": "41.239922",
       "deeplineLongitude": "-71.833669",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d42s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28461,6 +28504,7 @@
       ],
       "deeplineLatitude": "41.238288",
       "deeplineLongitude": "-71.832668",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d43s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28488,6 +28532,7 @@
       ],
       "deeplineLatitude": "41.236655",
       "deeplineLongitude": "-71.831667",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d44s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28515,6 +28560,7 @@
       ],
       "deeplineLatitude": "41.235021",
       "deeplineLongitude": "-71.830665",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d45s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28542,6 +28588,7 @@
       ],
       "deeplineLatitude": "41.233388",
       "deeplineLongitude": "-71.829664",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d46s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28569,6 +28616,7 @@
       ],
       "deeplineLatitude": "41.231754",
       "deeplineLongitude": "-71.828663",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d47s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28596,6 +28644,7 @@
       ],
       "deeplineLatitude": "41.230121",
       "deeplineLongitude": "-71.827662",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d48s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28623,6 +28672,7 @@
       ],
       "deeplineLatitude": "41.228487",
       "deeplineLongitude": "-71.826661",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d49s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28650,6 +28700,7 @@
       ],
       "deeplineLatitude": "41.226854",
       "deeplineLongitude": "-71.825660",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d50s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28677,6 +28728,7 @@
       ],
       "deeplineLatitude": "41.225220",
       "deeplineLongitude": "-71.824659",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d51s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28704,6 +28756,7 @@
       ],
       "deeplineLatitude": "41.223587",
       "deeplineLongitude": "-71.823658",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d52s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28731,6 +28784,7 @@
       ],
       "deeplineLatitude": "41.221953",
       "deeplineLongitude": "-71.822657",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d53s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28758,6 +28812,7 @@
       ],
       "deeplineLatitude": "41.220320",
       "deeplineLongitude": "-71.821656",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d54s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28785,6 +28840,7 @@
       ],
       "deeplineLatitude": "41.218686",
       "deeplineLongitude": "-71.820655",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d55s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28812,6 +28868,7 @@
       ],
       "deeplineLatitude": "41.217053",
       "deeplineLongitude": "-71.819654",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d56s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28839,6 +28896,7 @@
       ],
       "deeplineLatitude": "41.215419",
       "deeplineLongitude": "-71.818654",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d57s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28866,6 +28924,7 @@
       ],
       "deeplineLatitude": "41.213786",
       "deeplineLongitude": "-71.817653",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d58s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28893,6 +28952,7 @@
       ],
       "deeplineLatitude": "41.212152",
       "deeplineLongitude": "-71.816652",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d59s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28920,6 +28980,7 @@
       ],
       "deeplineLatitude": "41.210519",
       "deeplineLongitude": "-71.815652",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d60s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28947,6 +29008,7 @@
       ],
       "deeplineLatitude": "41.208885",
       "deeplineLongitude": "-71.814651",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d61s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -28974,6 +29036,7 @@
       ],
       "deeplineLatitude": "41.207251",
       "deeplineLongitude": "-71.813651",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d62s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29001,6 +29064,7 @@
       ],
       "deeplineLatitude": "41.205618",
       "deeplineLongitude": "-71.812651",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d63s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29028,6 +29092,7 @@
       ],
       "deeplineLatitude": "41.203984",
       "deeplineLongitude": "-71.811650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d64s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29055,6 +29120,7 @@
       ],
       "deeplineLatitude": "41.202351",
       "deeplineLongitude": "-71.810650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d65s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29082,6 +29148,7 @@
       ],
       "deeplineLatitude": "41.200717",
       "deeplineLongitude": "-71.809650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d66s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29109,6 +29176,7 @@
       ],
       "deeplineLatitude": "41.199083",
       "deeplineLongitude": "-71.808649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d67s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29136,6 +29204,7 @@
       ],
       "deeplineLatitude": "41.197450",
       "deeplineLongitude": "-71.807649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d68s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29163,6 +29232,7 @@
       ],
       "deeplineLatitude": "41.195816",
       "deeplineLongitude": "-71.806649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d69s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29190,6 +29260,7 @@
       ],
       "deeplineLatitude": "41.194182",
       "deeplineLongitude": "-71.805649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d70s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29217,6 +29288,7 @@
       ],
       "deeplineLatitude": "41.192549",
       "deeplineLongitude": "-71.804649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d71s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29244,6 +29316,7 @@
       ],
       "deeplineLatitude": "41.190915",
       "deeplineLongitude": "-71.803649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d72s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29271,6 +29344,7 @@
       ],
       "deeplineLatitude": "41.189281",
       "deeplineLongitude": "-71.802649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d73s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29298,6 +29372,7 @@
       ],
       "deeplineLatitude": "41.187648",
       "deeplineLongitude": "-71.801649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d74s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29325,6 +29400,7 @@
       ],
       "deeplineLatitude": "41.186014",
       "deeplineLongitude": "-71.800650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d75s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29352,6 +29428,7 @@
       ],
       "deeplineLatitude": "41.184380",
       "deeplineLongitude": "-71.799650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d76s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29379,6 +29456,7 @@
       ],
       "deeplineLatitude": "41.182747",
       "deeplineLongitude": "-71.798650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d77s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29406,6 +29484,7 @@
       ],
       "deeplineLatitude": "41.181113",
       "deeplineLongitude": "-71.797650",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d78s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29433,6 +29512,7 @@
       ],
       "deeplineLatitude": "41.179479",
       "deeplineLongitude": "-71.796651",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d79s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29460,6 +29540,7 @@
       ],
       "deeplineLatitude": "41.177845",
       "deeplineLongitude": "-71.795651",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d80s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29487,6 +29568,7 @@
       ],
       "deeplineLatitude": "41.176212",
       "deeplineLongitude": "-71.794652",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d81s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29514,6 +29596,7 @@
       ],
       "deeplineLatitude": "41.174578",
       "deeplineLongitude": "-71.793652",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d82s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29541,6 +29624,7 @@
       ],
       "deeplineLatitude": "41.172944",
       "deeplineLongitude": "-71.792653",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d83s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29568,6 +29652,7 @@
       ],
       "deeplineLatitude": "41.171310",
       "deeplineLongitude": "-71.791654",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d84s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29595,6 +29680,7 @@
       ],
       "deeplineLatitude": "41.169676",
       "deeplineLongitude": "-71.790654",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d85s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29622,6 +29708,7 @@
       ],
       "deeplineLatitude": "41.168043",
       "deeplineLongitude": "-71.789655",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d86s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29649,6 +29736,7 @@
       ],
       "deeplineLatitude": "41.166409",
       "deeplineLongitude": "-71.788656",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d87s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29676,6 +29764,7 @@
       ],
       "deeplineLatitude": "41.164775",
       "deeplineLongitude": "-71.787657",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d88s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29703,6 +29792,7 @@
       ],
       "deeplineLatitude": "41.163141",
       "deeplineLongitude": "-71.786658",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d89s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29730,6 +29820,7 @@
       ],
       "deeplineLatitude": "41.161507",
       "deeplineLongitude": "-71.785658",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d90s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29757,6 +29848,7 @@
       ],
       "deeplineLatitude": "41.159874",
       "deeplineLongitude": "-71.784659",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d91s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29784,6 +29876,7 @@
       ],
       "deeplineLatitude": "41.158240",
       "deeplineLongitude": "-71.783661",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d92s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29811,6 +29904,7 @@
       ],
       "deeplineLatitude": "41.156606",
       "deeplineLongitude": "-71.782662",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d93s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29838,6 +29932,7 @@
       ],
       "deeplineLatitude": "41.154972",
       "deeplineLongitude": "-71.781663",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d94s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29865,6 +29960,7 @@
       ],
       "deeplineLatitude": "41.153338",
       "deeplineLongitude": "-71.780664",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d95s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29892,6 +29988,7 @@
       ],
       "deeplineLatitude": "41.151704",
       "deeplineLongitude": "-71.779665",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d96s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29919,6 +30016,7 @@
       ],
       "deeplineLatitude": "41.150070",
       "deeplineLongitude": "-71.778666",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d97s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29946,6 +30044,7 @@
       ],
       "deeplineLatitude": "41.148436",
       "deeplineLongitude": "-71.777668",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d98s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -29973,6 +30072,7 @@
       ],
       "deeplineLatitude": "41.146803",
       "deeplineLongitude": "-71.776669",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d99s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30000,6 +30100,7 @@
       ],
       "deeplineLatitude": "41.145169",
       "deeplineLongitude": "-71.775671",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d100s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30027,6 +30128,7 @@
       ],
       "deeplineLatitude": "41.143535",
       "deeplineLongitude": "-71.774672",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d101s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30054,6 +30156,7 @@
       ],
       "deeplineLatitude": "41.141901",
       "deeplineLongitude": "-71.773674",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d102s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30081,6 +30184,7 @@
       ],
       "deeplineLatitude": "41.140267",
       "deeplineLongitude": "-71.772675",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d103s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30108,6 +30212,7 @@
       ],
       "deeplineLatitude": "41.138633",
       "deeplineLongitude": "-71.771677",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d104s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30135,6 +30240,7 @@
       ],
       "deeplineLatitude": "41.136999",
       "deeplineLongitude": "-71.770679",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d105s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30162,6 +30268,7 @@
       ],
       "deeplineLatitude": "41.135365",
       "deeplineLongitude": "-71.769680",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d106s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30189,6 +30296,7 @@
       ],
       "deeplineLatitude": "41.133731",
       "deeplineLongitude": "-71.768682",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d107s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30216,6 +30324,7 @@
       ],
       "deeplineLatitude": "41.132097",
       "deeplineLongitude": "-71.767684",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d108s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30243,6 +30352,7 @@
       ],
       "deeplineLatitude": "41.130463",
       "deeplineLongitude": "-71.766686",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d109s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30270,6 +30380,7 @@
       ],
       "deeplineLatitude": "41.128829",
       "deeplineLongitude": "-71.765688",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d110s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30297,6 +30408,7 @@
       ],
       "deeplineLatitude": "41.127195",
       "deeplineLongitude": "-71.764690",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d111s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30324,6 +30436,7 @@
       ],
       "deeplineLatitude": "41.125561",
       "deeplineLongitude": "-71.763692",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d112s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30351,6 +30464,7 @@
       ],
       "deeplineLatitude": "41.123927",
       "deeplineLongitude": "-71.762694",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d113s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30378,6 +30492,7 @@
       ],
       "deeplineLatitude": "41.122293",
       "deeplineLongitude": "-71.761696",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d114s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30405,6 +30520,7 @@
       ],
       "deeplineLatitude": "41.120659",
       "deeplineLongitude": "-71.760698",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d115s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30432,6 +30548,7 @@
       ],
       "deeplineLatitude": "41.119025",
       "deeplineLongitude": "-71.759701",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d116s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30459,6 +30576,7 @@
       ],
       "deeplineLatitude": "41.117391",
       "deeplineLongitude": "-71.758703",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d117s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30486,6 +30604,7 @@
       ],
       "deeplineLatitude": "41.115757",
       "deeplineLongitude": "-71.757705",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d118s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30513,6 +30632,7 @@
       ],
       "deeplineLatitude": "41.114123",
       "deeplineLongitude": "-71.756708",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d119s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30540,6 +30660,7 @@
       ],
       "deeplineLatitude": "41.112488",
       "deeplineLongitude": "-71.755710",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d120s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30567,6 +30688,7 @@
       ],
       "deeplineLatitude": "41.110854",
       "deeplineLongitude": "-71.754712",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d121s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30594,6 +30716,7 @@
       ],
       "deeplineLatitude": "41.109220",
       "deeplineLongitude": "-71.753715",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d122s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30621,6 +30744,7 @@
       ],
       "deeplineLatitude": "41.107586",
       "deeplineLongitude": "-71.752718",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d123s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30648,6 +30772,7 @@
       ],
       "deeplineLatitude": "41.105952",
       "deeplineLongitude": "-71.751720",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "40d124s",
       "slopelineLatitude": "41.300965",
       "slopelineLongitude": "-71.871133"
@@ -30675,6 +30800,7 @@
       ],
       "deeplineLatitude": "41.306985",
       "deeplineLongitude": "-71.879348",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d0s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30702,6 +30828,7 @@
       ],
       "deeplineLatitude": "41.305377",
       "deeplineLongitude": "-71.878275",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d1s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30729,6 +30856,7 @@
       ],
       "deeplineLatitude": "41.303770",
       "deeplineLongitude": "-71.877201",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d2s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30756,6 +30884,7 @@
       ],
       "deeplineLatitude": "41.302162",
       "deeplineLongitude": "-71.876127",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d3s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30783,6 +30912,7 @@
       ],
       "deeplineLatitude": "41.300554",
       "deeplineLongitude": "-71.875054",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d4s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30810,6 +30940,7 @@
       ],
       "deeplineLatitude": "41.298947",
       "deeplineLongitude": "-71.873980",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d5s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30837,6 +30968,7 @@
       ],
       "deeplineLatitude": "41.297339",
       "deeplineLongitude": "-71.872907",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d6s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30864,6 +30996,7 @@
       ],
       "deeplineLatitude": "41.295731",
       "deeplineLongitude": "-71.871834",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d7s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30891,6 +31024,7 @@
       ],
       "deeplineLatitude": "41.294123",
       "deeplineLongitude": "-71.870760",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d8s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30918,6 +31052,7 @@
       ],
       "deeplineLatitude": "41.292516",
       "deeplineLongitude": "-71.869687",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d9s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30945,6 +31080,7 @@
       ],
       "deeplineLatitude": "41.290908",
       "deeplineLongitude": "-71.868614",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d10s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30972,6 +31108,7 @@
       ],
       "deeplineLatitude": "41.289300",
       "deeplineLongitude": "-71.867541",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d11s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -30999,6 +31136,7 @@
       ],
       "deeplineLatitude": "41.287692",
       "deeplineLongitude": "-71.866468",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d12s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31026,6 +31164,7 @@
       ],
       "deeplineLatitude": "41.286085",
       "deeplineLongitude": "-71.865395",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d13s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31053,6 +31192,7 @@
       ],
       "deeplineLatitude": "41.284477",
       "deeplineLongitude": "-71.864322",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d14s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31080,6 +31220,7 @@
       ],
       "deeplineLatitude": "41.282869",
       "deeplineLongitude": "-71.863249",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d15s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31107,6 +31248,7 @@
       ],
       "deeplineLatitude": "41.281261",
       "deeplineLongitude": "-71.862176",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d16s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31134,6 +31276,7 @@
       ],
       "deeplineLatitude": "41.279653",
       "deeplineLongitude": "-71.861103",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d17s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31161,6 +31304,7 @@
       ],
       "deeplineLatitude": "41.278046",
       "deeplineLongitude": "-71.860030",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d18s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31188,6 +31332,7 @@
       ],
       "deeplineLatitude": "41.276438",
       "deeplineLongitude": "-71.858957",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d19s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31215,6 +31360,7 @@
       ],
       "deeplineLatitude": "41.274830",
       "deeplineLongitude": "-71.857885",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d20s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31242,6 +31388,7 @@
       ],
       "deeplineLatitude": "41.273222",
       "deeplineLongitude": "-71.856812",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d21s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31269,6 +31416,7 @@
       ],
       "deeplineLatitude": "41.271614",
       "deeplineLongitude": "-71.855739",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d22s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31296,6 +31444,7 @@
       ],
       "deeplineLatitude": "41.270006",
       "deeplineLongitude": "-71.854667",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d23s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31323,6 +31472,7 @@
       ],
       "deeplineLatitude": "41.268398",
       "deeplineLongitude": "-71.853594",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d24s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31350,6 +31500,7 @@
       ],
       "deeplineLatitude": "41.266790",
       "deeplineLongitude": "-71.852522",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d25s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31377,6 +31528,7 @@
       ],
       "deeplineLatitude": "41.265182",
       "deeplineLongitude": "-71.851450",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d26s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31404,6 +31556,7 @@
       ],
       "deeplineLatitude": "41.263575",
       "deeplineLongitude": "-71.850377",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d27s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31431,6 +31584,7 @@
       ],
       "deeplineLatitude": "41.261967",
       "deeplineLongitude": "-71.849305",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d28s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31458,6 +31612,7 @@
       ],
       "deeplineLatitude": "41.260359",
       "deeplineLongitude": "-71.848233",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d29s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31485,6 +31640,7 @@
       ],
       "deeplineLatitude": "41.258751",
       "deeplineLongitude": "-71.847161",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d30s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31512,6 +31668,7 @@
       ],
       "deeplineLatitude": "41.257143",
       "deeplineLongitude": "-71.846089",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d31s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31539,6 +31696,7 @@
       ],
       "deeplineLatitude": "41.255535",
       "deeplineLongitude": "-71.845017",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d32s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31566,6 +31724,7 @@
       ],
       "deeplineLatitude": "41.253927",
       "deeplineLongitude": "-71.843945",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d33s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31593,6 +31752,7 @@
       ],
       "deeplineLatitude": "41.252319",
       "deeplineLongitude": "-71.842873",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d34s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31620,6 +31780,7 @@
       ],
       "deeplineLatitude": "41.250711",
       "deeplineLongitude": "-71.841801",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d35s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31647,6 +31808,7 @@
       ],
       "deeplineLatitude": "41.249103",
       "deeplineLongitude": "-71.840729",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d36s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31674,6 +31836,7 @@
       ],
       "deeplineLatitude": "41.247495",
       "deeplineLongitude": "-71.839657",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d37s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31701,6 +31864,7 @@
       ],
       "deeplineLatitude": "41.245887",
       "deeplineLongitude": "-71.838585",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d38s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31728,6 +31892,7 @@
       ],
       "deeplineLatitude": "41.244279",
       "deeplineLongitude": "-71.837514",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d39s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31755,6 +31920,7 @@
       ],
       "deeplineLatitude": "41.242671",
       "deeplineLongitude": "-71.836442",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d40s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31782,6 +31948,7 @@
       ],
       "deeplineLatitude": "41.241063",
       "deeplineLongitude": "-71.835371",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d41s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31809,6 +31976,7 @@
       ],
       "deeplineLatitude": "41.239454",
       "deeplineLongitude": "-71.834299",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d42s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31836,6 +32004,7 @@
       ],
       "deeplineLatitude": "41.237846",
       "deeplineLongitude": "-71.833228",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d43s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31863,6 +32032,7 @@
       ],
       "deeplineLatitude": "41.236238",
       "deeplineLongitude": "-71.832156",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d44s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31890,6 +32060,7 @@
       ],
       "deeplineLatitude": "41.234630",
       "deeplineLongitude": "-71.831085",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d45s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31917,6 +32088,7 @@
       ],
       "deeplineLatitude": "41.233022",
       "deeplineLongitude": "-71.830013",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d46s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31944,6 +32116,7 @@
       ],
       "deeplineLatitude": "41.231414",
       "deeplineLongitude": "-71.828942",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d47s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31971,6 +32144,7 @@
       ],
       "deeplineLatitude": "41.229806",
       "deeplineLongitude": "-71.827871",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d48s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -31998,6 +32172,7 @@
       ],
       "deeplineLatitude": "41.228198",
       "deeplineLongitude": "-71.826800",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d49s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32025,6 +32200,7 @@
       ],
       "deeplineLatitude": "41.226589",
       "deeplineLongitude": "-71.825729",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d50s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32052,6 +32228,7 @@
       ],
       "deeplineLatitude": "41.224981",
       "deeplineLongitude": "-71.824658",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d51s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32079,6 +32256,7 @@
       ],
       "deeplineLatitude": "41.223373",
       "deeplineLongitude": "-71.823587",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d52s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32106,6 +32284,7 @@
       ],
       "deeplineLatitude": "41.221765",
       "deeplineLongitude": "-71.822516",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d53s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32133,6 +32312,7 @@
       ],
       "deeplineLatitude": "41.220157",
       "deeplineLongitude": "-71.821445",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d54s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32160,6 +32340,7 @@
       ],
       "deeplineLatitude": "41.218549",
       "deeplineLongitude": "-71.820374",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d55s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32187,6 +32368,7 @@
       ],
       "deeplineLatitude": "41.216940",
       "deeplineLongitude": "-71.819303",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d56s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32214,6 +32396,7 @@
       ],
       "deeplineLatitude": "41.215332",
       "deeplineLongitude": "-71.818232",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d57s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32241,6 +32424,7 @@
       ],
       "deeplineLatitude": "41.213724",
       "deeplineLongitude": "-71.817162",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d58s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32268,6 +32452,7 @@
       ],
       "deeplineLatitude": "41.212116",
       "deeplineLongitude": "-71.816091",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d59s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32295,6 +32480,7 @@
       ],
       "deeplineLatitude": "41.210507",
       "deeplineLongitude": "-71.815021",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d60s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32322,6 +32508,7 @@
       ],
       "deeplineLatitude": "41.208899",
       "deeplineLongitude": "-71.813950",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d61s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32349,6 +32536,7 @@
       ],
       "deeplineLatitude": "41.207291",
       "deeplineLongitude": "-71.812880",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d62s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32376,6 +32564,7 @@
       ],
       "deeplineLatitude": "41.205683",
       "deeplineLongitude": "-71.811809",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d63s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32403,6 +32592,7 @@
       ],
       "deeplineLatitude": "41.204074",
       "deeplineLongitude": "-71.810739",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d64s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32430,6 +32620,7 @@
       ],
       "deeplineLatitude": "41.202466",
       "deeplineLongitude": "-71.809669",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d65s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32457,6 +32648,7 @@
       ],
       "deeplineLatitude": "41.200858",
       "deeplineLongitude": "-71.808598",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d66s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32484,6 +32676,7 @@
       ],
       "deeplineLatitude": "41.199249",
       "deeplineLongitude": "-71.807528",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d67s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32511,6 +32704,7 @@
       ],
       "deeplineLatitude": "41.197641",
       "deeplineLongitude": "-71.806458",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d68s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32538,6 +32732,7 @@
       ],
       "deeplineLatitude": "41.196033",
       "deeplineLongitude": "-71.805388",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d69s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32565,6 +32760,7 @@
       ],
       "deeplineLatitude": "41.194424",
       "deeplineLongitude": "-71.804318",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d70s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32592,6 +32788,7 @@
       ],
       "deeplineLatitude": "41.192816",
       "deeplineLongitude": "-71.803248",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d71s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32619,6 +32816,7 @@
       ],
       "deeplineLatitude": "41.191208",
       "deeplineLongitude": "-71.802178",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d72s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32646,6 +32844,7 @@
       ],
       "deeplineLatitude": "41.189599",
       "deeplineLongitude": "-71.801108",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d73s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32673,6 +32872,7 @@
       ],
       "deeplineLatitude": "41.187991",
       "deeplineLongitude": "-71.800038",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d74s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32700,6 +32900,7 @@
       ],
       "deeplineLatitude": "41.186382",
       "deeplineLongitude": "-71.798968",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d75s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32727,6 +32928,7 @@
       ],
       "deeplineLatitude": "41.184774",
       "deeplineLongitude": "-71.797899",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d76s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32754,6 +32956,7 @@
       ],
       "deeplineLatitude": "41.183165",
       "deeplineLongitude": "-71.796829",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d77s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32781,6 +32984,7 @@
       ],
       "deeplineLatitude": "41.181557",
       "deeplineLongitude": "-71.795759",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d78s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32808,6 +33012,7 @@
       ],
       "deeplineLatitude": "41.179949",
       "deeplineLongitude": "-71.794690",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d79s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32835,6 +33040,7 @@
       ],
       "deeplineLatitude": "41.178340",
       "deeplineLongitude": "-71.793620",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d80s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32862,6 +33068,7 @@
       ],
       "deeplineLatitude": "41.176732",
       "deeplineLongitude": "-71.792551",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d81s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32889,6 +33096,7 @@
       ],
       "deeplineLatitude": "41.175123",
       "deeplineLongitude": "-71.791481",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d82s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32916,6 +33124,7 @@
       ],
       "deeplineLatitude": "41.173515",
       "deeplineLongitude": "-71.790412",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d83s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32943,6 +33152,7 @@
       ],
       "deeplineLatitude": "41.171906",
       "deeplineLongitude": "-71.789343",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d84s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32970,6 +33180,7 @@
       ],
       "deeplineLatitude": "41.170298",
       "deeplineLongitude": "-71.788273",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d85s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -32997,6 +33208,7 @@
       ],
       "deeplineLatitude": "41.168689",
       "deeplineLongitude": "-71.787204",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d86s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33024,6 +33236,7 @@
       ],
       "deeplineLatitude": "41.167081",
       "deeplineLongitude": "-71.786135",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d87s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33051,6 +33264,7 @@
       ],
       "deeplineLatitude": "41.165472",
       "deeplineLongitude": "-71.785066",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d88s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33078,6 +33292,7 @@
       ],
       "deeplineLatitude": "41.163864",
       "deeplineLongitude": "-71.783997",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d89s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33105,6 +33320,7 @@
       ],
       "deeplineLatitude": "41.162255",
       "deeplineLongitude": "-71.782928",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d90s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33132,6 +33348,7 @@
       ],
       "deeplineLatitude": "41.160647",
       "deeplineLongitude": "-71.781859",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d91s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33159,6 +33376,7 @@
       ],
       "deeplineLatitude": "41.159038",
       "deeplineLongitude": "-71.780790",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d92s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33186,6 +33404,7 @@
       ],
       "deeplineLatitude": "41.157429",
       "deeplineLongitude": "-71.779721",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d93s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33213,6 +33432,7 @@
       ],
       "deeplineLatitude": "41.155821",
       "deeplineLongitude": "-71.778652",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d94s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33240,6 +33460,7 @@
       ],
       "deeplineLatitude": "41.154212",
       "deeplineLongitude": "-71.777584",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d95s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33267,6 +33488,7 @@
       ],
       "deeplineLatitude": "41.152604",
       "deeplineLongitude": "-71.776515",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d96s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33294,6 +33516,7 @@
       ],
       "deeplineLatitude": "41.150995",
       "deeplineLongitude": "-71.775446",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d97s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33321,6 +33544,7 @@
       ],
       "deeplineLatitude": "41.149386",
       "deeplineLongitude": "-71.774378",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d98s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33348,6 +33572,7 @@
       ],
       "deeplineLatitude": "41.147778",
       "deeplineLongitude": "-71.773309",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d99s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33375,6 +33600,7 @@
       ],
       "deeplineLatitude": "41.146169",
       "deeplineLongitude": "-71.772241",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d100s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33402,6 +33628,7 @@
       ],
       "deeplineLatitude": "41.144560",
       "deeplineLongitude": "-71.771172",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d101s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33429,6 +33656,7 @@
       ],
       "deeplineLatitude": "41.142952",
       "deeplineLongitude": "-71.770104",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d102s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33456,6 +33684,7 @@
       ],
       "deeplineLatitude": "41.141343",
       "deeplineLongitude": "-71.769036",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d103s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33483,6 +33712,7 @@
       ],
       "deeplineLatitude": "41.139734",
       "deeplineLongitude": "-71.767967",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d104s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33510,6 +33740,7 @@
       ],
       "deeplineLatitude": "41.138126",
       "deeplineLongitude": "-71.766899",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d105s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33537,6 +33768,7 @@
       ],
       "deeplineLatitude": "41.136517",
       "deeplineLongitude": "-71.765831",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d106s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33564,6 +33796,7 @@
       ],
       "deeplineLatitude": "41.134908",
       "deeplineLongitude": "-71.764763",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d107s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33591,6 +33824,7 @@
       ],
       "deeplineLatitude": "41.133299",
       "deeplineLongitude": "-71.763695",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d108s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33618,6 +33852,7 @@
       ],
       "deeplineLatitude": "41.131691",
       "deeplineLongitude": "-71.762627",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d109s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33645,6 +33880,7 @@
       ],
       "deeplineLatitude": "41.130082",
       "deeplineLongitude": "-71.761559",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d110s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33672,6 +33908,7 @@
       ],
       "deeplineLatitude": "41.128473",
       "deeplineLongitude": "-71.760491",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d111s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33699,6 +33936,7 @@
       ],
       "deeplineLatitude": "41.126864",
       "deeplineLongitude": "-71.759423",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d112s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33726,6 +33964,7 @@
       ],
       "deeplineLatitude": "41.125256",
       "deeplineLongitude": "-71.758355",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d113s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33753,6 +33992,7 @@
       ],
       "deeplineLatitude": "41.123647",
       "deeplineLongitude": "-71.757288",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d114s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33780,6 +34020,7 @@
       ],
       "deeplineLatitude": "41.122038",
       "deeplineLongitude": "-71.756220",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d115s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33807,6 +34048,7 @@
       ],
       "deeplineLatitude": "41.120429",
       "deeplineLongitude": "-71.755152",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d116s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33834,6 +34076,7 @@
       ],
       "deeplineLatitude": "41.118820",
       "deeplineLongitude": "-71.754085",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d117s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33861,6 +34104,7 @@
       ],
       "deeplineLatitude": "41.117212",
       "deeplineLongitude": "-71.753017",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d118s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33888,6 +34132,7 @@
       ],
       "deeplineLatitude": "41.115603",
       "deeplineLongitude": "-71.751950",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d119s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33915,6 +34160,7 @@
       ],
       "deeplineLatitude": "41.113994",
       "deeplineLongitude": "-71.750882",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d120s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33942,6 +34188,7 @@
       ],
       "deeplineLatitude": "41.112385",
       "deeplineLongitude": "-71.749815",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d121s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33969,6 +34216,7 @@
       ],
       "deeplineLatitude": "41.110776",
       "deeplineLongitude": "-71.748748",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d122s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -33996,6 +34244,7 @@
       ],
       "deeplineLatitude": "41.109167",
       "deeplineLongitude": "-71.747680",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d123s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -34023,6 +34272,7 @@
       ],
       "deeplineLatitude": "41.107558",
       "deeplineLongitude": "-71.746613",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "50d124s",
       "slopelineLatitude": "41.299550",
       "slopelineLongitude": "-71.874383"
@@ -34050,6 +34300,7 @@
       ],
       "deeplineLatitude": "41.309601",
       "deeplineLongitude": "-71.872117",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d0s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34077,6 +34328,7 @@
       ],
       "deeplineLatitude": "41.307891",
       "deeplineLongitude": "-71.871378",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d1s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34104,6 +34356,7 @@
       ],
       "deeplineLatitude": "41.306180",
       "deeplineLongitude": "-71.870638",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d2s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34131,6 +34384,7 @@
       ],
       "deeplineLatitude": "41.304469",
       "deeplineLongitude": "-71.869899",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d3s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34158,6 +34412,7 @@
       ],
       "deeplineLatitude": "41.302758",
       "deeplineLongitude": "-71.869160",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d4s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34185,6 +34440,7 @@
       ],
       "deeplineLatitude": "41.301047",
       "deeplineLongitude": "-71.868421",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d5s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34212,6 +34468,7 @@
       ],
       "deeplineLatitude": "41.299337",
       "deeplineLongitude": "-71.867682",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d6s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34239,6 +34496,7 @@
       ],
       "deeplineLatitude": "41.297626",
       "deeplineLongitude": "-71.866943",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d7s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34266,6 +34524,7 @@
       ],
       "deeplineLatitude": "41.295915",
       "deeplineLongitude": "-71.866204",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d8s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34293,6 +34552,7 @@
       ],
       "deeplineLatitude": "41.294204",
       "deeplineLongitude": "-71.865466",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d9s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34320,6 +34580,7 @@
       ],
       "deeplineLatitude": "41.292493",
       "deeplineLongitude": "-71.864727",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d10s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34347,6 +34608,7 @@
       ],
       "deeplineLatitude": "41.290782",
       "deeplineLongitude": "-71.863988",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d11s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34374,6 +34636,7 @@
       ],
       "deeplineLatitude": "41.289072",
       "deeplineLongitude": "-71.863249",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d12s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34401,6 +34664,7 @@
       ],
       "deeplineLatitude": "41.287361",
       "deeplineLongitude": "-71.862510",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d13s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34428,6 +34692,7 @@
       ],
       "deeplineLatitude": "41.285650",
       "deeplineLongitude": "-71.861772",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d14s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34455,6 +34720,7 @@
       ],
       "deeplineLatitude": "41.283939",
       "deeplineLongitude": "-71.861033",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d15s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34482,6 +34748,7 @@
       ],
       "deeplineLatitude": "41.282228",
       "deeplineLongitude": "-71.860295",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d16s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34509,6 +34776,7 @@
       ],
       "deeplineLatitude": "41.280517",
       "deeplineLongitude": "-71.859556",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d17s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34536,6 +34804,7 @@
       ],
       "deeplineLatitude": "41.278806",
       "deeplineLongitude": "-71.858818",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d18s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34563,6 +34832,7 @@
       ],
       "deeplineLatitude": "41.277096",
       "deeplineLongitude": "-71.858079",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d19s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34590,6 +34860,7 @@
       ],
       "deeplineLatitude": "41.275385",
       "deeplineLongitude": "-71.857341",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d20s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34617,6 +34888,7 @@
       ],
       "deeplineLatitude": "41.273674",
       "deeplineLongitude": "-71.856602",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d21s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34644,6 +34916,7 @@
       ],
       "deeplineLatitude": "41.271963",
       "deeplineLongitude": "-71.855864",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d22s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34671,6 +34944,7 @@
       ],
       "deeplineLatitude": "41.270252",
       "deeplineLongitude": "-71.855125",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d23s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34698,6 +34972,7 @@
       ],
       "deeplineLatitude": "41.268541",
       "deeplineLongitude": "-71.854387",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d24s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34725,6 +35000,7 @@
       ],
       "deeplineLatitude": "41.266830",
       "deeplineLongitude": "-71.853649",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d25s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34752,6 +35028,7 @@
       ],
       "deeplineLatitude": "41.265119",
       "deeplineLongitude": "-71.852911",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d26s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34779,6 +35056,7 @@
       ],
       "deeplineLatitude": "41.263408",
       "deeplineLongitude": "-71.852173",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d27s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34806,6 +35084,7 @@
       ],
       "deeplineLatitude": "41.261697",
       "deeplineLongitude": "-71.851434",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d28s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34833,6 +35112,7 @@
       ],
       "deeplineLatitude": "41.259986",
       "deeplineLongitude": "-71.850696",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d29s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34860,6 +35140,7 @@
       ],
       "deeplineLatitude": "41.258276",
       "deeplineLongitude": "-71.849958",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d30s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34887,6 +35168,7 @@
       ],
       "deeplineLatitude": "41.256565",
       "deeplineLongitude": "-71.849220",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d31s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34914,6 +35196,7 @@
       ],
       "deeplineLatitude": "41.254854",
       "deeplineLongitude": "-71.848482",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d32s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34941,6 +35224,7 @@
       ],
       "deeplineLatitude": "41.253143",
       "deeplineLongitude": "-71.847744",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d33s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34968,6 +35252,7 @@
       ],
       "deeplineLatitude": "41.251432",
       "deeplineLongitude": "-71.847006",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d34s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -34995,6 +35280,7 @@
       ],
       "deeplineLatitude": "41.249721",
       "deeplineLongitude": "-71.846269",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d35s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35022,6 +35308,7 @@
       ],
       "deeplineLatitude": "41.248010",
       "deeplineLongitude": "-71.845531",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d36s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35049,6 +35336,7 @@
       ],
       "deeplineLatitude": "41.246299",
       "deeplineLongitude": "-71.844793",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d37s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35076,6 +35364,7 @@
       ],
       "deeplineLatitude": "41.244588",
       "deeplineLongitude": "-71.844055",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d38s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35103,6 +35392,7 @@
       ],
       "deeplineLatitude": "41.242877",
       "deeplineLongitude": "-71.843318",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d39s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35130,6 +35420,7 @@
       ],
       "deeplineLatitude": "41.241166",
       "deeplineLongitude": "-71.842580",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d40s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35157,6 +35448,7 @@
       ],
       "deeplineLatitude": "41.239455",
       "deeplineLongitude": "-71.841842",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d41s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35184,6 +35476,7 @@
       ],
       "deeplineLatitude": "41.237744",
       "deeplineLongitude": "-71.841105",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d42s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35211,6 +35504,7 @@
       ],
       "deeplineLatitude": "41.236033",
       "deeplineLongitude": "-71.840367",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d43s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35238,6 +35532,7 @@
       ],
       "deeplineLatitude": "41.234322",
       "deeplineLongitude": "-71.839630",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d44s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35265,6 +35560,7 @@
       ],
       "deeplineLatitude": "41.232611",
       "deeplineLongitude": "-71.838892",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d45s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35292,6 +35588,7 @@
       ],
       "deeplineLatitude": "41.230900",
       "deeplineLongitude": "-71.838155",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d46s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35319,6 +35616,7 @@
       ],
       "deeplineLatitude": "41.229189",
       "deeplineLongitude": "-71.837417",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d47s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35346,6 +35644,7 @@
       ],
       "deeplineLatitude": "41.227478",
       "deeplineLongitude": "-71.836680",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d48s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35373,6 +35672,7 @@
       ],
       "deeplineLatitude": "41.225767",
       "deeplineLongitude": "-71.835943",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d49s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35400,6 +35700,7 @@
       ],
       "deeplineLatitude": "41.224056",
       "deeplineLongitude": "-71.835205",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d50s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35427,6 +35728,7 @@
       ],
       "deeplineLatitude": "41.222345",
       "deeplineLongitude": "-71.834468",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d51s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35454,6 +35756,7 @@
       ],
       "deeplineLatitude": "41.220634",
       "deeplineLongitude": "-71.833731",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d52s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35481,6 +35784,7 @@
       ],
       "deeplineLatitude": "41.218923",
       "deeplineLongitude": "-71.832994",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d53s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35508,6 +35812,7 @@
       ],
       "deeplineLatitude": "41.217212",
       "deeplineLongitude": "-71.832257",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d54s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35535,6 +35840,7 @@
       ],
       "deeplineLatitude": "41.215501",
       "deeplineLongitude": "-71.831519",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d55s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35562,6 +35868,7 @@
       ],
       "deeplineLatitude": "41.213790",
       "deeplineLongitude": "-71.830782",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d56s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35589,6 +35896,7 @@
       ],
       "deeplineLatitude": "41.212079",
       "deeplineLongitude": "-71.830045",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d57s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35616,6 +35924,7 @@
       ],
       "deeplineLatitude": "41.210368",
       "deeplineLongitude": "-71.829308",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d58s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35643,6 +35952,7 @@
       ],
       "deeplineLatitude": "41.208656",
       "deeplineLongitude": "-71.828571",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d59s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35670,6 +35980,7 @@
       ],
       "deeplineLatitude": "41.206945",
       "deeplineLongitude": "-71.827835",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d60s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35697,6 +36008,7 @@
       ],
       "deeplineLatitude": "41.205234",
       "deeplineLongitude": "-71.827098",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d61s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35724,6 +36036,7 @@
       ],
       "deeplineLatitude": "41.203523",
       "deeplineLongitude": "-71.826361",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d62s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35751,6 +36064,7 @@
       ],
       "deeplineLatitude": "41.201812",
       "deeplineLongitude": "-71.825624",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d63s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35778,6 +36092,7 @@
       ],
       "deeplineLatitude": "41.200101",
       "deeplineLongitude": "-71.824887",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d64s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35805,6 +36120,7 @@
       ],
       "deeplineLatitude": "41.198390",
       "deeplineLongitude": "-71.824151",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d65s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35832,6 +36148,7 @@
       ],
       "deeplineLatitude": "41.196679",
       "deeplineLongitude": "-71.823414",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d66s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35859,6 +36176,7 @@
       ],
       "deeplineLatitude": "41.194968",
       "deeplineLongitude": "-71.822677",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d67s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35886,6 +36204,7 @@
       ],
       "deeplineLatitude": "41.193257",
       "deeplineLongitude": "-71.821941",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d68s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35913,6 +36232,7 @@
       ],
       "deeplineLatitude": "41.191546",
       "deeplineLongitude": "-71.821204",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d69s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35940,6 +36260,7 @@
       ],
       "deeplineLatitude": "41.189834",
       "deeplineLongitude": "-71.820468",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d70s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35967,6 +36288,7 @@
       ],
       "deeplineLatitude": "41.188123",
       "deeplineLongitude": "-71.819731",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d71s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -35994,6 +36316,7 @@
       ],
       "deeplineLatitude": "41.186412",
       "deeplineLongitude": "-71.818995",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d72s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36021,6 +36344,7 @@
       ],
       "deeplineLatitude": "41.184701",
       "deeplineLongitude": "-71.818258",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d73s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36048,6 +36372,7 @@
       ],
       "deeplineLatitude": "41.182990",
       "deeplineLongitude": "-71.817522",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d74s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36075,6 +36400,7 @@
       ],
       "deeplineLatitude": "41.181279",
       "deeplineLongitude": "-71.816786",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d75s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36102,6 +36428,7 @@
       ],
       "deeplineLatitude": "41.179568",
       "deeplineLongitude": "-71.816049",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d76s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36129,6 +36456,7 @@
       ],
       "deeplineLatitude": "41.177856",
       "deeplineLongitude": "-71.815313",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d77s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36156,6 +36484,7 @@
       ],
       "deeplineLatitude": "41.176145",
       "deeplineLongitude": "-71.814577",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d78s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36183,6 +36512,7 @@
       ],
       "deeplineLatitude": "41.174434",
       "deeplineLongitude": "-71.813841",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d79s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36210,6 +36540,7 @@
       ],
       "deeplineLatitude": "41.172723",
       "deeplineLongitude": "-71.813105",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d80s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36237,6 +36568,7 @@
       ],
       "deeplineLatitude": "41.171012",
       "deeplineLongitude": "-71.812369",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d81s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36264,6 +36596,7 @@
       ],
       "deeplineLatitude": "41.169301",
       "deeplineLongitude": "-71.811633",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d82s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36291,6 +36624,7 @@
       ],
       "deeplineLatitude": "41.167589",
       "deeplineLongitude": "-71.810897",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d83s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36318,6 +36652,7 @@
       ],
       "deeplineLatitude": "41.165878",
       "deeplineLongitude": "-71.810161",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d84s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36345,6 +36680,7 @@
       ],
       "deeplineLatitude": "41.164167",
       "deeplineLongitude": "-71.809425",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d85s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36372,6 +36708,7 @@
       ],
       "deeplineLatitude": "41.162456",
       "deeplineLongitude": "-71.808689",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d86s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36399,6 +36736,7 @@
       ],
       "deeplineLatitude": "41.160745",
       "deeplineLongitude": "-71.807953",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d87s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36426,6 +36764,7 @@
       ],
       "deeplineLatitude": "41.159033",
       "deeplineLongitude": "-71.807217",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d88s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36453,6 +36792,7 @@
       ],
       "deeplineLatitude": "41.157322",
       "deeplineLongitude": "-71.806481",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d89s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36480,6 +36820,7 @@
       ],
       "deeplineLatitude": "41.155611",
       "deeplineLongitude": "-71.805746",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d90s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36507,6 +36848,7 @@
       ],
       "deeplineLatitude": "41.153900",
       "deeplineLongitude": "-71.805010",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d91s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36534,6 +36876,7 @@
       ],
       "deeplineLatitude": "41.152189",
       "deeplineLongitude": "-71.804274",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d92s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36561,6 +36904,7 @@
       ],
       "deeplineLatitude": "41.150477",
       "deeplineLongitude": "-71.803539",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d93s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36588,6 +36932,7 @@
       ],
       "deeplineLatitude": "41.148766",
       "deeplineLongitude": "-71.802803",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d94s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36615,6 +36960,7 @@
       ],
       "deeplineLatitude": "41.147055",
       "deeplineLongitude": "-71.802067",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d95s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36642,6 +36988,7 @@
       ],
       "deeplineLatitude": "41.145344",
       "deeplineLongitude": "-71.801332",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d96s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36669,6 +37016,7 @@
       ],
       "deeplineLatitude": "41.143632",
       "deeplineLongitude": "-71.800596",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d97s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36696,6 +37044,7 @@
       ],
       "deeplineLatitude": "41.141921",
       "deeplineLongitude": "-71.799861",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d98s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36723,6 +37072,7 @@
       ],
       "deeplineLatitude": "41.140210",
       "deeplineLongitude": "-71.799126",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d99s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36750,6 +37100,7 @@
       ],
       "deeplineLatitude": "41.138499",
       "deeplineLongitude": "-71.798390",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d100s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36777,6 +37128,7 @@
       ],
       "deeplineLatitude": "41.136787",
       "deeplineLongitude": "-71.797655",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d101s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36804,6 +37156,7 @@
       ],
       "deeplineLatitude": "41.135076",
       "deeplineLongitude": "-71.796920",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d102s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36831,6 +37184,7 @@
       ],
       "deeplineLatitude": "41.133365",
       "deeplineLongitude": "-71.796184",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d103s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36858,6 +37212,7 @@
       ],
       "deeplineLatitude": "41.131654",
       "deeplineLongitude": "-71.795449",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d104s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36885,6 +37240,7 @@
       ],
       "deeplineLatitude": "41.129942",
       "deeplineLongitude": "-71.794714",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d105s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36912,6 +37268,7 @@
       ],
       "deeplineLatitude": "41.128231",
       "deeplineLongitude": "-71.793979",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d106s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36939,6 +37296,7 @@
       ],
       "deeplineLatitude": "41.126520",
       "deeplineLongitude": "-71.793244",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d107s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36966,6 +37324,7 @@
       ],
       "deeplineLatitude": "41.124808",
       "deeplineLongitude": "-71.792509",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d108s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -36993,6 +37352,7 @@
       ],
       "deeplineLatitude": "41.123097",
       "deeplineLongitude": "-71.791774",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d109s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37020,6 +37380,7 @@
       ],
       "deeplineLatitude": "41.121386",
       "deeplineLongitude": "-71.791039",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d110s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37047,6 +37408,7 @@
       ],
       "deeplineLatitude": "41.119674",
       "deeplineLongitude": "-71.790304",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d111s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37074,6 +37436,7 @@
       ],
       "deeplineLatitude": "41.117963",
       "deeplineLongitude": "-71.789569",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d112s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37101,6 +37464,7 @@
       ],
       "deeplineLatitude": "41.116252",
       "deeplineLongitude": "-71.788834",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d113s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37128,6 +37492,7 @@
       ],
       "deeplineLatitude": "41.114540",
       "deeplineLongitude": "-71.788099",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d114s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37155,6 +37520,7 @@
       ],
       "deeplineLatitude": "41.112829",
       "deeplineLongitude": "-71.787364",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d115s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37182,6 +37548,7 @@
       ],
       "deeplineLatitude": "41.111118",
       "deeplineLongitude": "-71.786630",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d116s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37209,6 +37576,7 @@
       ],
       "deeplineLatitude": "41.109406",
       "deeplineLongitude": "-71.785895",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d117s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37236,6 +37604,7 @@
       ],
       "deeplineLatitude": "41.107695",
       "deeplineLongitude": "-71.785160",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d118s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37263,6 +37632,7 @@
       ],
       "deeplineLatitude": "41.105984",
       "deeplineLongitude": "-71.784426",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d119s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37290,6 +37660,7 @@
       ],
       "deeplineLatitude": "41.104272",
       "deeplineLongitude": "-71.783691",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d120s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37317,6 +37688,7 @@
       ],
       "deeplineLatitude": "41.102561",
       "deeplineLongitude": "-71.782956",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d121s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37344,6 +37716,7 @@
       ],
       "deeplineLatitude": "41.100850",
       "deeplineLongitude": "-71.782222",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d122s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37371,6 +37744,7 @@
       ],
       "deeplineLatitude": "41.099138",
       "deeplineLongitude": "-71.781487",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d123s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37398,6 +37772,7 @@
       ],
       "deeplineLatitude": "41.097427",
       "deeplineLongitude": "-71.780753",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "30d124s",
       "slopelineLatitude": "41.301689",
       "slopelineLongitude": "-71.868698"
@@ -37425,6 +37800,7 @@
       ],
       "deeplineLatitude": "41.310130",
       "deeplineLongitude": "-71.869321",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d0s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37452,6 +37828,7 @@
       ],
       "deeplineLatitude": "41.308341",
       "deeplineLongitude": "-71.869074",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d1s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37479,6 +37856,7 @@
       ],
       "deeplineLatitude": "41.306552",
       "deeplineLongitude": "-71.868828",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d2s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37506,6 +37884,7 @@
       ],
       "deeplineLatitude": "41.304763",
       "deeplineLongitude": "-71.868582",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d3s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37533,6 +37912,7 @@
       ],
       "deeplineLatitude": "41.302974",
       "deeplineLongitude": "-71.868335",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d4s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37560,6 +37940,7 @@
       ],
       "deeplineLatitude": "41.301185",
       "deeplineLongitude": "-71.868089",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d5s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37587,6 +37968,7 @@
       ],
       "deeplineLatitude": "41.299395",
       "deeplineLongitude": "-71.867843",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d6s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37614,6 +37996,7 @@
       ],
       "deeplineLatitude": "41.297606",
       "deeplineLongitude": "-71.867597",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d7s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37641,6 +38024,7 @@
       ],
       "deeplineLatitude": "41.295817",
       "deeplineLongitude": "-71.867350",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d8s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37668,6 +38052,7 @@
       ],
       "deeplineLatitude": "41.294028",
       "deeplineLongitude": "-71.867104",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d9s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37695,6 +38080,7 @@
       ],
       "deeplineLatitude": "41.292239",
       "deeplineLongitude": "-71.866858",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d10s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37722,6 +38108,7 @@
       ],
       "deeplineLatitude": "41.290450",
       "deeplineLongitude": "-71.866612",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d11s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37749,6 +38136,7 @@
       ],
       "deeplineLatitude": "41.288661",
       "deeplineLongitude": "-71.866366",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d12s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37776,6 +38164,7 @@
       ],
       "deeplineLatitude": "41.286872",
       "deeplineLongitude": "-71.866120",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d13s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37803,6 +38192,7 @@
       ],
       "deeplineLatitude": "41.285083",
       "deeplineLongitude": "-71.865873",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d14s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37830,6 +38220,7 @@
       ],
       "deeplineLatitude": "41.283294",
       "deeplineLongitude": "-71.865627",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d15s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37857,6 +38248,7 @@
       ],
       "deeplineLatitude": "41.281504",
       "deeplineLongitude": "-71.865381",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d16s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37884,6 +38276,7 @@
       ],
       "deeplineLatitude": "41.279715",
       "deeplineLongitude": "-71.865135",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d17s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37911,6 +38304,7 @@
       ],
       "deeplineLatitude": "41.277926",
       "deeplineLongitude": "-71.864889",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d18s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37938,6 +38332,7 @@
       ],
       "deeplineLatitude": "41.276137",
       "deeplineLongitude": "-71.864643",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d19s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37965,6 +38360,7 @@
       ],
       "deeplineLatitude": "41.274348",
       "deeplineLongitude": "-71.864397",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d20s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -37992,6 +38388,7 @@
       ],
       "deeplineLatitude": "41.272559",
       "deeplineLongitude": "-71.864151",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d21s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38019,6 +38416,7 @@
       ],
       "deeplineLatitude": "41.270770",
       "deeplineLongitude": "-71.863905",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d22s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38046,6 +38444,7 @@
       ],
       "deeplineLatitude": "41.268981",
       "deeplineLongitude": "-71.863659",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d23s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38073,6 +38472,7 @@
       ],
       "deeplineLatitude": "41.267192",
       "deeplineLongitude": "-71.863413",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d24s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38100,6 +38500,7 @@
       ],
       "deeplineLatitude": "41.265402",
       "deeplineLongitude": "-71.863167",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d25s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38127,6 +38528,7 @@
       ],
       "deeplineLatitude": "41.263613",
       "deeplineLongitude": "-71.862921",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d26s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38154,6 +38556,7 @@
       ],
       "deeplineLatitude": "41.261824",
       "deeplineLongitude": "-71.862675",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d27s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38181,6 +38584,7 @@
       ],
       "deeplineLatitude": "41.260035",
       "deeplineLongitude": "-71.862429",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d28s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38208,6 +38612,7 @@
       ],
       "deeplineLatitude": "41.258246",
       "deeplineLongitude": "-71.862183",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d29s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38235,6 +38640,7 @@
       ],
       "deeplineLatitude": "41.256457",
       "deeplineLongitude": "-71.861937",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d30s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38262,6 +38668,7 @@
       ],
       "deeplineLatitude": "41.254668",
       "deeplineLongitude": "-71.861691",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d31s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38289,6 +38696,7 @@
       ],
       "deeplineLatitude": "41.252879",
       "deeplineLongitude": "-71.861445",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d32s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38316,6 +38724,7 @@
       ],
       "deeplineLatitude": "41.251089",
       "deeplineLongitude": "-71.861199",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d33s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38343,6 +38752,7 @@
       ],
       "deeplineLatitude": "41.249300",
       "deeplineLongitude": "-71.860953",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d34s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38370,6 +38780,7 @@
       ],
       "deeplineLatitude": "41.247511",
       "deeplineLongitude": "-71.860708",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d35s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38397,6 +38808,7 @@
       ],
       "deeplineLatitude": "41.245722",
       "deeplineLongitude": "-71.860462",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d36s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38424,6 +38836,7 @@
       ],
       "deeplineLatitude": "41.243933",
       "deeplineLongitude": "-71.860216",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d37s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38451,6 +38864,7 @@
       ],
       "deeplineLatitude": "41.242144",
       "deeplineLongitude": "-71.859970",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d38s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38478,6 +38892,7 @@
       ],
       "deeplineLatitude": "41.240355",
       "deeplineLongitude": "-71.859724",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d39s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38505,6 +38920,7 @@
       ],
       "deeplineLatitude": "41.238566",
       "deeplineLongitude": "-71.859479",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d40s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38532,6 +38948,7 @@
       ],
       "deeplineLatitude": "41.236776",
       "deeplineLongitude": "-71.859233",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d41s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38559,6 +38976,7 @@
       ],
       "deeplineLatitude": "41.234987",
       "deeplineLongitude": "-71.858987",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d42s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38586,6 +39004,7 @@
       ],
       "deeplineLatitude": "41.233198",
       "deeplineLongitude": "-71.858741",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d43s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38613,6 +39032,7 @@
       ],
       "deeplineLatitude": "41.231409",
       "deeplineLongitude": "-71.858495",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d44s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38640,6 +39060,7 @@
       ],
       "deeplineLatitude": "41.229620",
       "deeplineLongitude": "-71.858250",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d45s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38667,6 +39088,7 @@
       ],
       "deeplineLatitude": "41.227831",
       "deeplineLongitude": "-71.858004",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d46s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38694,6 +39116,7 @@
       ],
       "deeplineLatitude": "41.226042",
       "deeplineLongitude": "-71.857758",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d47s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38721,6 +39144,7 @@
       ],
       "deeplineLatitude": "41.224253",
       "deeplineLongitude": "-71.857513",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d48s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38748,6 +39172,7 @@
       ],
       "deeplineLatitude": "41.222463",
       "deeplineLongitude": "-71.857267",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d49s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38775,6 +39200,7 @@
       ],
       "deeplineLatitude": "41.220674",
       "deeplineLongitude": "-71.857021",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d50s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38802,6 +39228,7 @@
       ],
       "deeplineLatitude": "41.218885",
       "deeplineLongitude": "-71.856776",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d51s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38829,6 +39256,7 @@
       ],
       "deeplineLatitude": "41.217096",
       "deeplineLongitude": "-71.856530",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d52s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38856,6 +39284,7 @@
       ],
       "deeplineLatitude": "41.215307",
       "deeplineLongitude": "-71.856284",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d53s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38883,6 +39312,7 @@
       ],
       "deeplineLatitude": "41.213518",
       "deeplineLongitude": "-71.856039",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d54s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38910,6 +39340,7 @@
       ],
       "deeplineLatitude": "41.211729",
       "deeplineLongitude": "-71.855793",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d55s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38937,6 +39368,7 @@
       ],
       "deeplineLatitude": "41.209940",
       "deeplineLongitude": "-71.855548",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d56s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38964,6 +39396,7 @@
       ],
       "deeplineLatitude": "41.208150",
       "deeplineLongitude": "-71.855302",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d57s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -38991,6 +39424,7 @@
       ],
       "deeplineLatitude": "41.206361",
       "deeplineLongitude": "-71.855057",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d58s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39018,6 +39452,7 @@
       ],
       "deeplineLatitude": "41.204572",
       "deeplineLongitude": "-71.854811",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d59s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39045,6 +39480,7 @@
       ],
       "deeplineLatitude": "41.202783",
       "deeplineLongitude": "-71.854566",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d60s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39072,6 +39508,7 @@
       ],
       "deeplineLatitude": "41.200994",
       "deeplineLongitude": "-71.854320",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d61s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39099,6 +39536,7 @@
       ],
       "deeplineLatitude": "41.199205",
       "deeplineLongitude": "-71.854075",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d62s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39126,6 +39564,7 @@
       ],
       "deeplineLatitude": "41.197416",
       "deeplineLongitude": "-71.853829",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d63s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39153,6 +39592,7 @@
       ],
       "deeplineLatitude": "41.195627",
       "deeplineLongitude": "-71.853584",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d64s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39180,6 +39620,7 @@
       ],
       "deeplineLatitude": "41.193837",
       "deeplineLongitude": "-71.853338",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d65s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39207,6 +39648,7 @@
       ],
       "deeplineLatitude": "41.192048",
       "deeplineLongitude": "-71.853093",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d66s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39234,6 +39676,7 @@
       ],
       "deeplineLatitude": "41.190259",
       "deeplineLongitude": "-71.852847",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d67s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39261,6 +39704,7 @@
       ],
       "deeplineLatitude": "41.188470",
       "deeplineLongitude": "-71.852602",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d68s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39288,6 +39732,7 @@
       ],
       "deeplineLatitude": "41.186681",
       "deeplineLongitude": "-71.852356",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d69s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39315,6 +39760,7 @@
       ],
       "deeplineLatitude": "41.184892",
       "deeplineLongitude": "-71.852111",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d70s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39342,6 +39788,7 @@
       ],
       "deeplineLatitude": "41.183103",
       "deeplineLongitude": "-71.851866",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d71s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39369,6 +39816,7 @@
       ],
       "deeplineLatitude": "41.181313",
       "deeplineLongitude": "-71.851620",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d72s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39396,6 +39844,7 @@
       ],
       "deeplineLatitude": "41.179524",
       "deeplineLongitude": "-71.851375",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d73s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39423,6 +39872,7 @@
       ],
       "deeplineLatitude": "41.177735",
       "deeplineLongitude": "-71.851130",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d74s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39450,6 +39900,7 @@
       ],
       "deeplineLatitude": "41.175946",
       "deeplineLongitude": "-71.850884",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d75s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39477,6 +39928,7 @@
       ],
       "deeplineLatitude": "41.174157",
       "deeplineLongitude": "-71.850639",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d76s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39504,6 +39956,7 @@
       ],
       "deeplineLatitude": "41.172368",
       "deeplineLongitude": "-71.850394",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d77s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39531,6 +39984,7 @@
       ],
       "deeplineLatitude": "41.170579",
       "deeplineLongitude": "-71.850148",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d78s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39558,6 +40012,7 @@
       ],
       "deeplineLatitude": "41.168789",
       "deeplineLongitude": "-71.849903",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d79s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39585,6 +40040,7 @@
       ],
       "deeplineLatitude": "41.167000",
       "deeplineLongitude": "-71.849658",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d80s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39612,6 +40068,7 @@
       ],
       "deeplineLatitude": "41.165211",
       "deeplineLongitude": "-71.849413",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d81s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39639,6 +40096,7 @@
       ],
       "deeplineLatitude": "41.163422",
       "deeplineLongitude": "-71.849167",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d82s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39666,6 +40124,7 @@
       ],
       "deeplineLatitude": "41.161633",
       "deeplineLongitude": "-71.848922",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d83s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39693,6 +40152,7 @@
       ],
       "deeplineLatitude": "41.159844",
       "deeplineLongitude": "-71.848677",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d84s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39720,6 +40180,7 @@
       ],
       "deeplineLatitude": "41.158055",
       "deeplineLongitude": "-71.848432",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d85s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39747,6 +40208,7 @@
       ],
       "deeplineLatitude": "41.156265",
       "deeplineLongitude": "-71.848187",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d86s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39774,6 +40236,7 @@
       ],
       "deeplineLatitude": "41.154476",
       "deeplineLongitude": "-71.847942",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d87s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39801,6 +40264,7 @@
       ],
       "deeplineLatitude": "41.152687",
       "deeplineLongitude": "-71.847696",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d88s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39828,6 +40292,7 @@
       ],
       "deeplineLatitude": "41.150898",
       "deeplineLongitude": "-71.847451",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d89s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39855,6 +40320,7 @@
       ],
       "deeplineLatitude": "41.149109",
       "deeplineLongitude": "-71.847206",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d90s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39882,6 +40348,7 @@
       ],
       "deeplineLatitude": "41.147320",
       "deeplineLongitude": "-71.846961",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d91s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39909,6 +40376,7 @@
       ],
       "deeplineLatitude": "41.145531",
       "deeplineLongitude": "-71.846716",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d92s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39936,6 +40404,7 @@
       ],
       "deeplineLatitude": "41.143741",
       "deeplineLongitude": "-71.846471",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d93s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39963,6 +40432,7 @@
       ],
       "deeplineLatitude": "41.141952",
       "deeplineLongitude": "-71.846226",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d94s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -39990,6 +40460,7 @@
       ],
       "deeplineLatitude": "41.140163",
       "deeplineLongitude": "-71.845981",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d95s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40017,6 +40488,7 @@
       ],
       "deeplineLatitude": "41.138374",
       "deeplineLongitude": "-71.845736",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d96s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40044,6 +40516,7 @@
       ],
       "deeplineLatitude": "41.136585",
       "deeplineLongitude": "-71.845491",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d97s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40071,6 +40544,7 @@
       ],
       "deeplineLatitude": "41.134796",
       "deeplineLongitude": "-71.845246",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d98s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40098,6 +40572,7 @@
       ],
       "deeplineLatitude": "41.133007",
       "deeplineLongitude": "-71.845001",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d99s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40125,6 +40600,7 @@
       ],
       "deeplineLatitude": "41.131217",
       "deeplineLongitude": "-71.844756",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d100s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40152,6 +40628,7 @@
       ],
       "deeplineLatitude": "41.129428",
       "deeplineLongitude": "-71.844511",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d101s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40179,6 +40656,7 @@
       ],
       "deeplineLatitude": "41.127639",
       "deeplineLongitude": "-71.844266",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d102s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40206,6 +40684,7 @@
       ],
       "deeplineLatitude": "41.125850",
       "deeplineLongitude": "-71.844021",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d103s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40233,6 +40712,7 @@
       ],
       "deeplineLatitude": "41.124061",
       "deeplineLongitude": "-71.843776",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d104s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40260,6 +40740,7 @@
       ],
       "deeplineLatitude": "41.122272",
       "deeplineLongitude": "-71.843531",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d105s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40287,6 +40768,7 @@
       ],
       "deeplineLatitude": "41.120482",
       "deeplineLongitude": "-71.843286",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d106s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40314,6 +40796,7 @@
       ],
       "deeplineLatitude": "41.118693",
       "deeplineLongitude": "-71.843041",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d107s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40341,6 +40824,7 @@
       ],
       "deeplineLatitude": "41.116904",
       "deeplineLongitude": "-71.842796",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d108s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40368,6 +40852,7 @@
       ],
       "deeplineLatitude": "41.115115",
       "deeplineLongitude": "-71.842551",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d109s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40395,6 +40880,7 @@
       ],
       "deeplineLatitude": "41.113326",
       "deeplineLongitude": "-71.842307",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d110s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40422,6 +40908,7 @@
       ],
       "deeplineLatitude": "41.111537",
       "deeplineLongitude": "-71.842062",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d111s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40449,6 +40936,7 @@
       ],
       "deeplineLatitude": "41.109747",
       "deeplineLongitude": "-71.841817",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d112s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40476,6 +40964,7 @@
       ],
       "deeplineLatitude": "41.107958",
       "deeplineLongitude": "-71.841572",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d113s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40503,6 +40992,7 @@
       ],
       "deeplineLatitude": "41.106169",
       "deeplineLongitude": "-71.841327",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d114s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40530,6 +41020,7 @@
       ],
       "deeplineLatitude": "41.104380",
       "deeplineLongitude": "-71.841083",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d115s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40557,6 +41048,7 @@
       ],
       "deeplineLatitude": "41.102591",
       "deeplineLongitude": "-71.840838",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d116s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40584,6 +41076,7 @@
       ],
       "deeplineLatitude": "41.100802",
       "deeplineLongitude": "-71.840593",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d117s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40611,6 +41104,7 @@
       ],
       "deeplineLatitude": "41.099013",
       "deeplineLongitude": "-71.840348",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d118s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40638,6 +41132,7 @@
       ],
       "deeplineLatitude": "41.097223",
       "deeplineLongitude": "-71.840103",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d119s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40665,6 +41160,7 @@
       ],
       "deeplineLatitude": "41.095434",
       "deeplineLongitude": "-71.839859",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d120s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40692,6 +41188,7 @@
       ],
       "deeplineLatitude": "41.093645",
       "deeplineLongitude": "-71.839614",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d121s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40719,6 +41216,7 @@
       ],
       "deeplineLatitude": "41.091856",
       "deeplineLongitude": "-71.839369",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d122s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40746,6 +41244,7 @@
       ],
       "deeplineLatitude": "41.090067",
       "deeplineLongitude": "-71.839125",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d123s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40773,6 +41272,7 @@
       ],
       "deeplineLatitude": "41.088278",
       "deeplineLongitude": "-71.838880",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "20d124s",
       "slopelineLatitude": "41.301855",
       "slopelineLongitude": "-71.868182"
@@ -40800,6 +41300,7 @@
       ],
       "deeplineLatitude": "41.310271",
       "deeplineLongitude": "-71.865322",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d0s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40827,6 +41328,7 @@
       ],
       "deeplineLatitude": "41.308481",
       "deeplineLongitude": "-71.865548",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d1s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40854,6 +41356,7 @@
       ],
       "deeplineLatitude": "41.306690",
       "deeplineLongitude": "-71.865773",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d2s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40881,6 +41384,7 @@
       ],
       "deeplineLatitude": "41.304899",
       "deeplineLongitude": "-71.865998",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d3s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40908,6 +41412,7 @@
       ],
       "deeplineLatitude": "41.303109",
       "deeplineLongitude": "-71.866223",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d4s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40935,6 +41440,7 @@
       ],
       "deeplineLatitude": "41.301318",
       "deeplineLongitude": "-71.866448",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d5s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40962,6 +41468,7 @@
       ],
       "deeplineLatitude": "41.299527",
       "deeplineLongitude": "-71.866673",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d6s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -40989,6 +41496,7 @@
       ],
       "deeplineLatitude": "41.297737",
       "deeplineLongitude": "-71.866898",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d7s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41016,6 +41524,7 @@
       ],
       "deeplineLatitude": "41.295946",
       "deeplineLongitude": "-71.867123",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d8s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41043,6 +41552,7 @@
       ],
       "deeplineLatitude": "41.294155",
       "deeplineLongitude": "-71.867349",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d9s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41070,6 +41580,7 @@
       ],
       "deeplineLatitude": "41.292365",
       "deeplineLongitude": "-71.867574",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d10s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41097,6 +41608,7 @@
       ],
       "deeplineLatitude": "41.290574",
       "deeplineLongitude": "-71.867799",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d11s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41124,6 +41636,7 @@
       ],
       "deeplineLatitude": "41.288783",
       "deeplineLongitude": "-71.868024",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d12s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41151,6 +41664,7 @@
       ],
       "deeplineLatitude": "41.286993",
       "deeplineLongitude": "-71.868249",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d13s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41178,6 +41692,7 @@
       ],
       "deeplineLatitude": "41.285202",
       "deeplineLongitude": "-71.868474",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d14s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41205,6 +41720,7 @@
       ],
       "deeplineLatitude": "41.283411",
       "deeplineLongitude": "-71.868699",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d15s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41232,6 +41748,7 @@
       ],
       "deeplineLatitude": "41.281621",
       "deeplineLongitude": "-71.868924",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d16s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41259,6 +41776,7 @@
       ],
       "deeplineLatitude": "41.279830",
       "deeplineLongitude": "-71.869149",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d17s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41286,6 +41804,7 @@
       ],
       "deeplineLatitude": "41.278039",
       "deeplineLongitude": "-71.869374",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d18s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41313,6 +41832,7 @@
       ],
       "deeplineLatitude": "41.276249",
       "deeplineLongitude": "-71.869599",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d19s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41340,6 +41860,7 @@
       ],
       "deeplineLatitude": "41.274458",
       "deeplineLongitude": "-71.869824",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d20s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41367,6 +41888,7 @@
       ],
       "deeplineLatitude": "41.272667",
       "deeplineLongitude": "-71.870048",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d21s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41394,6 +41916,7 @@
       ],
       "deeplineLatitude": "41.270877",
       "deeplineLongitude": "-71.870273",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d22s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41421,6 +41944,7 @@
       ],
       "deeplineLatitude": "41.269086",
       "deeplineLongitude": "-71.870498",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d23s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41448,6 +41972,7 @@
       ],
       "deeplineLatitude": "41.267295",
       "deeplineLongitude": "-71.870723",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d24s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41475,6 +42000,7 @@
       ],
       "deeplineLatitude": "41.265505",
       "deeplineLongitude": "-71.870948",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d25s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41502,6 +42028,7 @@
       ],
       "deeplineLatitude": "41.263714",
       "deeplineLongitude": "-71.871173",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d26s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41529,6 +42056,7 @@
       ],
       "deeplineLatitude": "41.261923",
       "deeplineLongitude": "-71.871398",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d27s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41556,6 +42084,7 @@
       ],
       "deeplineLatitude": "41.260132",
       "deeplineLongitude": "-71.871623",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d28s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41583,6 +42112,7 @@
       ],
       "deeplineLatitude": "41.258342",
       "deeplineLongitude": "-71.871847",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d29s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41610,6 +42140,7 @@
       ],
       "deeplineLatitude": "41.256551",
       "deeplineLongitude": "-71.872072",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d30s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41637,6 +42168,7 @@
       ],
       "deeplineLatitude": "41.254760",
       "deeplineLongitude": "-71.872297",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d31s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41664,6 +42196,7 @@
       ],
       "deeplineLatitude": "41.252970",
       "deeplineLongitude": "-71.872522",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d32s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41691,6 +42224,7 @@
       ],
       "deeplineLatitude": "41.251179",
       "deeplineLongitude": "-71.872747",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d33s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41718,6 +42252,7 @@
       ],
       "deeplineLatitude": "41.249388",
       "deeplineLongitude": "-71.872971",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d34s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41745,6 +42280,7 @@
       ],
       "deeplineLatitude": "41.247598",
       "deeplineLongitude": "-71.873196",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d35s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41772,6 +42308,7 @@
       ],
       "deeplineLatitude": "41.245807",
       "deeplineLongitude": "-71.873421",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d36s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41799,6 +42336,7 @@
       ],
       "deeplineLatitude": "41.244016",
       "deeplineLongitude": "-71.873646",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d37s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41826,6 +42364,7 @@
       ],
       "deeplineLatitude": "41.242226",
       "deeplineLongitude": "-71.873870",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d38s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41853,6 +42392,7 @@
       ],
       "deeplineLatitude": "41.240435",
       "deeplineLongitude": "-71.874095",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d39s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41880,6 +42420,7 @@
       ],
       "deeplineLatitude": "41.238644",
       "deeplineLongitude": "-71.874320",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d40s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41907,6 +42448,7 @@
       ],
       "deeplineLatitude": "41.236854",
       "deeplineLongitude": "-71.874544",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d41s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41934,6 +42476,7 @@
       ],
       "deeplineLatitude": "41.235063",
       "deeplineLongitude": "-71.874769",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d42s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41961,6 +42504,7 @@
       ],
       "deeplineLatitude": "41.233272",
       "deeplineLongitude": "-71.874994",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d43s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -41988,6 +42532,7 @@
       ],
       "deeplineLatitude": "41.231481",
       "deeplineLongitude": "-71.875218",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d44s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42015,6 +42560,7 @@
       ],
       "deeplineLatitude": "41.229691",
       "deeplineLongitude": "-71.875443",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d45s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42042,6 +42588,7 @@
       ],
       "deeplineLatitude": "41.227900",
       "deeplineLongitude": "-71.875668",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d46s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42069,6 +42616,7 @@
       ],
       "deeplineLatitude": "41.226109",
       "deeplineLongitude": "-71.875892",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d47s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42096,6 +42644,7 @@
       ],
       "deeplineLatitude": "41.224319",
       "deeplineLongitude": "-71.876117",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d48s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42123,6 +42672,7 @@
       ],
       "deeplineLatitude": "41.222528",
       "deeplineLongitude": "-71.876341",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d49s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42150,6 +42700,7 @@
       ],
       "deeplineLatitude": "41.220737",
       "deeplineLongitude": "-71.876566",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d50s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42177,6 +42728,7 @@
       ],
       "deeplineLatitude": "41.218947",
       "deeplineLongitude": "-71.876791",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d51s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42204,6 +42756,7 @@
       ],
       "deeplineLatitude": "41.217156",
       "deeplineLongitude": "-71.877015",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d52s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42231,6 +42784,7 @@
       ],
       "deeplineLatitude": "41.215365",
       "deeplineLongitude": "-71.877240",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d53s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42258,6 +42812,7 @@
       ],
       "deeplineLatitude": "41.213575",
       "deeplineLongitude": "-71.877464",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d54s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42285,6 +42840,7 @@
       ],
       "deeplineLatitude": "41.211784",
       "deeplineLongitude": "-71.877689",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d55s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42312,6 +42868,7 @@
       ],
       "deeplineLatitude": "41.209993",
       "deeplineLongitude": "-71.877913",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d56s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42339,6 +42896,7 @@
       ],
       "deeplineLatitude": "41.208202",
       "deeplineLongitude": "-71.878138",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d57s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42366,6 +42924,7 @@
       ],
       "deeplineLatitude": "41.206412",
       "deeplineLongitude": "-71.878362",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d58s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42393,6 +42952,7 @@
       ],
       "deeplineLatitude": "41.204621",
       "deeplineLongitude": "-71.878587",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d59s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42420,6 +42980,7 @@
       ],
       "deeplineLatitude": "41.202830",
       "deeplineLongitude": "-71.878811",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d60s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42447,6 +43008,7 @@
       ],
       "deeplineLatitude": "41.201040",
       "deeplineLongitude": "-71.879035",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d61s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42474,6 +43036,7 @@
       ],
       "deeplineLatitude": "41.199249",
       "deeplineLongitude": "-71.879260",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d62s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42501,6 +43064,7 @@
       ],
       "deeplineLatitude": "41.197458",
       "deeplineLongitude": "-71.879484",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d63s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42528,6 +43092,7 @@
       ],
       "deeplineLatitude": "41.195668",
       "deeplineLongitude": "-71.879709",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d64s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42555,6 +43120,7 @@
       ],
       "deeplineLatitude": "41.193877",
       "deeplineLongitude": "-71.879933",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d65s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42582,6 +43148,7 @@
       ],
       "deeplineLatitude": "41.192086",
       "deeplineLongitude": "-71.880157",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d66s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42609,6 +43176,7 @@
       ],
       "deeplineLatitude": "41.190295",
       "deeplineLongitude": "-71.880382",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d67s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42636,6 +43204,7 @@
       ],
       "deeplineLatitude": "41.188505",
       "deeplineLongitude": "-71.880606",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d68s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42663,6 +43232,7 @@
       ],
       "deeplineLatitude": "41.186714",
       "deeplineLongitude": "-71.880830",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d69s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42690,6 +43260,7 @@
       ],
       "deeplineLatitude": "41.184923",
       "deeplineLongitude": "-71.881055",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d70s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42717,6 +43288,7 @@
       ],
       "deeplineLatitude": "41.183133",
       "deeplineLongitude": "-71.881279",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d71s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42744,6 +43316,7 @@
       ],
       "deeplineLatitude": "41.181342",
       "deeplineLongitude": "-71.881503",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d72s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42771,6 +43344,7 @@
       ],
       "deeplineLatitude": "41.179551",
       "deeplineLongitude": "-71.881728",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d73s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42798,6 +43372,7 @@
       ],
       "deeplineLatitude": "41.177761",
       "deeplineLongitude": "-71.881952",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d74s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42825,6 +43400,7 @@
       ],
       "deeplineLatitude": "41.175970",
       "deeplineLongitude": "-71.882176",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d75s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42852,6 +43428,7 @@
       ],
       "deeplineLatitude": "41.174179",
       "deeplineLongitude": "-71.882400",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d76s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42879,6 +43456,7 @@
       ],
       "deeplineLatitude": "41.172388",
       "deeplineLongitude": "-71.882625",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d77s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42906,6 +43484,7 @@
       ],
       "deeplineLatitude": "41.170598",
       "deeplineLongitude": "-71.882849",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d78s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42933,6 +43512,7 @@
       ],
       "deeplineLatitude": "41.168807",
       "deeplineLongitude": "-71.883073",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d79s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42960,6 +43540,7 @@
       ],
       "deeplineLatitude": "41.167016",
       "deeplineLongitude": "-71.883297",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d80s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -42987,6 +43568,7 @@
       ],
       "deeplineLatitude": "41.165226",
       "deeplineLongitude": "-71.883522",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d81s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43014,6 +43596,7 @@
       ],
       "deeplineLatitude": "41.163435",
       "deeplineLongitude": "-71.883746",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d82s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43041,6 +43624,7 @@
       ],
       "deeplineLatitude": "41.161644",
       "deeplineLongitude": "-71.883970",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d83s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43068,6 +43652,7 @@
       ],
       "deeplineLatitude": "41.159853",
       "deeplineLongitude": "-71.884194",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d84s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43095,6 +43680,7 @@
       ],
       "deeplineLatitude": "41.158063",
       "deeplineLongitude": "-71.884418",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d85s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43122,6 +43708,7 @@
       ],
       "deeplineLatitude": "41.156272",
       "deeplineLongitude": "-71.884642",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d86s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43149,6 +43736,7 @@
       ],
       "deeplineLatitude": "41.154481",
       "deeplineLongitude": "-71.884866",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d87s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43176,6 +43764,7 @@
       ],
       "deeplineLatitude": "41.152691",
       "deeplineLongitude": "-71.885091",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d88s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43203,6 +43792,7 @@
       ],
       "deeplineLatitude": "41.150900",
       "deeplineLongitude": "-71.885315",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d89s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43230,6 +43820,7 @@
       ],
       "deeplineLatitude": "41.149109",
       "deeplineLongitude": "-71.885539",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d90s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43257,6 +43848,7 @@
       ],
       "deeplineLatitude": "41.147318",
       "deeplineLongitude": "-71.885763",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d91s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43284,6 +43876,7 @@
       ],
       "deeplineLatitude": "41.145528",
       "deeplineLongitude": "-71.885987",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d92s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43311,6 +43904,7 @@
       ],
       "deeplineLatitude": "41.143737",
       "deeplineLongitude": "-71.886211",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d93s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43338,6 +43932,7 @@
       ],
       "deeplineLatitude": "41.141946",
       "deeplineLongitude": "-71.886435",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d94s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43365,6 +43960,7 @@
       ],
       "deeplineLatitude": "41.140156",
       "deeplineLongitude": "-71.886659",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d95s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43392,6 +43988,7 @@
       ],
       "deeplineLatitude": "41.138365",
       "deeplineLongitude": "-71.886883",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d96s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43419,6 +44016,7 @@
       ],
       "deeplineLatitude": "41.136574",
       "deeplineLongitude": "-71.887107",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d97s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43446,6 +44044,7 @@
       ],
       "deeplineLatitude": "41.134783",
       "deeplineLongitude": "-71.887331",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d98s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43473,6 +44072,7 @@
       ],
       "deeplineLatitude": "41.132993",
       "deeplineLongitude": "-71.887555",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d99s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43500,6 +44100,7 @@
       ],
       "deeplineLatitude": "41.131202",
       "deeplineLongitude": "-71.887779",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d100s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43527,6 +44128,7 @@
       ],
       "deeplineLatitude": "41.129411",
       "deeplineLongitude": "-71.888003",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d101s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43554,6 +44156,7 @@
       ],
       "deeplineLatitude": "41.127621",
       "deeplineLongitude": "-71.888227",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d102s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43581,6 +44184,7 @@
       ],
       "deeplineLatitude": "41.125830",
       "deeplineLongitude": "-71.888451",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d103s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43608,6 +44212,7 @@
       ],
       "deeplineLatitude": "41.124039",
       "deeplineLongitude": "-71.888674",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d104s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43635,6 +44240,7 @@
       ],
       "deeplineLatitude": "41.122248",
       "deeplineLongitude": "-71.888898",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d105s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43662,6 +44268,7 @@
       ],
       "deeplineLatitude": "41.120458",
       "deeplineLongitude": "-71.889122",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d106s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43689,6 +44296,7 @@
       ],
       "deeplineLatitude": "41.118667",
       "deeplineLongitude": "-71.889346",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d107s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43716,6 +44324,7 @@
       ],
       "deeplineLatitude": "41.116876",
       "deeplineLongitude": "-71.889570",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d108s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43743,6 +44352,7 @@
       ],
       "deeplineLatitude": "41.115086",
       "deeplineLongitude": "-71.889794",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d109s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43770,6 +44380,7 @@
       ],
       "deeplineLatitude": "41.113295",
       "deeplineLongitude": "-71.890018",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d110s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43797,6 +44408,7 @@
       ],
       "deeplineLatitude": "41.111504",
       "deeplineLongitude": "-71.890241",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d111s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43824,6 +44436,7 @@
       ],
       "deeplineLatitude": "41.109713",
       "deeplineLongitude": "-71.890465",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d112s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43851,6 +44464,7 @@
       ],
       "deeplineLatitude": "41.107923",
       "deeplineLongitude": "-71.890689",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d113s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43878,6 +44492,7 @@
       ],
       "deeplineLatitude": "41.106132",
       "deeplineLongitude": "-71.890913",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d114s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43905,6 +44520,7 @@
       ],
       "deeplineLatitude": "41.104341",
       "deeplineLongitude": "-71.891137",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d115s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43932,6 +44548,7 @@
       ],
       "deeplineLatitude": "41.102551",
       "deeplineLongitude": "-71.891360",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d116s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43959,6 +44576,7 @@
       ],
       "deeplineLatitude": "41.100760",
       "deeplineLongitude": "-71.891584",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d117s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -43986,6 +44604,7 @@
       ],
       "deeplineLatitude": "41.098969",
       "deeplineLongitude": "-71.891808",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d118s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -44013,6 +44632,7 @@
       ],
       "deeplineLatitude": "41.097178",
       "deeplineLongitude": "-71.892032",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d119s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -44040,6 +44660,7 @@
       ],
       "deeplineLatitude": "41.095388",
       "deeplineLongitude": "-71.892255",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d120s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -44067,6 +44688,7 @@
       ],
       "deeplineLatitude": "41.093597",
       "deeplineLongitude": "-71.892479",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d121s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -44094,6 +44716,7 @@
       ],
       "deeplineLatitude": "41.091806",
       "deeplineLongitude": "-71.892703",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d122s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -44121,6 +44744,7 @@
       ],
       "deeplineLatitude": "41.090015",
       "deeplineLongitude": "-71.892926",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d123s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
@@ -44148,6 +44772,7 @@
       ],
       "deeplineLatitude": "41.088225",
       "deeplineLongitude": "-71.893150",
+      "calculateDailyAverageSlope": true,
       "slopelineKey": "10d124s",
       "slopelineLatitude": "41.301990",
       "slopelineLongitude": "-71.866364"
