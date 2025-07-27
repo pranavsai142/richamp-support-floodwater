@@ -186,7 +186,7 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/dec22conv.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWind2022/
 
 # Watch Hill Mesh
-# python generateGraphs.py --stations OBS_STATIONS.json --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE_OFFSHORE
+python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json --meshExists true --mesh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/fort.14 --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE_OFFSHORE
 
 
 # Correctly format multipanel graphs and create figures
@@ -203,13 +203,13 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/dec22conv.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ObsWindSwath2022/
 
 # Obs Waves
-python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --wavesExists true \
---waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/rads.64.nc \
---waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_HS.63.nc \
---wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_DIR.63.nc \
---wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_TMM10.63.nc \
---wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWave2022/
+# python generateGraphs.py --obsExists true --stations OBS_STATIONS.json --wavesExists true \
+# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/rads.64.nc \
+# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_HS.63.nc \
+# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_DIR.63.nc \
+# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_TMM10.63.nc \
+# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/Dec222022RunupRun/forecast_RI_track_waves/swan_TPS.63.nc \
+#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory ObsWave2022/
  
 #  Wave swath
 #  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
