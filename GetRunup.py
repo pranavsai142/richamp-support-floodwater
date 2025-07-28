@@ -580,6 +580,17 @@ class GetRunup:
                     waterlineDistance = haversine.haversine(waterlineCoordinates, adjacentWaterlineCoordinates) * 1000
                     averageSlope = math.atan((waterlineElevation - adjacentWaterlineElevation) / waterlineDistance)
                     averageSlopes.append(averageSlope)
+#                 Hardcode foreshore beach slope
+                if("1" in generalKey):
+                    averageSlope = 0.13
+                elif("2" in generalKey):
+                    averageSlope = 0.11
+                elif("3" in generalKey):
+                    averageSlope = 0.08
+                elif("4" in generalKey):
+                    averageSlope = 0.07
+                elif("5" in generalKey):
+                    averageSlope = 0.07
 #                 Use first calculate average slope
                 
 #                 slopelineDistance = haversine.haversine(slopelineCoordinates, waterlineCoordinates) * 1000
