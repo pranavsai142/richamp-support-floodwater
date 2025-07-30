@@ -2932,6 +2932,96 @@ class Grapher:
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
+        
+        # --- Combined Elevation Profiles for All Transects ---
+        # Collect all elevation data for consistent y-axis, excluding NaN
+        all_elevations = []
+        all_dem_elevations = []
+        for transect in range(1, 6):
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                # Check if the station name contains "pp" and matches the transect
+                if str(transect) in stationName[0:stationName.index(" ")] and "pp" in stationName[2:4]:
+                    if stationName in self.assetLabels:
+                        elevationIndex = self.assetLabels.index(stationName)
+                        elev = self.datapointsElevation[elevationIndex]
+                        dem_elev = self.assetDatapointsElevation[elevationIndex]
+                        if not np.isnan(elev):
+                            all_elevations.append(elev)
+                        if not np.isnan(dem_elev):
+                            all_dem_elevations.append(dem_elev)
+        
+        # Compute global y-axis limits, handling empty lists
+        elevation_min = min(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else -30.0
+        elevation_max = max(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else 10.0
+        elevation_padding = (elevation_max - elevation_min) * 0.1 if elevation_max != elevation_min else 1.0
+        elevation_y_min = elevation_min - elevation_padding
+        elevation_y_max = elevation_max + elevation_padding
+        
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+        
+            profileDistances = []
+            profileElevations = []
+            profileDemElevations = []
+        
+            # Collect data for the transect, only for profile points ("pp")
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                # Check if the station name contains "pp" and matches the transect
+                if str(transect) in stationName[0:stationName.index(" ")] and "pp" in stationName[2:4]:
+                    if stationName in self.assetLabels:
+                        elevationIndex = self.assetLabels.index(stationName)
+                        profileElevations.append(self.datapointsElevation[elevationIndex])
+                        profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
+                        # Extract distance from the station name (e.g., "Napatree1 Profile 250m -250m")
+                        distance_str = stationName[stationName.rindex(" ") + 1:-1]
+                        profileDistances.append(float(distance_str))  # Use float to handle negative distances
+        
+            # Convert to numpy arrays and sort by distance
+            profileDistances = np.array(profileDistances)
+            profileElevations = np.array(profileElevations)
+            profileDemElevations = np.array(profileDemElevations)
+            sorted_indices = np.argsort(profileDistances)
+            profileDistances = profileDistances[sorted_indices]
+            profileElevations = profileElevations[sorted_indices]
+            profileDemElevations = profileDemElevations[sorted_indices]
+        
+            # Interpolate NaN values in profileDemElevations
+            if np.any(np.isnan(profileDemElevations)):
+                valid_mask = ~np.isnan(profileDemElevations)
+                if np.sum(valid_mask) >= 2:  # Need at least 2 valid points for interpolation
+                    profileDemElevations = np.interp(
+                        profileDistances,
+                        profileDistances[valid_mask],
+                        profileDemElevations[valid_mask]
+                    )
+                else:
+                    print(f"Warning: Insufficient valid DEM elevation data for interpolation in transect {transect}")
+                    profileDemElevations[np.isnan(profileDemElevations)] = 0.0  # Fallback: replace NaN with 0
+        
+            # Plot elevation lines
+            ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
+            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
+        
+            # Customize axes
+            ax.set_ylabel("Elevation (meters)", fontsize=12)
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree{transect} Profile Points Elevation Profile", fontsize=16)
+            ax.set_ylim(elevation_y_min, elevation_y_max)  # Consistent y-axis limits
+            ax.grid(False)  # Disable grid lines to remove horizontal lines
+        
+            # Add legend
+            ax.legend(loc="upper right", fontsize=10)
+        
+            # Set x-axis label on the bottom subplot
+            if transect == 5:
+                ax.set_xlabel("Distance (meters)", fontsize=14)
+        
+        plt.tight_layout()
+        plt.savefig(graph_directory + 'Napatree_beach_elevation_profiles.png')
+        plt.close()
 # 
 # # Graph all runup
 # 

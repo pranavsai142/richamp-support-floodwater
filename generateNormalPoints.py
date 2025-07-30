@@ -4,6 +4,7 @@ import math
 import datetime
 
 GENERATE_TRANSECT_POINTS = False
+GENERATE_PROFILE_POINTS = True
 
 HYPERRESOLUTION = 1
 HYPERPOINTS = 120
@@ -76,7 +77,36 @@ def generate_deepline_distances(max_distance, spacing, initial_distance=75, num_
         deepline_distances_map[runup_id] = globals()[f"DEEPLINE_DISTANCES_{station_idx}"]
     
     return deepline_distances_map
-
+    
+def generate_profile_points_map(max_distance, spacing, num_stations=5):
+    """
+    Generate PROFILE_POINTS_X lists for specified max distance (±max_distance) and spacing.
+    
+    Args:
+        max_distance (float): Maximum distance in meters (e.g., 250), applied forward and backward.
+        spacing (float): Distance increment in meters (e.g., 2).
+        num_stations (int): Number of stations (default: 5 for Napatree1-5).
+    
+    Returns:
+        dict: Dictionary mapping runup_id to profile points list.
+        Also sets global variables PROFILE_POINTS_1, ..., PROFILE_POINTS_X.
+    """
+    # Generate the distance list from -max_distance to +max_distance
+    distances = []
+    current_distance = -max_distance
+    while current_distance <= max_distance:
+        distances.append({"distance": current_distance, "depth": f"{abs(current_distance)}m"})
+        current_distance += spacing
+    
+    # Create PROFILE_POINTS_X for each station
+    profile_points_map = {}
+    for station_idx in range(1, num_stations + 1):
+        runup_id = str(station_idx * 10)  # 10, 20, 30, 40, 50
+        # Assign the same distances list to each station
+        globals()[f"PROFILE_POINTS_{station_idx}"] = distances.copy()
+        profile_points_map[runup_id] = globals()[f"PROFILE_POINTS_{station_idx}"]
+    
+    return profile_points_map
 # Example usage
 # max_distance = 12475  # Maximum distance in meters
 # spacing = 200         # Spacing between points in meters
@@ -84,6 +114,13 @@ if(GENERATE_TRANSECT_POINTS):
     max_distance = 25000  # Maximum distance in meters
     spacing = 200         # Spacing between points in meters
     DEEPLINE_DISTANCES_MAP = generate_deepline_distances(max_distance, spacing)
+    
+    # New GENERATE_PROFILE_POINTS block
+# New GENERATE_PROFILE_POINTS block
+if(GENERATE_PROFILE_POINTS):
+    max_distance = 250    # Maximum distance in meters (forward and backward)
+    spacing = 2           # Spacing between points in meters
+    PROFILE_POINTS_MAP = generate_profile_points_map(max_distance, spacing)
 
 # if(True):
 #     DEEPLINE_DISTANCES_1 = [
@@ -887,11 +924,64 @@ def generate_tangent_points(json_data, resolution=HYPERRESOLUTION, points_count=
             json_data['TANGENT'][station_id][new_key] = new_point
             point_counter += 1
 
+# New function to generate profile points using PROFILE_POINTS_MAP
+def generate_profile_points(json_data):
+    new_runup = {}
+    
+    # Remove plain deepline keys from ASSET, NDBC, NOS (consistent with generate_deepline_points)
+    for section in ['ASSET', 'NDBC', 'NOS']:
+        for key in PLAIN_DEEPLINE_KEYS:
+            if key in json_data[section]:
+                del json_data[section][key]
+    
+    for runup_id, runup_data in list(json_data['RUNUP'].items()):
+        station_id = runup_id[0:2]
+        print(f"Processing station_id: {station_id}, runup_id: {runup_id}")
+        shoreline_lat, shoreline_lon = float(runup_data['latitude']), float(runup_data['longitude'])
+        surf_lat, surf_lon = float(runup_data['surfLatitude']), float(runup_data['surfLongitude'])
+        bearing = calculate_bearing(shoreline_lat, shoreline_lon, surf_lat, surf_lon)
+        profile_points = PROFILE_POINTS_MAP.get(station_id, [])  # Use PROFILE_POINTS_MAP
+        dune_heights = DUNE_HEIGHTS_MAP.get(station_id, DUNE_HEIGHTS_1)
+        
+        if 'profileKey' not in runup_data:
+            runup_data['profileKey'] = f"{station_id}p"
+        
+        for idx, profile_info in enumerate(profile_points):
+            distance = profile_info['distance']
+            depth = profile_info['depth']
+            profile_key = f"{runup_data['profileKey']}p{idx}"
+            base_name = f"{runup_data['name'].split(' ')[0]} Profile {depth} {distance}m"
+            
+            # Create one RUNUP entry with calculateDailyAverageSlope: true
+            for slope_mode in [True]:
+                new_runup_key = f"{runup_id}p{idx}"
+                new_runup[new_runup_key] = runup_data.copy()
+                new_runup[new_runup_key]['profileKey'] = profile_key
+                new_runup[new_runup_key]['name'] = f"{base_name}"
+                new_runup[new_runup_key]['duneHeights'] = dune_heights
+                new_lat, new_lon = calculate_new_point(shoreline_lat, shoreline_lon, bearing, distance)
+                new_runup[new_runup_key]['profileLatitude'] = f"{new_lat:.6f}"
+                new_runup[new_runup_key]['profileLongitude'] = f"{new_lon:.6f}"
+                new_runup[new_runup_key]['calculateDailyAverageSlope'] = slope_mode
+                
+                profile_point = {
+                    "id": "RUNUP",
+                    "source": "RUNUP",
+                    "name": f"{base_name}",
+                    "latitude": f"{new_lat:.6f}",
+                    "longitude": f"{new_lon:.6f}"
+                }
+                for section in ['ASSET']:
+                    json_data[section][profile_key] = profile_point
+    
+#     json_data['RUNUP'] = new_runup
+
 # NORMAL stations
 with open('RUNUP_NAPATREE_STATIONS.json', 'r') as file:
     data_normal = json.load(file)
 generate_points_along_line(data_normal)
 generate_deepline_points(data_normal)
+generate_profile_points(data_normal)
 generate_slopeline_points(data_normal, distance=MAX_SLOPELINE_DISTANCE)
 generate_tangent_points(data_normal)
 with open('NAPATREE_NORMAL_STATIONS.json', 'w') as file:
