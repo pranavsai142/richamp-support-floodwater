@@ -1,3 +1,175 @@
+import json
+import os
+from typing import List, Dict, Optional
+from datetime import datetime
+
+def datetime_to_unix_time(datetime_str: str) -> int:
+    """Convert datetime string (YYYY-MM-DD HH:00:00) to Unix timestamp."""
+    return int(datetime.strptime(datetime_str, "%Y-%m-%d %H:%00:%00").timestamp())
+
+def read_site_json(file_path: str) -> Optional[Dict]:
+    """
+    Read site JSON file and return a dictionary with site-specific data.
+    Returns None if the file cannot be read or lacks required fields.
+    """
+    try:
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        # Assume the JSON contains a single object or a list with one object
+        site_data = data[0] if isinstance(data, list) and len(data) > 0 else data
+        required_fields = ["siteLatitude", "siteLongitude", "toeHeight", "crestHeight"]
+        if not all(field in site_data for field in required_fields):
+            print(f"Site JSON missing required fields: {file_path}")
+            return None
+        # Convert numeric fields to float
+        return {
+            "siteLatitude": float(site_data["siteLatitude"]),
+            "siteLongitude": float(site_data["siteLongitude"]),
+            "toeHeight": float(site_data["toeHeight"]),
+            "crestHeight": float(site_data["crestHeight"])
+        }
+    except FileNotFoundError:
+        print(f"Site file not found: {file_path}")
+        return None
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON in site file: {file_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading site file {file_path}: {e}")
+        return None
+
+def read_water_levels_json(file_path: str, fields: List[str]) -> List[Dict]:
+    """
+    Read water levels JSON file and return a list of dictionaries with specified fields.
+    Always includes 'id' and 'dateTime'. Converts numeric fields to float and dateTime to unixTime.
+    """
+    try:
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        # Ensure data is a list
+        if not isinstance(data, list):
+            print(f"Water levels JSON is not a list: {file_path}")
+            return []
+        
+        results = []
+        required_fields = ["id", "dateTime"] + [f for f in fields if f not in ["id", "dateTime"]]
+        numeric_fields = [
+            "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
+            "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp"
+        ]
+        
+        for item in data:
+            # Check if all required fields are present
+            if not all(field in item for field in required_fields):
+                print(f"Skipping record in {file_path} due to missing fields")
+                continue
+            # Create new record with requested fields
+            record = {"id": str(item["id"])}  # Ensure id is string
+            for field in fields:
+                if field == "dateTime":
+                    record["unixTime"] = datetime_to_unix_time(item["dateTime"])
+                elif field == "predictedImpact":
+                    record[field] = str(item[field])  # Ensure predictedImpact is string
+                elif field in numeric_fields:
+                    try:
+                        record[field] = float(item[field])  # Convert to float
+                    except (ValueError, TypeError):
+                        print(f"Invalid numeric value for {field} in {file_path}")
+                        continue
+                else:
+                    record[field] = item[field]
+            results.append(record)
+        return results
+    except FileNotFoundError:
+        print(f"Water levels file not found: {file_path}")
+        return []
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON in water levels file: {file_path}")
+        return []
+    except Exception as e:
+        print(f"Error reading water levels file {file_path}: {e}")
+        return []
+
+def fetch_water_levels(
+    site_ids: List[int] = [1401, 1402, 1403],
+#     forecast_dates: List[str] = ["2022-12-20"],
+    forecast_dates: List[str] = ["2023-12-15"],
+    fields: List[str] = [
+        "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
+        "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp", "predictedImpact"
+    ],
+    base_dir: str = "."
+) -> List[Dict]:
+    """
+    Fetch all water level data from JSON files for specified sites and forecast dates.
+    Includes site-specific data (latitude, longitude, toeHeight, crestHeight).
+    Returns a list of dictionaries with water level and site data, using unixTime instead of dateTime.
+    """
+    results = []
+    
+    for site_id in site_ids:
+        for forecast_date in forecast_dates:
+            # Construct paths to water levels and site JSON files
+            folder = f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_json"
+            water_levels_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_waterLevels.json")
+            site_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_site.json")
+            
+            # Read site data
+            site_data = read_site_json(site_path)
+            if not site_data:
+                continue
+            
+            # Read water levels data
+            water_levels = read_water_levels_json(water_levels_path, fields)
+            
+            # Combine water level and site data
+            for wl in water_levels:
+                result = wl.copy()
+                result["siteId"] = str(site_id)  # Ensure siteId is string
+                result.update(site_data)
+                results.append(result)
+    
+    return results
+
+# Example usage
+# if __name__ == "__main__":
+#     fields = [
+#         "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
+#         "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp", "predictedImpact"
+#     ]
+#     
+#     water_level_data = fetch_water_levels(
+#         site_ids=[1401, 1402, 1403],
+#         forecast_dates=["2022-12-20", "2023-12-15"],
+#         fields=fields,
+#         base_dir="."
+#     )
+#     
+#     # Print a sample of results (first few records for brevity)
+#     for item in water_level_data[:5]:  # Limit to first 5 for demonstration
+#         print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
+#         print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
+#         print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
+#         print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
+#         print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
+#         print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
+#         print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
+#         print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
+#         print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
+#         print(f"  Predicted Impact: {item['predictedImpact']}")
+#         print()
+#     
+#     print(f"Total records retrieved: {len(water_level_data)}")
+
+
+
+
+
+
+
+
+
+
 # Calculates runup with a set of json data files, then writes the runup to a json file
 # Running the postprocessing takes >2 hr
 # The majority of the time spent finding the closest nodes to all the points on the tangent
@@ -40,7 +212,7 @@ class GetRunup:
 # 
 
 #     The holmann runup formula defines runup excent
-#   as Atotalof 154runuptimeseriesarediscusseidn thispaper.Afterdigiti- zation of a runup time seriesand transformationto the verti- cal component,the mean (r/) and the standard deviation a arefound.From thisthesetupâ€¢ iscalculatedas((r/)-tide) and the significantswashheightRsvas4a.
+#   as Atotalof 154runuptimeseriesarediscusseidn thispaper.Afterdigiti- zation of a runup time seriesand transformationto the verti- cal component,the mean (r/) and the standard deviation a arefound.From thisthesetup¥ iscalculatedas((r/)-tide) and the significantswashheightRsvas4a.
 #   4 times the standard deviation of mean runup from the observations
 # Also, iribarren number under 0.3 is parameterized differencly
 # Also, setup is parameterized independent of swash.
@@ -270,7 +442,7 @@ class GetRunup:
                 generalKey = key[0:-1]
             else:
                 generalKey = key
-            CALCULATE_DAILY_AVERAGE_SLOPE = stationDict["calculateDailyAverageSlope"]
+            CALCULATE_DAILY_AVERAGE_SLOPE = False
             normalDict = stationsDict["NORMAL"][generalKey]
             tangentDict = stationsDict["TANGENT"][generalKey]
             stationId = stationDict["id"]
@@ -429,6 +601,13 @@ class GetRunup:
             runupWaterlineLongitudes = [] 
             runupTangentLatitudes = [] 
             runupTangentLongitudes = []
+            
+            runupValuesObsSwash = []
+            runupValuesObsIncidentSwash = []
+            runupValuesObsInfragravitySwash = []
+            runupValuesObsSwh = []
+            runupValuesObsPwp = []
+            runupValuesObsImpact = []
             
             for index, waterValue in enumerate(offshoreWater):
                 waterlineKey = None
@@ -620,6 +799,8 @@ class GetRunup:
 #           Then calculate the irribarren number
                 iribarren = (averageSlope / (np.sqrt(offshoreSteepness[index])))
                 iribarrenNumbers.append(iribarren)
+                
+                
                 runupHolmanHigh = self.calculateHolmanHighRunup(iribarren, offshoreSwh[index])
                 runupHolmanMid = self.calculateHolmanMidRunup(iribarren, offshoreSwh[index])
                 runupHolmanLow = self.calculateHolmanLowRunup(iribarren, offshoreSwh[index])
@@ -633,8 +814,10 @@ class GetRunup:
                 swashHolmanInfragravity = self.calculateHolmanInfragravitySwash(iribarren, offshoreSwh[index])
                 
                 stockdonSetup = self.calculateStockdonSetup(averageSlope, offshoreSwh[index], offshoreWavelength[index])
+                
                 stockdonSwashIncident = self.calculateStockdonIncidentSwash(averageSlope, offshoreSwh[index], offshoreWavelength[index])
-                stockdonSwashInfragravity = self.calculateStockdonInfragravitySwash(offshoreSwh[index], offshoreWavelength[index])          
+                stockdonSwashInfragravity = self.calculateStockdonInfragravitySwash(offshoreSwh[index], offshoreWavelength[index])
+                    
                 stockdonSetupLow = self.calculateStockdonLowSetup(offshoreSwh[index], offshoreWavelength[index])                
                 stockdonSwashLow = self.calculateStockdonLowSwash(offshoreSwh[index], offshoreWavelength[index])
                 stockdonRunup = self.calculateStockdonRunup(averageSlope, offshoreSwh[index], offshoreWavelength[index], waterlineStillwaterValue)
@@ -674,6 +857,79 @@ class GetRunup:
                 stockdonSwashLow = waterlineWaterValue
                 swashHolmanLow = stockdonRunupNoSetup
 #                 runupHolmanMid = stockdonRunup
+
+# Get obs runup
+                if("1" in generalKey):
+                    site_ids=[1401]
+                elif("2" in generalKey):
+                    site_ids=[1402]
+                elif("3" in generalKey):
+                    site_ids=[1402]
+                elif("4" in generalKey):
+                    site_ids=[1403]
+                elif("5" in generalKey):
+                    site_ids=[1403]
+
+                water_level_data = fetch_water_levels(
+                    site_ids=[1401, 1402, 1403],
+                    fields=fields,
+                    base_dir="."
+                )
+                
+                for item in water_level_data[0]:
+                    obsRunupTimes = item["unixTime"]
+#                     obsLatitude = item["siteLatitude"]
+#                     obsLongitude = item["siteLongitude"]
+                    obsToeHeight = item["toeHeight"]
+                    obsCrestHeight = item["crestHeight"]
+                    obsTwl = item["twl"]
+                    obsTwl05 = item["twl05"]
+                    obsTwl95 = item["twl95"]
+                    obsSetup = item["setup"]
+                    obsRunup = item["runup"]
+                    obsWaterLevel = item["tideWindSetup"]
+                    obsSwash = item["swash"]
+                    obsIncidentSwash = item["incSwash"]
+                    obsInfragravitySwash = item["infragSwash"]
+                    obsSwh = item["hs"]
+                    obsPwp = item["pp"]
+                    obsImpact = item["predictedImpact"]
+                    print("IMPACT:", obsImpact)
+                    
+                setupHolmanHigh = obsRunupTimes
+                setupHolmanMid = obsToeHeight
+                setupHolmanLow = obsCrestHeight
+                swashHolmanHigh = obsTwl
+                swashHolmanMid = obsTwl05
+                swashHolmanIncident = obsTwl95
+                swashHolmanInfragravity = obsSetup
+                stockdonSwashLow = obsRunup
+                stockdonRunupLow = obsWaterLevel
+                
+#                 runupValuesStockdonLow = obsSwash
+#                 runupValuesStockdonNoSetup = obsIncidentSwash
+#                 runupValuesStockdon = obsIngragravitySwash
+                
+                
+                
+                
+                
+                
+                
+                # Print a sample of results (first few records for brevity)
+                for item in water_level_data[:5]:  # Limit to first 5 for demonstration
+                    print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
+                    print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
+                    print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
+                    print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
+                    print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
+                    print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
+                    print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
+                    print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
+                    print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
+                    print(f"  Predicted Impact: {item['predictedImpact']}")
+                    print()
+    
                 
 #                 runupValues.append(stockdonRunup)
                 runupValuesHolmanHigh.append(runupHolmanHigh)
@@ -707,6 +963,13 @@ class GetRunup:
                 runupWaterlineLongitudes.append(runupWaterlineCoordinates[1])
                 runupTangentLatitudes.append(runupTangentCoordinates[0])
                 runupTangentLongitudes.append(runupTangentCoordinates[1])
+                
+                runupValuesObsSwash.append(obsSwash)
+                runupValuesObsIncidentSwash.append(obsIncidentSwash)
+                runupValuesObsInfragravitySwash.append(obsInfragravitySwash)
+                runupValuesObsSwh.append(obsSwh)
+                runupValuesObsPwp.append(obsPwp)
+                runupValuesObsImpact.append(obsImpact)
 
 #           Then calculate the runup value 2% exceedence
 
@@ -924,7 +1187,15 @@ class GetRunup:
             runupDict[key]["longitude"] = shorelineCoordinates[1]
             
             runupDict[key]["duneHeights"] = duneHeights
-        
+            
+                
+            runupDict[key]["obsSwash"] = runupValuesObsSwash
+            runupDict[key]["obsIncidentSwash"] = runupValuesObsIncidentSwash
+            runupDict[key]["obsInfragravitySwash"] = runupValuesObsInfragravitySwash
+            runupDict[key]["obsSwh"] = runupValuesObsSwh
+            runupDict[key]["obsPwp"] = runupValuesObsPwp
+            runupDict[key]["obsImpact"] = runupValuesObsImpact
+
         # print(windDict)
         print("Writing runup data file!")
         with open(RUNUP_DATA_FILE, "w") as outfile:

@@ -420,6 +420,14 @@ class Grapher:
         self.datapointsRunupLatitudes = []
         self.runupAverageSlopes = []
         
+        self.datapointsRunupObsSwash = []
+        self.datapointsRunupObsIncidentSwash = []
+        self.datapointsRunupObsInfragravitySwash = []
+        self.datapointsRunupObsSwh = []
+        self.datapointsRunupObsPwp = []
+        self.datapointsRunupObsImpact = []
+
+        
         self.datapointsDuneHeights = []
     
 
@@ -971,6 +979,15 @@ class Grapher:
                 datapointAdcircRunup = []
                 datapointDuneHeights = []
                 
+                datapointRunupObsSwash = []
+                datapointRunupObsIncidentSwash = []
+                datapointRunupObsInfragravitySwash = []
+                datapointRunupObsSwh = []
+                datapointRunupObsPwp = []
+                datapointRunupObsImpact = []
+                
+
+                
                 for index in range(len(runupDataset[stationKey]["times"])):
                     if(self.runupStartDate == None):
                         self.runupStartDate = datetime.fromtimestamp(int(runupDataset[stationKey]["times"][index]), timezone.utc)
@@ -1020,6 +1037,12 @@ class Grapher:
                     datapointAdcircSetup.append(runupDataset[stationKey]["setupAdcirc"][index])
                     datapointAdcircRunup.append(runupDataset[stationKey]["runupAdcirc"][index])
                     datapointDuneHeights.append(runupDataset[stationKey]["duneHeights"][index])
+                    datapointRunupObsSwash.append(runupDataset[stationKey]["obsSwash"][index])
+                    datapointRunupObsIncidentSwash.append(runupDataset[stationKey]["obsIncidentSwash"][index])
+                    datapointRunupObsInfragravitySwash.append(runupDataset[stationKey]["obsInfragravitySwash"][index])
+                    datapointRunupObsSwh.append(runupDataset[stationKey]["obsSwh"][index])
+                    datapointRunupObsPwp.append(runupDataset[stationKey]["obsPwp"][index])
+                    datapointRunupObsImpact.append(runupDataset[stationKey]["obsImpact"][index])
                     
                 runupTimestampsInitialized = True
                 self.datapointsRunup.append(datapointRunup)    
@@ -1053,6 +1076,14 @@ class Grapher:
                 self.datapointsSetupAdcirc.append(datapointAdcircSetup)
                 self.datapointsRunupAdcirc.append(datapointAdcircRunup)
                 self.datapointsDuneHeights.append(datapointDuneHeights)
+                
+                self.datapointsRunupObsSwash.append(datapointRunupObsSwash)
+                self.datapointsRunupObsIncidentSwash.append(datapointRunupObsInfragravitySwash)
+                self.datapointsRunupObsInfragravitySwash.append(datapointRunupObsInfragravitySwash)
+                self.datapointsRunupObsSwh.append(datapointRunupObsSwh)
+                self.datapointsRunupObsPwp.append(datapointRunupObsPwp)
+                self.datapointsRunupObsImpact.append(datapointRunupObsImpact)
+
                 
 
     def generateGraphs(self):
@@ -2241,6 +2272,8 @@ class Grapher:
                 ax.plot(self.runupTimes, self.datapointsSetupStockdon[index], label=r"Stockdon $\langle\eta\rangle$")
 #                 ax.plot(self.runupTimes, self.datapointsSetupAdcirc[index], label="ADCIRC+SWAN setup+storm surge")
                 ax.plot(self.runupTimes, self.datapointsSetupStockdonLow[index], label=r"SWAN $\eta_{setup}$")
+                
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"USGS $\langle \eta \rangle$")
 #                 ax.plot(self.runupTimes, self.datapointsRunupHolmanHigh[index], label="ADCIRC+SWAN storm surge")
 
 
@@ -2265,6 +2298,10 @@ class Grapher:
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
                 datapointsSwashStockdon = (np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
+                
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], label=r"USGS Incident")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], label=r"USGS Infragravity")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], label=r"USGS Swash")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2283,6 +2320,7 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsRunup[index], label="runup")
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanIncident[index], label="Holman Incident ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], label="Stockdon Incident βf√(HₒLₒ)")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], label=r"USGS Incident")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2300,6 +2338,7 @@ class Grapher:
                 fig, ax = plt.subplots(figsize=(16,9))
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanInfragravity[index], label="Holman Infragravity ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], label=r"USGS Infragravity")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2386,6 +2425,9 @@ class Grapher:
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', label=r"USGS TWL", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', label=r"USGS $\eta$", linewidth=1.5) 
+
                     # Calculate the maximum elevation including the swash
                     max_water_elevation = max(self.datapointsSwashStockdonLow[index])
                     max_swash_upper = max(upper_bound)
@@ -2629,9 +2671,13 @@ class Grapher:
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
                     unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
+        
+            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', label=r"USGS TWL") 
+
             # Plot η line if available
             if eta_values is not None:
                 ax.plot(self.runupTimes, eta_values, linestyle='-', color='black', label='η')
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', label=r"USGS $\eta$") 
         
             # Plot horizontal lines for dune heights
             for height in unique_heights:
@@ -2727,6 +2773,7 @@ class Grapher:
                             max_9km = round(np.nanmax(self.datapointsSWH[swhIndex]), 2) if len(self.datapointsSWH[swhIndex]) > 0 else "-"
         
                         ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
+                        ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"USGS H_s") 
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -2773,6 +2820,7 @@ class Grapher:
                             max_9km = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
         
                         ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
+                        ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"USGS H_s") 
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
