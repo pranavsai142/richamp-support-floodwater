@@ -119,7 +119,7 @@ if(GENERATE_TRANSECT_POINTS):
 # New GENERATE_PROFILE_POINTS block
 if(GENERATE_PROFILE_POINTS):
     max_distance = 250    # Maximum distance in meters (forward and backward)
-    spacing = 2           # Spacing between points in meters
+    spacing = 10           # Spacing between points in meters
     PROFILE_POINTS_MAP = generate_profile_points_map(max_distance, spacing)
 
 # if(True):
