@@ -13,6 +13,10 @@ import imageio
 import gc
 from geographiclib.geodesic import Geodesic
 import re
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.patches as patches
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 
 SMALL_SIZE = 14
@@ -2259,6 +2263,8 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanLow[index], label="Holman Low Tide ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], label="Stockdon Incident βf√(HₒLₒ)")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
+                datapointsSwashStockdon = (np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+                ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2275,7 +2281,7 @@ class Grapher:
 #                 Graph incident swash
                 fig, ax = plt.subplots(figsize=(16,9))
 #                 ax.plot(self.runupTimes, self.datapointsRunup[index], label="runup")
-                ax.plot(self.runupTimes, self.datapointsSwashHolmanIncident[index], label="Holman Incident ξ")
+#                 ax.plot(self.runupTimes, self.datapointsSwashHolmanIncident[index], label="Holman Incident ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], label="Stockdon Incident βf√(HₒLₒ)")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
@@ -2292,7 +2298,7 @@ class Grapher:
                 
 #                 Graph infragravity swash
                 fig, ax = plt.subplots(figsize=(16,9))
-                ax.plot(self.runupTimes, self.datapointsSwashHolmanInfragravity[index], label="Holman Infragravity ξ")
+#                 ax.plot(self.runupTimes, self.datapointsSwashHolmanInfragravity[index], label="Holman Infragravity ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
@@ -2433,20 +2439,72 @@ class Grapher:
                 plt.savefig(graph_directory + stationName + '_steepness.png')
                 plt.close()
                 
-#                 Graph iribarren number
-                fig, ax = plt.subplots(figsize=(16,9))
-                ax.plot(self.runupTimes, self.datapointsIribarren[index])
+                #                 Graph iribarren number
+
+                
+                # Assuming self.datapointsIribarren[index] contains the Iribarren numbers (ξ₀)
+                fig, ax = plt.subplots(figsize=(16, 9))
+                
+                # Plot the Iribarren number over time
+                ax.plot(self.runupTimes, self.datapointsIribarren[index], color='#FF9999', linewidth=2, marker='o', markersize=6, label='Iribarren Number')
+                
+                # Set y-axis limits
                 ax.set_ylim([0, 2])
-#                 ax.legend(loc="upper left")
+                
+                # Define pastel colors and shaded regions for wave types based on ξ₀ ranges
+                ax.axhspan(1.5, 2.0, color='#D3E0EA', alpha=0.7, label='Surging/Collapsing (ξ₀ > 1.5)')  # Light blue
+                ax.axhspan(0.5, 1.5, color='#C1E1C6', alpha=0.7, label='Plunging (0.5 < ξ₀ ≤ 1.5)')    # Light green
+                ax.axhspan(0.0, 0.5, color='#FADADD', alpha=0.7, label='Spilling (ξ₀ ≤ 0.5)')         # Light pink
+                
+                # Customize x-axis date format
                 ax.format_xdata = mdates.DateFormatter('%d')
                 plt.xticks(fontsize=12)
                 plt.yticks(fontsize=12)
+                
+                # Station name and max Iribarren value
                 stationName = self.runupLabels[index]
                 maxIribarren = str(round(max(self.datapointsIribarren[index]), 2))
-                plt.title(self.titlePrefix + stationName + " station iribarren max: " + maxIribarren, fontsize=18)
-#                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
-                plt.ylabel("iribarren number", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_iribarren.png')
+                plt.title(f'{self.titlePrefix}{stationName} Station Iribarren (Max: {maxIribarren})', fontsize=18, pad=20, fontweight='bold', color='#333333')
+                
+                # Y-axis label
+                plt.ylabel('Iribarren Number', fontsize=14, fontweight='bold', color='#555555')
+                
+                # Add legend
+                ax.legend(loc='upper left', fontsize=10, frameon=True, facecolor='white', edgecolor='#CCCCCC')
+                
+                # Simulate wave images with annotations (using simple shapes as placeholders)
+                # Note: Replace with actual image paths or use custom patches
+                def add_wave_annotation(x, y, wave_type):
+                    if wave_type == 'Surging/Collapsing':
+                        color, shape = '#D3E0EA', 's'  # Square for steep wave
+                    elif wave_type == 'Plunging':
+                        color, shape = '#C1E1C6', '^'  # Triangle for plunging wave
+                    else:  # Spilling
+                        color, shape = '#FADADD', 'o'  # Circle for gentle wave
+                    ax.scatter(x, y, c=color, marker=shape, s=200, edgecolor='none', alpha=0.8)
+                    ax.annotate(wave_type, xy=(x, y), xytext=(0, 10), textcoords='offset points',
+                                ha='center', va='bottom', fontsize=10, color='#333333',
+                                bbox=dict(boxstyle='round,pad=0.5', fc='white', alpha=0.8))
+                
+                # Add wave type annotations for each data point
+                for x, y in zip(self.runupTimes, self.datapointsIribarren[index]):
+                    if y > 1.5:
+                        add_wave_annotation(x, y, 'Surging/Collapsing')
+                    elif 0.5 < y <= 1.5:
+                        add_wave_annotation(x, y, 'Plunging')
+                    else:  # y <= 0.5
+                        add_wave_annotation(x, y, 'Spilling')
+                
+                # Customize the plot's appearance
+                ax.grid(False)
+                ax.set_facecolor('#F5F5F5')  # Light gray background
+                for spine in ax.spines.values():
+                    spine.set_visible(False)
+                ax.tick_params(axis='both', colors='#555555')
+                fig.patch.set_facecolor('#F5F5F5')
+                
+                # Save the figure
+                plt.savefig(graph_directory + stationName + '_iribarren.png', dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
                 plt.close()
                 
 #                 Graph average slope
