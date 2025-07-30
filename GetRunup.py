@@ -3,6 +3,12 @@ import os
 from typing import List, Dict, Optional
 from datetime import datetime
 
+fields = [
+    "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
+    "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp", "predictedImpact"
+]
+    
+
 def datetime_to_unix_time(datetime_str: str) -> int:
     """Convert datetime string (YYYY-MM-DD HH:00:00) to Unix timestamp."""
     return int(datetime.strptime(datetime_str, "%Y-%m-%d %H:%00:%00").timestamp())
@@ -133,11 +139,6 @@ def fetch_water_levels(
 
 # Example usage
 # if __name__ == "__main__":
-#     fields = [
-#         "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
-#         "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp", "predictedImpact"
-#     ]
-#     
 #     water_level_data = fetch_water_levels(
 #         site_ids=[1401, 1402, 1403],
 #         forecast_dates=["2022-12-20", "2023-12-15"],
