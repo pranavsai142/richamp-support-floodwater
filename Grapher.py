@@ -661,7 +661,7 @@ class Grapher:
                             self.assetDatapointsElevation.append(assetElevation)
             assetLabelsInitialized = True
             
-        if(self.waterExists):
+        if(self.waterExists or False):
             with open(dataToGraph["WATER"]) as outfile:
                 waterDataset = json.load(outfile)
                 
@@ -3047,7 +3047,7 @@ class Grapher:
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 # Check if the station name contains "pp" and matches the transect
-                if str(transect) in stationName[0:stationName.index(" ")] and "pp" in stationName[2:4]:
+                if str(transect) in stationName[0:stationName.index(" ")] and "P" in stationName[stationName.index(" ") + 1]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         elev = self.datapointsElevation[elevationIndex]
@@ -3076,7 +3076,7 @@ class Grapher:
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 # Check if the station name contains "pp" and matches the transect
-                if str(transect) in stationName[0:stationName.index(" ")] and "pp" in stationName[2:4]:
+                if str(transect) in stationName[0:stationName.index(" ")] and "P" in stationName[stationName.index(" ") + 1]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         profileElevations.append(self.datapointsElevation[elevationIndex])
@@ -3111,15 +3111,71 @@ class Grapher:
             ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
             ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
+            # Define elevation levels for intersection points
+            dune_toe_elev = self.datapointsSetupHolmanMid[index]
+            dune_crest_elev = self.datapointsSetupHolmanLow[index]
+            mhwl_elev = self.datapointsRunupStockdonLow[index]
+        
+            # Function to find intersection point via interpolation
+            def find_intersection(distances, elevations, target_elev):
+                if len(distances) < 2 or np.all(np.isnan(elevations)):
+                    return None
+                valid_mask = ~np.isnan(elevations)
+                if not np.any(valid_mask):
+                    return None
+                distances = distances[valid_mask]
+                elevations = elevations[valid_mask]
+                for i in range(len(elevations) - 1):
+                    if (elevations[i] - target_elev) * (elevations[i + 1] - target_elev) <= 0:
+                        # Linear interpolation between points
+                        x0, x1 = distances[i], distances[i + 1]
+                        y0, y1 = elevations[i], elevations[i + 1]
+                        interp_dist = x0 + (target_elev - y0) * (x1 - x0) / (y1 - y0)
+                        return interp_dist
+                return None  # No intersection found
+        
+            # Find intersection points
+            toe_dist = find_intersection(profileDistances, profileElevations, dune_toe_elev)
+            crest_dist = find_intersection(profileDistances, profileElevations, dune_crest_elev)
+            mhwl_dist = find_intersection(profileDistances, profileElevations, mhwl_elev)
+        
+            # Plot intersection points with annotations
+            points = []
+            if toe_dist is not None:
+                ax.scatter(toe_dist, dune_toe_elev, color='blue', s=100, zorder=5)
+                points.append(ax.annotate('Dune Toe', xy=(toe_dist, dune_toe_elev), xytext=(5, 5),
+                                         textcoords='offset points', ha='left', va='bottom',
+                                         bbox=dict(boxstyle='round,pad=0.5', fc='white', ec='blue', alpha=0.8),
+                                         fontsize=10, color='blue'))
+            if crest_dist is not None:
+                ax.scatter(crest_dist, dune_crest_elev, color='green', s=100, zorder=5)
+                points.append(ax.annotate('Dune Crest', xy=(crest_dist, dune_crest_elev), xytext=(5, 5),
+                                         textcoords='offset points', ha='left', va='bottom',
+                                         bbox=dict(boxstyle='round,pad=0.5', fc='white', ec='green', alpha=0.8),
+                                         fontsize=10, color='green'))
+            if mhwl_dist is not None:
+                ax.scatter(mhwl_dist, mhwl_elev, color='orange', s=100, zorder=5)
+                points.append(ax.annotate('MHWL', xy=(mhwl_dist, mhwl_elev), xytext=(5, 5),
+                                         textcoords='offset points', ha='left', va='bottom',
+                                         bbox=dict(boxstyle='round,pad=0.5', fc='white', ec='orange', alpha=0.8),
+                                         fontsize=10, color='orange'))
+        
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
             ax.tick_params(axis='both', labelsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Profile Points Elevation Profile", fontsize=16)
             ax.set_ylim(elevation_y_min, elevation_y_max)  # Consistent y-axis limits
-            ax.grid(False)  # Disable grid lines to remove horizontal lines
+            ax.grid(False)  # Disable grid lines
         
-            # Add legend
-            ax.legend(loc="upper right", fontsize=10)
+            # Update legend to include intersection points
+            handles, labels = ax.get_legend_handles_labels()
+            if toe_dist is not None:
+                handles.append(plt.scatter([], [], color='blue', s=100, label='Dune Toe'))
+            if crest_dist is not None:
+                handles.append(plt.scatter([], [], color='green', s=100, label='Dune Crest'))
+            if mhwl_dist is not None:
+                handles.append(plt.scatter([], [], color='orange', s=100, label='MHWL'))
+            ax.legend(handles=handles, loc="upper right", fontsize=10)
         
             # Set x-axis label on the bottom subplot
             if transect == 5:
@@ -3128,7 +3184,6 @@ class Grapher:
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_beach_elevation_profiles.png')
         plt.close()
-# 
 # # Graph all runup
 # 
 #         fig, ax = plt.subplots(figsize=(16,9))

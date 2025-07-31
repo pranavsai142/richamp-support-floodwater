@@ -888,14 +888,14 @@ class GetRunup:
                     obsRunupTimes = item["unixTime"]
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
-                    obsToeHeight = item["toeHeight"]
-                    obsCrestHeight = item["crestHeight"]
-                    obsTwl = item["twl"]
-                    obsTwl05 = item["twl05"]
-                    obsTwl95 = item["twl95"]
+                    obsToeHeight = item["toeHeight"] + 0.646
+                    obsCrestHeight = item["crestHeight"] + 0.646
+                    obsTwl = item["twl"] + 0.646
+                    obsTwl05 = item["twl05"] + 0.646
+                    obsTwl95 = item["twl95"] + 0.646
                     obsSetup = item["setup"]
                     obsRunup = item["runup"]
-                    obsWaterLevel = item["tideWindSetup"]
+                    obsWaterLevel = item["tideWindSetup"] + 0.646
                     obsSwash = item["swash"]
                     obsIncidentSwash = item["incSwash"]
                     obsInfragravitySwash = item["infragSwash"]
@@ -911,7 +911,7 @@ class GetRunup:
                 swashHolmanMid = obsTwl05
                 swashHolmanIncident = obsTwl95
                 swashHolmanInfragravity = obsSetup
-                stockdonSwashLow = obsRunup
+#                 stockdonSwashLow = obsRunup
                 stockdonRunupLow = obsWaterLevel
                 
 #                 runupValuesStockdonLow = obsSwash
