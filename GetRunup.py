@@ -870,9 +870,9 @@ class GetRunup:
                     site_ids=[1403]
                 elif("5" in generalKey):
                     site_ids=[1403]
-
+#                 This isint working
                 water_level_data = fetch_water_levels(
-                    site_ids=side_ids,
+                    site_ids=site_ids,
                     fields=fields,
                     base_dir="."
                 )
