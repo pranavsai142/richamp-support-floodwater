@@ -419,7 +419,7 @@ class Grapher:
         self.datapointsRunupLongitudes = []
         self.datapointsRunupLatitudes = []
         self.runupAverageSlopes = []
-        
+        self.datapointsRunupObs = []
         self.datapointsRunupObsSwash = []
         self.datapointsRunupObsIncidentSwash = []
         self.datapointsRunupObsInfragravitySwash = []
@@ -1037,6 +1037,7 @@ class Grapher:
                     datapointAdcircSetup.append(runupDataset[stationKey]["setupAdcirc"][index])
                     datapointAdcircRunup.append(runupDataset[stationKey]["runupAdcirc"][index])
                     datapointDuneHeights.append(runupDataset[stationKey]["duneHeights"][index])
+                    datapointRunupObs.append(runupDataset[stationKey]["obsRunup"][index])
                     datapointRunupObsSwash.append(runupDataset[stationKey]["obsSwash"][index])
                     datapointRunupObsIncidentSwash.append(runupDataset[stationKey]["obsIncidentSwash"][index])
                     datapointRunupObsInfragravitySwash.append(runupDataset[stationKey]["obsInfragravitySwash"][index])
@@ -1076,7 +1077,7 @@ class Grapher:
                 self.datapointsSetupAdcirc.append(datapointAdcircSetup)
                 self.datapointsRunupAdcirc.append(datapointAdcircRunup)
                 self.datapointsDuneHeights.append(datapointDuneHeights)
-                
+                self.datapointsRunupObs.append(datapointRunupObs)
                 self.datapointsRunupObsSwash.append(datapointRunupObsSwash)
                 self.datapointsRunupObsIncidentSwash.append(datapointRunupObsInfragravitySwash)
                 self.datapointsRunupObsInfragravitySwash.append(datapointRunupObsInfragravitySwash)
@@ -2263,8 +2264,8 @@ class Grapher:
                 plt.savefig(graph_directory + stationName + '_deepwater_swh.png')
                 plt.close()
                 
-                print("runup obs times: ", self.datapointsSetupHolmanHigh[index][0:20])
-                quit()
+#                 print("runup obs times: ", self.datapointsSetupHolmanHigh[index][0:20])
+#                 quit()
 #                 Graph setup
                 fig, ax = plt.subplots(figsize=(16,9))
 #                 ax.plot(self.runupTimes, self.datapointsRunup[index], label="runup")

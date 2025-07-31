@@ -606,6 +606,7 @@ class GetRunup:
             runupTangentLatitudes = [] 
             runupTangentLongitudes = []
             
+            runupValuesObsStockdon = []
             runupValuesObsSwash = []
             runupValuesObsIncidentSwash = []
             runupValuesObsInfragravitySwash = []
@@ -808,11 +809,7 @@ class GetRunup:
                 runupHolmanHigh = self.calculateHolmanHighRunup(iribarren, offshoreSwh[index])
                 runupHolmanMid = self.calculateHolmanMidRunup(iribarren, offshoreSwh[index])
                 runupHolmanLow = self.calculateHolmanLowRunup(iribarren, offshoreSwh[index])
-                setupHolmanHigh = self.calculateHolmanHighSetup(iribarren, offshoreSwh[index])
-                setupHolmanMid = self.calculateHolmanMidSetup(iribarren, offshoreSwh[index])
-                setupHolmanLow = self.calculateHolmanLowSetup(iribarren, offshoreSwh[index])
-                swashHolmanHigh = self.calculateHolmanHighSwash(iribarren, offshoreSwh[index])
-                swashHolmanMid = self.calculateHolmanMidSwash(iribarren, offshoreSwh[index])
+
                 swashHolmanLow = self.calculateHolmanLowSwash(iribarren, offshoreSwh[index])
                 swashHolmanIncident = self.calculateHolmanIncidentSwash(iribarren, offshoreSwh[index])
                 swashHolmanInfragravity = self.calculateHolmanInfragravitySwash(iribarren, offshoreSwh[index])
@@ -827,7 +824,6 @@ class GetRunup:
                 stockdonRunup = self.calculateStockdonRunup(averageSlope, offshoreSwh[index], offshoreWavelength[index], waterlineStillwaterValue)
 #                 stockdonRunup = self.calculateStockdonRunup(averageSlope, offshoreSwh[index], offshoreWavelength[index], waterlineTidewaterValue)
                 stockdonRunupNoSetup = self.calculateStockdonRunupNoSetup(averageSlope, offshoreSwh[index], offshoreWavelength[index])
-                stockdonRunupLow = self.calculateStockdonLowRunup(offshoreSwh[index], offshoreWavelength[index]) 
                 
 #                 Add the waterline water value
 #                 The "adrircSetup" is a value that is the still water level 
@@ -862,96 +858,13 @@ class GetRunup:
                 swashHolmanLow = stockdonRunupNoSetup
 #                 runupHolmanMid = stockdonRunup
 
-# Get obs runup
-                if("1" in generalKey):
-                    site_ids=[1401]
-                elif("2" in generalKey):
-                    site_ids=[1402]
-                elif("3" in generalKey):
-                    site_ids=[1402]
-                elif("4" in generalKey):
-                    site_ids=[1403]
-                elif("5" in generalKey):
-                    site_ids=[1403]
-#                 This isint working                     
 
-# forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
-#                 print("site_ids", site_ids)
-                water_level_data = fetch_water_levels(
-                    site_ids=site_ids,
-                    forecast_dates = ["2023-12-15"],
-                    fields=fields,
-                    base_dir="."
-                )
-                
-                for item in water_level_data:
-                    obsRunupTimes = item["unixTime"]
-#                     print("obsRunupTimes converted", datetime.fromtimestamp(obsRunupTimes, timezone.utc))
-#                     obsLatitude = item["siteLatitude"]
-#                     obsLongitude = item["siteLongitude"]
-                    obsToeHeight = item["toeHeight"] + 0.646
-                    obsCrestHeight = item["crestHeight"] + 0.646
-                    obsTwl = item["twl"] + 0.646
-                    obsTwl05 = item["twl05"] + 0.646
-                    obsTwl95 = item["twl95"] + 0.646
-                    obsSetup = item["setup"]
-                    obsRunup = item["runup"]
-                    obsWaterLevel = item["tideWindSetup"] + 0.646
-                    obsSwash = item["swash"]
-                    obsIncidentSwash = item["incSwash"]
-                    obsInfragravitySwash = item["infragSwash"]
-                    obsSwh = item["hs"]
-                    obsPwp = item["pp"]
-                    obsImpact = item["predictedImpact"]
-#                     print("IMPACT:", obsImpact)
-                    
-                setupHolmanHigh = obsRunupTimes
-                setupHolmanMid = obsToeHeight
-                setupHolmanLow = obsCrestHeight
-                swashHolmanHigh = obsTwl
-                swashHolmanMid = obsTwl05
-                swashHolmanIncident = obsTwl95
-                swashHolmanInfragravity = obsSetup
-#                 stockdonSwashLow = obsRunup
-                stockdonRunupLow = obsWaterLevel
-                
-#                 runupValuesStockdonLow = obsSwash
-#                 runupValuesStockdonNoSetup = obsIncidentSwash
-#                 runupValuesStockdon = obsIngragravitySwash
-                
-                
-                
-                
-                
-                
-                
-                # Print a sample of results (first few records for brevity)
-                for item in water_level_data[:5]:  # Limit to first 5 for demonstration
-                    print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
-                    print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
-                    print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
-                    print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
-                    print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
-                    print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
-                    print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
-                    print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
-                    print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
-                    print(f"  Predicted Impact: {item['predictedImpact']}")
-                    print()
-    
                 
 #                 runupValues.append(stockdonRunup)
                 runupValuesHolmanHigh.append(runupHolmanHigh)
                 runupValuesHolmanMid.append(runupHolmanMid)
                 runupValuesHolmanLow.append(runupHolmanLow)
-                swashValuesHolmanHigh.append(swashHolmanHigh)
-                swashValuesHolmanMid.append(swashHolmanMid)
                 swashValuesHolmanLow.append(swashHolmanLow)
-                setupValuesHolmanHigh.append(setupHolmanHigh)
-                setupValuesHolmanMid.append(setupHolmanMid)
-                setupValuesHolmanLow.append(setupHolmanLow)
-                swashValuesHolmanIncident.append(swashHolmanIncident)
-                swashValuesHolmanInfragravity.append(swashHolmanInfragravity)
                 
                 setupValuesStockdon.append(stockdonSetup)
                 swashValuesStockdonIncident.append(stockdonSwashIncident)
@@ -960,7 +873,6 @@ class GetRunup:
                 swashValuesStockdonLow.append(stockdonSwashLow)
                 runupValuesStockdon.append(stockdonRunup)
                 runupValuesStockdonNoSetup.append(stockdonRunupNoSetup)
-                runupValuesStockdonLow.append(stockdonRunupLow)
                 
                 setupValuesAdcirc.append(adcircSetup)
                 runupValuesAdcirc.append(adcircRunup)
@@ -973,12 +885,114 @@ class GetRunup:
                 runupTangentLatitudes.append(runupTangentCoordinates[0])
                 runupTangentLongitudes.append(runupTangentCoordinates[1])
                 
-                runupValuesObsSwash.append(obsSwash)
-                runupValuesObsIncidentSwash.append(obsIncidentSwash)
-                runupValuesObsInfragravitySwash.append(obsInfragravitySwash)
-                runupValuesObsSwh.append(obsSwh)
-                runupValuesObsPwp.append(obsPwp)
-                runupValuesObsImpact.append(obsImpact)
+
+                
+# Get obs runup
+            if("1" in generalKey):
+                site_ids=[1401]
+            elif("2" in generalKey):
+                site_ids=[1402]
+            elif("3" in generalKey):
+                site_ids=[1402]
+            elif("4" in generalKey):
+                site_ids=[1403]
+            elif("5" in generalKey):
+                site_ids=[1403]
+#                 This isint working                     
+
+# forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
+#                 print("site_ids", site_ids)
+            water_level_data = fetch_water_levels(
+                site_ids=site_ids,
+                forecast_dates = ["2023-12-15"],
+                fields=fields,
+                base_dir="."
+            )
+            
+            for item in water_level_data:
+                obsRunupTimes = item["unixTime"]
+#                     print("obsRunupTimes converted", datetime.fromtimestamp(obsRunupTimes, timezone.utc))
+#                     obsLatitude = item["siteLatitude"]
+#                     obsLongitude = item["siteLongitude"]
+                obsToeHeight = item["toeHeight"] + 0.646
+                obsCrestHeight = item["crestHeight"] + 0.646
+                obsTwl = item["twl"] + 0.646
+                obsTwl05 = item["twl05"] + 0.646
+                obsTwl95 = item["twl95"] + 0.646
+                obsSetup = item["setup"]
+                obsRunup = item["runup"]
+                obsWaterLevel = item["tideWindSetup"] + 0.646
+                obsSwash = item["swash"]
+                obsIncidentSwash = item["incSwash"]
+                obsInfragravitySwash = item["infragSwash"]
+                obsSwh = item["hs"]
+                obsPwp = item["pp"]
+                obsImpact = item["predictedImpact"]
+#                     print("IMPACT:", obsImpact)
+                
+            setupHolmanHigh = obsRunupTimes
+            setupHolmanMid = obsToeHeight
+            setupHolmanLow = obsCrestHeight
+            swashHolmanHigh = obsTwl
+            swashHolmanMid = obsTwl05
+            swashHolmanIncident = obsTwl95
+            swashHolmanInfragravity = obsSetup
+            stockdonRunupLow = obsWaterLevel
+            
+
+            
+            setupValuesHolmanHigh.extend(setupHolmanHigh)
+            setupValuesHolmanMid.extend(setupHolmanMid)
+            setupValuesHolmanLow.extend(setupHolmanLow)
+            swashValuesHolmanHigh.extend(swashHolmanHigh)
+            swashValuesHolmanMid.extend(swashHolmanMid)
+            swashValuesHolmanIncident.extend(swashHolmanIncident)
+            swashValuesHolmanInfragravity.extend(swashHolmanInfragravity)
+            runupValuesStockdonLow.extend(stockdonRunupLow)
+            runupValuesObsStockdon.extend(obsRunup)
+            runupValuesObsSwash.extend(obsSwash)
+            runupValuesObsIncidentSwash.extend(obsIncidentSwash)
+            runupValuesObsInfragravitySwash.extend(obsInfragravitySwash)
+            runupValuesObsSwh.extend(obsSwh)
+            runupValuesObsPwp.extend(obsPwp)
+            runupValuesObsImpact.extend(obsImpact)
+
+#             scrapped variables
+#             setupHolmanHigh = self.calculateHolmanHighSetup(iribarren, offshoreSwh[index])
+#             setupHolmanMid = self.calculateHolmanMidSetup(iribarren, offshoreSwh[index])
+#             setupHolmanLow = self.calculateHolmanLowSetup(iribarren, offshoreSwh[index])
+#             
+#                 swashHolmanHigh = self.calculateHolmanHighSwash(iribarren, offshoreSwh[index])
+#                 swashHolmanMid = self.calculateHolmanMidSwash(iribarren, offshoreSwh[index])
+#                 swashHolmanIncident = self.calculateHolmanIncidentSwash(iribarren, offshoreSwh[index])
+#                 swashHolmanInfragravity = self.calculateHolmanInfragravitySwash(iribarren, offshoreSwh[index])
+#                 stockdonRunupLow = self.calculateStockdonLowRunup(offshoreSwh[index], offshoreWavelength[index]) 
+
+            
+#                 runupValuesStockdonLow = obsSwash
+#                 runupValuesStockdonNoSetup = obsIncidentSwash
+#                 runupValuesStockdon = obsIngragravitySwash
+            
+            
+            
+            
+            
+            
+            
+            # Print a sample of results (first few records for brevity)
+            for item in water_level_data[:5]:  # Limit to first 5 for demonstration
+                print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
+                print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
+                print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
+                print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
+                print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
+                print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
+                print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
+                print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
+                print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
+                print(f"  Predicted Impact: {item['predictedImpact']}")
+                print()
+    
 
 #           Then calculate the runup value 2% exceedence
 
@@ -1197,7 +1211,7 @@ class GetRunup:
             
             runupDict[key]["duneHeights"] = duneHeights
             
-                
+            runupDict[key]["obsRunup"] = runupValuesObsStockdon
             runupDict[key]["obsSwash"] = runupValuesObsSwash
             runupDict[key]["obsIncidentSwash"] = runupValuesObsIncidentSwash
             runupDict[key]["obsInfragravitySwash"] = runupValuesObsInfragravitySwash
