@@ -876,7 +876,7 @@ class GetRunup:
 #                 This isint working                     
 
 # forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
-                print("site_ids", site_ids)
+#                 print("site_ids", site_ids)
                 water_level_data = fetch_water_levels(
                     site_ids=site_ids,
                     forecast_dates = ["2023-12-15"],
@@ -886,9 +886,6 @@ class GetRunup:
                 
                 for item in water_level_data:
                     obsRunupTimes = item["unixTime"]
-                    print(obsRunupTimes)
-                    if(obsRunupTimes < 0):
-                        quit()
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
                     obsToeHeight = item["toeHeight"]
@@ -905,7 +902,7 @@ class GetRunup:
                     obsSwh = item["hs"]
                     obsPwp = item["pp"]
                     obsImpact = item["predictedImpact"]
-                    print("IMPACT:", obsImpact)
+#                     print("IMPACT:", obsImpact)
                     
                 setupHolmanHigh = obsRunupTimes
                 setupHolmanMid = obsToeHeight
