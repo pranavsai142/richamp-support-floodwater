@@ -2809,8 +2809,8 @@ class Grapher:
                     ax.plot(self.runupTimes, upper_bound_1_1, color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)
                     
                     # Plot USGS data
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", label=r"TWL USGS", linewidth=1.5)
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '-', color="blue", alpha=0.5, label=r"$\eta$ USGS", linewidth=1.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", alpha=0.5, label=r"TWL USGS", linewidth=1.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="blue", alpha=0.5, label=r"$\eta$ USGS", linewidth=1.5)
                     
                     # Calculate max values for title
                     max_water_elevation = round(max(self.datapointsSwashStockdonLow[index]), 2)

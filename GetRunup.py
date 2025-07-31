@@ -891,7 +891,7 @@ class GetRunup:
                 
 # Get obs runup
             if("1" in generalKey):
-                site_ids=[1401]
+                site_ids=[1402]
             elif("2" in generalKey):
                 site_ids=[1402]
             elif("3" in generalKey):
