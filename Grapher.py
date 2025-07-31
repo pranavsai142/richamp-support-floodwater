@@ -2528,14 +2528,14 @@ class Grapher:
                                 ha='center', va='bottom', fontsize=10, color='#333333',
                                 bbox=dict(boxstyle='round,pad=0.5', fc='white', alpha=0.8))
                 
-                # Add wave type annotations for each data point
-                for x, y in zip(self.runupTimes, self.datapointsIribarren[index]):
-                    if y > 1.5:
-                        add_wave_annotation(x, y, 'Surging/Collapsing')
-                    elif 0.5 < y <= 1.5:
-                        add_wave_annotation(x, y, 'Plunging')
-                    else:  # y <= 0.5
-                        add_wave_annotation(x, y, 'Spilling')
+                # Add wave type annotations for each data point, skip annotating each thing
+#                 for x, y in zip(self.runupTimes, self.datapointsIribarren[index]):
+#                     if y > 1.5:
+#                         add_wave_annotation(x, y, 'Surging/Collapsing')
+#                     elif 0.5 < y <= 1.5:
+#                         add_wave_annotation(x, y, 'Plunging')
+#                     else:  # y <= 0.5
+#                         add_wave_annotation(x, y, 'Spilling')
                 
                 # Customize the plot's appearance
                 ax.grid(False)
@@ -3047,7 +3047,9 @@ class Grapher:
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 # Check if the station name contains "pp" and matches the transect
-                if str(transect) in stationName[0:stationName.index(" ")] and "P" in stationName[stationName.index(" ") + 1]:
+#                 here is where the problem is. Need to get all "Profile" from ASSET
+#               waves does it becausse in ASSET name is exactly the same as RUNUP section name
+                if str(transect) in stationName[0:stationName.index(" ")]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         elev = self.datapointsElevation[elevationIndex]
@@ -3076,7 +3078,7 @@ class Grapher:
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 # Check if the station name contains "pp" and matches the transect
-                if str(transect) in stationName[0:stationName.index(" ")] and "P" in stationName[stationName.index(" ") + 1]:
+                if str(transect) in stationName[0:stationName.index(" ")]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         profileElevations.append(self.datapointsElevation[elevationIndex])

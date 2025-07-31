@@ -885,7 +885,7 @@ class GetRunup:
                 )
                 
                 for item in water_level_data:
-                    obsRunupTimes = item["unixTime"]
+                    obsRunupTimes = item["unixTime"] - 14400
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
                     obsToeHeight = item["toeHeight"] + 0.646
@@ -925,18 +925,18 @@ class GetRunup:
                 
                 
                 # Print a sample of results (first few records for brevity)
-#                 for item in water_level_data[:5]:  # Limit to first 5 for demonstration
-#                     print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
-#                     print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
-#                     print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
-#                     print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
-#                     print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
-#                     print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
-#                     print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
-#                     print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
-#                     print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
-#                     print(f"  Predicted Impact: {item['predictedImpact']}")
-#                     print()
+                for item in water_level_data[:5]:  # Limit to first 5 for demonstration
+                    print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
+                    print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
+                    print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
+                    print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
+                    print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
+                    print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
+                    print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
+                    print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
+                    print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
+                    print(f"  Predicted Impact: {item['predictedImpact']}")
+                    print()
     
                 
 #                 runupValues.append(stockdonRunup)
