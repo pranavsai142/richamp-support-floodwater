@@ -606,7 +606,7 @@ class GetRunup:
             runupTangentLatitudes = [] 
             runupTangentLongitudes = []
             
-            runupValuesObsStockdon = []
+            runupValuesObs = []
             runupValuesObsSwash = []
             runupValuesObsIncidentSwash = []
             runupValuesObsInfragravitySwash = []
@@ -949,7 +949,7 @@ class GetRunup:
                 swashValuesHolmanIncident.append(swashHolmanIncident)
                 swashValuesHolmanInfragravity.append(swashHolmanInfragravity)
                 runupValuesStockdonLow.append(stockdonRunupLow)
-                runupValuesObsStockdon.append(obsRunup)
+                runupValuesObs.append(obsRunup)
                 runupValuesObsSwash.append(obsSwash)
                 runupValuesObsIncidentSwash.append(obsIncidentSwash)
                 runupValuesObsInfragravitySwash.append(obsInfragravitySwash)
@@ -1211,7 +1211,7 @@ class GetRunup:
             
             runupDict[key]["duneHeights"] = duneHeights
             
-            runupDict[key]["obsRunup"] = runupValuesObsStockdon
+            runupDict[key]["obsRunup"] = runupValuesObs
             runupDict[key]["obsSwash"] = runupValuesObsSwash
             runupDict[key]["obsIncidentSwash"] = runupValuesObsIncidentSwash
             runupDict[key]["obsInfragravitySwash"] = runupValuesObsInfragravitySwash
