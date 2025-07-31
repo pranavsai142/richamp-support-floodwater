@@ -36,7 +36,7 @@ def read_site_json(file_path: str) -> Optional[Dict]:
             "siteLatitude": float(site_data["siteLatitude"]),
             "siteLongitude": float(site_data["siteLongitude"]),
             "toeHeight": float(site_data["toeHeight"]),
-            "crestHeight": float(site_data["crestHeight"])
+            "crestHeight": float(site_data["crestHeight"]),
             "beachSlope": float(site_data["beachSlope"])
         }
     except FileNotFoundError:
