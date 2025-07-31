@@ -886,6 +886,8 @@ class GetRunup:
                 
                 for item in water_level_data:
                     obsRunupTimes = item["unixTime"] - 14400
+                    print("obsRunupTimes converted", datetime.fromtimestamp(obsRunupTimes, timezone.utc))
+                    quit()
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
                     obsToeHeight = item["toeHeight"] + 0.646
