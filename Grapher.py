@@ -1083,7 +1083,7 @@ class Grapher:
                 self.datapointsDuneHeights.append(datapointDuneHeights)
                 self.datapointsRunupObs.append(datapointRunupObs)
                 self.datapointsRunupObsSwash.append(datapointRunupObsSwash)
-                self.datapointsRunupObsIncidentSwash.append(datapointRunupObsInfragravitySwash)
+                self.datapointsRunupObsIncidentSwash.append(datapointRunupObsIncidentSwash)
                 self.datapointsRunupObsInfragravitySwash.append(datapointRunupObsInfragravitySwash)
                 self.datapointsRunupObsSwh.append(datapointRunupObsSwh)
                 self.datapointsRunupObsPwp.append(datapointRunupObsPwp)
