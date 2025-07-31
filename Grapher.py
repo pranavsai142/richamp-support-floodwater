@@ -3133,9 +3133,9 @@ class Grapher:
             ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
             # Define elevation points for intersection
-            dune_toe_elev = self.datapointsSetupHolmanMid[index]
-            dune_crest_elev = self.datapointsSetupHolmanLow[index]
-            mhwl_elev = self.datapointsRunupStockdonLow[index]
+            dune_toe_elev = self.datapointsSetupHolmanMid[index][-1]
+            dune_crest_elev = self.datapointsSetupHolmanLow[index][-1]
+            mhwl_elev = self.datapointsRunupStockdonLow[index][-1]
         
             # Find intersection points using interpolation (first crossing from offshore)
             def find_intersection(distances, elevations, target_elev):
