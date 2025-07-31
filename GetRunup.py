@@ -930,32 +930,32 @@ class GetRunup:
                 obsImpact = item["predictedImpact"]
 #                     print("IMPACT:", obsImpact)
                 
-            setupHolmanHigh = obsRunupTimes
-            setupHolmanMid = obsToeHeight
-            setupHolmanLow = obsCrestHeight
-            swashHolmanHigh = obsTwl
-            swashHolmanMid = obsTwl05
-            swashHolmanIncident = obsTwl95
-            swashHolmanInfragravity = obsSetup
-            stockdonRunupLow = obsWaterLevel
+                setupHolmanHigh = obsRunupTimes
+                setupHolmanMid = obsToeHeight
+                setupHolmanLow = obsCrestHeight
+                swashHolmanHigh = obsTwl
+                swashHolmanMid = obsTwl05
+                swashHolmanIncident = obsTwl95
+                swashHolmanInfragravity = obsSetup
+                stockdonRunupLow = obsWaterLevel
             
 
             
-            setupValuesHolmanHigh.extend(setupHolmanHigh)
-            setupValuesHolmanMid.extend(setupHolmanMid)
-            setupValuesHolmanLow.extend(setupHolmanLow)
-            swashValuesHolmanHigh.extend(swashHolmanHigh)
-            swashValuesHolmanMid.extend(swashHolmanMid)
-            swashValuesHolmanIncident.extend(swashHolmanIncident)
-            swashValuesHolmanInfragravity.extend(swashHolmanInfragravity)
-            runupValuesStockdonLow.extend(stockdonRunupLow)
-            runupValuesObsStockdon.extend(obsRunup)
-            runupValuesObsSwash.extend(obsSwash)
-            runupValuesObsIncidentSwash.extend(obsIncidentSwash)
-            runupValuesObsInfragravitySwash.extend(obsInfragravitySwash)
-            runupValuesObsSwh.extend(obsSwh)
-            runupValuesObsPwp.extend(obsPwp)
-            runupValuesObsImpact.extend(obsImpact)
+                setupValuesHolmanHigh.append(setupHolmanHigh)
+                setupValuesHolmanMid.append(setupHolmanMid)
+                setupValuesHolmanLow.append(setupHolmanLow)
+                swashValuesHolmanHigh.extend(swashHolmanHigh)
+                swashValuesHolmanMid.append(swashHolmanMid)
+                swashValuesHolmanIncident.append(swashHolmanIncident)
+                swashValuesHolmanInfragravity.append(swashHolmanInfragravity)
+                runupValuesStockdonLow.append(stockdonRunupLow)
+                runupValuesObsStockdon.append(obsRunup)
+                runupValuesObsSwash.append(obsSwash)
+                runupValuesObsIncidentSwash.append(obsIncidentSwash)
+                runupValuesObsInfragravitySwash.append(obsInfragravitySwash)
+                runupValuesObsSwh.append(obsSwh)
+                runupValuesObsPwp.append(obsPwp)
+                runupValuesObsImpact.append(obsImpact)
 
 #             scrapped variables
 #             setupHolmanHigh = self.calculateHolmanHighSetup(iribarren, offshoreSwh[index])
@@ -978,21 +978,21 @@ class GetRunup:
             
             
             
-            
-            # Print a sample of results (first few records for brevity)
-            for item in water_level_data[:5]:  # Limit to first 5 for demonstration
-                print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
-                print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
-                print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
-                print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
-                print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
-                print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
-                print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
-                print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
-                print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
-                print(f"  Predicted Impact: {item['predictedImpact']}")
-                print()
-    
+#             
+#             # Print a sample of results (first few records for brevity)
+#             for item in water_level_data[:5]:  # Limit to first 5 for demonstration
+#                 print(f"Site {item['siteId']} (Timestamp: {item['unixTime']}):")
+#                 print(f"  Latitude: {item['siteLatitude']}, Longitude: {item['siteLongitude']}")
+#                 print(f"  Dune Toe Height: {item['toeHeight']}, Dune Crest Height: {item['crestHeight']}")
+#                 print(f"  TWL: {item['twl']}, TWL05: {item['twl05']}, TWL95: {item['twl95']}")
+#                 print(f"  Setup: {item['setup']}, Runup: {item['runup']}")
+#                 print(f"  Runup05: {item['runup05']}, Runup95: {item['runup95']}")
+#                 print(f"  Tide+Wind Setup: {item['tideWindSetup']}, Swash: {item['swash']}")
+#                 print(f"  Incident Swash: {item['incSwash']}, Infragravity Swash: {item['infragSwash']}")
+#                 print(f"  Hs: {item['hs']}, Pp: {item['pp']}")
+#                 print(f"  Predicted Impact: {item['predictedImpact']}")
+#                 print()
+#     
 
 #           Then calculate the runup value 2% exceedence
 
