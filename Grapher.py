@@ -3046,7 +3046,6 @@ class Grapher:
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
 
-
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
@@ -3095,7 +3094,7 @@ class Grapher:
                             distance_str = assetLabel[assetLabel.rindex(" ") + 1:-1]
                             profileDistances.append(float(distance_str))  # Use float to handle negative distances
         
-            # Convert to numpy arrays and sort by distance (offshore to inland)
+            # Convert to numpy arrays and sort by distance
             profileDistances = np.array(profileDistances)
             profileElevations = np.array(profileElevations)
             profileDemElevations = np.array(profileDemElevations)
@@ -3131,8 +3130,10 @@ class Grapher:
                 if len(distances) < 2 or np.all(elevations == elevations[0]):
                     return None
                 for i in range(len(distances) - 1):
-                    # Check if the line crosses the target elevation
-                    if (elevations[i] - target_elev) * (elevations[i + 1] - target_elev) <= 0:
+                    # Ensure scalar comparison to avoid array ambiguity
+                    diff1 = float(elevations[i] - target_elev)
+                    diff2 = float(elevations[i + 1] - target_elev)
+                    if diff1 * diff2 <= 0:  # Check for sign change
                         # Linear interpolation between points
                         x1, x2 = distances[i], distances[i + 1]
                         y1, y2 = elevations[i], elevations[i + 1]
