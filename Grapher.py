@@ -1031,7 +1031,7 @@ class Grapher:
                     datapointDuneHeights.append(runupDataset[stationKey]["duneHeights"][index])
 
                     
-                for index in range(len(runupDataset[stationKey]["swashHolmanHigh"][index]):
+                for index in range(len(runupDataset[stationKey]["swashHolmanHigh"][index])):
                     datapointHolmanHighSetup.append(self.unixTimeToDeltaHours(runupDataset[stationKey]["setupHolmanHigh"][index], self.runupStartDate))
                     datapointHolmanMidSetup.append(runupDataset[stationKey]["setupHolmanMid"][index])
                     datapointHolmanLowSetup.append(runupDataset[stationKey]["setupHolmanLow"][index])
