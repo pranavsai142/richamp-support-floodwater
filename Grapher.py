@@ -1022,6 +1022,8 @@ class Grapher:
                     datapointStockdonSetup.append(runupDataset[stationKey]["setupStockdon"][index])
                     datapointStockdonSetupLow.append(runupDataset[stationKey]["setupStockdonLow"][index])
                     datapointStockdonSwashLow.append(runupDataset[stationKey]["swashStockdonLow"][index])
+                    datapointStockdonSwashIncident.append(runupDataset[stationKey]["swashStockdonIncident"][index])
+                    datapointStockdonSwashInfragravity.append(runupDataset[stationKey]["swashStockdonInfragravity"][index])
                     datapointStockdonRunup.append(runupDataset[stationKey]["runupStockdon"][index])
                     datapointStockdonRunupNoSetup.append(runupDataset[stationKey]["runupStockdonNoSetup"][index])
                     datapointAdcircSetup.append(runupDataset[stationKey]["setupAdcirc"][index])
