@@ -2263,6 +2263,7 @@ class Grapher:
                 plt.savefig(graph_directory + stationName + '_deepwater_swh.png')
                 plt.close()
                 
+                print("runup obs times: ", self.datapointsSetupHolmanHigh[index])
 #                 Graph setup
                 fig, ax = plt.subplots(figsize=(16,9))
 #                 ax.plot(self.runupTimes, self.datapointsRunup[index], label="runup")
@@ -3038,7 +3039,8 @@ class Grapher:
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
-        
+
+
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
@@ -3046,18 +3048,16 @@ class Grapher:
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                # Check if the station name contains "pp" and matches the transect
-#                 here is where the problem is. Need to get all "Profile" from ASSET
-#               waves does it becausse in ASSET name is exactly the same as RUNUP section name
+                # Check if the station name contains "P" and matches the transect
                 if str(transect) in stationName[0:stationName.index(" ")]:
-                    if stationName in self.assetLabels:
-                        elevationIndex = self.assetLabels.index(stationName)
-                        elev = self.datapointsElevation[elevationIndex]
-                        dem_elev = self.assetDatapointsElevation[elevationIndex]
-                        if not np.isnan(elev):
-                            all_elevations.append(elev)
-                        if not np.isnan(dem_elev):
-                            all_dem_elevations.append(dem_elev)
+                    for elevationIndex, assetLabel in enumerate(self.assetLabels):
+                        if(assetLabel[assetLabel.index(" ") + 1)] == "P" and assetLabel[assetLabel.index(" ") - 1)] == str(transect)):
+                            elev = self.datapointsElevation[elevationIndex]
+                            dem_elev = self.assetDatapointsElevation[elevationIndex]
+                            if not np.isnan(elev):
+                                all_elevations.append(elev)
+                            if not np.isnan(dem_elev):
+                                all_dem_elevations.append(dem_elev)
         
         # Compute global y-axis limits, handling empty lists
         elevation_min = min(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else -30.0
@@ -3074,18 +3074,18 @@ class Grapher:
             profileElevations = []
             profileDemElevations = []
         
-            # Collect data for the transect, only for profile points ("pp")
+            # Collect data for the transect, only for profile points ("P")
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                # Check if the station name contains "pp" and matches the transect
+                # Check if the station name contains "P" and matches the transect
                 if str(transect) in stationName[0:stationName.index(" ")]:
-                    if stationName in self.assetLabels:
-                        elevationIndex = self.assetLabels.index(stationName)
-                        profileElevations.append(self.datapointsElevation[elevationIndex])
-                        profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
-                        # Extract distance from the station name (e.g., "Napatree1 Profile 250m -250m")
-                        distance_str = stationName[stationName.rindex(" ") + 1:-1]
-                        profileDistances.append(float(distance_str))  # Use float to handle negative distances
+                    for elevationIndex, assetLabel in enumerate(self.assetLabels):
+                        if(assetLabel[assetLabel.index(" ") + 1)] == "P" and assetLabel[assetLabel.index(" ") - 1)] == str(transect)):
+                            profileElevations.append(self.datapointsElevation[elevationIndex])
+                            profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
+                            # Extract distance from the station name (e.g., "Napatree1 Profile 250m -250m")
+                            distance_str = stationName[assetLabel.rindex(" ") + 1:-1]
+                            profileDistances.append(float(distance_str))  # Use float to handle negative distances
         
             # Convert to numpy arrays and sort by distance
             profileDistances = np.array(profileDistances)
@@ -3113,54 +3113,65 @@ class Grapher:
             ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
             ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
-            # Define elevation levels for intersection points
+            # Define elevation points for intersection
             dune_toe_elev = self.datapointsSetupHolmanMid[index]
             dune_crest_elev = self.datapointsSetupHolmanLow[index]
             mhwl_elev = self.datapointsRunupStockdonLow[index]
         
-            # Function to find intersection point via interpolation
+            # Find intersection points using interpolation
             def find_intersection(distances, elevations, target_elev):
-                if len(distances) < 2 or np.all(np.isnan(elevations)):
+                if len(distances) < 2 or np.all(elevations == elevations[0]):
                     return None
-                valid_mask = ~np.isnan(elevations)
-                if not np.any(valid_mask):
-                    return None
-                distances = distances[valid_mask]
-                elevations = elevations[valid_mask]
-                for i in range(len(elevations) - 1):
+                for i in range(len(distances) - 1):
                     if (elevations[i] - target_elev) * (elevations[i + 1] - target_elev) <= 0:
                         # Linear interpolation between points
-                        x0, x1 = distances[i], distances[i + 1]
-                        y0, y1 = elevations[i], elevations[i + 1]
-                        interp_dist = x0 + (target_elev - y0) * (x1 - x0) / (y1 - y0)
-                        return interp_dist
-                return None  # No intersection found
+                        x1, x2 = distances[i], distances[i + 1]
+                        y1, y2 = elevations[i], elevations[i + 1]
+                        intersect_x = x1 + (target_elev - y1) * (x2 - x1) / (y2 - y1) if y2 != y1 else x1
+                        return intersect_x
+                return None
         
-            # Find intersection points
-            toe_dist = find_intersection(profileDistances, profileElevations, dune_toe_elev)
-            crest_dist = find_intersection(profileDistances, profileElevations, dune_crest_elev)
-            mhwl_dist = find_intersection(profileDistances, profileElevations, mhwl_elev)
+            # Calculate intersection points
+            mhwl_intersect = find_intersection(profileDistances, profileElevations, mhwl_elev)
+            dune_toe_intersect = find_intersection(profileDistances, profileElevations, dune_toe_elev)
+            dune_crest_intersect = find_intersection(profileDistances, profileElevations, dune_crest_elev)
         
             # Plot intersection points with annotations
-            points = []
-            if toe_dist is not None:
-                ax.scatter(toe_dist, dune_toe_elev, color='blue', s=100, zorder=5)
-                points.append(ax.annotate('Dune Toe', xy=(toe_dist, dune_toe_elev), xytext=(5, 5),
-                                         textcoords='offset points', ha='left', va='bottom',
-                                         bbox=dict(boxstyle='round,pad=0.5', fc='white', ec='blue', alpha=0.8),
-                                         fontsize=10, color='blue'))
-            if crest_dist is not None:
-                ax.scatter(crest_dist, dune_crest_elev, color='green', s=100, zorder=5)
-                points.append(ax.annotate('Dune Crest', xy=(crest_dist, dune_crest_elev), xytext=(5, 5),
-                                         textcoords='offset points', ha='left', va='bottom',
-                                         bbox=dict(boxstyle='round,pad=0.5', fc='white', ec='green', alpha=0.8),
-                                         fontsize=10, color='green'))
-            if mhwl_dist is not None:
-                ax.scatter(mhwl_dist, mhwl_elev, color='orange', s=100, zorder=5)
-                points.append(ax.annotate('MHWL', xy=(mhwl_dist, mhwl_elev), xytext=(5, 5),
-                                         textcoords='offset points', ha='left', va='bottom',
-                                         bbox=dict(boxstyle='round,pad=0.5', fc='white', ec='orange', alpha=0.8),
-                                         fontsize=10, color='orange'))
+            points_to_plot = []
+            if mhwl_intersect is not None:
+                ax.scatter(mhwl_intersect, mhwl_elev, color='blue', s=100, edgecolor='white', zorder=5)
+                ax.annotate('MHWL', xy=(mhwl_intersect, mhwl_elev), xytext=(5, 5), textcoords='offset points',
+                            ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+                points_to_plot.append('MHWL')
+            if dune_toe_intersect is not None:
+                ax.scatter(dune_toe_intersect, dune_toe_elev, color='green', s=100, edgecolor='white', zorder=5)
+                ax.annotate('Dune Toe', xy=(dune_toe_intersect, dune_toe_elev), xytext=(5, 5), textcoords='offset points',
+                            ha='left', va='bottom', fontsize=10, color='green', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+                points_to_plot.append('Dune Toe')
+            if dune_crest_intersect is not None:
+                ax.scatter(dune_crest_intersect, dune_crest_elev, color='orange', s=100, edgecolor='white', zorder=5)
+                ax.annotate('Dune Crest', xy=(dune_crest_intersect, dune_crest_elev), xytext=(5, 5), textcoords='offset points',
+                            ha='left', va='bottom', fontsize=10, color='orange', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+                points_to_plot.append('Dune Crest')
+        
+            # Draw subtle line from MHWL to Dune Toe
+            if mhwl_intersect is not None and dune_toe_intersect is not None:
+                ax.plot([mhwl_intersect, dune_toe_intersect], [mhwl_elev, dune_toe_elev], color='gray', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{f_{toe}}$')
+        
+                # Calculate average slope (β_f_toe)
+                distance = abs(dune_toe_intersect - mhwl_intersect)
+                elevation_diff = abs(dune_toe_elev - mhwl_elev)
+                if distance != 0:  # Avoid division by zero
+                    beta_f_toe = elevation_diff / distance
+                    slope_label = f'β_f_toe = {beta_f_toe:.3f}'
+                else:
+                    slope_label = 'β_f_toe = N/A'
+                ax_title = ax.get_title()
+                ax.set_title(f"{ax_title} ({slope_label})", fontsize=16)
+        
+            # Draw subtle horizontal line for dune crest
+            if dune_crest_intersect is not None:
+                ax.axhline(y=dune_crest_elev, color='orange', linestyle=':', linewidth=1, alpha=0.5, label='Dune Crest Elev')
         
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
@@ -3169,14 +3180,20 @@ class Grapher:
             ax.set_ylim(elevation_y_min, elevation_y_max)  # Consistent y-axis limits
             ax.grid(False)  # Disable grid lines
         
-            # Update legend to include intersection points
+            # Update legend to include new elements
             handles, labels = ax.get_legend_handles_labels()
-            if toe_dist is not None:
-                handles.append(plt.scatter([], [], color='blue', s=100, label='Dune Toe'))
-            if crest_dist is not None:
-                handles.append(plt.scatter([], [], color='green', s=100, label='Dune Crest'))
-            if mhwl_dist is not None:
-                handles.append(plt.scatter([], [], color='orange', s=100, label='MHWL'))
+            if points_to_plot:
+                for point in points_to_plot:
+                    if point == 'MHWL':
+                        handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=10, label='MHWL'))
+                    elif point == 'Dune Toe':
+                        handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=10, label='Dune Toe'))
+                    elif point == 'Dune Crest':
+                        handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='orange', markersize=10, label='Dune Crest'))
+                if mhwl_intersect is not None and dune_toe_intersect is not None:
+                    handles.append(plt.Line2D([0], [0], color='gray', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{f_{toe}}$'))
+                if dune_crest_intersect is not None:
+                    handles.append(plt.Line2D([0], [0], color='orange', linestyle=':', linewidth=1, alpha=0.5, label='Dune Crest Elev'))
             ax.legend(handles=handles, loc="upper right", fontsize=10)
         
             # Set x-axis label on the bottom subplot
