@@ -2304,7 +2304,7 @@ class Grapher:
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], label="Stockdon Incident βf√(HₒLₒ)")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
                 datapointsSwashStockdon = (np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
-                ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
+                ax.plot(self.runupTimes, datapointsSwashStockdon, label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
                 
                 ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], label=r"USGS Incident")
                 ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], label=r"USGS Infragravity")
@@ -3057,7 +3057,8 @@ class Grapher:
                 # Check if the station name contains "P" and matches the transect
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
-                        if(assetLabel[assetLabel.index(" ") + 1] == "P" and assetLabel[assetLabel.index(" ") - 1] == str(transect)):
+                        if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
+                            assetLabel[assetLabel.index(" ") - 1] == str(transect)):
                             elev = self.datapointsElevation[elevationIndex]
                             dem_elev = self.assetDatapointsElevation[elevationIndex]
                             if not np.isnan(elev):
@@ -3086,18 +3087,19 @@ class Grapher:
                 # Check if the station name contains "P" and matches the transect
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
-                        if(assetLabel[assetLabel.index(" ") + 1] == "P" and assetLabel[assetLabel.index(" ") - 1] == str(transect)):
+                        if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
+                            assetLabel[assetLabel.index(" ") - 1] == str(transect)):
                             profileElevations.append(self.datapointsElevation[elevationIndex])
                             profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
                             # Extract distance from the station name (e.g., "Napatree1 Profile 250m -250m")
                             distance_str = assetLabel[assetLabel.rindex(" ") + 1:-1]
                             profileDistances.append(float(distance_str))  # Use float to handle negative distances
         
-            # Convert to numpy arrays and sort by distance
+            # Convert to numpy arrays and sort by distance (offshore to inland)
             profileDistances = np.array(profileDistances)
             profileElevations = np.array(profileElevations)
             profileDemElevations = np.array(profileDemElevations)
-            sorted_indices = np.argsort(profileDistances)
+            sorted_indices = np.argsort(profileDistances)  # Sort from min to max distance
             profileDistances = profileDistances[sorted_indices]
             profileElevations = profileElevations[sorted_indices]
             profileDemElevations = profileDemElevations[sorted_indices]
@@ -3124,20 +3126,23 @@ class Grapher:
             dune_crest_elev = self.datapointsSetupHolmanLow[index]
             mhwl_elev = self.datapointsRunupStockdonLow[index]
         
-            # Find intersection points using interpolation
+            # Find intersection points using interpolation (first crossing from offshore)
             def find_intersection(distances, elevations, target_elev):
                 if len(distances) < 2 or np.all(elevations == elevations[0]):
                     return None
                 for i in range(len(distances) - 1):
+                    # Check if the line crosses the target elevation
                     if (elevations[i] - target_elev) * (elevations[i + 1] - target_elev) <= 0:
                         # Linear interpolation between points
                         x1, x2 = distances[i], distances[i + 1]
                         y1, y2 = elevations[i], elevations[i + 1]
-                        intersect_x = x1 + (target_elev - y1) * (x2 - x1) / (y2 - y1) if y2 != y1 else x1
-                        return intersect_x
+                        if y2 != y1:  # Avoid division by zero
+                            intersect_x = x1 + (target_elev - y1) * (x2 - x1) / (y2 - y1)
+                            return intersect_x
+                        return x1  # If y2 == y1, use x1 as approximation
                 return None
         
-            # Calculate intersection points
+            # Calculate intersection points (first from offshore, positive distances)
             mhwl_intersect = find_intersection(profileDistances, profileElevations, mhwl_elev)
             dune_toe_intersect = find_intersection(profileDistances, profileElevations, dune_toe_elev)
             dune_crest_intersect = find_intersection(profileDistances, profileElevations, dune_crest_elev)
