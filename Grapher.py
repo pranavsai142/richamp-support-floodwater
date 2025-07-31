@@ -3471,7 +3471,7 @@ class Grapher:
             # Draw additional slope lines from MHWL
             if mhwl_intersect is not None:
                 beta_mhw = self.datapointsRunupObsBeachSlope[index][-1]
-                beta_usgs = self.runupAverageSlopes[index]
+                beta_usgs = sum(self.runupAverageSlopes[index])/len(self.runupAverageSlopes[index])
                 x_range = ax.get_xlim()
                 x_start = mhwl_intersect
                 x_end = x_start + 100  # Arbitrary length for visualization
@@ -3492,7 +3492,7 @@ class Grapher:
                 y_start_2sigma = mhwl_elev
                 y_end_2sigma = y_start_2sigma + beta_usgs * (x_end - x_start)  # Using same slope for 2σ as USGS
                 ax.plot([x_start, x_end], [y_start_2sigma, y_end_2sigma], color='magenta', linestyle='--', linewidth=1, alpha=0.5)
-                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,2\sigma}} = {:.3f}$'.format(beta_usgs))
+                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\bar{\beta_{{f,2\sigma}}} = {:.3f}$'.format(beta_usgs))
         
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
