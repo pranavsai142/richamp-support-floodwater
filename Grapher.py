@@ -426,6 +426,7 @@ class Grapher:
         self.datapointsRunupObsSwh = []
         self.datapointsRunupObsPwp = []
         self.datapointsRunupObsImpact = []
+        self.datapointsRunupObsBeachSlope = []
 
         
         self.datapointsDuneHeights = []
@@ -985,6 +986,7 @@ class Grapher:
                 datapointRunupObsSwh = []
                 datapointRunupObsPwp = []
                 datapointRunupObsImpact = []
+                datapointRunupObsBeachSlope = []
                 
 
                 
@@ -1032,21 +1034,23 @@ class Grapher:
 
                     
                 for index in range(len(runupDataset[stationKey]["swashHolmanHigh"])):
-                    datapointHolmanHighSetup.append(self.unixTimeToDeltaHours(runupDataset[stationKey]["setupHolmanHigh"][index], self.runupStartDate))
-                    datapointHolmanMidSetup.append(runupDataset[stationKey]["setupHolmanMid"][index])
-                    datapointHolmanLowSetup.append(runupDataset[stationKey]["setupHolmanLow"][index])
-                    datapointHolmanHighSwash.append(runupDataset[stationKey]["swashHolmanHigh"][index])
-                    datapointHolmanMidSwash.append(runupDataset[stationKey]["swashHolmanMid"][index])
-                    datapointHolmanSwashIncident.append(runupDataset[stationKey]["swashHolmanIncident"][index])
-                    datapointHolmanSwashInfragravity.append(runupDataset[stationKey]["swashHolmanInfragravity"][index])
-                    datapointStockdonRunupLow.append(runupDataset[stationKey]["runupStockdonLow"][index])
-                    datapointRunupObs.append(runupDataset[stationKey]["obsRunup"][index])
-                    datapointRunupObsSwash.append(runupDataset[stationKey]["obsSwash"][index])
-                    datapointRunupObsIncidentSwash.append(runupDataset[stationKey]["obsIncidentSwash"][index])
-                    datapointRunupObsInfragravitySwash.append(runupDataset[stationKey]["obsInfragravitySwash"][index])
-                    datapointRunupObsSwh.append(runupDataset[stationKey]["obsSwh"][index])
-                    datapointRunupObsPwp.append(runupDataset[stationKey]["obsPwp"][index])
-                    datapointRunupObsImpact.append(runupDataset[stationKey]["obsImpact"][index])
+                    if(runupDataset[stationKey]["setupHolmanHigh"][index] <= runupDataset[stationKey]["times"][-1]):
+                        datapointHolmanHighSetup.append(self.unixTimeToDeltaHours(runupDataset[stationKey]["setupHolmanHigh"][index], self.runupStartDate))
+                        datapointHolmanMidSetup.append(runupDataset[stationKey]["setupHolmanMid"][index])
+                        datapointHolmanLowSetup.append(runupDataset[stationKey]["setupHolmanLow"][index])
+                        datapointHolmanHighSwash.append(runupDataset[stationKey]["swashHolmanHigh"][index])
+                        datapointHolmanMidSwash.append(runupDataset[stationKey]["swashHolmanMid"][index])
+                        datapointHolmanSwashIncident.append(runupDataset[stationKey]["swashHolmanIncident"][index])
+                        datapointHolmanSwashInfragravity.append(runupDataset[stationKey]["swashHolmanInfragravity"][index])
+                        datapointStockdonRunupLow.append(runupDataset[stationKey]["runupStockdonLow"][index])
+                        datapointRunupObs.append(runupDataset[stationKey]["obsRunup"][index])
+                        datapointRunupObsSwash.append(runupDataset[stationKey]["obsSwash"][index])
+                        datapointRunupObsIncidentSwash.append(runupDataset[stationKey]["obsIncidentSwash"][index])
+                        datapointRunupObsInfragravitySwash.append(runupDataset[stationKey]["obsInfragravitySwash"][index])
+                        datapointRunupObsSwh.append(runupDataset[stationKey]["obsSwh"][index])
+                        datapointRunupObsPwp.append(runupDataset[stationKey]["obsPwp"][index])
+                        datapointRunupObsImpact.append(runupDataset[stationKey]["obsImpact"][index])
+                        datapointRunupObsBeachSlope.append(runupDataset[stationKey]["obsBeachSlope"][index])
                         
                     
                 runupTimestampsInitialized = True
@@ -1088,6 +1092,8 @@ class Grapher:
                 self.datapointsRunupObsSwh.append(datapointRunupObsSwh)
                 self.datapointsRunupObsPwp.append(datapointRunupObsPwp)
                 self.datapointsRunupObsImpact.append(datapointRunupObsImpact)
+                self.datapointsRunupObsBeachSlope.append(datapointRunupObsBeachSlope)
+                
 
                 
 
@@ -2301,14 +2307,14 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanHigh[index], label="Holman High Tide ξ")
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanMid[index], label="Holman Mid Tide ξ")
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanLow[index], label="Holman Low Tide ξ")
-                ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], label="Stockdon Incident βf√(HₒLₒ)")
-                ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
+                ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], linestyle="--", color = "blue", label="Stockdon Incident βf√(HₒLₒ)")
+                ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], linestyle="--", color = "orange", label="Stockdon Infragravity √(HₒLₒ)")
                 datapointsSwashStockdon = (np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
-                ax.plot(self.runupTimes, datapointsSwashStockdon, label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
+                ax.plot(self.runupTimes, datapointsSwashStockdon, linestyle="--", color = "green", label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
                 
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], label=r"USGS Incident")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], label=r"USGS Infragravity")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], label=r"USGS Swash")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color = "blue", label=r"USGS Incident")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color = "orange", label=r"USGS Infragravity")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color = "green", label=r"USGS Swash")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2316,7 +2322,7 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxSwash = str(round(max(self.datapointsSwashStockdonIncident[index]), 2)) + ", " + str(round(max(self.datapointsSwashStockdonInfragravity[index]), 2))
-                plt.title(self.titlePrefix + stationName + " station swash max (inc, ig): " + maxSwash, fontsize=18)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station swash max (inc, ig): " + maxSwash, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("swash (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_swash.png')
@@ -2335,7 +2341,7 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxIncidentSwash = str(round(max(self.datapointsSwashStockdonIncident[index]), 2))
-                plt.title(self.titlePrefix + stationName + " station incident (<3min) swash max: " + maxIncidentSwash, fontsize=18)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station incident (<3min) swash max: " + maxIncidentSwash, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("swash (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_incident_swash.png')
@@ -2353,7 +2359,7 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxInfragravitySwash = str(round(max(self.datapointsSwashStockdonInfragravity[index]), 2))
-                plt.title(self.titlePrefix + stationName + " station infragravity (>3 min) swash max: " + maxInfragravitySwash, fontsize=18)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station infragravity (>3 min) swash max: " + maxInfragravitySwash, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("swash (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_infragravity_swash.png')
@@ -2430,10 +2436,10 @@ class Grapher:
                     # Add dotted lines for original and new extents
                     ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$+\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
-                    ax.plot(self.runupTimes, upper_bound_1_1, '--', color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
+                    ax.plot(self.runupTimes, upper_bound_1_1, color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', label=r"USGS TWL", linewidth=1.5) 
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', label=r"USGS $\eta$", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="lightblue", label=r"USGS TWL", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="purple", label=r"USGS $\eta$", linewidth=1.5) 
 
                     # Calculate the maximum elevation including the swash
                     max_water_elevation = max(self.datapointsSwashStockdonLow[index])
@@ -2513,7 +2519,7 @@ class Grapher:
                 # Station name and max Iribarren value
                 stationName = self.runupLabels[index]
                 maxIribarren = str(round(max(self.datapointsIribarren[index]), 2))
-                plt.title(f'{self.titlePrefix}{stationName} Station Iribarren (Max: {maxIribarren})', fontsize=18, pad=20, fontweight='bold', color='#333333')
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + f' Iribarren (Max: {maxIribarren})', fontsize=18)
                 
                 # Y-axis label
                 plt.ylabel('Iribarren Number', fontsize=14, fontweight='bold', color='#555555')
@@ -3133,6 +3139,7 @@ class Grapher:
         
             # Find intersection points using interpolation (first crossing from offshore)
             def find_intersection(distances, elevations, target_elev):
+                elevations = np.array(elevations)
                 if len(distances) < 2 or np.all(elevations == elevations[0]):
                     return None
                 for i in range(len(distances) - 1):

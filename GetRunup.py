@@ -37,6 +37,7 @@ def read_site_json(file_path: str) -> Optional[Dict]:
             "siteLongitude": float(site_data["siteLongitude"]),
             "toeHeight": float(site_data["toeHeight"]),
             "crestHeight": float(site_data["crestHeight"])
+            "beachSlope": float(site_data["beachSlope"])
         }
     except FileNotFoundError:
         print(f"Site file not found: {file_path}")
@@ -613,6 +614,7 @@ class GetRunup:
             runupValuesObsSwh = []
             runupValuesObsPwp = []
             runupValuesObsImpact = []
+            runupValuesObsBeachSlope = []
             
             for index, waterValue in enumerate(offshoreWater):
                 waterlineKey = None
@@ -928,6 +930,7 @@ class GetRunup:
                 obsSwh = item["hs"]
                 obsPwp = item["pp"]
                 obsImpact = item["predictedImpact"]
+                obsBeachSlope = item["beachSlope"]
 #                     print("IMPACT:", obsImpact)
                 
                 setupHolmanHigh = obsRunupTimes
@@ -956,6 +959,7 @@ class GetRunup:
                 runupValuesObsSwh.append(obsSwh)
                 runupValuesObsPwp.append(obsPwp)
                 runupValuesObsImpact.append(obsImpact)
+                runupValuesObsBeachSlope.append(obsBeachSlope)
 
 #             scrapped variables
 #             setupHolmanHigh = self.calculateHolmanHighSetup(iribarren, offshoreSwh[index])
@@ -1218,6 +1222,7 @@ class GetRunup:
             runupDict[key]["obsSwh"] = runupValuesObsSwh
             runupDict[key]["obsPwp"] = runupValuesObsPwp
             runupDict[key]["obsImpact"] = runupValuesObsImpact
+            runupDict[key]["obsBeachSlope"] = runupValuesObsBeachSlope
 
         # print(windDict)
         print("Writing runup data file!")
