@@ -1019,8 +1019,6 @@ class Grapher:
                     datapointHolmanMid.append(runupDataset[stationKey]["runupHolmanMid"][index])
                     datapointHolmanLow.append(runupDataset[stationKey]["runupHolmanLow"][index])
                     datapointHolmanLowSwash.append(runupDataset[stationKey]["swashHolmanLow"][index])
-                    datapointHolmanSwashIncident.append(runupDataset[stationKey]["swashHolmanIncident"][index])
-                    datapointHolmanSwashInfragravity.append(runupDataset[stationKey]["swashHolmanInfragravity"][index])
                     datapointStockdonSetup.append(runupDataset[stationKey]["setupStockdon"][index])
                     datapointStockdonSetupLow.append(runupDataset[stationKey]["setupStockdonLow"][index])
                     datapointStockdonSwashLow.append(runupDataset[stationKey]["swashStockdonLow"][index])
