@@ -2819,7 +2819,7 @@ class Grapher:
                     maxElevation = f"{max_water_elevation}, {max_swash_upper}, {max_swash_upper_1_1}"
                     
                     # Set title and labels
-                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Water Level (Max $\eta$, $+\frac{{S}}{{2}}$, $+1.1\frac{{S}}{{2}}$: {maxElevation} m)", fontsize=14)
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Water Level " + r"(Max $\eta$, $+\frac{{S}}{{2}}$, $+1.1\frac{{S}}{{2}}$: " + f"{maxElevation} m)", fontsize=14)
                     ax.set_ylabel("Elevation (meters)", fontsize=12)
                     break  # Plot only one station per transect
             
