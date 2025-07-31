@@ -2263,7 +2263,8 @@ class Grapher:
                 plt.savefig(graph_directory + stationName + '_deepwater_swh.png')
                 plt.close()
                 
-                print("runup obs times: ", self.datapointsSetupHolmanHigh[index])
+                print("runup obs times: ", self.datapointsSetupHolmanHigh[index][0:20])
+                quit()
 #                 Graph setup
                 fig, ax = plt.subplots(figsize=(16,9))
 #                 ax.plot(self.runupTimes, self.datapointsRunup[index], label="runup")
