@@ -3051,7 +3051,7 @@ class Grapher:
                 # Check if the station name contains "P" and matches the transect
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
-                        if(assetLabel[assetLabel.index(" ") + 1)] == "P" and assetLabel[assetLabel.index(" ") - 1)] == str(transect)):
+                        if(assetLabel[assetLabel.index(" ") + 1] == "P" and assetLabel[assetLabel.index(" ") - 1] == str(transect)):
                             elev = self.datapointsElevation[elevationIndex]
                             dem_elev = self.assetDatapointsElevation[elevationIndex]
                             if not np.isnan(elev):
@@ -3080,7 +3080,7 @@ class Grapher:
                 # Check if the station name contains "P" and matches the transect
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
-                        if(assetLabel[assetLabel.index(" ") + 1)] == "P" and assetLabel[assetLabel.index(" ") - 1)] == str(transect)):
+                        if(assetLabel[assetLabel.index(" ") + 1] == "P" and assetLabel[assetLabel.index(" ") - 1] == str(transect)):
                             profileElevations.append(self.datapointsElevation[elevationIndex])
                             profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
                             # Extract distance from the station name (e.g., "Napatree1 Profile 250m -250m")
