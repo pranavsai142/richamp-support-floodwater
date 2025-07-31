@@ -2743,7 +2743,7 @@ class Grapher:
                     maxSwash = f"{max_swash_stockdon}, {max_swash_usgs}"
                     
                     # Set title and labels
-                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash (Max $\sqrt{{S_{{inc}}^2 + S_{{ig}}^2}}$, USGS: {maxSwash})", fontsize=14)
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash " + r"(Max $\sqrt{{S_{{inc}}^2 + S_{{ig}}^2}}$, USGS: " +  f"{maxSwash})", fontsize=14)
                     ax.set_ylabel("Swash (meters)", fontsize=12)
                     break  # Plot only one station per transect
             
