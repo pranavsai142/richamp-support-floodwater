@@ -3084,7 +3084,7 @@ class Grapher:
                             profileElevations.append(self.datapointsElevation[elevationIndex])
                             profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
                             # Extract distance from the station name (e.g., "Napatree1 Profile 250m -250m")
-                            distance_str = stationName[assetLabel.rindex(" ") + 1:-1]
+                            distance_str = assetLabel[assetLabel.rindex(" ") + 1:-1]
                             profileDistances.append(float(distance_str))  # Use float to handle negative distances
         
             # Convert to numpy arrays and sort by distance
