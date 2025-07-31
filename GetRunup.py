@@ -884,8 +884,8 @@ class GetRunup:
                     base_dir="."
                 )
                 
-                for item in water_level_data[0]:
-                    print(water_level_data)
+                for item in water_level_data[0:5]:
+                    print(np.shape(water_level_data))
                     obsRunupTimes = item["unixTime"]
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
