@@ -944,7 +944,7 @@ class GetRunup:
                 setupValuesHolmanHigh.append(setupHolmanHigh)
                 setupValuesHolmanMid.append(setupHolmanMid)
                 setupValuesHolmanLow.append(setupHolmanLow)
-                swashValuesHolmanHigh.extend(swashHolmanHigh)
+                swashValuesHolmanHigh.append(swashHolmanHigh)
                 swashValuesHolmanMid.append(swashHolmanMid)
                 swashValuesHolmanIncident.append(swashHolmanIncident)
                 swashValuesHolmanInfragravity.append(swashHolmanInfragravity)
