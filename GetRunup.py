@@ -885,7 +885,7 @@ class GetRunup:
                 )
                 
                 for item in water_level_data[0]:
-                    print(item)
+                    print(water_level_data)
                     obsRunupTimes = item["unixTime"]
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
