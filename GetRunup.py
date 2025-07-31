@@ -10,8 +10,12 @@ fields = [
     
 
 def datetime_to_unix_time(datetime_str: str) -> int:
-    """Convert datetime string (YYYY-MM-DD HH:00:00) to Unix timestamp."""
-    return int(datetime.strptime(datetime_str, "%Y-%m-%d %H:%00:%00").timestamp())
+    """Convert datetime string (YYYY-MM-DD HH:MM:SS) to Unix timestamp."""
+    try:
+        return int(datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S").timestamp())
+    except ValueError as e:
+        print(f"Error parsing datetime {datetime_str}: {e}")
+        raise
 
 def read_site_json(file_path: str) -> Optional[Dict]:
     """
@@ -21,7 +25,7 @@ def read_site_json(file_path: str) -> Optional[Dict]:
     try:
         with open(file_path, 'r') as f:
             data = json.load(f)
-        # Assume the JSON contains a single object or a list with one object
+        # Handle both single object and list with one object
         site_data = data[0] if isinstance(data, list) and len(data) > 0 else data
         required_fields = ["siteLatitude", "siteLongitude", "toeHeight", "crestHeight"]
         if not all(field in site_data for field in required_fields):
@@ -47,7 +51,7 @@ def read_site_json(file_path: str) -> Optional[Dict]:
 def read_water_levels_json(file_path: str, fields: List[str]) -> List[Dict]:
     """
     Read water levels JSON file and return a list of dictionaries with specified fields.
-    Always includes 'id' and 'dateTime'. Converts numeric fields to float and dateTime to unixTime.
+    Always includes 'id' and 'unixTime'. Converts numeric fields to float and dateTime to unixTime.
     """
     try:
         with open(file_path, 'r') as f:
@@ -67,7 +71,7 @@ def read_water_levels_json(file_path: str, fields: List[str]) -> List[Dict]:
         for item in data:
             # Check if all required fields are present
             if not all(field in item for field in required_fields):
-                print(f"Skipping record in {file_path} due to missing fields")
+                print(f"Skipping record in {file_path} due to missing fields: {item}")
                 continue
             # Create new record with requested fields
             record = {"id": str(item["id"])}  # Ensure id is string
@@ -80,7 +84,7 @@ def read_water_levels_json(file_path: str, fields: List[str]) -> List[Dict]:
                     try:
                         record[field] = float(item[field])  # Convert to float
                     except (ValueError, TypeError):
-                        print(f"Invalid numeric value for {field} in {file_path}")
+                        print(f"Invalid numeric value for {field} in {file_path}: {item[field]}")
                         continue
                 else:
                     record[field] = item[field]
@@ -98,8 +102,7 @@ def read_water_levels_json(file_path: str, fields: List[str]) -> List[Dict]:
 
 def fetch_water_levels(
     site_ids: List[int] = [1401, 1402, 1403],
-#     forecast_dates: List[str] = ["2022-12-20"],
-    forecast_dates: List[str] = ["2023-12-15"],
+    forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
     fields: List[str] = [
         "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
         "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp", "predictedImpact"
@@ -870,9 +873,13 @@ class GetRunup:
                     site_ids=[1403]
                 elif("5" in generalKey):
                     site_ids=[1403]
-#                 This isint working
+#                 This isint working                     
+
+# forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
+
                 water_level_data = fetch_water_levels(
                     site_ids=site_ids,
+                    forecast_dates: List[str] = ["2023-12-15"],
                     fields=fields,
                     base_dir="."
                 )
