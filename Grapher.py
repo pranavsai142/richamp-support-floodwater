@@ -2684,9 +2684,18 @@ class Grapher:
                     ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
                     unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
-        
-            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="green", label=r"USGS TWL") 
-
+            #https://x.com/i/grok/share/h5PUOM8iQLOEEh3QJ8g2xPJtK
+            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="green", label=r"USGS TWL")
+            
+            # Calculate the error distances for asymmetric error bars
+            yerr_lower = self.datapointsSwashHolmanHigh[index] - self.datapointsSwashHolmanMid[index]  # Distance from central to 5% (lower bound)
+            yerr_upper = self.datapointsSwashHolmanIncident[index] - self.datapointsSwashHolmanHigh[index]  # Distance from central to 95% (upper bound)
+            
+            # Combine into asymmetric error array
+            yerr = [yerr_lower, yerr_upper]
+            
+            # Add error bars
+            ax.errorbar(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], yerr=yerr, fmt='none', ecolor='green', capsize=3, alpha=0.5)
             # Plot η line if available
             if eta_values is not None:
                 ax.plot(self.runupTimes, eta_values, linestyle='-', color='black', label='η')
@@ -2786,10 +2795,11 @@ class Grapher:
                         if distance == "9000m":
                             max_9km = round(np.nanmax(self.datapointsSWH[swhIndex]), 2) if len(self.datapointsSWH[swhIndex]) > 0 else "-"
         
-                        ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
                         if(not obsPlotted):
-                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"USGS H_s")
-                            obsPlotted = True 
+                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"USGS $H_s$")
+                            obsPlotted = True
+                        ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
+
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -2836,10 +2846,11 @@ class Grapher:
                         if distance == "9000m":
                             max_9km = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
         
-                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
                         if(not obsPlotted):
-                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"USGS T_p") 
+                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"USGS $T_p$") 
                             obsPlotted = True 
+                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
+            
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -3123,7 +3134,7 @@ class Grapher:
         
             # Plot elevation lines
             ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
-            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
+#             ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
             # Define reference elevations
             dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
@@ -3199,9 +3210,9 @@ class Grapher:
                 elevation_diff = abs(zt - mhwl_elev)
                 if distance != 0:
                     beta_f_toe = elevation_diff / distance
-                    slope_label_toe = r'$\beta_{f,toe} = {:.3f}$'.format(beta_f_toe)
+                    slope_label_toe = r'$\beta_{{f,toe}} = {:.3f}$'.format(beta_f_toe)  # Escaped curly braces
                 else:
-                    slope_label_toe = r'$\beta_{f,toe} = N/A$'
+                    slope_label_toe = r'$\beta_{{f,toe}} = N/A$'
                 ax.plot([], [], color='gray', linestyle='--', linewidth=1, alpha=0.5, label=slope_label_toe)
         
             # Draw additional slope lines from MHWL
@@ -3216,19 +3227,19 @@ class Grapher:
                 y_start_mhw = mhwl_elev
                 y_end_mhw = y_start_mhw + beta_mhw * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_mhw, y_end_mhw], color='purple', linestyle='--', linewidth=1, alpha=0.5)
-                ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{f,MHW} = {:.3f}$'.format(beta_mhw))
+                ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,MHW}} = {:.3f}$'.format(beta_mhw))
         
                 # β_f,USGS
                 y_start_usgs = mhwl_elev
                 y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.5)
-                ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{f,USGS} = {:.3f}$'.format(beta_usgs))
+                ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,USGS}} = {:.3f}$'.format(beta_usgs))
         
                 # β_f,2σ
                 y_start_2sigma = mhwl_elev
-                y_end_2sigma = y_start_2sigma + beta_usgs * (x_end - x_start)  # Using same slope for 2σ as USGS for simplicity
+                y_end_2sigma = y_start_2sigma + beta_usgs * (x_end - x_start)  # Using same slope for 2σ as USGS
                 ax.plot([x_start, x_end], [y_start_2sigma, y_end_2sigma], color='magenta', linestyle='--', linewidth=1, alpha=0.5)
-                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{f,2\sigma} = {:.3f}$'.format(beta_usgs))
+                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,2\sigma}} = {:.3f}$'.format(beta_usgs))
         
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
