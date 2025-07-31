@@ -1018,7 +1018,7 @@ class Grapher:
                     datapointHolmanHigh.append(runupDataset[stationKey]["runupHolmanHigh"][index])
                     datapointHolmanMid.append(runupDataset[stationKey]["runupHolmanMid"][index])
                     datapointHolmanLow.append(runupDataset[stationKey]["runupHolmanLow"][index])
-                    datapointHolmanHighSetup.append(runupDataset[stationKey]["setupHolmanHigh"][index])
+                    datapointHolmanHighSetup.append(self.unixTimeToDeltaHours(runupDataset[stationKey]["setupHolmanHigh"][index], self.runupStartDate))
                     datapointHolmanMidSetup.append(runupDataset[stationKey]["setupHolmanMid"][index])
                     datapointHolmanLowSetup.append(runupDataset[stationKey]["setupHolmanLow"][index])
                     datapointHolmanHighSwash.append(runupDataset[stationKey]["swashHolmanHigh"][index])
