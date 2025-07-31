@@ -879,7 +879,7 @@ class GetRunup:
 
                 water_level_data = fetch_water_levels(
                     site_ids=site_ids,
-                    forecast_dates: List[str] = ["2023-12-15"],
+                    forecast_dates = ["2023-12-15"],
                     fields=fields,
                     base_dir="."
                 )
