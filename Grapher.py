@@ -2307,24 +2307,24 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanHigh[index], label="Holman High Tide ξ")
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanMid[index], label="Holman Mid Tide ξ")
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanLow[index], label="Holman Low Tide ξ")
-                ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], linestyle="--", color = "blue", label="Stockdon Incident βf√(HₒLₒ)")
-                ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], linestyle="--", color = "orange", label="Stockdon Infragravity √(HₒLₒ)")
                 datapointsSwashStockdon = (np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
-                ax.plot(self.runupTimes, datapointsSwashStockdon, linestyle="--", color = "green", label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
+                ax.plot(self.runupTimes, datapointsSwashStockdon, color = "green", label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
+                ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], color = "blue", label="Stockdon Incident βf√(HₒLₒ)")
+                ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], color = "orange", label="Stockdon Infragravity √(HₒLₒ)")
                 
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color = "blue", label=r"USGS Incident")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color = "orange", label=r"USGS Infragravity")
                 ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color = "green", label=r"USGS Swash")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color = "blue", label=r"USGS Incident Swash")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color = "orange", label=r"USGS Infragravity Swash")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
                 plt.xticks(fontsize=12)
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
-                maxSwash = str(round(max(self.datapointsSwashStockdonIncident[index]), 2)) + ", " + str(round(max(self.datapointsSwashStockdonInfragravity[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station swash max (inc, ig): " + maxSwash, fontsize=18)
+                maxSwash = str(round(max(datapointsSwashStockdon), 2)) + ", " + str(round(max(self.datapointsRunupObsSwash[index]), 2))
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Swash (Max $\sqrt{S_{inc}^2 + S_{ig}^2}$, USGS): " + maxSwash, fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
-                plt.ylabel("swash (meters)", fontsize=14)
+                plt.ylabel("Swash (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_swash.png')
                 plt.close()
                         
@@ -2438,8 +2438,8 @@ class Grapher:
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, upper_bound_1_1, color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="lightblue", label=r"USGS TWL", linewidth=1.5) 
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="purple", label=r"USGS $\eta$", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", label=r"TWL USGS", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '-', color="blue", alpha=0.5, label=r"$\eta$ USGS", linewidth=1.5) 
 
                     # Calculate the maximum elevation including the swash
                     max_water_elevation = max(self.datapointsSwashStockdonLow[index])
@@ -2613,6 +2613,8 @@ class Grapher:
                 if str(transect) not in station_name[0:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
+                    ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f,2\sigma}}$", color='blue', linestyle='-')
+                    ax.axhline(y=self.datapointsRunupObsBeachSlope[index][-1], color='green', linestyle='--', label=r"$\beta_{{f,USGS}}$")
                     base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
                     if base_name not in slopes_by_name:
                         slopes_by_name[base_name] = {'true': None, 'false': None}
@@ -2641,6 +2643,256 @@ class Grapher:
         plt.savefig(f"{graph_directory}/Napatree_all_slope.png")
         plt.close()
     
+    
+# napatree_all_setup
+        # Collect all y-values for dynamic y-limits
+        all_y_values = []
+        for index in range(len(self.runupLabels)):
+            if '7m Depth Waves' in self.runupLabels[index]:
+                all_y_values.extend([x for x in self.datapointsSetupStockdon[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsSetupStockdonLow[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsSwashHolmanInfragravity[index] if not np.isnan(x)])
+        
+        y_min = min(all_y_values) if all_y_values else -0.1
+        y_max = max(all_y_values) if all_y_values else 0.1
+        y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.01
+        y_min = y_min - y_padding
+        y_max = y_max + y_padding
+        
+        # Create 5x1 subplots
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+            
+            # Find one station per transect (7m depth)
+            for index, station_name in enumerate(self.runupLabels):
+                if str(transect) not in station_name[0:station_name.index(" ")]:
+                    continue
+                if '7m Depth Waves' in station_name:
+                    # Plot setup time series
+                    ax.plot(self.runupTimes, self.datapointsSetupStockdon[index], label=r"Stockdon $\langle\eta\rangle$", color='blue')
+                    ax.plot(self.runupTimes, self.datapointsSetupStockdonLow[index], label=r"SWAN $\eta_{setup}$", color='orange')
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"USGS $\langle \eta \rangle$", color='green')
+                    
+                    # Calculate max values for title
+                    max_swan = round(max(self.datapointsSetupStockdonLow[index]), 2)
+                    max_stockdon = round(max(self.datapointsSetupStockdon[index]), 2)
+                    maxSetup = f"{max_swan}, {max_stockdon}"
+                    
+                    # Set title and labels
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Setup (Max SWAN, Stockdon: {maxSetup} m)", fontsize=14)
+                    ax.set_ylabel("Setup (meters)", fontsize=12)
+                    break  # Plot only one station per transect
+            
+            ax.legend(loc="upper left", fontsize=10)
+            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylim(y_min, y_max)
+        
+        axes[-1].set_xlabel("Date", fontsize=14)
+        plt.tight_layout()
+        plt.savefig(f"{graph_directory}/Napatree_all_setup.png")
+        plt.close()
+        
+#         napatree all swash
+
+        # Collect all y-values for dynamic y-limits
+        all_y_values = []
+        for index in range(len(self.runupLabels)):
+            if '7m Depth Waves' in self.runupLabels[index]:
+                datapointsSwashStockdon = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+                all_y_values.extend([x for x in datapointsSwashStockdon if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsSwashStockdonIncident[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsSwashStockdonInfragravity[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsRunupObsSwash[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsRunupObsIncidentSwash[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsRunupObsInfragravitySwash[index] if not np.isnan(x)])
+        
+        y_min = min(all_y_values) if all_y_values else -0.1
+        y_max = max(all_y_values) if all_y_values else 0.1
+        y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.01
+        y_min = y_min - y_padding
+        y_max = y_max + y_padding
+        
+        # Create 5x1 subplots
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+            
+            # Find one station per transect (7m depth)
+            for index, station_name in enumerate(self.runupLabels):
+                if str(transect) not in station_name[0:station_name.index(" ")]:
+                    continue
+                if '7m Depth Waves' in station_name:
+                    # Calculate total swash
+                    datapointsSwashStockdon = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
+                    
+                    # Plot swash time series
+                    ax.plot(self.runupTimes, datapointsSwashStockdon, color="green", label=r"Stockdon Swash $\sqrt{S_{inc}^2 + S_{ig}^2}$")
+                    ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], color="blue", label="Stockdon Incident βf√(HₒLₒ)")
+                    ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], color="orange", label="Stockdon Infragravity √(HₒLₒ)")
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color="green", label=r"USGS Swash")
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color="blue", label=r"USGS Incident Swash")
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color="orange", label=r"USGS Infragravity Swash")
+                    
+                    # Calculate max values for title
+                    max_swash_stockdon = round(max(datapointsSwashStockdon), 2)
+                    max_swash_usgs = round(max(self.datapointsRunupObsSwash[index]), 2)
+                    maxSwash = f"{max_swash_stockdon}, {max_swash_usgs}"
+                    
+                    # Set title and labels
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash (Max $\sqrt{{S_{{inc}}^2 + S_{{ig}}^2}}$, USGS: {maxSwash})", fontsize=14)
+                    ax.set_ylabel("Swash (meters)", fontsize=12)
+                    break  # Plot only one station per transect
+            
+            ax.legend(loc="upper left", fontsize=10)
+            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylim(y_min, y_max)
+        
+        axes[-1].set_xlabel("Date", fontsize=14)
+        plt.tight_layout()
+        plt.savefig(f"{graph_directory}/Napatree_all_swash.png")
+        plt.close()
+        
+#     napatree all water swash
+
+        # Collect all y-values for dynamic y-limits
+        all_y_values = []
+        for index in range(len(self.runupLabels)):
+            if '7m Depth Waves' in self.runupLabels[index]:
+                total_swash = (np.array(self.datapointsSwashHolmanLow[index]) * 2) * (1/1.1)
+                lower_bound = self.datapointsSwashStockdonLow[index] - 0.5 * total_swash
+                upper_bound = self.datapointsSwashStockdonLow[index] + 0.5 * total_swash
+                upper_bound_1_1 = self.datapointsSwashStockdonLow[index] + 0.5 * 1.1 * total_swash
+                all_y_values.extend([x for x in self.datapointsSwashStockdonLow[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in lower_bound if not np.isnan(x)])
+                all_y_values.extend([x for x in upper_bound if not np.isnan(x)])
+                all_y_values.extend([x for x in upper_bound_1_1 if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsSwashHolmanHigh[index] if not np.isnan(x)])
+                all_y_values.extend([x for x in self.datapointsRunupStockdonLow[index] if not np.isnan(x)])
+        
+        y_min = min(all_y_values) if all_y_values else -0.1
+        y_max = max(all_y_values) if all_y_values else 0.1
+        y_padding = (y_max - y_min) * 0.1 if y_max != y_min else 0.01
+        y_min = y_min - y_padding
+        y_max = y_max + y_padding
+        
+        # Create 5x1 subplots
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+            
+            # Find one station per transect (7m depth)
+            for index, station_name in enumerate(self.runupLabels):
+                if str(transect) not in station_name[0:station_name.index(" ")]:
+                    continue
+                if '7m Depth Waves' in station_name:
+                    # Plot water elevation
+                    ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label=r"$\eta$", color='blue', linewidth=2)
+                    
+                    # Calculate total swash and bounds
+                    total_swash = (np.array(self.datapointsSwashHolmanLow[index]) * 2) * (1/1.1)
+                    lower_bound = self.datapointsSwashStockdonLow[index] - 0.5 * total_swash
+                    upper_bound = self.datapointsSwashStockdonLow[index] + 0.5 * total_swash
+                    upper_bound_1_1 = self.datapointsSwashStockdonLow[index] + 0.5 * 1.1 * total_swash
+                    
+                    # Fill swash extent
+                    ax.fill_between(self.runupTimes, lower_bound, upper_bound_1_1, color='lightblue', alpha=0.4, label="Swash Extent")
+                    
+                    # Plot bounds
+                    ax.plot(self.runupTimes, upper_bound, '--', color='red', label=r"$+\frac{S}{2}$", linewidth=1.5)
+                    ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
+                    ax.plot(self.runupTimes, upper_bound_1_1, color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)
+                    
+                    # Plot USGS data
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", label=r"TWL USGS", linewidth=1.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '-', color="blue", alpha=0.5, label=r"$\eta$ USGS", linewidth=1.5)
+                    
+                    # Calculate max values for title
+                    max_water_elevation = round(max(self.datapointsSwashStockdonLow[index]), 2)
+                    max_swash_upper = round(max(upper_bound), 2)
+                    max_swash_upper_1_1 = round(max(upper_bound_1_1), 2)
+                    maxElevation = f"{max_water_elevation}, {max_swash_upper}, {max_swash_upper_1_1}"
+                    
+                    # Set title and labels
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Water Level (Max $\eta$, $+\frac{{S}}{{2}}$, $+1.1\frac{{S}}{{2}}$: {maxElevation} m)", fontsize=14)
+                    ax.set_ylabel("Elevation (meters)", fontsize=12)
+                    break  # Plot only one station per transect
+            
+            ax.legend(loc="upper left", fontsize=10)
+            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylim(y_min, y_max)
+        
+        axes[-1].set_xlabel("Date", fontsize=14)
+        plt.tight_layout()
+        plt.savefig(f"{graph_directory}/Napatree_all_water_swash.png")
+        plt.close()
+        
+#         napatree all iribarren
+        
+        # Collect all y-values for dynamic y-limits (though fixed to [0, 2] as in single plot)
+        all_y_values = []
+        for index in range(len(self.runupLabels)):
+            if '7m Depth Waves' in self.runupLabels[index]:
+                all_y_values.extend([x for x in self.datapointsIribarren[index] if not np.isnan(x)])
+        
+        y_min = 0  # Fixed as in single plot
+        y_max = 2
+        y_padding = 0  # No padding needed for fixed limits
+        # y_min = y_min - y_padding
+        # y_max = y_max + y_padding
+        
+        # Create 5x1 subplots
+        fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
+        
+        for transect in range(1, 6):
+            ax = axes[transect - 1]
+            
+            # Find one station per transect (7m depth)
+            for index, station_name in enumerate(self.runupLabels):
+                if str(transect) not in station_name[0:station_name.index(" ")]:
+                    continue
+                if '7m Depth Waves' in station_name:
+                    # Plot Iribarren number
+                    ax.plot(self.runupTimes, self.datapointsIribarren[index], color='#FF9999', linewidth=2, marker='o', markersize=6, label='Iribarren Number')
+                    
+                    # Add shaded regions for wave types
+                    ax.axhspan(1.5, 2.0, color='#D3E0EA', alpha=0.7, label='Surging/Collapsing (ξ₀ > 1.5)')
+                    ax.axhspan(0.5, 1.5, color='#C1E1C6', alpha=0.7, label='Plunging (0.5 < ξ₀ ≤ 1.5)')
+                    ax.axhspan(0.0, 0.5, color='#FADADD', alpha=0.7, label='Spilling (ξ₀ ≤ 0.5)')
+                    
+                    # Calculate max value for title
+                    maxIribarren = round(max(self.datapointsIribarren[index]), 2)
+                    
+                    # Set title and labels
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Iribarren (Max: {maxIribarren})", fontsize=14)
+                    ax.set_ylabel("Iribarren Number", fontsize=12)
+                    
+                    # Customize appearance
+                    ax.grid(False)
+                    ax.set_facecolor('#F5F5F5')
+                    for spine in ax.spines.values():
+                        spine.set_visible(False)
+                    ax.tick_params(axis='both', colors='#555555')
+                    break  # Plot only one station per transect
+            
+            ax.legend(loc="upper left", fontsize=10, frameon=True, facecolor='white', edgecolor='#CCCCCC')
+            ax.format_xdata = mdates.DateFormatter('%d')
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_ylim(y_min, y_max)
+        
+        axes[-1].set_xlabel("Date", fontsize=14)
+        fig.patch.set_facecolor('#F5F5F5')
+        plt.tight_layout()
+        plt.savefig(f"{graph_directory}/Napatree_all_iribarren.png", dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
+        plt.close()
+    
+
         # --- Combined Runup Plots for All Transects --- 
         
         all_y_values = []
@@ -2688,8 +2940,8 @@ class Grapher:
             ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="green", label=r"USGS TWL")
             
             # Calculate the error distances for asymmetric error bars
-            yerr_lower = self.datapointsSwashHolmanHigh[index] - self.datapointsSwashHolmanMid[index]  # Distance from central to 5% (lower bound)
-            yerr_upper = self.datapointsSwashHolmanIncident[index] - self.datapointsSwashHolmanHigh[index]  # Distance from central to 95% (upper bound)
+            yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
+            yerr_upper = np.array(self.datapointsSwashHolmanIncident[index]) - np.array(self.datapointsSwashHolmanHigh[index])  # Distance from central to 95% (upper bound)
             
             # Combine into asymmetric error array
             yerr = [yerr_lower, yerr_upper]
@@ -3069,6 +3321,7 @@ class Grapher:
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
 
+
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
@@ -3134,7 +3387,7 @@ class Grapher:
         
             # Plot elevation lines
             ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
-#             ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
+            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
             # Define reference elevations
             dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
