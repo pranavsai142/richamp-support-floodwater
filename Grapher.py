@@ -2679,12 +2679,12 @@ class Grapher:
                     unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
         
-            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', label=r"USGS TWL") 
+            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="green", label=r"USGS TWL") 
 
             # Plot η line if available
             if eta_values is not None:
                 ax.plot(self.runupTimes, eta_values, linestyle='-', color='black', label='η')
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', label=r"USGS $\eta$") 
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="black", label=r"USGS $\eta$") 
         
             # Plot horizontal lines for dune heights
             for height in unique_heights:
@@ -2762,6 +2762,7 @@ class Grapher:
         
         fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
         for transect in range(1, 6):
+            obsPlotted = False
             ax = axes[transect - 1]
         
             # Collect max values for 7m, 20m, 9km
@@ -2780,7 +2781,9 @@ class Grapher:
                             max_9km = round(np.nanmax(self.datapointsSWH[swhIndex]), 2) if len(self.datapointsSWH[swhIndex]) > 0 else "-"
         
                         ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName)
-                        ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"USGS H_s") 
+                        if(not obsPlotted):
+                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"USGS H_s")
+                            obsPlotted = True 
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -2809,6 +2812,7 @@ class Grapher:
         
         fig, axes = plt.subplots(5, 1, figsize=(16, 20), sharex=True)
         for transect in range(1, 6):
+            obsPlotted = False
             ax = axes[transect - 1]
         
             # Collect max values for 7m, 20m, 9km
@@ -2827,7 +2831,9 @@ class Grapher:
                             max_9km = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
         
                         ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName)
-                        ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"USGS H_s") 
+                        if(not obsPlotted):
+                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"USGS T_p") 
+                            obsPlotted = True 
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -3144,6 +3150,7 @@ class Grapher:
                 return None
         
             # Calculate intersection points (first from offshore, positive distances)
+            print("profileElevations", profileElevations[0])
             mhwl_intersect = find_intersection(profileDistances, profileElevations, mhwl_elev)
             dune_toe_intersect = find_intersection(profileDistances, profileElevations, dune_toe_elev)
             dune_crest_intersect = find_intersection(profileDistances, profileElevations, dune_crest_elev)
