@@ -978,7 +978,7 @@ class Grapher:
                 datapointAdcircSetup = []
                 datapointAdcircRunup = []
                 datapointDuneHeights = []
-                
+                datapointRunupObs = []
                 datapointRunupObsSwash = []
                 datapointRunupObsIncidentSwash = []
                 datapointRunupObsInfragravitySwash = []
