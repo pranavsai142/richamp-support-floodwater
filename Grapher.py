@@ -3332,7 +3332,6 @@ class Grapher:
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
 
-
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
@@ -3436,20 +3435,21 @@ class Grapher:
         
             # Plot additional horizontal line using unique values from self.datapointsDuneHeights
             duneHeightPlotted = False
-            for dune_height in list(set(self.datapointsDuneHeights[index])):
+            unique_dune_heights = sorted(list(set(self.datapointsDuneHeights[index])))
+            for dune_height in unique_dune_heights:
                 if not np.isnan(dune_height):
-                    ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.3, color='yellow', label='Dune Height' if not duneHeightPlotted else "")
+                    ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.3, color='lightgray', label='Dune Height' if not duneHeightPlotted else "")
                     duneHeightPlotted = True
         
-            # Draw slope lines through MHWL
+            # Draw slope lines through MHWL (corrected direction: inland positive)
             if mhwl_intersect is not None:
                 # β_f,USGS from self.datapointsRunupObsBeachSlope
                 beta_usgs = self.datapointsRunupObsBeachSlope[index][-1]
                 x_range = ax.get_xlim()
                 x_start = mhwl_intersect
-                x_end = x_start + 100  # Arbitrary length for visualization
+                x_end = x_start + 100  # Extend inland (positive x)
                 y_start_usgs = mhwl_elev
-                y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)
+                y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)  # Positive slope inland
                 ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.5)
                 ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,USGS}} = {:.3f}$'.format(beta_usgs))
         
@@ -3457,7 +3457,7 @@ class Grapher:
                 FORESHORE_BEACH_SLOPE_OBS = [0.05, 0.05, 0.06, 0.06, 0.06]  # Index 0-4 for transects 1-5
                 beta_obs = FORESHORE_BEACH_SLOPE_OBS[transect - 1]
                 y_start_obs = mhwl_elev
-                y_end_obs = y_start_obs + beta_obs * (x_end - x_start)
+                y_end_obs = y_start_obs + beta_obs * (x_end - x_start)  # Positive slope inland
                 ax.plot([x_start, x_end], [y_start_obs, y_end_obs], color='purple', linestyle='--', linewidth=1, alpha=0.5)
                 ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.3f}$'.format(beta_obs))
         
@@ -3467,23 +3467,25 @@ class Grapher:
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     # Plot η line (first valid dataset)
                     if len(self.datapointsSwashStockdonLow[index]) > 0:
-                        eta = np.array(self.datapointsSwashStockdonLow[index])  # Convert to NumPy array
+                        eta = np.array(self.datapointsSwashStockdonLow[index])
                         max_eta_idx = np.nanargmax(eta) if np.any(~np.isnan(eta)) else 0
                         max_eta_time = np.array(self.runupTimes)[max_eta_idx] if max_eta_idx < len(self.runupTimes) else np.array(self.runupTimes)[-1]
                         max_eta_value = np.nanmax(eta)
                         ax.plot([max_eta_time], [max_eta_value], 'o-', color='black', label='η' if transect == 1 else "")
-                        # Shade underneath η with pastel blue, avoiding terrain
-                        ax.fill_between(np.array(self.runupTimes), eta, elevation_y_min, where=(eta > profileElevations) & (eta < elevation_y_max), 
+                        # Interpolate profileElevations to runupTimes for accurate shading
+                        interp_elevations = np.interp(np.array(self.runupTimes), profileDistances, profileElevations)
+                        ax.fill_between(np.array(self.runupTimes), eta, elevation_y_min, where=(eta > interp_elevations) & (eta < elevation_y_max), 
                                         color='#CCE5FF', alpha=0.5, label='η Shade' if transect == 1 else "")
         
                     # Plot total water level (runupHolmanMid)
-                    total_water = np.array(self.datapointsRunupHolmanMid[index])  # Convert to NumPy array
+                    total_water = np.array(self.datapointsRunupHolmanMid[index])
                     max_total_idx = np.nanargmax(total_water) if np.any(~np.isnan(total_water)) else 0
                     max_total_time = np.array(self.datapointsSetupHolmanHigh[index])[max_total_idx] if max_total_idx < len(self.datapointsSetupHolmanHigh[index]) else np.array(self.datapointsSetupHolmanHigh[index])[-1]
                     max_total_value = np.nanmax(total_water)
                     ax.plot([max_total_time], [max_total_value], 'o-', color='blue', label='Total Water' if transect == 1 else "")
-                    # Shade underneath total water with pastel red, avoiding terrain
-                    ax.fill_between(np.array(self.datapointsSetupHolmanHigh[index]), total_water, elevation_y_min, where=(total_water > profileElevations) & (total_water < elevation_y_max), 
+                    # Interpolate profileElevations to setupHolmanHigh for accurate shading
+                    interp_elevations_total = np.interp(np.array(self.datapointsSetupHolmanHigh[index]), profileDistances, profileElevations)
+                    ax.fill_between(np.array(self.datapointsSetupHolmanHigh[index]), total_water, elevation_y_min, where=(total_water > interp_elevations_total) & (total_water < elevation_y_max), 
                                     color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
         
                     # Plot USGS TWL and η
