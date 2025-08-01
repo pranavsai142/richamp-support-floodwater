@@ -58,7 +58,7 @@ class Grapher:
     
     def vectorSpeed(self, x,y):
         return math.sqrt(x**2 + y**2)
-    
+        
     def vectorDirection(self, x,y):
         degrees = math.degrees(math.atan2(-y,x))
         if(degrees < 0):
@@ -3332,7 +3332,6 @@ class Grapher:
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
 
-
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
@@ -3403,9 +3402,8 @@ class Grapher:
             # Define reference elevations
             dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
             dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
-#             mhwl_elev = self.datapointsRunupStockdonLow[index][-1]  # MHWL elevation
-            mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # MHWL elevation
-
+            mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
+        
             # Find intersection for MHWL (first from maximum distance inward)
             def find_intersection(distances, elevations, target_elev):
                 if len(distances) < 2 or np.all(elevations == elevations[0]):
@@ -3425,90 +3423,42 @@ class Grapher:
         
             mhwl_intersect = find_intersection(profileDistances, profileElevations, mhwl_elev)
         
-            # Find dune toe (xt, zt) based on elevation data
-            def find_dune_toe(distances, elevations, dune_crest_elev, mhwl_elev):
-                if len(distances) < 3 or np.all(elevations == elevations[0]):
-                    return None, None
-                # Traverse from max distance to min
-                max_dist_idx = np.argmax(distances)
-                for i in range(max_dist_idx, 1, -1):
-                    zt = elevations[i]
-                    xt = distances[i]
-                    zc = dune_crest_elev
-        
-                    # Apply constraints
-                    if zt > mhwl_elev and zc - zt > 0.5:
-                        # Check curvature (negative second derivative)
-                        if i > 1 and i < len(distances) - 1:
-                            dx = distances[i + 1] - distances[i - 1]
-                            if dx != 0:
-                                d2z_dx2 = (elevations[i + 1] - 2 * elevations[i] + elevations[i - 1]) / (dx ** 2)
-                                if d2z_dx2 < 0:  # Negative curvature
-                                    return xt, zt
-                return None, None
-        
-            xt, zt = find_dune_toe(profileDistances, profileElevations, dune_crest_elev_ref, mhwl_elev)
-        
             # Plot MHWL intersection
-            points_to_plot = []
             if mhwl_intersect is not None:
                 ax.scatter(mhwl_intersect, mhwl_elev, color='blue', s=100, edgecolor='white', zorder=5)
                 ax.annotate('MHWL', xy=(mhwl_intersect, mhwl_elev), xytext=(5, 5), textcoords='offset points',
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
-                points_to_plot.append('MHWL')
-        
-            # Plot calculated dune toe
-            if xt is not None and zt is not None:
-                ax.scatter(xt, zt, color='green', s=100, edgecolor='white', zorder=5)
-                ax.annotate('Dune Toe', xy=(xt, zt), xytext=(5, 5), textcoords='offset points',
-                            ha='left', va='bottom', fontsize=10, color='green', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
-                points_to_plot.append('Dune Toe')
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.3, label='Dune Crest USGS')
-            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.3, label='Dune Toe USGS')
+            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.3, color='orange', label='Dune Crest USGS')
+            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.3, color='green', label='Dune Toe USGS')
+        
+            # Plot additional horizontal line using unique values from self.datapointsDuneHeights
             duneHeightPlotted = False
             for dune_height in list(set(self.datapointsDuneHeights[index])):
-#             Change to Runup Height for 2022
-                ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, label='Dune Height' if not duneHeightPlotted else)
+                ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.3, color='yellow', label='Dune Height' if not duneHeightPlotted else "")
                 duneHeightPlotted = True
-            # Draw slope line from MHWL to calculated dune toe
-            if mhwl_intersect is not None and xt is not None:
-                ax.plot([mhwl_intersect, xt], [mhwl_elev, zt], color='gray', linestyle='--', linewidth=1, alpha=0.5)
-                distance = abs(xt - mhwl_intersect)
-                elevation_diff = abs(zt - mhwl_elev)
-                if distance != 0:
-                    beta_f_toe = elevation_diff / distance
-                    slope_label_toe = r'$\beta_{{f,toe}} = {:.3f}$'.format(beta_f_toe)  # Escaped curly braces
-                else:
-                    slope_label_toe = r'$\beta_{{f,toe}} = N/A$'
-                ax.plot([], [], color='gray', linestyle='--', linewidth=1, alpha=0.5, label=slope_label_toe)
         
-            # Draw additional slope lines from MHWL
+            # Draw slope lines through MHWL
             if mhwl_intersect is not None:
-                beta_mhw = max(self.datapointsRunupObsBeachSlope[index])
-                beta_usgs = sum(self.runupAverageSlopes[index])/len(self.runupAverageSlopes[index])
+                # β_f,USGS from self.datapointsRunupObsBeachSlope
+                beta_usgs = self.datapointsRunupObsBeachSlope[index][-1]  # Assuming last value is representative
                 x_range = ax.get_xlim()
                 x_start = mhwl_intersect
                 x_end = x_start + 100  # Arbitrary length for visualization
-        
-                # β_f,MHW
-                y_start_mhw = mhwl_elev
-                y_end_mhw = y_start_mhw + beta_mhw * (x_end - x_start)
-                ax.plot([x_start, x_end], [y_start_mhw, y_end_mhw], color='purple', linestyle='--', linewidth=1, alpha=0.5)
-                ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,MHW}} = {:.3f}$'.format(beta_mhw))
-        
-                # β_f,USGS
                 y_start_usgs = mhwl_elev
                 y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.5)
                 ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,USGS}} = {:.3f}$'.format(beta_usgs))
         
-                # β_f,2σ
-                y_start_2sigma = mhwl_elev
-                y_end_2sigma = y_start_2sigma + beta_usgs * (x_end - x_start)  # Using same slope for 2σ as USGS
-                ax.plot([x_start, x_end], [y_start_2sigma, y_end_2sigma], color='magenta', linestyle='--', linewidth=1, alpha=0.5)
-                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r"$\beta_{{f,avg}}$ = {:.3f}".format(beta_usgs))        
+                # β_f,obs hardcoded per transect
+                FORESHORE_BEACH_SLOPE_OBS = [0.05, 0.05, 0.06, 0.06, 0.06]  # Index 0-4 for transects 1-5
+                beta_obs = FORESHORE_BEACH_SLOPE_OBS[transect - 1]
+                y_start_obs = mhwl_elev
+                y_end_obs = y_start_obs + beta_obs * (x_end - x_start)
+                ax.plot([x_start, x_end], [y_start_obs, y_end_obs], color='purple', linestyle='--', linewidth=1, alpha=0.5)
+                ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.3f}$'.format(beta_obs))
+        
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
             ax.tick_params(axis='both', labelsize=12)
@@ -3518,14 +3468,11 @@ class Grapher:
         
             # Update legend
             handles, labels = ax.get_legend_handles_labels()
-            if points_to_plot:
-                for point in points_to_plot:
-                    if point == 'MHWL':
-                        handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=10, label='MHWL'))
-                    elif point == 'Dune Toe':
-                        handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=10, label='Dune Toe'))
+            handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=10, label='MHWL'))
             handles.append(plt.Line2D([0], [0], color='orange', linestyle='--', linewidth=1, alpha=0.5, label='Dune Crest Elev'))
             handles.append(plt.Line2D([0], [0], color='green', linestyle='--', linewidth=1, alpha=0.5, label='Dune Toe Elev'))
+            if duneHeightPlotted:
+                handles.append(plt.Line2D([0], [0], color='yellow', linestyle='--', linewidth=1, alpha=0.5, label='Dune Height'))
             ax.legend(handles=handles, loc="upper right", fontsize=10)
         
             # Set x-axis label on the bottom subplot
