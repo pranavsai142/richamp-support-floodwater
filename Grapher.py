@@ -3396,8 +3396,8 @@ class Grapher:
                     profileDemElevations[np.isnan(profileDemElevations)] = 0.0
         
             # Plot elevation lines
-            ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
-            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
+            ax.scatter(profileDistances, profileElevations, label="Mesh", color='red')
+            ax.scatter(profileDistances, profileDemElevations, label="DEM", color='black')
         
             # Define reference elevations
             dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
