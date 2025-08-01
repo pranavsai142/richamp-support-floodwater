@@ -2627,7 +2627,7 @@ class Grapher:
                 if '7m Depth Waves' in station_name:
                     ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f}}$", color='blue', linestyle='-')
                     ax.axhline(y=max(self.datapointsRunupObsBeachSlope[index]), color='green', linestyle='--', label=r"$\beta_{{f,USGS}}$")
-                    ax.axhline(y=FORESHORE_BEACH_SLOPE_OBS[transect - 1], color='green', linestyle='--', label=r"$\beta_{{f,obs}}$")
+                    ax.axhline(y=FORESHORE_BEACH_SLOPE_OBS[transect - 1], color='red', linestyle='--', label=r"$\beta_{{f,obs}}$")
                     base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
                     if base_name not in slopes_by_name:
                         slopes_by_name[base_name] = {'true': None, 'false': None}
@@ -3433,11 +3433,13 @@ class Grapher:
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.3, color='orange', label='Dune Crest USGS')
-            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.3, color='green', label='Dune Toe USGS')
+            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.5, color='orange', label='Dune Crest USGS')
+            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.5, color='green', label='Dune Toe USGS')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
             duneHeightPlotted = False
+            print(self.datapointsDuneHeights[index])
+            quit()
             unique_dune_heights = [x for x in self.datapointsDuneHeights[index] if not np.isnan(x)]
             unique_dune_heights = sorted(list(set(unique_dune_heights)))
             for dune_height in unique_dune_heights:
@@ -3500,7 +3502,7 @@ class Grapher:
 
                     # Plot the horizontal line at the maximum value
                     max_value = np.nanmax(np.array(self.datapointsSwashHolmanHigh[index]))
-                    ax.axhline(y=max_value, linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.5, label='USGS TWL' if transect == 1 else "")
                     
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
@@ -3514,10 +3516,9 @@ class Grapher:
                     
                     # Choose an x-coordinate for the error bar (e.g., middle of the time series)
                     # Replace x_mid with your time series x-values if available, or a reasonable point
-                    x_mid = len(self.datapointsSwashHolmanHigh[index]) / 2  # Example: middle of the series
                     
                     # Plot the error bar as a single point
-                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='orange', alpha=0.5, capsize=5)
+                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='blue', alpha=0.5, capsize=5)
 
 
             # Shade terrain underneath elevation curve
@@ -3529,6 +3530,7 @@ class Grapher:
             ax.tick_params(axis='both', labelsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Profile Points Elevation Profile", fontsize=16)
             ax.set_ylim(elevation_y_min, elevation_y_max)
+            ax.set_xlim(-250, 250)
             ax.grid(False)
         
             # Update legend
