@@ -34,6 +34,13 @@ from Encoders import NumpyEncoder
 # NOS_ADCIRC_NODES_FILE_NAME = "NOS_Floodwater_Nodes.json"
 # NOS_ADCIRC_WIND_DATA_FILE_NAME = "NOS_Floodwater_Wind_Data.json"
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
+
+
+MIN_SEARCH_LONGITUDE = -72
+MAX_SEARCH_LONGITUDE = -70
+MIN_SEARCH_LATITUDE = 40.5
+MAX_SEARCH_LATITUDE = 41.5
+
 class Reader:
     def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", BACKGROUND_AXIS=[], format=""):
         self.STATIONS_FILE = STATIONS_FILE
@@ -710,8 +717,7 @@ class Reader:
             node = (nodesLatitudes[index], nodesLongitudes[index])
             nodeIndex = nodesIndex[index]
 #             print(node)
-# Added conditional to only check for closest nodes if point inside of BACKGROUND_AXIS
-            if(node[0] <= 90 and node[0] >= -90 and node[0] <= self.BACKGROUND_AXIS[2] and node[0] >= self.BACKGROUND_AXIS[3] and node[1] >= self.BACKGROUND_AXIS[0] and node[1] <= self.BACKGROUND_AXIS[1]):
+            if(node[0] <= 90 and node[0] >= -90 and node[0] <= MAX_SEARCH_LATITUDE and node[0] >= MIN_SEARCH_LATITUDE and node[1] >= MIN_SEARCH_LONGITUDE and node[1] <= MAX_SEARCH_LONGITUDE):
                 for stationKey in stationKeys:
 #                     print(stationKey)
                     if(dataType == "rain"):
