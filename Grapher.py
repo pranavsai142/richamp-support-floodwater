@@ -34,7 +34,7 @@ BYPASS_WATER_TIMESERIES_PLOTS = True
 
 MHW_ELEVATION_RELATIVE_TO_NAVD88 = 0.646
 
-FORESHORE_BEACH_SLOPE_OBS = [0.05, 0.05, 0.06, 0.06, 0.06]
+FORESHORE_BEACH_SLOPE_OBS = [0.13, 0.11, 0.08, 0.07, 0.07]                 
 
 # Search for below to find where to make changes when running runup graphs for 2022 vs 2023
 #             CHANGE HERE WHEN DOING 2022 VS 2023 NOREASTER
@@ -2950,7 +2950,7 @@ class Grapher:
                     unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
             #https://x.com/i/grok/share/h5PUOM8iQLOEEh3QJ8g2xPJtK
-            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="orange", alpha = 0.5, label=r"USGS TWL")
+            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="blue", alpha = 0.5, label=r"USGS TWL")
             
             # Calculate the error distances for asymmetric error bars
             yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
@@ -2960,7 +2960,7 @@ class Grapher:
             yerr = [yerr_lower, yerr_upper]
             
             # Add error bars
-            ax.errorbar(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], yerr=yerr, fmt='none', ecolor='orange', alpha = 0.25, capsize=3)
+            ax.errorbar(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], yerr=yerr, fmt='none', ecolor='blue', alpha = 0.5, capsize=3)
             # Plot η line if available
             if eta_values is not None:
                 ax.plot(self.runupTimes, eta_values, linestyle='-', color='black', label='η')
@@ -3400,8 +3400,8 @@ class Grapher:
                     profileDemElevations[np.isnan(profileDemElevations)] = 0.0
         
             # Plot elevation lines
-            ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
-            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
+            ax.plot(profileDistances, profileElevations, label="Mesh", color='red')
+#             ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
             # Define reference elevations
             dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
@@ -3433,9 +3433,9 @@ class Grapher:
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.7, color='orange', label='Dune Crest USGS')
-            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.7, color='green', label='Dune Toe USGS')
-            ax.axhline(y=max(self.datapointsDuneHeights[index]), linestyle='--', linewidth=1, alpha=0.7, color='red', label='Dune Height')
+            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='orange', label='Dune Crest USGS')
+            ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe USGS')
+            ax.axhline(y=max(self.datapointsDuneHeights[index]), linewidth=1, alpha=0.7, color='red', label='Dune Height')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
 #             duneHeightPlotted = False
@@ -3485,25 +3485,25 @@ class Grapher:
                         # Shade underneath η with pastel blue, avoiding terrain
                         ax.fill_between(profileDistances, np.full_like(profileDistances, max_eta_value), elevation_y_min, 
                                         where=(max_eta_value > profileElevations) & (max_eta_value < elevation_y_max), 
-                                        color='#CCE5FF', alpha=0.5, label='η Shade' if transect == 1 else "")
+                                        color='#CCE5FF', alpha=0.5, label='η Shade' if transect == 0 else "")
         
                     # Plot total water level (maximum value as horizontal line)
                     total_water = np.array(self.datapointsRunupHolmanMid[index])
                     max_total_value = np.nanmax(total_water)
-                    ax.axhline(y=max_total_value, color='blue', linestyle='-', label='Total Water' if transect == 1 else "")
+                    ax.axhline(y=max_total_value, color='blue', linestyle='-', label='TWL' if transect == 1 else "")
                     # Shade underneath total water with pastel red, avoiding terrain
                     ax.fill_between(profileDistances, np.full_like(profileDistances, max_total_value), elevation_y_min, 
                                     where=(max_total_value > profileElevations) & (max_total_value < elevation_y_max), 
-                                    color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
+                                    color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 0 else "")
                                   
 
 #                     ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.7, label='USGS η' if transect == 1 else "")
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.7, label='η USGS' if transect == 1 else "")
 
                     # Plot the horizontal line at the maximum value
                     max_value = np.nanmax(np.array(self.datapointsSwashHolmanHigh[index]))
-                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.7, label='USGS TWL' if transect == 1 else "")
+                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.7, label='TWL USGS' if transect == 1 else "")
                     
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
@@ -3524,7 +3524,7 @@ class Grapher:
 
             # Shade terrain underneath elevation curve
             ax.fill_between(profileDistances, profileElevations, elevation_y_min, where=(profileElevations > elevation_y_min), 
-                            color='#D2B48C', alpha=0.5, label='Terrain' if transect == 1 else "")
+                            color='#D2B48C', alpha=0.5, label='Terrain' if transect == 0 else "")
         
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
