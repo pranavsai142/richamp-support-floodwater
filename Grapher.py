@@ -3494,9 +3494,9 @@ class Grapher:
                                     color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
                                   
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), '--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), '--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
 
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
