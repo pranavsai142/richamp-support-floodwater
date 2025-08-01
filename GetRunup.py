@@ -916,14 +916,14 @@ class GetRunup:
 #                     print("obsRunupTimes converted", datetime.fromtimestamp(obsRunupTimes, timezone.utc))
 #                     obsLatitude = item["siteLatitude"]
 #                     obsLongitude = item["siteLongitude"]
-                obsToeHeight = item["toeHeight"] + 0.646
-                obsCrestHeight = item["crestHeight"] + 0.646
-                obsTwl = item["twl"] + 0.646
-                obsTwl05 = item["twl05"] + 0.646
-                obsTwl95 = item["twl95"] + 0.646
+                obsToeHeight = item["toeHeight"] - 0.069
+                obsCrestHeight = item["crestHeight"] - 0.069
+                obsTwl = item["twl"] - 0.069
+                obsTwl05 = item["twl05"] - 0.069
+                obsTwl95 = item["twl95"] - 0.069
                 obsSetup = item["setup"]
                 obsRunup = item["runup"]
-                obsWaterLevel = item["tideWindSetup"] + 0.646
+                obsWaterLevel = item["tideWindSetup"] - 0.069
                 obsSwash = item["swash"]
                 obsIncidentSwash = item["incSwash"]
                 obsInfragravitySwash = item["infragSwash"]
