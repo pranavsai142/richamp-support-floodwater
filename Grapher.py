@@ -2603,6 +2603,7 @@ class Grapher:
         all_y_values = []
         for index in range(len(self.runupLabels)):
             all_y_values.extend([x for x in self.runupAverageSlopes[index] if not np.isnan(x)])
+            all_y_values.extend([x for x in self.datapointsRunupObsBeachSlope[index] if not np.isnan(x)])
         
         y_min = min(all_y_values) if all_y_values else -0.1
         y_max = max(all_y_values) if all_y_values else 0.1
@@ -2638,7 +2639,7 @@ class Grapher:
                     ax.plot(self.runupTimes, slopes['true'], label=r"Daily Average $\beta_f$", color='blue', linestyle='-')
                 if slopes['false'] is not None:
                     ax.plot(self.runupTimes, slopes['false'], label=r"Instantaneous $\beta_f$", color='red', linestyle='--')
-                break  # Plot only one station per transect
+                break  # Plot only one station per transect 
             
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
