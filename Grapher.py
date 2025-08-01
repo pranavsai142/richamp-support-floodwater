@@ -3494,21 +3494,32 @@ class Grapher:
                                     color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
                                   
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+#                     ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
 
                     ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
 
+                    # Plot the horizontal line at the maximum value
+                    max_value = np.nanmax(np.array(self.datapointsSwashHolmanHigh[index]))
+                    ax.axhline(y=max_value, linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+                    
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
                     yerr_upper = np.array(self.datapointsSwashHolmanIncident[index]) - np.array(self.datapointsSwashHolmanHigh[index])  # Distance from central to 95% (upper bound)
                     
-                    # Combine into asymmetric error array
-                    yerr = [np.nanmax(yerr_lower), np.nanmax(yerr_upper)]
+                    # Since it's a horizontal line, use the maximum value's error bounds
+                    # Find the index of the maximum value to get the corresponding error bounds
+                    max_idx = np.nanargmax(np.array(self.datapointsSwashHolmanHigh[index]))
+                    yerr_lower_max = yerr_lower[max_idx]
+                    yerr_upper_max = yerr_upper[max_idx]
                     
-                    # Add error bars
-                    ax.errorbar(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), yerr=yerr, fmt='none', ecolor='orange', alpha = 0.25, capsize=3)
+                    # Choose an x-coordinate for the error bar (e.g., middle of the time series)
+                    # Replace x_mid with your time series x-values if available, or a reasonable point
+                    x_mid = len(self.datapointsSwashHolmanHigh[index]) / 2  # Example: middle of the series
+                    
+                    # Plot the error bar as a single point
+                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='orange', alpha=0.5, capsize=5)
 
-        
+
             # Shade terrain underneath elevation curve
             ax.fill_between(profileDistances, profileElevations, elevation_y_min, where=(profileElevations > elevation_y_min), 
                             color='#D2B48C', alpha=0.5, label='Terrain' if transect == 1 else "")
