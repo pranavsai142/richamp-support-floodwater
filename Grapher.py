@@ -3433,8 +3433,8 @@ class Grapher:
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.5, color='orange', label='Dune Crest USGS')
-            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.5, color='green', label='Dune Toe USGS')
+            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.7, color='orange', label='Dune Crest USGS')
+            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.7, color='green', label='Dune Toe USGS')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
             duneHeightPlotted = False
@@ -3443,7 +3443,7 @@ class Grapher:
             unique_dune_heights = [x for x in self.datapointsDuneHeights[index] if not np.isnan(x)]
             unique_dune_heights = sorted(list(set(unique_dune_heights)))
             for dune_height in unique_dune_heights:
-                ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.5, color='lightgray', label='Dune Height' if not duneHeightPlotted else "")
+                ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.7, color='red', label='Dune Height' if not duneHeightPlotted else "")
                 duneHeightPlotted = True
         
             # Draw slope lines through MHWL with correct direction (inward/downward)
@@ -3455,21 +3455,21 @@ class Grapher:
                 x_end = x_start - 100  # Inward direction
                 y_start_usgs = mhwl_elev
                 y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)
-                ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.5)
+                ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.6)
                 ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,USGS}} = {:.3f}$'.format(abs(beta_usgs)))
         
                 # β_f,obs hardcoded per transect
                 beta_obs = -FORESHORE_BEACH_SLOPE_OBS[transect - 1]  # Negative slope for inward direction
                 y_start_obs = mhwl_elev
                 y_end_obs = y_start_obs + beta_obs * (x_end - x_start)
-                ax.plot([x_start, x_end], [y_start_obs, y_end_obs], color='purple', linestyle='--', linewidth=1, alpha=0.5)
+                ax.plot([x_start, x_end], [y_start_obs, y_end_obs], color='purple', linestyle='--', linewidth=1, alpha=0.6)
                 ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.3f}$'.format(abs(beta_obs)))
         
                 # β_f,avg from mean of runupAverageSlopes
                 beta_avg = -np.nanmean(self.runupAverageSlopes[index])  # Negative slope for inward direction
                 y_start_avg = mhwl_elev
                 y_end_avg = y_start_avg + beta_avg * (x_end - x_start)
-                ax.plot([x_start, x_end], [y_start_avg, y_end_avg], color='magenta', linestyle='--', linewidth=1, alpha=0.5)
+                ax.plot([x_start, x_end], [y_start_avg, y_end_avg], color='magenta', linestyle='--', linewidth=1, alpha=0.6)
                 ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,avg}} = {:.3f}$'.format(abs(beta_avg)))
         
             # Water lines and total water lines
@@ -3498,11 +3498,11 @@ class Grapher:
 
 #                     ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.7, label='USGS η' if transect == 1 else "")
 
                     # Plot the horizontal line at the maximum value
                     max_value = np.nanmax(np.array(self.datapointsSwashHolmanHigh[index]))
-                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.7, label='USGS TWL' if transect == 1 else "")
                     
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
@@ -3518,7 +3518,7 @@ class Grapher:
                     # Replace x_mid with your time series x-values if available, or a reasonable point
                     
                     # Plot the error bar as a single point
-                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='blue', alpha=0.5, capsize=5)
+                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='blue', alpha=0.7, capsize=5)
 
 
             # Shade terrain underneath elevation curve
@@ -3530,7 +3530,7 @@ class Grapher:
             ax.tick_params(axis='both', labelsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Profile Points Elevation Profile", fontsize=16)
             ax.set_ylim(elevation_y_min, elevation_y_max)
-            ax.set_xlim(-250, 250)
+            ax.set_xlim(min(profileDistances), max(profileDistances))
             ax.grid(False)
         
             # Update legend
