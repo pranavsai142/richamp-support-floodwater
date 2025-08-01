@@ -736,9 +736,9 @@ class Reader:
                     if(thresholdDistance > distance):
 #                         print("Found a closest node", node, nodeIndex, "distance ", distance, "station", stationKey)
                         stationToNodeDistancesDict[stationKey]["closestNodes"].append(nodeIndex)
-            else:
-                badNodes.append(nodeIndex)
-                print("bad node", nodeIndex, node, flush=True)
+#             else:
+#                 badNodes.append(nodeIndex)
+#                 print("bad node", nodeIndex, node, flush=True)
             if(index % 100000 == 0):
                 print("index", index, flush=True)
 
