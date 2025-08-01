@@ -3467,31 +3467,31 @@ class Grapher:
                 if str(transect) in stationName[0:stationName.index(" ")]:
                     # Plot η line (first valid dataset)
                     if len(self.datapointsSwashStockdonLow[index]) > 0:
-                        eta = self.datapointsSwashStockdonLow[index]
+                        eta = np.array(self.datapointsSwashStockdonLow[index])  # Convert to NumPy array
                         max_eta_idx = np.nanargmax(eta) if np.any(~np.isnan(eta)) else 0
-                        max_eta_time = self.runupTimes[max_eta_idx] if max_eta_idx < len(self.runupTimes) else self.runupTimes[-1]
+                        max_eta_time = np.array(self.runupTimes)[max_eta_idx] if max_eta_idx < len(self.runupTimes) else np.array(self.runupTimes)[-1]
                         max_eta_value = np.nanmax(eta)
                         ax.plot([max_eta_time], [max_eta_value], 'o-', color='black', label='η' if transect == 1 else "")
                         # Shade underneath η with pastel blue, avoiding terrain
-                        ax.fill_between(self.runupTimes, eta, y_min, where=(eta > profileElevations[-1]) & (eta < y_max), 
+                        ax.fill_between(np.array(self.runupTimes), eta, elevation_y_min, where=(eta > profileElevations) & (eta < elevation_y_max), 
                                         color='#CCE5FF', alpha=0.5, label='η Shade' if transect == 1 else "")
         
                     # Plot total water level (runupHolmanMid)
-                    total_water = self.datapointsRunupHolmanMid[index]
+                    total_water = np.array(self.datapointsRunupHolmanMid[index])  # Convert to NumPy array
                     max_total_idx = np.nanargmax(total_water) if np.any(~np.isnan(total_water)) else 0
-                    max_total_time = self.datapointsSetupHolmanHigh[index][max_total_idx] if max_total_idx < len(self.datapointsSetupHolmanHigh[index]) else self.datapointsSetupHolmanHigh[index][-1]
+                    max_total_time = np.array(self.datapointsSetupHolmanHigh[index])[max_total_idx] if max_total_idx < len(self.datapointsSetupHolmanHigh[index]) else np.array(self.datapointsSetupHolmanHigh[index])[-1]
                     max_total_value = np.nanmax(total_water)
                     ax.plot([max_total_time], [max_total_value], 'o-', color='blue', label='Total Water' if transect == 1 else "")
                     # Shade underneath total water with pastel red, avoiding terrain
-                    ax.fill_between(self.datapointsSetupHolmanHigh[index], total_water, y_min, where=(total_water > profileElevations[-1]) & (total_water < y_max), 
+                    ax.fill_between(np.array(self.datapointsSetupHolmanHigh[index]), total_water, elevation_y_min, where=(total_water > profileElevations) & (total_water < elevation_y_max), 
                                     color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
         
                     # Plot USGS TWL and η
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
+                    ax.plot(np.array(self.datapointsSetupHolmanHigh[index]), np.array(self.datapointsSwashHolmanHigh[index]), '--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+                    ax.plot(np.array(self.datapointsSetupHolmanHigh[index]), np.array(self.datapointsRunupStockdonLow[index]), '--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
         
             # Shade terrain underneath elevation curve
-            ax.fill_between(profileDistances, profileElevations, y_min, where=(profileElevations > y_min), color='#D2B48C', alpha=0.5, label='Terrain' if transect == 1 else "")
+            ax.fill_between(profileDistances, profileElevations, elevation_y_min, where=(profileElevations > elevation_y_min), color='#D2B48C', alpha=0.5, label='Terrain' if transect == 1 else "")
         
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
