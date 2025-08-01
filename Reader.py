@@ -710,7 +710,8 @@ class Reader:
             node = (nodesLatitudes[index], nodesLongitudes[index])
             nodeIndex = nodesIndex[index]
 #             print(node)
-            if(node[0] <= 90 and node[0] >= -90 and node[0] <= 41.5 and node[0] >= 40):
+# Added conditional to only check for closest nodes if point inside of BACKGROUND_AXIS
+            if(node[0] <= 90 and node[0] >= -90 and node[0] <= self.BACKGROUND_AXIS[2] and node[0] >= self.BACKGROUND_AXIS[3] and node[1] >= self.BACKGROUND_AXIS[0] and node[1] <= self.BACKGROUND_AXIS[1]):
                 for stationKey in stationKeys:
 #                     print(stationKey)
                     if(dataType == "rain"):
