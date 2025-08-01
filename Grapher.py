@@ -1199,14 +1199,14 @@ class Grapher:
         plt.title("location of datapoints by data type")
         plt.xlabel("longitude")
         plt.ylabel("latitude")
-        plt.savefig(graph_directory + 'closest_points.png')
+        plt.savefig(graph_directory + 'closest_points.png', dpi=300)
         plt.close()
         
         img = mpimg.imread(self.backgroundMap)
         plotAxis = [self.backgroundAxis[0], self.backgroundAxis[1], self.backgroundAxis[3], self.backgroundAxis[2]]
         aspectRatio = (self.backgroundAxis[1] - self.backgroundAxis[0]) / (self.backgroundAxis[2] - self.backgroundAxis[3])
-#         img = mpimg.imread('subsetFlipped.png')
-#         img = mpimg.imread('NorthAtlanticBasin3.png')
+#         img = mpimg.imread('subsetFlipped.png', dpi=300)
+#         img = mpimg.imread('NorthAtlanticBasin3.png', dpi=300)
 
         # Create a new colormap with alpha-blended colors
         def create_blended_cmap(cmap, alpha=0.5):
@@ -1261,7 +1261,7 @@ class Grapher:
                     ax=plt.gca()
                 )
                 
-                plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png')
+                plt.savefig(graph_directory + 'map_wind_' + str(index) + '.png', dpi=300)
                 plt.close()
                 gc.collect()
             with imageio.get_writer(graph_directory + 'wind.gif', mode='I') as writer:
@@ -1303,7 +1303,7 @@ class Grapher:
             plt.xticks(fontsize=22)
             plt.yticks(fontsize=22)  # Corrected from duplicate xticks
 
-            plt.savefig(graph_directory + 'map_wind_swath.png')
+            plt.savefig(graph_directory + 'map_wind_swath.png', dpi=300)
             plt.close()
             gc.collect()
         if(len(self.mapRainTimes) > 0):
@@ -1336,7 +1336,7 @@ class Grapher:
                     label="Millimeters/Hour",
                     ax=plt.gca()
                 )
-                plt.savefig(graph_directory + 'map_rain_' + str(index) + '.png')
+                plt.savefig(graph_directory + 'map_rain_' + str(index) + '.png', dpi=300)
                 plt.close()
                 gc.collect()
             with imageio.get_writer(graph_directory + 'rain.gif', mode='I') as writer:
@@ -1365,7 +1365,7 @@ class Grapher:
                 label="Millimeters",
                 ax=plt.gca()
             )
-            plt.savefig(graph_directory + 'map_rain_accumulation.png')
+            plt.savefig(graph_directory + 'map_rain_accumulation.png', dpi=300)
             plt.close()
             gc.collect()
         if(len(self.mapElevation) > 0):
@@ -1421,7 +1421,7 @@ class Grapher:
             if ax.get_legend():
                 ax.legend(loc="upper left", fontsize=22)
     
-            plt.savefig(graph_directory + 'map_elevation.png')
+            plt.savefig(graph_directory + 'map_elevation.png', dpi=300)
             plt.close()
             gc.collect()
         if(len(self.mapEtaTimes) > 0):
@@ -1451,7 +1451,7 @@ class Grapher:
                     label="Meters",
                     ax=plt.gca()
                 )
-                plt.savefig(graph_directory + 'map_eta_' + str(index) + '.png')
+                plt.savefig(graph_directory + 'map_eta_' + str(index) + '.png', dpi=300)
                 plt.close()
                 gc.collect()
             with imageio.get_writer(graph_directory + 'eta.gif', mode='I') as writer:
@@ -1479,7 +1479,7 @@ class Grapher:
                 label="Meters",
                 ax=plt.gca()
             )
-            plt.savefig(graph_directory + 'map_eta_swath.png')
+            plt.savefig(graph_directory + 'map_eta_swath.png', dpi=300)
             plt.close()
             gc.collect()
         if(len(self.mapWaterTimes) > 0):
@@ -1541,7 +1541,7 @@ class Grapher:
                 plt.xticks(fontsize=22)
                 plt.yticks(fontsize=22)  # Corrected from duplicate xticks
         
-                plt.savefig(graph_directory + 'map_water_' + str(index) + '.png')
+                plt.savefig(graph_directory + 'map_water_' + str(index) + '.png', dpi=300)
                 plt.close()
                 gc.collect()
         
@@ -1594,7 +1594,7 @@ class Grapher:
             # Set axis tick label font sizes
             plt.xticks(fontsize=22)
             plt.yticks(fontsize=22)  # Corrected from duplicate xticks
-            plt.savefig(graph_directory + 'map_water_swath.png')
+            plt.savefig(graph_directory + 'map_water_swath.png', dpi=300)
             plt.close()
             gc.collect()
         if(len(self.mapWaveTimes) > 0):
@@ -1638,7 +1638,7 @@ class Grapher:
 #                     ax=plt.gca()
 #                 )
 #         
-#                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png')
+#                 plt.savefig(graph_directory + 'map_swh_' + str(index) + '.png', dpi=300)
 #                 plt.close()
 #                 gc.collect()
 #         
@@ -1688,7 +1688,7 @@ class Grapher:
             plt.xticks(fontsize=22)
             plt.yticks(fontsize=22)  # Corrected from duplicate xticks
             
-            plt.savefig(graph_directory + 'map_swh_swath.png')
+            plt.savefig(graph_directory + 'map_swh_swath.png', dpi=300)
             plt.close()
             gc.collect()
         
@@ -1706,7 +1706,7 @@ class Grapher:
                 plt.title(stationName + " station wind speed", fontsize=24)
 #                 plt.xlabel("Hours since " + self.windStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("wind speed (m/s)")
-                plt.savefig(graph_directory + stationName + '_wind_speed.png')
+                plt.savefig(graph_directory + stationName + '_wind_speed.png', dpi=300)
                 plt.close()
             if(len(self.datapointsDirections) > 0):
                 fig, ax = plt.subplots(figsize=(16,9))
@@ -1718,7 +1718,7 @@ class Grapher:
                 stationName = self.obsLabels[index]
                 plt.title(stationName + " station wind directions", fontsize=24)
                 plt.ylabel("wind direction (degrees)")
-                plt.savefig(graph_directory + stationName + '_wind_direction.png')
+                plt.savefig(graph_directory + stationName + '_wind_direction.png', dpi=300)
                 plt.close()
         for index in range(numberOfRainDatapoints):
             if(len(self.datapointsRains) > 0):
@@ -1753,7 +1753,7 @@ class Grapher:
                 plt.title(stationName + " rain-accumulation forecast/gauge:" + accumulationRain + "/" + accumulationGauge)
                 plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("rain (mm/hr)")
-                plt.savefig(graph_directory + stationName + '_rain.png')
+                plt.savefig(graph_directory + stationName + '_rain.png', dpi=300)
                 plt.close()
 #                Plot accumulation series
                 fig, ax = plt.subplots()
@@ -1764,7 +1764,7 @@ class Grapher:
                 plt.title(stationName + " accumulated rain- forecast/gauge:" + accumulationRain + "/" + accumulationGauge)
                 plt.xlabel("Hours since " + self.rainStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("rain (mm)")
-                plt.savefig(graph_directory + stationName + '_rain_accumulation.png')
+                plt.savefig(graph_directory + stationName + '_rain_accumulation.png', dpi=300)
                 plt.close()
         for index in range(numberOfWaterDatapoints):
             if(BYPASS_WATER_TIMESERIES_PLOTS):
@@ -1786,7 +1786,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName + " station water elevation", fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("elevation (meters)")
-                plt.savefig(graph_directory + stationName + '_water.png')
+                plt.savefig(graph_directory + stationName + '_water.png', dpi=300)
                 plt.close()
                 
 
@@ -1799,7 +1799,7 @@ class Grapher:
                     plt.title(self.titlePrefix + stationName + " station water depth")
 #                     plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("depth (meters)")
-                    plt.savefig(graph_directory + stationName + '_station_water.png')
+                    plt.savefig(graph_directory + stationName + '_station_water.png', dpi=300)
                     plt.close()
 #         No loop because no timeseries
         if(len(self.datapointsElevation) > 0):
@@ -1829,7 +1829,7 @@ class Grapher:
                 plt.title(stationName + " station eta elevation")
                 plt.xlabel("Hours since " + self.etaStartDate.strftime(self.DATE_FORMAT))
                 plt.ylabel("eta (meters)")
-                plt.savefig(graph_directory + stationName + '_eta.png')
+                plt.savefig(graph_directory + stationName + '_eta.png', dpi=300)
                 plt.close()
         for index in range(numberOfWaveDatapoints):
             if(self.wavesExists):
@@ -1846,7 +1846,7 @@ class Grapher:
                     plt.xlabel("Date")                    
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("SWH (meters)")
-                    plt.savefig(graph_directory + stationName + '_wave_swh.png')
+                    plt.savefig(graph_directory + stationName + '_wave_swh.png', dpi=300)
                     plt.close()
                 if(len(self.datapointsMWD[index]) > 0):
                     fig, ax = plt.subplots()
@@ -1859,7 +1859,7 @@ class Grapher:
 #                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("MWD (degrees)")
-                    plt.savefig(graph_directory + stationName + '_wave_mwd.png')
+                    plt.savefig(graph_directory + stationName + '_wave_mwd.png', dpi=300)
                     plt.close()
                 if(len(self.datapointsMWP[index]) > 0):
                     fig, ax = plt.subplots()
@@ -1872,7 +1872,7 @@ class Grapher:
 #                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("MWP (seconds)")
-                    plt.savefig(graph_directory + stationName + '_wave_mwp.png')
+                    plt.savefig(graph_directory + stationName + '_wave_mwp.png', dpi=300)
                     plt.close()
                 if(len(self.datapointsPWP[index]) > 0):
                     fig, ax = plt.subplots(figsize=(16,9))
@@ -1887,7 +1887,7 @@ class Grapher:
                     plt.xlabel("Date")
                     ax.format_xdata = mdates.DateFormatter('%d')
                     plt.ylabel("PWP (seconds)")
-                    plt.savefig(graph_directory + stationName + '_wave_pwp.png')
+                    plt.savefig(graph_directory + stationName + '_wave_pwp.png', dpi=300)
                     plt.close()
                 if(len(self.datapointsRADMag[index]) > 0):
                     fig, ax = plt.subplots()
@@ -1897,7 +1897,7 @@ class Grapher:
                     plt.title(stationName + " station radiation stress magnitude", fontsize=24)
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("Rad Stress Magitude (1/m^2s^2)")
-                    plt.savefig(graph_directory + stationName + '_wave_radstress_mag.png')
+                    plt.savefig(graph_directory + stationName + '_wave_radstress_mag.png', dpi=300)
                     plt.close()
                 if(len(self.datapointsRADDir[index]) > 0):
                     fig, ax = plt.subplots()
@@ -1907,7 +1907,7 @@ class Grapher:
                     plt.title(stationName + " station radiation stress direction", fontsize=24)
                     plt.xlabel("Hours since " + self.waveStartDate.strftime(self.DATE_FORMAT))
                     plt.ylabel("Rad stress direction (degrees)")
-                    plt.savefig(graph_directory + stationName + '_wave_radstress_dir.png')
+                    plt.savefig(graph_directory + stationName + '_wave_radstress_dir.png', dpi=300)
                     plt.close()
                     
 # Graph wave parameters on the same graph for comparison
@@ -1929,7 +1929,7 @@ class Grapher:
             ax_swh.set_ylabel("SWH (meters)")
             ax_swh.set_xlabel("Date")
             plt.tight_layout()
-            plt.savefig(graph_directory + 'all_stations_wave_swh.png')
+            plt.savefig(graph_directory + 'all_stations_wave_swh.png', dpi=300)
             plt.close(fig_swh)
         # MWP Graph
         if self.wavesExists:
@@ -1949,7 +1949,7 @@ class Grapher:
             ax_mwp.set_ylabel("MWP (seconds)")
             ax_mwp.set_xlabel("Date")
             plt.tight_layout()
-            plt.savefig(graph_directory + 'all_stations_wave_mwp.png')
+            plt.savefig(graph_directory + 'all_stations_wave_mwp.png', dpi=300)
             plt.close(fig_mwp)
 
         # PWP Graph
@@ -1970,7 +1970,7 @@ class Grapher:
             ax_pwp.set_ylabel("PWP (seconds)")
             ax_pwp.set_xlabel("Date")
             plt.tight_layout()
-            plt.savefig(graph_directory + 'all_stations_wave_pwp.png')
+            plt.savefig(graph_directory + 'all_stations_wave_pwp.png', dpi=300)
             plt.close(fig_pwp)
             
 #           Plot mwp and pwp together
@@ -1999,7 +1999,7 @@ class Grapher:
             ax.set_xlabel("Date")
     
             fig.tight_layout()
-            fig.savefig(graph_directory + 'all_stations_wave_mwp_pwp.png')
+            fig.savefig(graph_directory + 'all_stations_wave_mwp_pwp.png', dpi=300)
             plt.close(fig)
             
 #         Graph water values on top of each other
@@ -2036,7 +2036,7 @@ class Grapher:
 #             plt.ylabel("Elevation (meters)", fontsize=14)
 #     
 #             plt.tight_layout()
-#             plt.savefig(graph_directory + 'all_stations_water.png')
+#             plt.savefig(graph_directory + 'all_stations_water.png', dpi=300)
 #             plt.close()
 
         
@@ -2235,7 +2235,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName + " station runup distance max: " + maxRunupDistance, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("runup distance along shore (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_runup_distance.png')
+                plt.savefig(graph_directory + stationName + '_runup_distance.png', dpi=300)
                 plt.close()
 #             Iterate through runup times to graph a map of the waterline
             
@@ -2261,7 +2261,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName + " station runup (adcirc, stockdon): " + maxRunup, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("runup (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_runup.png')
+                plt.savefig(graph_directory + stationName + '_runup.png', dpi=300)
                 plt.close()
             
 #               graph deepwater wave height
@@ -2282,7 +2282,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName + " station deepwater SWH max: " + maxSwh, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Deepwater SWH (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_deepwater_swh.png')
+                plt.savefig(graph_directory + stationName + '_deepwater_swh.png', dpi=300)
                 plt.close()
                 
 #                 print("runup obs times: ", self.datapointsSetupHolmanHigh[index][0:20])
@@ -2309,7 +2309,7 @@ class Grapher:
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Setup (meters)")
                 plt.xlabel("Date")
-                plt.savefig(graph_directory + stationName + '_setup.png')
+                plt.savefig(graph_directory + stationName + '_setup.png', dpi=300)
                 plt.close()
                 
 #                 Graph swash
@@ -2336,7 +2336,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Swash (Max $\sqrt{S_{inc}^2 + S_{ig}^2}$, USGS): " + maxSwash, fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Swash (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_swash.png')
+                plt.savefig(graph_directory + stationName + '_swash.png', dpi=300)
                 plt.close()
                         
 #                 Graph incident swash
@@ -2355,7 +2355,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station incident (<3min) swash max: " + maxIncidentSwash, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("swash (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_incident_swash.png')
+                plt.savefig(graph_directory + stationName + '_incident_swash.png', dpi=300)
                 plt.close()
                 
 #                 Graph infragravity swash
@@ -2373,7 +2373,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + " station infragravity (>3 min) swash max: " + maxInfragravitySwash, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("swash (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_infragravity_swash.png')
+                plt.savefig(graph_directory + stationName + '_infragravity_swash.png', dpi=300)
                 plt.close()
             
                 
@@ -2487,7 +2487,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName + " station wavelength max: " + maxWavelength, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("wavelength (meters)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_wavelength.png')
+                plt.savefig(graph_directory + stationName + '_wavelength.png', dpi=300)
                 plt.close()
                 
 #                 Graph steepness
@@ -2502,7 +2502,7 @@ class Grapher:
                 plt.title(self.titlePrefix + stationName + " station steepness max: " + maxSteepness, fontsize=18)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("wave steepness (H₀/L₀)", fontsize=14)
-                plt.savefig(graph_directory + stationName + '_steepness.png')
+                plt.savefig(graph_directory + stationName + '_steepness.png', dpi=300)
                 plt.close()
                 
                 #                 Graph iribarren number
@@ -2587,7 +2587,7 @@ class Grapher:
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Slope")
                 plt.xlabel("Date")
-                plt.savefig(graph_directory + stationName + '_slope.png')
+                plt.savefig(graph_directory + stationName + '_slope.png', dpi=300)
                 plt.close()
 
 
@@ -2984,7 +2984,7 @@ class Grapher:
         
         axes[-1].set_xlabel("Date", fontsize=14)
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_all_runup.png')
+        plt.savefig(graph_directory + 'Napatree_all_runup.png', dpi=300)
         plt.close()
         
         # --- Figure 1: Combined Deepwater Significant Wave Height ---
@@ -3026,7 +3026,7 @@ class Grapher:
         
         axes[-1].set_xlabel("Date", fontsize=14)
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_all_deepwater_swh.png')
+        plt.savefig(graph_directory + 'Napatree_all_deepwater_swh.png', dpi=300)
         plt.close()
         
         # --- Figure 2: Combined Significant Wave Height ---
@@ -3080,7 +3080,7 @@ class Grapher:
         
         axes[-1].set_xlabel("Date", fontsize=14)
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_all_swh.png')
+        plt.savefig(graph_directory + 'Napatree_all_swh.png', dpi=300)
         plt.close()
         
         # --- Combined Peak Wave Period ---
@@ -3122,7 +3122,7 @@ class Grapher:
                         if(not obsPlotted):
                             ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"$T_p$ USGS", color="blue") 
                             obsPlotted = True 
-                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName, color="blue")
+                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName, color=color)
             
         
             ax.legend(loc="upper left", fontsize=10)
@@ -3134,7 +3134,7 @@ class Grapher:
         
         axes[-1].set_xlabel("Date", fontsize=14)
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_all_pwp.png')
+        plt.savefig(graph_directory + 'Napatree_all_pwp.png', dpi=300)
         plt.close()
         
         # --- Figure 3: Combined Elevation, Max SWH, and Max Deepwater SWH ---
@@ -3253,7 +3253,7 @@ class Grapher:
                 ax.set_xlabel("Distance (meters)", fontsize=14)
         
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_all_deepline_metrics.png')
+        plt.savefig(graph_directory + 'Napatree_all_deepline_metrics.png', dpi=300)
         plt.close()
         
         # --- Combined Elevation Profiles for All Transects ---
@@ -3339,7 +3339,7 @@ class Grapher:
                 ax.set_xlabel("Distance (meters)", fontsize=14)
         
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
+        plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png', dpi=300)
         plt.close()
 
         # --- Combined Elevation Profiles for All Transects ---
@@ -3554,7 +3554,7 @@ class Grapher:
                 ax.set_xlabel("Distance (meters)", fontsize=14)
         
         plt.tight_layout()
-        plt.savefig(graph_directory + 'Napatree_beach_elevation_profiles.png')
+        plt.savefig(graph_directory + 'Napatree_beach_elevation_profiles.png', dpi=300)
         plt.close()
 # # Graph all runup
 # 
@@ -3576,7 +3576,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Runup (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree1_all_runup.png')
+#         plt.savefig(graph_directory + 'Napatree1_all_runup.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3597,7 +3597,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Runup (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree2_all_runup.png')
+#         plt.savefig(graph_directory + 'Napatree2_all_runup.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3618,7 +3618,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Runup (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree3_all_runup.png')
+#         plt.savefig(graph_directory + 'Napatree3_all_runup.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3639,7 +3639,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Runup (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree4_all_runup.png')
+#         plt.savefig(graph_directory + 'Napatree4_all_runup.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3660,7 +3660,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Runup (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree5_all_runup.png')
+#         plt.savefig(graph_directory + 'Napatree5_all_runup.png', dpi=300)
 #         plt.close()
 # #         
 #     #               graph all deepwater swh                
@@ -3683,7 +3683,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel(r"$H_0$ (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree1_all_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree1_all_deepwater_swh.png', dpi=300)
 #         plt.close()
 # # #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3701,7 +3701,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel(r"$H_s$ (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree1_all_swh.png')
+#         plt.savefig(graph_directory + 'Napatree1_all_swh.png', dpi=300)
 #         plt.close()
 # 
 #         deeplineDistances = []
@@ -3728,7 +3728,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Elevation (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree1_all_elevations.png')
+#         plt.savefig(graph_directory + 'Napatree1_all_elevations.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3739,7 +3739,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree1_max_swh.png')
+#         plt.savefig(graph_directory + 'Napatree1_max_swh.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3750,7 +3750,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree1_max_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree1_max_deepwater_swh.png', dpi=300)
 #         plt.close()
 
                 
@@ -3774,7 +3774,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree2_all_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree2_all_deepwater_swh.png', dpi=300)
 #         plt.close()
         
 #         deeplineDistances = []
@@ -3801,7 +3801,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Elevation (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree2_all_elevations.png')
+#         plt.savefig(graph_directory + 'Napatree2_all_elevations.png', dpi=300)
 #         plt.close()
         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3812,7 +3812,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree2_max_swh.png')
+#         plt.savefig(graph_directory + 'Napatree2_max_swh.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3823,7 +3823,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree2_max_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree2_max_deepwater_swh.png', dpi=300)
 #         plt.close()
 
     #               graph all deepwater swh                
@@ -3846,7 +3846,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree3_all_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree3_all_deepwater_swh.png', dpi=300)
 #         plt.close()
 #         
 #         deeplineDistances = []
@@ -3873,7 +3873,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Elevation (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree3_all_elevations.png')
+#         plt.savefig(graph_directory + 'Napatree3_all_elevations.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3884,7 +3884,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree3_max_swh.png')
+#         plt.savefig(graph_directory + 'Napatree3_max_swh.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3895,7 +3895,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree3_max_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree3_max_deepwater_swh.png', dpi=300)
 #         plt.close()
 
 
@@ -3919,7 +3919,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree4_all_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree4_all_deepwater_swh.png', dpi=300)
 #         plt.close()
         
 #         deeplineDistances = []
@@ -3946,7 +3946,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Elevation (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree4_all_elevations.png')
+#         plt.savefig(graph_directory + 'Napatree4_all_elevations.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3957,7 +3957,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree4_max_swh.png')
+#         plt.savefig(graph_directory + 'Napatree4_max_swh.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -3968,7 +3968,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree4_max_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree4_max_deepwater_swh.png', dpi=300)
 #         plt.close()
 
     #               graph all deepwater swh                
@@ -3991,7 +3991,7 @@ class Grapher:
 # #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
 #         plt.tight_layout()
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
-#         plt.savefig(graph_directory + 'Napatree5_all_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree5_all_deepwater_swh.png', dpi=300)
 #         plt.close()
 #         
 #         deeplineDistances = []
@@ -4018,7 +4018,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Elevation (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree5_all_elevations.png')
+#         plt.savefig(graph_directory + 'Napatree5_all_elevations.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -4029,7 +4029,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree5_max_swh.png')
+#         plt.savefig(graph_directory + 'Napatree5_max_swh.png', dpi=300)
 #         plt.close()
 #         
 #         fig, ax = plt.subplots(figsize=(16,9))
@@ -4040,7 +4040,7 @@ class Grapher:
 #         plt.xlabel("Distance", fontsize=14)
 #         plt.ylabel("Deepwater SWH (meters)", fontsize=14)
 #         plt.tight_layout()
-#         plt.savefig(graph_directory + 'Napatree5_max_deepwater_swh.png')
+#         plt.savefig(graph_directory + 'Napatree5_max_deepwater_swh.png', dpi=300)
 #         plt.close()
 
                 
@@ -4079,7 +4079,7 @@ class Grapher:
 #                 plt.xlabel(self.runupTimes[index])
 #     #             plt.gca().invert_yaxis()
 # 
-#                 plt.savefig(graph_directory + 'map_runup_' + str(index) + '.png')
+#                 plt.savefig(graph_directory + 'map_runup_' + str(index) + '.png', dpi=300)
 #                 plt.close()
 #                 gc.collect()
 #             with imageio.get_writer(graph_directory + 'runup.gif', mode='I') as writer:
