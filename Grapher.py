@@ -3443,7 +3443,7 @@ class Grapher:
             # Draw subtle horizontal lines for dune crest and dune toe
             ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='orange', label='Dune Crest TWL&CC')
             ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
-            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color='red', label='Dune Height Obs')
+            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="pink", label='Dune Height Obs')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
 #             duneHeightPlotted = False
