@@ -2625,8 +2625,9 @@ class Grapher:
                 if str(transect) not in station_name[0:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
-                    ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f,2\sigma}}$", color='blue', linestyle='-')
+                    ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f}}$", color='blue', linestyle='-')
                     ax.axhline(y=max(self.datapointsRunupObsBeachSlope[index]), color='green', linestyle='--', label=r"$\beta_{{f,USGS}}$")
+                    ax.axhline(y=FORESHORE_BEACH_SLOPE_OBS[transect - 1], color='green', linestyle='--', label=r"$\beta_{{f,obs}}$")
                     base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
                     if base_name not in slopes_by_name:
                         slopes_by_name[base_name] = {'true': None, 'false': None}
@@ -2742,7 +2743,7 @@ class Grapher:
                     datapointsSwashStockdon = np.sqrt(np.array(self.datapointsSwashStockdonIncident[index])**2 + np.array(self.datapointsSwashStockdonInfragravity[index])**2)
                     
                     # Plot swash time series
-                    ax.plot(self.runupTimes, datapointsSwashStockdon, color="green", label=r"Stockdon Swash $S$")
+                    ax.plot(self.runupTimes, datapointsSwashStockdon, color="green", label=r"Stockdon Swash $\sqrt{{S_{{inc}}^2 + S_{{ig}}^2}}$")
                     ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], color="blue", label=r"Stockdon Incident $S_{inc}$")
                     ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], color="orange", label=r"Stockdon Infragravity $S_{ig}$")
                     ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color="green", label=r"USGS Swash", alpha=0.5)
@@ -2755,7 +2756,7 @@ class Grapher:
                     maxSwash = f"{max_swash_stockdon}, {max_swash_usgs}"
                     
                     # Set title and labels
-                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash " + r"(Max $\sqrt{{S_{{inc}}^2 + S_{{ig}}^2}}$, USGS: " +  f"{maxSwash})", fontsize=14)
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash " + r"(Max $S$, USGS: " +  f"{maxSwash})", fontsize=14)
                     ax.set_ylabel("Swash (meters)", fontsize=12)
                     break  # Plot only one station per transect
             
@@ -3472,7 +3473,7 @@ class Grapher:
             # Water lines and total water lines
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) in stationName[0:stationName.index(" ")] and "7" in stationName[stationName.index(" ") + 1]:
                     # Plot η line (maximum value as horizontal line)
                     if len(self.datapointsSwashStockdonLow[index]) > 0:
                         eta = np.array(self.datapointsSwashStockdonLow[index])
@@ -3491,12 +3492,22 @@ class Grapher:
                     ax.fill_between(profileDistances, np.full_like(profileDistances, max_total_value), elevation_y_min, 
                                     where=(max_total_value > profileElevations) & (max_total_value < elevation_y_max), 
                                     color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
-        
-                    # Plot USGS TWL and η
-                    ax.plot(np.array(self.datapointsSetupHolmanHigh[index]), np.array(self.datapointsSwashHolmanHigh[index]), 
-                            '--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
-                    ax.plot(np.array(self.datapointsSetupHolmanHigh[index]), np.array(self.datapointsRunupStockdonLow[index]), 
-                            '--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
+                                  
+
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), '--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), '--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
+
+                    # Calculate the error distances for asymmetric error bars
+                    yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
+                    yerr_upper = np.array(self.datapointsSwashHolmanIncident[index]) - np.array(self.datapointsSwashHolmanHigh[index])  # Distance from central to 95% (upper bound)
+                    
+                    # Combine into asymmetric error array
+                    yerr = [np.nanmax(yerr_lower), np.nanmax(yerr_upper)]
+                    
+                    # Add error bars
+                    ax.errorbar(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), yerr=yerr, fmt='none', ecolor='orange', alpha = 0.25, capsize=3)
+
         
             # Shade terrain underneath elevation curve
             ax.fill_between(profileDistances, profileElevations, elevation_y_min, where=(profileElevations > elevation_y_min), 
