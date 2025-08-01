@@ -710,7 +710,7 @@ class Reader:
             node = (nodesLatitudes[index], nodesLongitudes[index])
             nodeIndex = nodesIndex[index]
 #             print(node)
-            if(node[0] <= 90 and node[0] >= -90):
+            if(node[0] <= 90 and node[0] >= -90 and node[0] <= 41.5 and node[0] >= 40):
                 for stationKey in stationKeys:
 #                     print(stationKey)
                     if(dataType == "rain"):
