@@ -2297,7 +2297,7 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsSetupAdcirc[index], label="ADCIRC+SWAN setup+storm surge")
                 ax.plot(self.runupTimes, self.datapointsSetupStockdonLow[index], label=r"SWAN $\eta_{setup}$")
                 
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"USGS $\langle \eta \rangle$")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"TWL&CC $\langle \eta \rangle$")
 #                 ax.plot(self.runupTimes, self.datapointsRunupHolmanHigh[index], label="ADCIRC+SWAN storm surge")
 
 
@@ -2323,9 +2323,9 @@ class Grapher:
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], color = "blue", label="Stockdon Incident βf√(HₒLₒ)")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], color = "orange", label="Stockdon Infragravity √(HₒLₒ)")
                 
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color = "green", label=r"USGS Swash")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color = "blue", label=r"USGS Incident Swash")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color = "orange", label=r"USGS Infragravity Swash")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color = "green", label=r"TWL&CC Swash")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color = "blue", label=r"TWL&CC Incident Swash")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color = "orange", label=r"TWL&CC Infragravity Swash")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2333,7 +2333,7 @@ class Grapher:
                 plt.yticks(fontsize=12)
                 stationName = self.runupLabels[index]
                 maxSwash = str(round(max(datapointsSwashStockdon), 2)) + ", " + str(round(max(self.datapointsRunupObsSwash[index]), 2))
-                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Swash (Max $\sqrt{S_{inc}^2 + S_{ig}^2}$, USGS): " + maxSwash, fontsize=24)
+                plt.title(self.titlePrefix + stationName[0:stationName.index(" ")] + r" Swash (Max $\sqrt{S_{inc}^2 + S_{ig}^2}$, TWL&CC): " + maxSwash, fontsize=24)
 #                 plt.xlabel("Start: " + self.waterStartDate.strftime(self.DATE_FORMAT), fontsize=14)
                 plt.ylabel("Swash (meters)", fontsize=14)
                 plt.savefig(graph_directory + stationName + '_swash.png', dpi=300)
@@ -2344,7 +2344,7 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsRunup[index], label="runup")
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanIncident[index], label="Holman Incident ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], label="Stockdon Incident βf√(HₒLₒ)")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], label=r"USGS Incident")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], label=r"TWL&CC Incident")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2362,7 +2362,7 @@ class Grapher:
                 fig, ax = plt.subplots(figsize=(16,9))
 #                 ax.plot(self.runupTimes, self.datapointsSwashHolmanInfragravity[index], label="Holman Infragravity ξ")
                 ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], label="Stockdon Infragravity √(HₒLₒ)")
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], label=r"USGS Infragravity")
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], label=r"TWL&CC Infragravity")
 #                 ax.plot(self.runupTimes, self.datapointsSwashStockdonLow[index], label="Stockdon Low")
                 ax.legend(loc="upper left")
                 ax.format_xdata = mdates.DateFormatter('%d')
@@ -2449,8 +2449,8 @@ class Grapher:
                     ax.plot(self.runupTimes, lower_bound, '--', color='green', label=r"$-\frac{S}{2}$", linewidth=1.5)
                     ax.plot(self.runupTimes, upper_bound_1_1, color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)  # New 1.1 * S/2 line
                 
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", label=r"TWL USGS", linewidth=1.5) 
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="blue", alpha=0.5, label=r"$\eta$ USGS", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", label=r"TWL TWL&CC", linewidth=1.5) 
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="blue", alpha=0.5, label=r"$\eta$ TWL&CC", linewidth=1.5) 
 
                     # Calculate the maximum elevation including the swash
                     max_water_elevation = max(self.datapointsSwashStockdonLow[index])
@@ -2627,7 +2627,7 @@ class Grapher:
                     continue
                 if '7m Depth Waves' in station_name:
                     ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f}}$", color='blue', linestyle='-')
-                    ax.axhline(y=max(self.datapointsRunupObsBeachSlope[index]), color='green', linestyle='--', label=r"$\beta_{{f}}$ USGS")
+                    ax.axhline(y=max(self.datapointsRunupObsBeachSlope[index]), color='green', linestyle='--', label=r"$\beta_{{f}}$ TWL&CC")
                     ax.axhline(y=FORESHORE_BEACH_SLOPE_OBS[transect - 1], color='red', linestyle='--', label=r"$\beta_{{f}}$ Obs")
                     base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
                     if base_name not in slopes_by_name:
@@ -2686,7 +2686,7 @@ class Grapher:
                 if '7m Depth Waves' in station_name:
                     # Plot setup time series
                     ax.plot(self.runupTimes, self.datapointsSetupStockdon[index], label=r"$\langle\eta\rangle$ Stockdon", color='blue')
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"$\langle \eta \rangle$ USGS", color='green')
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"$\langle \eta \rangle$ TWL&CC", color='green')
                     ax.plot(self.runupTimes, self.datapointsSetupStockdonLow[index], label=r"$\eta_{setup}$ SWAN", color='orange')
                     
                     # Calculate max values for title
@@ -2747,9 +2747,9 @@ class Grapher:
                     ax.plot(self.runupTimes, datapointsSwashStockdon, color="green", label=r"Stockdon Swash $\sqrt{{S_{{inc}}^2 + S_{{ig}}^2}}$")
                     ax.plot(self.runupTimes, self.datapointsSwashStockdonIncident[index], color="blue", label=r"Stockdon Incident $S_{inc}$")
                     ax.plot(self.runupTimes, self.datapointsSwashStockdonInfragravity[index], color="orange", label=r"Stockdon Infragravity $S_{ig}$")
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color="green", label=r"USGS Swash USGS", alpha=0.5)
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color="blue", label=r"Incident Swash USGS", alpha=0.5)
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color="orange", label=r"Infragravity Swash USGS", alpha=0.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwash[index], linestyle="--", color="green", label=r"Swash TWL&CC", alpha=0.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsIncidentSwash[index], linestyle="--", color="blue", label=r"Incident Swash TWL&CC", alpha=0.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsInfragravitySwash[index], linestyle="--", color="orange", label=r"Infragravity Swash TWL&CC", alpha=0.5)
                     
                     # Calculate max values for title
                     max_swash_stockdon = round(max(datapointsSwashStockdon), 2)
@@ -2757,7 +2757,7 @@ class Grapher:
                     maxSwash = f"{max_swash_stockdon}, {max_swash_usgs}"
                     
                     # Set title and labels
-                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash " + r"(Max $S$, USGS: " +  f"{maxSwash})", fontsize=14)
+                    ax.set_title(f"{self.titlePrefix}Napatree{transect} Swash " + r"(Max $S$, TWL&CC: " +  f"{maxSwash})", fontsize=14)
                     ax.set_ylabel("Swash (meters)", fontsize=12)
                     break  # Plot only one station per transect
             
@@ -2823,8 +2823,8 @@ class Grapher:
                     ax.plot(self.runupTimes, upper_bound_1_1, color='purple', label=r"+1.1$\frac{S}{2}$", linewidth=1.5)
                     
                     # Plot USGS data
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", alpha=0.5, label=r"TWL USGS", linewidth=1.5)
-                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="blue", alpha=0.5, label=r"$\eta$ USGS", linewidth=1.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="purple", alpha=0.5, label=r"TWL TWL&CC", linewidth=1.5)
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="blue", alpha=0.5, label=r"$\eta$ TWL&CC", linewidth=1.5)
                     
                     # Calculate max values for title
                     max_water_elevation = round(max(self.datapointsSwashStockdonLow[index]), 2)
@@ -2947,11 +2947,11 @@ class Grapher:
                         max_9km = round(np.nanmax(self.datapointsRunupHolmanMid[index]), 2) if len(self.datapointsRunupHolmanMid[index]) > 0 else "-"
         
                     dune_heights = self.datapointsDuneHeights[index]
-                    ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName)
+                    ax.plot(self.runupTimes, self.datapointsRunupHolmanMid[index], label=stationName[stationName.index(" ") + 1:])
                     unique_heights.update([x for x in dune_heights if not np.isnan(x)])
         
             #https://x.com/i/grok/share/h5PUOM8iQLOEEh3QJ8g2xPJtK
-            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="blue", alpha = 0.3, label=r"TWL USGS")
+            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color="blue", alpha = 0.3, label=r"TWL TWL&CC")
             
             # Calculate the error distances for asymmetric error bars
             yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
@@ -2965,7 +2965,7 @@ class Grapher:
             # Plot η line if available
             if eta_values is not None:
                 ax.plot(self.runupTimes, eta_values, linestyle='-', color='black', label='η')
-                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="black", label=r"$\eta$ USGS", alpha = 0.5) 
+                ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color="black", label=r"$\eta$ TWL&CC", alpha = 0.5) 
         
             # Plot horizontal lines for dune heights
 #             CHANGE HERE WHEN DOING 2022 VS 2023 NOREASTER
@@ -3015,7 +3015,7 @@ class Grapher:
                     if distance == "9000m":
                         max_9km = round(np.nanmax(self.datapointsRunupHolmanLow[index]), 2) if len(self.datapointsRunupHolmanLow[index]) > 0 else "-"
         
-                    ax.plot(self.runupTimes, self.datapointsRunupHolmanLow[index], label=stationName)
+                    ax.plot(self.runupTimes, self.datapointsRunupHolmanLow[index], label=stationName[stationName.index(" ") + 1:])
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -3066,9 +3066,9 @@ class Grapher:
                             color = "green"
         
                         if(not obsPlotted):
-                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"$H_s$ USGS", color="blue")
+                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsSwh[index], '--', label=r"$H_s$ TWL&CC", color="blue")
                             obsPlotted = True
-                        ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName, color=color)
+                        ax.plot(self.runupTimes, self.datapointsSWH[swhIndex], label=stationName[stationName.index(" ") + 1:], color=color)
 
         
             ax.legend(loc="upper left", fontsize=10)
@@ -3120,9 +3120,9 @@ class Grapher:
                             max_9km = round(np.nanmax(self.datapointsPWP[pwpIndex]), 2) if len(self.datapointsPWP[pwpIndex]) > 0 else "-"
         
                         if(not obsPlotted):
-                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"$T_p$ USGS", color="blue") 
+                            ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupObsPwp[index], '--', label=r"$T_p$ TWL&CC", color="blue") 
                             obsPlotted = True 
-                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName, color=color)
+                        ax.plot(self.runupTimes, self.datapointsPWP[pwpIndex], label=stationName[stationName.index(" ") + 1:], color=color)
             
         
             ax.legend(loc="upper left", fontsize=10)
@@ -3441,8 +3441,8 @@ class Grapher:
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='orange', label='Dune Crest USGS')
-            ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe USGS')
+            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='orange', label='Dune Crest TWL&CC')
+            ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
             ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color='red', label='Dune Height Obs')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
@@ -3465,7 +3465,7 @@ class Grapher:
                 y_start_usgs = mhwl_elev
                 y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.6)
-                ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,USGS}} = {:.3f}$'.format(abs(beta_usgs)))
+                ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,TWL&CC}} = {:.3f}$'.format(abs(beta_usgs)))
         
                 # β_f,obs hardcoded per transect
                 beta_obs = -FORESHORE_BEACH_SLOPE_OBS[transect - 1]  # Negative slope for inward direction
@@ -3505,13 +3505,13 @@ class Grapher:
                                     color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 0 else "")
                                   
 
-#                     ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+#                     ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='TWL&CC TWL' if transect == 1 else "")
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.7, label='η USGS' if transect == 1 else "")
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.7, label='η TWL&CC' if transect == 1 else "")
 
                     # Plot the horizontal line at the maximum value
                     max_value = np.nanmax(np.array(self.datapointsSwashHolmanHigh[index]))
-                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.7, label='TWL USGS' if transect == 1 else "")
+                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.7, label='TWL TWL&CC' if transect == 1 else "")
                     
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
