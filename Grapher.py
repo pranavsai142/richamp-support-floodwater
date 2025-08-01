@@ -3435,17 +3435,18 @@ class Grapher:
             # Draw subtle horizontal lines for dune crest and dune toe
             ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.7, color='orange', label='Dune Crest USGS')
             ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.7, color='green', label='Dune Toe USGS')
+            ax.axhline(y=max(self.datapointsDuneHeights[index]), linestyle='--', linewidth=1, alpha=0.7, color='red', label='Dune Height')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
-            duneHeightPlotted = False
-            print(self.datapointsDuneHeights[index])
-            quit()
-            unique_dune_heights = [x for x in self.datapointsDuneHeights[index] if not np.isnan(x)]
-            unique_dune_heights = sorted(list(set(unique_dune_heights)))
-            for dune_height in unique_dune_heights:
-                ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.7, color='red', label='Dune Height' if not duneHeightPlotted else "")
-                duneHeightPlotted = True
-        
+#             duneHeightPlotted = False
+#             print(self.datapointsDuneHeights[index])
+#             quit()
+#             unique_dune_heights = [x for x in self.datapointsDuneHeights[index] if not np.isnan(x)]
+#             unique_dune_heights = sorted(list(set(unique_dune_heights)))
+#             for dune_height in unique_dune_heights:
+#                 ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.7, color='red', label='Dune Height' if not duneHeightPlotted else "")
+#                 duneHeightPlotted = True
+#         
             # Draw slope lines through MHWL with correct direction (inward/downward)
             if mhwl_intersect is not None:
                 # β_f,USGS from self.datapointsRunupObsBeachSlope
