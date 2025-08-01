@@ -3465,9 +3465,13 @@ class Grapher:
                 points_to_plot.append('Dune Toe')
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, color='orange', linestyle='--', linewidth=1, alpha=0.5, label='Dune Crest Elev')
-            ax.axhline(y=dune_toe_elev_ref, color='green', linestyle='--', linewidth=1, alpha=0.5, label='Dune Toe Elev')
-        
+            ax.axhline(y=dune_crest_elev_ref, linestyle='--', linewidth=1, alpha=0.3, label='Dune Crest USGS')
+            ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, alpha=0.3, label='Dune Toe USGS')
+            duneHeightPlotted = False
+            for dune_height in list(set(self.datapointsDuneHeights[index])):
+#             Change to Runup Height for 2022
+                ax.axhline(y=dune_toe_elev_ref, linestyle='--', linewidth=1, label='Dune Height' if not duneHeightPlotted else)
+                duneHeightPlotted = True
             # Draw slope line from MHWL to calculated dune toe
             if mhwl_intersect is not None and xt is not None:
                 ax.plot([mhwl_intersect, xt], [mhwl_elev, zt], color='gray', linestyle='--', linewidth=1, alpha=0.5)
