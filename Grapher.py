@@ -3332,6 +3332,7 @@ class Grapher:
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png')
         plt.close()
 
+
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
         all_elevations = []
@@ -3377,10 +3378,11 @@ class Grapher:
                             distance_str = assetLabel[assetLabel.rindex(" ") + 1:-1]
                             profileDistances.append(float(distance_str))
         
-            # Convert to numpy arrays
-            profileDistances = np.array(profileDistances)
-            profileElevations = np.array(profileElevations)
-            profileDemElevations = np.array(profileDemElevations)
+            # Convert to numpy arrays and sort by distance to fix connection issue
+            sort_indices = np.argsort(profileDistances)
+            profileDistances = np.array(profileDistances)[sort_indices]
+            profileElevations = np.array(profileElevations)[sort_indices]
+            profileDemElevations = np.array(profileDemElevations)[sort_indices]
         
             # Interpolate NaN values in profileDemElevations
             if np.any(np.isnan(profileDemElevations)):
@@ -3396,19 +3398,18 @@ class Grapher:
                     profileDemElevations[np.isnan(profileDemElevations)] = 0.0
         
             # Plot elevation lines
-            ax.scatter(profileDistances, profileElevations, label="Mesh", color='red')
-            ax.scatter(profileDistances, profileDemElevations, label="DEM", color='black')
+            ax.plot(profileDistances, profileElevations, label="Mesh", color='red', linestyle="--")
+            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
         
             # Define reference elevations
             dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
             dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
         
-            # Find intersection for MHWL (first from maximum distance inward)
+            # Find intersection for MHWL
             def find_intersection(distances, elevations, target_elev):
                 if len(distances) < 2 or np.all(elevations == elevations[0]):
                     return None
-                # Traverse from max distance to min (offshore to inland)
                 for i in range(len(distances) - 1, 0, -1):
                     diff1 = float(elevations[i] - target_elev)
                     diff2 = float(elevations[i - 1] - target_elev)
@@ -3436,13 +3437,14 @@ class Grapher:
             # Plot additional horizontal line using unique values from self.datapointsDuneHeights
             duneHeightPlotted = False
             for dune_height in list(set(self.datapointsDuneHeights[index])):
-                ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.3, color='yellow', label='Dune Height' if not duneHeightPlotted else "")
-                duneHeightPlotted = True
+                if not np.isnan(dune_height):
+                    ax.axhline(y=dune_height, linestyle='--', linewidth=1, alpha=0.3, color='yellow', label='Dune Height' if not duneHeightPlotted else "")
+                    duneHeightPlotted = True
         
             # Draw slope lines through MHWL
             if mhwl_intersect is not None:
                 # β_f,USGS from self.datapointsRunupObsBeachSlope
-                beta_usgs = self.datapointsRunupObsBeachSlope[index][-1]  # Assuming last value is representative
+                beta_usgs = self.datapointsRunupObsBeachSlope[index][-1]
                 x_range = ax.get_xlim()
                 x_start = mhwl_intersect
                 x_end = x_start + 100  # Arbitrary length for visualization
@@ -3459,6 +3461,38 @@ class Grapher:
                 ax.plot([x_start, x_end], [y_start_obs, y_end_obs], color='purple', linestyle='--', linewidth=1, alpha=0.5)
                 ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.3f}$'.format(beta_obs))
         
+            # Water lines and total water lines
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    # Plot η line (first valid dataset)
+                    if len(self.datapointsSwashStockdonLow[index]) > 0:
+                        eta = self.datapointsSwashStockdonLow[index]
+                        max_eta_idx = np.nanargmax(eta) if np.any(~np.isnan(eta)) else 0
+                        max_eta_time = self.runupTimes[max_eta_idx] if max_eta_idx < len(self.runupTimes) else self.runupTimes[-1]
+                        max_eta_value = np.nanmax(eta)
+                        ax.plot([max_eta_time], [max_eta_value], 'o-', color='black', label='η' if transect == 1 else "")
+                        # Shade underneath η with pastel blue, avoiding terrain
+                        ax.fill_between(self.runupTimes, eta, y_min, where=(eta > profileElevations[-1]) & (eta < y_max), 
+                                        color='#CCE5FF', alpha=0.5, label='η Shade' if transect == 1 else "")
+        
+                    # Plot total water level (runupHolmanMid)
+                    total_water = self.datapointsRunupHolmanMid[index]
+                    max_total_idx = np.nanargmax(total_water) if np.any(~np.isnan(total_water)) else 0
+                    max_total_time = self.datapointsSetupHolmanHigh[index][max_total_idx] if max_total_idx < len(self.datapointsSetupHolmanHigh[index]) else self.datapointsSetupHolmanHigh[index][-1]
+                    max_total_value = np.nanmax(total_water)
+                    ax.plot([max_total_time], [max_total_value], 'o-', color='blue', label='Total Water' if transect == 1 else "")
+                    # Shade underneath total water with pastel red, avoiding terrain
+                    ax.fill_between(self.datapointsSetupHolmanHigh[index], total_water, y_min, where=(total_water > profileElevations[-1]) & (total_water < y_max), 
+                                    color='#FFCCCC', alpha=0.5, label='Total Water Shade' if transect == 1 else "")
+        
+                    # Plot USGS TWL and η
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanHigh[index], '--', color='orange', alpha=0.5, label='USGS TWL' if transect == 1 else "")
+                    ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsRunupStockdonLow[index], '--', color='black', alpha=0.5, label='USGS η' if transect == 1 else "")
+        
+            # Shade terrain underneath elevation curve
+            ax.fill_between(profileDistances, profileElevations, y_min, where=(profileElevations > y_min), color='#D2B48C', alpha=0.5, label='Terrain' if transect == 1 else "")
+        
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
             ax.tick_params(axis='both', labelsize=12)
@@ -3468,11 +3502,9 @@ class Grapher:
         
             # Update legend
             handles, labels = ax.get_legend_handles_labels()
-            handles.append(plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=10, label='MHWL'))
-            handles.append(plt.Line2D([0], [0], color='orange', linestyle='--', linewidth=1, alpha=0.5, label='Dune Crest Elev'))
-            handles.append(plt.Line2D([0], [0], color='green', linestyle='--', linewidth=1, alpha=0.5, label='Dune Toe Elev'))
-            if duneHeightPlotted:
-                handles.append(plt.Line2D([0], [0], color='yellow', linestyle='--', linewidth=1, alpha=0.5, label='Dune Height'))
+            unique_labels = dict(zip(labels, handles))
+            handles = list(unique_labels.values())
+            labels = list(unique_labels.keys())
             ax.legend(handles=handles, loc="upper right", fontsize=10)
         
             # Set x-axis label on the bottom subplot
