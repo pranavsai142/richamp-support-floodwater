@@ -1473,7 +1473,7 @@ class Grapher:
                         ALL_LATITUDES_TRANSECTS.append(float(dc_data['lat'].iloc[0]))
                         with open("usgs_dune_crest_coordiantes.txt", "w") as f:
                             for index in range(len(ALL_LONGITUDES_TRANSECTS)):
-                                f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]))
+                                f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]) + "\n")
                         for twlccPoint in TWLCC_FORECAST_POINTS_IDENTIFIERS:
                             if state == twlccPoint[0] and segment == twlccPoint[1] and profile == twlccPoint[2]:
                                 TWLCC_FORECAST_POINTS_LATITUDES.append(float(dc_data['lat'].iloc[0]))
