@@ -7,6 +7,7 @@ import time
 import threading
 import sys
 import itertools
+import matplotlib.pyplot as plt
 
 # Define topography file
 TOPOGRAPHY_FILE = "topography.txt"
@@ -55,7 +56,7 @@ class GetObsElevation:
                     lines = file.readlines()
                     if len(lines) < 6:
                         print(f"Error reading {file_path}: Too few lines.")
-                        return None, None, None
+                        return None, None, None, None, None, None, None
                     longitudeDelta = int(lines[0][13:].strip())
                     latitudeDelta = int(lines[1][13:].strip())
                     minLongitude = float(lines[2][13:].strip())
@@ -68,7 +69,7 @@ class GetObsElevation:
 
                     if len(lines) < 6 + latitudeDelta:
                         print(f"Error reading {file_path}: Insufficient data lines ({len(lines)-6} vs {latitudeDelta}).")
-                        return None, None, None
+                        return None, None, None, None, None, None, None
 
                     longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
                     latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
@@ -78,7 +79,7 @@ class GetObsElevation:
                         data = np.array(line.split(), dtype=float)
                         if len(data) != longitudeDelta:
                             print(f"Error reading {file_path}: Line {len(values)+7} has {len(data)} values, expected {longitudeDelta}.")
-                            return None, None, None
+                            return None, None, None, None, None, None, None
                         values.append(data)
                     values = np.array(values)
                     # Negate values for bathymetry to convert negative depths to positive depths
@@ -89,7 +90,7 @@ class GetObsElevation:
                     # Verify grid
                     if values.size == 0 or np.all(values.mask):
                         print(f"Error reading {file_path}: Grid is empty or all values are masked.")
-                        return None, None, None
+                        return None, None, None, None, None, None, None
                     print(f"{file_path} grid shape: {values.shape}, sample value: {values[0,0]:.3f} m, min: {np.min(values):.3f} m, max: {np.max(values):.3f} m")
                     return values, latitudes, longitudes, minLongitude, maxLongitude, minLatitude, maxLatitude
             except Exception as e:
@@ -191,6 +192,24 @@ class GetObsElevation:
                 stop_event.set()
                 animation_thread.join()
 
+        # Plot heatmap of elevation/depth data
+        def plot_heatmap(values, latitudes, longitudes, title, filename):
+            if values is None or np.all(values.mask):
+                print(f"Cannot plot {filename}: No valid data available.")
+                return
+            plt.figure(figsize=(10, 8))
+            # Create meshgrid for plotting
+            lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
+            # Plot heatmap
+            plt.pcolormesh(lon_grid, lat_grid, values, cmap='terrain', shading='auto')
+            plt.colorbar(label='Elevation/Depth (m)')
+            plt.title(title)
+            plt.xlabel('Longitude')
+            plt.ylabel('Latitude')
+            plt.savefig(filename)
+            print(f"Saved plot: {filename}")
+            plt.close()
+
         # Determine bounding box (all points)
         lats = []
         lons = []
@@ -284,8 +303,27 @@ class GetObsElevation:
             elevationDict[key] = {"elevation": filterElevation(elevation, key)}
 
         # Log performance metrics
-        print(f"\nCompleted in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_called else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
+        print(f"\nCompleted processing in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_called else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
 
-        # Save to output file
+        # Save elevation dictionary to output file
         with open(OBS_ASSET_DATA_FILE, "w") as outfile:
             json.dump(elevationDict, outfile, allow_nan=True)
+
+        # Generate and save heatmap plots
+        if topo_success and topographyValues is not None:
+            plot_heatmap(topographyValues, topo_latitudes, topo_longitudes, "Topography Elevation", "obs_topo_debug.png")
+        else:
+            print("Skipping topography plot: No valid topography data available.")
+
+        if bathy_success and bathymetryValues is not None:
+            plot_heatmap(bathymetryValues, bathy_latitudes, bathy_longitudes, "Bathymetry Depth", "obs_bathy_debug.png")
+        else:
+            print("Skipping bathymetry plot: No valid bathymetry data available.")
+
+        # Exit after saving plots
+        print("Plots saved. Exiting.")
+        sys.exit(0)
+
+if __name__ == "__main__":
+    # Example usage (replace with actual file paths)
+    GetObsElevation(STATIONS_FILE="stations.json", OBS_ASSET_DATA_FILE="output/elevations.json")
