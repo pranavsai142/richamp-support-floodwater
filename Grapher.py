@@ -18,6 +18,15 @@ import matplotlib.dates as mdates
 import matplotlib.patches as patches
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
+import requests
+from scipy.interpolate import RegularGridInterpolator
+import time
+import threading
+import sys
+import itertools
+from pyproj import Transformer
+import pandas as pd
+
 
 SMALL_SIZE = 14
 MEDIUM_SIZE = 18
@@ -1372,20 +1381,6 @@ class Grapher:
             plt.close()
             gc.collect()
         if(len(self.mapElevation) > 0):
-            import json
-            import requests
-            import numpy as np
-            from scipy.interpolate import RegularGridInterpolator
-            import os
-            import time
-            import threading
-            import sys
-            import itertools
-            import matplotlib.pyplot as plt
-            from pyproj import Transformer
-            import pandas as pd
-            from matplotlib.tri import Triangulation
-            from matplotlib.cm import ScalarMappable
             
             # Assuming this is part of a larger class with existing attributes
             # USGS_BEACH_PROFILE_FILE is defined as a variable (e.g., "beach_profiles.csv")
