@@ -24,8 +24,9 @@ class GetObsElevation:
         temp_directory = OBS_ASSET_DATA_FILE[0:OBS_ASSET_DATA_FILE.rfind("/") + 1]
         BATHYMETRY_FILE = os.path.join(temp_directory, "bathymetry.txt")
 
-        # Coordinate transformation (assuming UTM Zone 13N for topography; adjust if needed)
-        transformer = Transformer.from_crs("EPSG:4326", "EPSG:32613", always_xy=True)  # WGS84 to UTM Zone 13N
+        # Coordinate transformation (UTM Zone 19N to WGS84 for plotting, WGS84 to UTM for interpolation)
+        utm_to_wgs84 = Transformer.from_crs("EPSG:32619", "EPSG:4326", always_xy=True)  # UTM Zone 19N to WGS84
+        wgs84_to_utm = Transformer.from_crs("EPSG:4326", "EPSG:32619", always_xy=True)  # WGS84 to UTM Zone 19N
 
         # Load stations data
         with open(STATIONS_FILE) as stations_file:
@@ -86,9 +87,11 @@ class GetObsElevation:
                             return None, None, None, None, None, None, None
                         values.append(data)
                     values = np.array(values)
-                    # Negate topography values to treat as negative depth; bathymetry is already positive depth
+                    # Flip topography data to align with bathymetry and negate to treat as negative depth
                     if not is_bathymetry:
-                        values = -values
+                        values = np.flipud(values)  # Flip vertically to align orientation
+                        values = -values  # Convert positive elevation to negative depth
+                    # Bathymetry is already positive depth (negative downward)
                     # Mask NODATA values
                     values = np.ma.masked_equal(values, noDataValue)
                     # Verify grid
@@ -198,20 +201,25 @@ class GetObsElevation:
                 stop_event.set()
                 animation_thread.join()
 
-        # Plot heatmap of depth data
+        # Plot heatmap of depth data in lat/lon
         def plot_heatmap(values, latitudes, longitudes, title, filename, is_projected=False):
             if values is None or np.all(values.mask):
                 print(f"Cannot plot {filename}: No valid data available.")
                 return
             plt.figure(figsize=(10, 8), dpi=300)
-            # Create meshgrid for plotting
-            lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
-            # Plot heatmap
-            plt.pcolormesh(lon_grid, lat_grid, values, cmap='terrain', shading='auto')
-            plt.colorbar(label='Depth (m, negative downward)')
+            # If projected (topography), convert UTM to lat/lon
+            if is_projected:
+                lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
+                lon_grid, lat_grid = utm_to_wgs84.transform(lon_grid, lat_grid)
+            else:
+                lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
+            # Mask NODATA values explicitly for plotting
+            plot_values = np.ma.masked_equal(values, -999999, copy=True)
+            plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto')
+            plt.colorbar(label='meters')
             plt.title(title)
-            plt.xlabel('Easting (m)' if is_projected else 'Longitude (degrees)')
-            plt.ylabel('Northing (m)' if is_projected else 'Latitude (degrees)')
+            plt.xlabel('Longitude (degrees)')
+            plt.ylabel('Latitude (degrees)')
             plt.savefig(filename, bbox_inches='tight')
             print(f"Saved plot: {filename}")
             plt.close()
@@ -291,7 +299,7 @@ class GetObsElevation:
 
             # Convert station coordinates to UTM for topography interpolation
             if topo_success and topographyValues is not None:
-                easting, northing = transformer.transform(lon, lat)
+                easting, northing = wgs84_to_utm.transform(lon, lat)
                 if is_within_bounds(easting, northing, topo_min_lon, topo_max_lon, topo_min_lat, topo_max_lat):
                     depth = InterpolatePoint(topographyValues, topo_latitudes, topo_longitudes, (northing, easting))
                     if not np.isnan(depth):
