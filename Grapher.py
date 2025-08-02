@@ -1452,6 +1452,7 @@ class Grapher:
                     all(profile_data['lon'].between(plotAxis[0], plotAxis[1])) and
                     all(profile_data['lat'].between(plotAxis[2], plotAxis[3]))):
                     valid_profiles.append(profile)
+            valid_profiles = df['profile'].unique()
             print(f"Valid transects with SL, DT, DC: {valid_profiles}")
         
             # Initialize transect lists
@@ -1501,6 +1502,7 @@ class Grapher:
                 closest_profiles.append(transect_num)
         
                 # Save z values for DC, DT, SL
+                print("profile_data", profile_data)
                 dc_data = profile_data[profile_data['feature_type'] == 'DC']
                 dt_data = profile_data[profile_data['feature_type'] == 'DT']
                 sl_data = profile_data[profile_data['feature_type'] == 'SL']
