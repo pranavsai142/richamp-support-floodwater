@@ -3465,21 +3465,21 @@ class Grapher:
                 y_start_usgs = mhwl_elev
                 y_end_usgs = y_start_usgs + beta_usgs * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_usgs, y_end_usgs], color='cyan', linestyle='--', linewidth=1, alpha=0.6)
-                ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,TWL&CC}} = {:.3f}$'.format(abs(beta_usgs)))
+                ax.plot([], [], color='cyan', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,TWL&CC}} = {:.2f}$'.format(abs(beta_usgs)))
         
                 # β_f,obs hardcoded per transect
                 beta_obs = -FORESHORE_BEACH_SLOPE_OBS[transect - 1]  # Negative slope for inward direction
                 y_start_obs = mhwl_elev
                 y_end_obs = y_start_obs + beta_obs * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_obs, y_end_obs], color='purple', linestyle='--', linewidth=1, alpha=0.6)
-                ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.3f}$'.format(abs(beta_obs)))
+                ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.2f}$'.format(abs(beta_obs)))
         
                 # β_f,avg from mean of runupAverageSlopes
                 beta_avg = -np.nanmean(self.runupAverageSlopes[index])  # Negative slope for inward direction
                 y_start_avg = mhwl_elev
                 y_end_avg = y_start_avg + beta_avg * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_avg, y_end_avg], color='magenta', linestyle='--', linewidth=1, alpha=0.6)
-                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,avg}} = {:.3f}$'.format(abs(beta_avg)))
+                ax.plot([], [], color='magenta', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,avg}} = {:.2f}$'.format(abs(beta_avg)))
         
             # Water lines and total water lines
             for index in range(numberOfRunupDatapoints):
@@ -3538,8 +3538,9 @@ class Grapher:
             ax.set_ylabel("Elevation (meters)", fontsize=12)
             ax.tick_params(axis='both', labelsize=12)
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Elevation Profile", fontsize=16)
-            ax.set_ylim(elevation_y_min, elevation_y_max)
-            ax.set_xlim(min(profileDistances), max(profileDistances))
+            ax.set_ylim(-2, 6.15)
+#             ax.set_xlim(min(profileDistances), max(profileDistances))
+            ax.set_xlim(-175, 50)
             ax.grid(False)
         
             # Update legend
