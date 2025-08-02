@@ -84,26 +84,33 @@ class GetObsElevation:
                     # Negate values for bathymetry to convert negative depths to positive depths
                     if is_bathymetry:
                         values = -values
-                    values = np.ma.masked_equal(values, -noDataValue)
+                    # Mask NODATA values
+                    values = np.ma.masked_equal(values, noDataValue)
                     # Verify grid
                     if values.size == 0 or np.all(values.mask):
                         print(f"Error reading {file_path}: Grid is empty or all values are masked.")
                         return None, None, None
                     print(f"{file_path} grid shape: {values.shape}, sample value: {values[0,0]:.3f} m, min: {np.min(values):.3f} m, max: {np.max(values):.3f} m")
-                    return values, latitudes, longitudes
+                    return values, latitudes, longitudes, minLongitude, maxLongitude, minLatitude, maxLatitude
             except Exception as e:
                 print(f"Error reading {file_path}: {e}")
-                return None, None, None
+                return None, None, None, None, None, None, None
+
+        # Check if point is within grid bounds
+        def is_within_bounds(lon, lat, min_lon, max_lon, min_lat, max_lat):
+            tolerance = 1e-6
+            return (min_lon - tolerance <= lon <= max_lon + tolerance and
+                    min_lat - tolerance <= lat <= max_lat + tolerance)
 
         # Interpolate elevation at a point
         def InterpolatePoint(grid, Y, X, point, method='linear'):
-            if grid.size == 0:
+            if grid is None or grid.size == 0:
                 print(f"Interpolation failed for point {point}: Empty grid")
                 return np.nan
             grid = np.ma.masked_invalid(grid) if not np.ma.is_masked(grid) else grid
             try:
                 interpolator = RegularGridInterpolator((Y, X), grid, method=method, bounds_error=False, fill_value=np.nan)
-                value = interpolator(np.flip(point))  # Flip point since interpolator expects (y,x)
+                value = interpolator(point)  # Use (lat, lon) order directly
                 value_float = float(value) if not np.ma.is_masked(value) and not np.isnan(value) else np.nan
                 print(f"Interpolated {'depth' if grid is bathymetryValues else 'elevation'} at {point}: {value_float:.3f} m" if not np.isnan(value_float) else f"Interpolated {'depth' if grid is bathymetryValues else 'elevation'} at {point}: NaN")
                 return value_float
@@ -219,18 +226,20 @@ class GetObsElevation:
             bathy_called = False
 
         # Read topography data (always assume file exists)
-        topographyValues, topo_latitudes, topo_longitudes = readRasterData(TOPOGRAPHY_FILE, is_bathymetry=False)
+        topographyValues, topo_latitudes, topo_longitudes, topo_min_lon, topo_max_lon, topo_min_lat, topo_max_lat = readRasterData(TOPOGRAPHY_FILE, is_bathymetry=False)
         if topographyValues is None:
             topo_success = False
             print(f"Warning: Topography data unavailable from {TOPOGRAPHY_FILE}. Elevations may rely on bathymetry only.")
+        else:
+            print(f"Topography bounds: (west={topo_min_lon:.6f}, south={topo_min_lat:.6f}, east={topo_max_lon:.6f}, north={topo_max_lat:.6f})")
 
         # Download and read bathymetry data
-        bathymetryValues, bathy_latitudes, bathy_longitudes = (None, None, None)
+        bathymetryValues, bathy_latitudes, bathy_longitudes, bathy_min_lon, bathy_max_lon, bathy_min_lat, bathy_max_lat = (None, None, None, None, None, None, None)
         if bathy_success:
             bathy_success = downloadBathymetryData(north, south, east, west)
             bathy_called = True
             if bathy_success:
-                bathymetryValues, bathy_latitudes, bathy_longitudes = readRasterData(BATHYMETRY_FILE, is_bathymetry=True)
+                bathymetryValues, bathy_latitudes, bathy_longitudes, bathy_min_lon, bathy_max_lon, bathy_min_lat, bathy_max_lat = readRasterData(BATHYMETRY_FILE, is_bathymetry=True)
             else:
                 print("Warning: Bathymetry data unavailable. Elevations may rely on topography only.")
 
@@ -255,17 +264,19 @@ class GetObsElevation:
 
             elevation = np.nan
 
-            # Try topography data first
-            if topo_success and topographyValues is not None:
-                elevation = InterpolatePoint(topographyValues, topo_latitudes, topo_longitudes, (lon, lat))
+            # Try topography data first if within bounds and data is available
+            if topo_success and topographyValues is not None and is_within_bounds(lon, lat, topo_min_lon, topo_max_lon, topo_min_lat, topo_max_lat):
+                elevation = InterpolatePoint(topographyValues, topo_latitudes, topo_longitudes, (lat, lon))
                 if not np.isnan(elevation):
                     print(f"Station {key}: Using topography elevation {elevation:.3f} m")
                 else:
-                    print(f"Station {key}: Topography elevation is NaN, trying bathymetry")
+                    print(f"Station {key}: Topography elevation is NaN or invalid, trying bathymetry")
+            else:
+                print(f"Station {key}: Outside topography bounds or data unavailable, trying bathymetry")
 
-            # Fall back to bathymetry data if topography elevation is NaN
-            if np.isnan(elevation) and bathy_success and bathymetryValues is not None:
-                elevation = -InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lon, lat))
+            # Fall back to bathymetry data if topography elevation is NaN or point is outside topography bounds
+            if np.isnan(elevation) and bathy_success and bathymetryValues is not None and is_within_bounds(lon, lat, bathy_min_lon, bathy_max_lon, bathy_min_lat, bathy_max_lat):
+                elevation = -InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lat, lon))
                 if not np.isnan(elevation):
                     print(f"Station {key}: Using bathymetry elevation {elevation:.3f} m")
 
