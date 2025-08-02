@@ -78,9 +78,9 @@ class GetObsElevation:
 
                     longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
                     if(is_bathymetry):
-                        latitudes = np.linspace(minLatitude, maxLatitude, latitudeDelta)  # Descending order
-                    else:
                         latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
+                    else:
+                        latitudes = np.linspace(minLatitude, maxLatitude, latitudeDelta)  # Descending order
                     values = []
                     for line in lines[6:]:
                         data = np.array(line.split(), dtype=float)
@@ -218,7 +218,7 @@ class GetObsElevation:
             # Mask NODATA values explicitly for plotting
             plot_values = np.ma.masked_values(values, -999999, copy=True)
             if(is_projected):
-                plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto', vmin=-15, vmax=10)
+                plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto', vmin=-2, vmax=10)
             else:
                 plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto')
             plt.colorbar(label='meters')
