@@ -1635,7 +1635,7 @@ class Grapher:
                 )
                 ax.annotate(
                     "TWL&CC Site",
-                    TWLCC_FORECAST_POINTS_LONGITUDES[twlccIndex], TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex]),
+                    (TWLCC_FORECAST_POINTS_LONGITUDES[twlccIndex], TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex]),
                     fontsize=16
                 )
         
