@@ -1461,19 +1461,23 @@ class Grapher:
         
             # Get transect numbers from assetLabels (assuming 5 transects)
             transect_numbers = []
-            for assetLabel in self.assetLabels[:5]:  # Limit to 5 transects
-                try:
-                    transect_num = int(assetLabel[:assetLabel.index(" ")])
-                    transect_numbers.append(transect_num)
-                except (ValueError, IndexError):
-                    print(f"Warning: Could not parse transect number from {assetLabel}")
-                    continue
-            print(f"Transect numbers from assetLabels: {transect_numbers}")
+            for assetIndex, assetLabel in enumerate(self.assetLabels):  # Limit to 5 transects
+                if "m" == assetLabel[-1]:
+                    if assetLabel[assetLabel.index(" ") + 1] == "0":
+                        try:
+                            transect_num = int(assetLabel[assetLabel.index(" ") - 1])
+                            transect_numbers.append(transect_num)
+                            asset_lons.append(self.assetLongitudes[assetIndex])
+                            asset_lats.append(self.assetLatitudes[assetIndex])
+                        except (ValueError, IndexError):
+                            print(f"Warning: Could not parse transect number from {assetLabel}")
+                            continue
+                    print(f"Transect numbers from assetLabels: {transect_numbers}")
         
             # Find closest transects
             closest_profiles = []
             for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(
-                self.assetLongitudes[:5], self.assetLatitudes[:5], transect_numbers
+                asset_lons, asset_lats, transect_numbers
             )):
                 # Filter profiles with valid SL, DT, DC points
                 profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
