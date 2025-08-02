@@ -77,7 +77,7 @@ class GetObsElevation:
                         return None, None, None, None, None, None, None
 
                     longitudes = np.linspace(minLongitude, maxLongitude, longitudeDelta)
-                    latitudes = np.linspace(maxLatitude, minLatitude, latitudeDelta)  # Descending order
+                    latitudes = np.linspace(minLatitude, maxLatitude, latitudeDelta)  # Descending order
 
                     values = []
                     for line in lines[6:]:
@@ -89,7 +89,7 @@ class GetObsElevation:
                     values = np.array(values)
                     # Flip topography data to align with bathymetry and negate to treat as negative depth
                     if not is_bathymetry:
-                        values = np.flipud(values)  # Flip vertically to align orientation
+#                         values = np.flipud(values)  # Flip vertically to align orientation
                         values = -values  # Convert positive elevation to negative depth
                     # Bathymetry is already positive depth (negative downward)
                     # Mask NODATA values
