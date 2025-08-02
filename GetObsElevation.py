@@ -215,7 +215,10 @@ class GetObsElevation:
                 lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
             # Mask NODATA values explicitly for plotting
             plot_values = np.ma.masked_values(values, -999999, copy=True)
-            plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto')
+            if(is_projected):
+                plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto', vmin=-15, vmax=10)
+            else:
+                plt.pcolormesh(lon_grid, lat_grid, plot_values, cmap='terrain', shading='auto')
             plt.colorbar(label='meters')
             plt.title(title)
             plt.xlabel('Longitude (degrees)')
