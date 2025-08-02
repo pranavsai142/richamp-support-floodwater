@@ -3603,6 +3603,10 @@ class Grapher:
                     obs_dune_elev_ref = self.datapointsDuneHeights[index][-1]
                     average_slopes = self.runupAverageSlopes[index]
                     average_obs_slope = -self.datapointsRunupObsBeachSlope[index][-1]
+                    print("BEACH PROFILE DATA", MHWL_TRANSECTS, DUNE_TOE_TRANSECTS, DUNE_CREST_TRANSECTS)
+                    mhwl_elev = MHWL_TRANSECTS[transect-1]
+                    dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect-1]
+                    dune_crest_elev_ref = DUNE_CREST_TRANSECTS[transect-1]
 
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
                         if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
@@ -3637,9 +3641,6 @@ class Grapher:
         
             # Define reference elevations
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
-            mhwl_elev = MHWL_TRANSECTS[transect-1]
-            dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect-1]
-            dune_crest_elev_ref = DUNE_CREST_TRANSECTS[transect-1]
         
             # Find intersection for MHWL
             def find_intersection(distances, elevations, target_elev):
