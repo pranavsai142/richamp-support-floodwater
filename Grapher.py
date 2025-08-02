@@ -1449,7 +1449,7 @@ class Grapher:
                 return
         
             # Filter valid transects within plotAxis
-            plotAxis = self.plotAxis  # [min_lon, max_lon, min_lat, max_lat]
+            plotAxis = plotAxis  # [min_lon, max_lon, min_lat, max_lat]
             valid_profiles = df[
                 (df['lon'] != 999) & (df['lat'] != 999) &
                 (df['lon'] >= plotAxis[0]) & (df['lon'] <= plotAxis[1]) &
@@ -1571,12 +1571,12 @@ class Grapher:
             plt.xticks(fontsize=22)
             plt.yticks(fontsize=22)
         
-            plt.savefig(self.graph_directory + 'map_elevation.png', dpi=300)
+            plt.savefig(graph_directory + 'map_elevation.png', dpi=300)
             plt.close()
             gc.collect()
         
             # Save transect data
-            with open(os.path.join(self.graph_directory, 'transect_data.json'), 'w') as f:
+            with open(os.path.join(graph_directory, 'transect_data.json'), 'w') as f:
                 json.dump({
                     'MHWL_TRANSECTS': MHWL_TRANSECTS,
                     'DUNE_TOE_TRANSECTS': DUNE_TOE_TRANSECTS,
