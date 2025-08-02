@@ -157,6 +157,9 @@ class Grapher:
 
     def __init__(self, dataToGraph={}, STATIONS_FILE="", backgroundMap="", backgroundAxis=[], titlePrefix="", GRAPH_DIRECTORY="graphs/"):
         self.GRAPH_DIRECTORY = GRAPH_DIRECTORY
+        
+        self.USGS_BEACH_PROFILE_FILE = "usgs_beach_profile_file.csv"
+        
         print("Initializing grapher", flush=True)
         self.obsExists = False
         self.gaugeExists = False
@@ -1369,61 +1372,277 @@ class Grapher:
             plt.close()
             gc.collect()
         if(len(self.mapElevation) > 0):
-            vmin = -15
-            vmax = 10
-            levels = 100
-            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-            elevationTriangulation = Triangulation(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, triangles=self.mapElevationTriangles, mask=self.mapElevationMaskedTriangles)
-    
-            fig, ax = plt.subplots(figsize=(18,18))
-    
-            # Get the original colormap
-            original_cmap = plt.cm.get_cmap('jet')
-    
-            # Create the blended colormap for the colorbar
-            blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
-    
-            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-            ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=15, zorder=4, color="purple")  # Increased s=5 to s=15
-    
-            legendLabelInitialized = False
-            transectLabelInitialized = False
-            for assetIndex, assetLabel in enumerate(self.assetLabels):
-                if("m" == assetLabel[-1]):
-                    if("Waves" in assetLabel):
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=60, color="black", label="7m depth" if not legendLabelInitialized else None)  # Increased s=20 to s=60
-                        legendLabelInitialized = True
-                        ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]), fontsize=22)  # Set annotation fontsize
-                    else:
-                        ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=30, color="black", label="Transects" if not transectLabelInitialized else None)  # Increased s=10 to s=30
-                        transectLabelInitialized = True
-    
-            plt.axis(plotAxis)
-            plt.title("Elevation Map", fontsize=30)
-    
-            # Create the colorbar and set font properties
-            cbar = plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
-                ticks=range(vmin, vmax+5, 10),
-                boundaries=levelBoundaries,
-                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                ax=plt.gca()
-            )
-            cbar.ax.tick_params(labelsize=28)  # Set colorbar tick label font size
-            cbar.set_label("Meters", fontsize=28)  # Set colorbar label font size
-    
-            # Set axis tick label font sizes
-            plt.xticks(fontsize=22)
-            plt.yticks(fontsize=22)
-    
-            # Set legend font size
-            if ax.get_legend():
-                ax.legend(loc="upper left", fontsize=22)
-    
-            plt.savefig(graph_directory + 'map_elevation.png', dpi=300)
-            plt.close()
-            gc.collect()
+            import json
+            import requests
+            import numpy as np
+            from scipy.interpolate import RegularGridInterpolator
+            import os
+            import time
+            import threading
+            import sys
+            import itertools
+            import matplotlib.pyplot as plt
+            from pyproj import Transformer
+            import pandas as pd
+            from matplotlib.tri import Triangulation
+            from matplotlib.cm import ScalarMappable
+            
+            # Assuming this is part of a larger class with existing attributes
+            # USGS_BEACH_PROFILE_FILE is defined as a variable (e.g., "beach_profiles.csv")
+            # graph_directory is defined for saving plots
+            
+            def create_blended_cmap(original_cmap, alpha=0.5):
+                # Create a blended colormap with specified alpha
+                colors = original_cmap(np.linspace(0, 1, 256))
+                colors[:, -1] = alpha  # Set alpha for all colors
+                return plt.cm.colors.ListedColormap(colors)
+            
+            def plot_elevation_map(self):
+                if len(self.mapElevation) == 0:
+                    print("No elevation data to plot.")
+                    return
+            
+                vmin = -15
+                vmax = 10
+                levels = 100
+                levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+                elevationTriangulation = Triangulation(
+                    self.mapElevationPointsLongitudes,
+                    self.mapElevationPointsLatitudes,
+                    triangles=self.mapElevationTriangles,
+                    mask=self.mapElevationMaskedTriangles
+                )
+            
+                fig, ax = plt.subplots(figsize=(18, 18))
+            
+                # Get the original colormap
+                original_cmap = plt.cm.get_cmap('jet')
+            
+                # Create the blended colormap for the colorbar
+                blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+            
+                # Plot background image and elevation triangulation
+                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+                contourset = ax.tripcolor(
+                    elevationTriangulation,
+                    self.mapElevation,
+                    shading='gouraud',
+                    cmap=original_cmap,
+                    vmin=vmin,
+                    vmax=vmax,
+                    zorder=1
+                )
+                ax.scatter(
+                    self.mapElevationPointsLongitudes,
+                    self.mapElevationPointsLatitudes,
+                    alpha=0.5,
+                    marker=".",
+                    s=15,
+                    zorder=4,
+                    color="purple"
+                )
+            
+                # Query and plot transects from USGS_BEACH_PROFILE_FILE
+                # Load the beach profile data
+                try:
+                    df = pd.read_csv(self.USGS_BEACH_PROFILE_FILE)
+                except Exception as e:
+                    print(f"Error reading {self.USGS_BEACH_PROFILE_FILE}: {e}")
+                    return
+            
+                # Filter valid transects within plotAxis
+                plotAxis = self.plotAxis  # [min_lon, max_lon, min_lat, max_lat]
+                valid_profiles = df[
+                    (df['lon'] != 999) & (df['lat'] != 999) &
+                    (df['lon'] >= plotAxis[0]) & (df['lon'] <= plotAxis[1]) &
+                    (df['lat'] >= plotAxis[2]) & (df['lat'] <= plotAxis[3])
+                ]['profile'].unique()
+            
+                # Initialize transect lists
+                MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
+                DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
+                DUNE_CREST_TRANSECTS = [None] * 5  # Dune Crest (DC)
+            
+                # Get transect numbers from assetLabels (assuming 5 transects)
+                transect_numbers = []
+                for assetLabel in self.assetLabels[:5]:  # Limit to 5 transects
+                    try:
+                        transect_num = int(assetLabel[:assetLabel.index(" ")])
+                        transect_numbers.append(transect_num)
+                    except (ValueError, IndexError):
+                        print(f"Warning: Could not parse transect number from {assetLabel}")
+                        continue
+            
+                # Find closest transects and plot all transects
+                closest_profiles = []
+                for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(
+                    self.assetLongitudes[:5], self.assetLatitudes[:5], transect_numbers
+                )):
+                    # Filter profiles with valid points
+                    profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
+                    if profile_data.empty:
+                        print(f"No valid data for transect {transect_num}")
+                        continue
+            
+                    # Compute distance to asset coordinates
+                    distances = np.sqrt(
+                        (profile_data['lon'] - asset_lon)**2 +
+                        (profile_data['lat'] - asset_lat)**2
+                    )
+                    if distances.min() > 0.1:  # Arbitrary threshold to avoid far matches
+                        print(f"No close match for transect {transect_num}")
+                        continue
+            
+                    closest_profiles.append(transect_num)
+            
+                    # Save z values for DC, DT, SL
+                    dc_data = profile_data[profile_data['feature_type'] == 'DC']
+                    dt_data = profile_data[profile_data['feature_type'] == 'DT']
+                    sl_data = profile_data[profile_data['feature_type'] == 'SL']
+                    if not dc_data.empty:
+                        DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
+                    if not dt_data.empty:
+                        DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
+                    if not sl_data.empty:
+                        MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
+            
+                # Plot all valid transects
+                for profile in valid_profiles:
+                    profile_data = df[(df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
+                    if len(profile_data) < 2:
+                        continue  # Need at least 2 points to plot a line
+            
+                    # Sort points by feature_type order: DC -> DT -> SL
+                    feature_order = {'DC': 0, 'DT': 1, 'SL': 2}
+                    profile_data = profile_data.sort_values(
+                        by='feature_type',
+                        key=lambda x: x.map(feature_order)
+                    )
+                    lons = profile_data['lon'].values
+                    lats = profile_data['lat'].values
+            
+                    # Plot transect line (subtle)
+                    line_style = 'k-' if profile in closest_profiles else 'k-'
+                    line_width = 2.0 if profile in closest_profiles else 1.0
+                    ax.plot(lons, lats, line_style, alpha=0.3, linewidth=line_width, zorder=3)
+            
+                # Plot asset points
+                for assetIndex, assetLabel in enumerate(self.assetLabels):
+                    if "m" == assetLabel[-1]:
+                        if "Waves" in assetLabel:
+                            ax.scatter(
+                                self.assetLongitudes[assetIndex],
+                                self.assetLatitudes[assetIndex],
+                                zorder=3,
+                                alpha=0.7,
+                                marker="x",
+                                s=60,
+                                color="black"
+                            )
+                            ax.annotate(
+                                assetLabel[:assetLabel.index(" ")],
+                                (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]),
+                                fontsize=22
+                            )
+                        else:
+                            ax.scatter(
+                                self.assetLongitudes[assetIndex],
+                                self.assetLatitudes[assetIndex],
+                                zorder=3,
+                                alpha=0.7,
+                                marker=".",
+                                s=30,
+                                color="black"
+                            )
+            
+                plt.axis(plotAxis)
+                plt.title("Elevation Map", fontsize=30)
+            
+                # Create the colorbar and set font properties
+                cbar = plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
+                    ticks=range(vmin, vmax + 5, 10),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    ax=plt.gca()
+                )
+                cbar.ax.tick_params(labelsize=28)
+                cbar.set_label("Meters", fontsize=28)
+            
+                # Set axis tick label font sizes
+                plt.xticks(fontsize=22)
+                plt.yticks(fontsize=22)
+            
+                plt.savefig(self.graph_directory + 'map_elevation.png', dpi=300)
+                plt.close()
+                gc.collect()
+            
+                # Save transect data
+                with open(os.path.join(self.graph_directory, 'transect_data.json'), 'w') as f:
+                    json.dump({
+                        'MHWL_TRANSECTS': MHWL_TRANSECTS,
+                        'DUNE_TOE_TRANSECTS': DUNE_TOE_TRANSECTS,
+                        'DUNE_CREST_TRANSECTS': DUNE_CREST_TRANSECTS
+                    }, f, indent=4)
+#             vmin = -15
+#             vmax = 10
+#             levels = 100
+#             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+#             elevationTriangulation = Triangulation(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, triangles=self.mapElevationTriangles, mask=self.mapElevationMaskedTriangles)
+#     
+#             fig, ax = plt.subplots(figsize=(18,18))
+#     
+#             # Get the original colormap
+#             original_cmap = plt.cm.get_cmap('jet')
+#     
+#             # Create the blended colormap for the colorbar
+#             blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+#     
+#             plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+#             contourset = ax.tripcolor(elevationTriangulation, self.mapElevation, shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+#             ax.scatter(self.mapElevationPointsLongitudes, self.mapElevationPointsLatitudes, alpha=0.5, marker=".", s=15, zorder=4, color="purple")  # Increased s=5 to s=15
+#     
+#             legendLabelInitialized = False
+#             transectLabelInitialized = False
+#             for assetIndex, assetLabel in enumerate(self.assetLabels):
+#                 if("m" == assetLabel[-1]):
+#                     if("Waves" in assetLabel):
+#                         ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker="x", s=60, color="black", label="7m depth" if not legendLabelInitialized else None)  # Increased s=20 to s=60
+#                         legendLabelInitialized = True
+#                         ax.annotate(assetLabel[:assetLabel.index(" ")], (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]), fontsize=22)  # Set annotation fontsize
+#                     else:
+#                         ax.scatter(self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex], zorder=3, alpha=0.7, marker=".", s=30, color="black", label="Transects" if not transectLabelInitialized else None)  # Increased s=10 to s=30
+#                         transectLabelInitialized = True
+#     
+#             plt.axis(plotAxis)
+#             plt.title("Elevation Map", fontsize=30)
+#     
+#             # Create the colorbar and set font properties
+#             cbar = plt.colorbar(
+#                 ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
+#                 ticks=range(vmin, vmax+5, 10),
+#                 boundaries=levelBoundaries,
+#                 values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+#                 ax=plt.gca()
+#             )
+#             cbar.ax.tick_params(labelsize=28)  # Set colorbar tick label font size
+#             cbar.set_label("Meters", fontsize=28)  # Set colorbar label font size
+#     
+#             # Set axis tick label font sizes
+#             plt.xticks(fontsize=22)
+#             plt.yticks(fontsize=22)
+#     
+#             # Set legend font size
+#             if ax.get_legend():
+#                 ax.legend(loc="upper left", fontsize=22)
+#     
+#             plt.savefig(graph_directory + 'map_elevation.png', dpi=300)
+#             plt.close()
+#             gc.collect()
+
+
+
+
         if(len(self.mapEtaTimes) > 0):
             vmin = -1
             vmax = math.ceil(self.maxEta)
@@ -3383,6 +3602,8 @@ class Grapher:
                     dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
                     dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
                     obs_dune_elev_ref = self.datapointsDuneHeights[index][-1]
+                    average_slopes = self.runupAverageSlopes[index]
+                    average_obs_slope = -self.datapointsRunupObsBeachSlope[index][-1]
 
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
                         if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
@@ -3417,6 +3638,9 @@ class Grapher:
         
             # Define reference elevations
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
+            mhwl_elev = MHWL_TRANSECTS[transect]
+            dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect]
+            dune_crest_elev_ref = DUNE_CREST_TRANSECTS[transect]
         
             # Find intersection for MHWL
             def find_intersection(distances, elevations, target_elev):
@@ -3435,6 +3659,7 @@ class Grapher:
                 return None
         
             mhwl_intersect = find_intersection(profileDistances, profileElevations, mhwl_elev)
+            
         
             # Plot MHWL intersection
             if mhwl_intersect is not None:
@@ -3460,7 +3685,7 @@ class Grapher:
             # Draw slope lines through MHWL with correct direction (inward/downward)
             if mhwl_intersect is not None:
                 # β_f,USGS from self.datapointsRunupObsBeachSlope
-                beta_usgs = -self.datapointsRunupObsBeachSlope[index][-1]  # Negative slope for inward direction
+                beta_usgs = average_obs_slope  # Negative slope for inward direction
                 x_range = ax.get_xlim()
                 x_start = mhwl_intersect
                 x_end = x_start - 100  # Inward direction
@@ -3477,7 +3702,7 @@ class Grapher:
                 ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.2f}$'.format(abs(beta_obs)))
         
                 # β_f,avg from mean of runupAverageSlopes
-                beta_avg = -np.nanmean(self.runupAverageSlopes[index])  # Negative slope for inward direction
+                beta_avg = -np.nanmean(average_slopes)  # Negative slope for inward direction
                 y_start_avg = mhwl_elev
                 y_end_avg = y_start_avg + beta_avg * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_avg, y_end_avg], color='magenta', linestyle='--', linewidth=1, alpha=0.6)
