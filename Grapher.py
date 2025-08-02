@@ -1488,7 +1488,7 @@ class Grapher:
             MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
             DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
             DUNE_CREST_TRANSECTS = [None] * 5  # Dune Crest (DC)
-            BEACH_SLOPE_TRANSECTS = [None] * 5
+            BEACH_SLOPES_TRANSECTS = [None] * 5
         
             # Get transect numbers from assetLabels (using your modified logic)
             transect_numbers = []
@@ -2931,7 +2931,7 @@ class Grapher:
                     continue
                 if '7m Depth Waves' in station_name:
                     ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f}}$", color='blue', linestyle='-')
-                    ax.axhline(y=BEACH_SLOPE_TRANSECTS[transect - 1], color='green', linestyle='--', label=r"$\beta_{{f}}$ TWL&CC")
+                    ax.axhline(y=BEACH_SLOPES_TRANSECTS[transect - 1], color='green', linestyle='--', label=r"$\beta_{{f}}$ TWL&CC")
                     ax.axhline(y=FORESHORE_BEACH_SLOPE_OBS[transect - 1], color='red', linestyle='--', label=r"$\beta_{{f}}$ Obs")
                     base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
                     if base_name not in slopes_by_name:
@@ -3785,7 +3785,7 @@ class Grapher:
                     obs_dune_elev_ref = self.datapointsDuneHeights[index][-1]
                     average_slopes = self.runupAverageSlopes[index]
 #                     average_obs_slope = -self.datapointsRunupObsBeachSlope[index][-1]
-                    average_obs_slope = BEACH_SLOPE_TRANSECTS[transect - 1]
+                    average_obs_slope = BEACH_SLOPES_TRANSECTS[transect - 1]
                     print("BEACH PROFILE DATA", MHWL_TRANSECTS, DUNE_TOE_TRANSECTS, DUNE_CREST_TRANSECTS)
                     mhwl_elev = MHWL_TRANSECTS[transect-1]
                     dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect-1]
