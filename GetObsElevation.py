@@ -343,7 +343,7 @@ class GetObsElevation:
 
         # Exit after saving plots
         print("Plots saved. Exiting.")
-        sys.exit(0)
+#         sys.exit(0)
 
 if __name__ == "__main__":
     # Example usage (replace with actual file paths)
