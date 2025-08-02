@@ -43,7 +43,11 @@ BYPASS_WATER_TIMESERIES_PLOTS = True
 
 MHW_ELEVATION_RELATIVE_TO_NAVD88 = 0.646
 
-FORESHORE_BEACH_SLOPE_OBS = [0.13, 0.11, 0.08, 0.07, 0.07]                 
+FORESHORE_BEACH_SLOPE_OBS = [0.13, 0.11, 0.08, 0.07, 0.07]     
+
+MHWL_TRANSECTS = []
+DUNE_TOE_TRANSECTS = []
+DUNE_CREST_TRANSECTS = []           
 
 # Search for below to find where to make changes when running runup graphs for 2022 vs 2023
 #             CHANGE HERE WHEN DOING 2022 VS 2023 NOREASTER
@@ -3537,7 +3541,7 @@ class Grapher:
         
             # Plot elevation lines
             ax.plot(deeplineDistances, deeplineElevations, label="Mesh", color='red', linestyle="--")
-            ax.plot(deeplineDistances, deeplineDemElevations, label="DEM", color='black', linestyle="-")
+            ax.plot(deeplineDistances, deeplineDemElevations, label="GEBCO DEM", color='black', linestyle="-")
         
             # Customize axes
             ax.set_ylabel("Elevation (meters)", fontsize=12)
@@ -3629,7 +3633,7 @@ class Grapher:
         
             # Plot elevation lines
             ax.plot(profileDistances, profileElevations, label="Mesh", color='black')
-            ax.plot(profileDistances, profileDemElevations, label="DEM", color='grey', linestyle="-")
+            ax.plot(profileDistances, profileDemElevations, label="USGS 1m DEM", color='lightgrey', linestyle="-")
         
             # Define reference elevations
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
