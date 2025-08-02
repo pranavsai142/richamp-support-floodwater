@@ -1475,7 +1475,7 @@ class Grapher:
                             for index in range(len(ALL_LONGITUDE_TRANSECTS)):
                                 f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]))
                         for twlccPoint in TWLCC_FORECAST_POINTS_IDENTIFIERS:
-                            if state == twlccPoint[0] and segment == twlccPoint[1] and profile = twlccPoint[2]:
+                            if state == twlccPoint[0] and segment == twlccPoint[1] and profile == twlccPoint[2]:
                                 TWLCC_FORECAST_POINTS_LATITUDES.append(float(dc_data['lat'].iloc[0]))
                                 TWLCC_FORECAST_POINTS_LONGITUDES.append(float(dc_data['lon'].iloc[0]))
                     else:
