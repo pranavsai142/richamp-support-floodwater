@@ -590,7 +590,7 @@ def main():
         if(args.wavesExists and args.meshExists):
             print("Calling get observational elevation data", flush=True)
             OBS_ASSET_DATA_FILE = wind_temp_directory + "obs_elevation_data_file" + ".json"
-#             GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
+            GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
             dataToGraph["ASSET"] = OBS_ASSET_DATA_FILE
             RUNUP_DATA_FILE = wind_temp_directory + "runup_data_file.json"
             GetRunup(
