@@ -1477,7 +1477,7 @@ class Grapher:
             asset_lats = []
             for assetIndex, assetLabel in enumerate(self.assetLabels):  # Limit to 5 transects
                 if "m" == assetLabel[-1]:
-                    if assetLabel[assetLabel.index(" ") + 1] == "0":
+                    if assetLabel[assetLabel.index(" ") + 1] == "0.0":
                         try:
                             transect_num = int(assetLabel[assetLabel.index(" ") - 1])
                             transect_numbers.append(transect_num)
@@ -1492,7 +1492,7 @@ class Grapher:
             closest_transects = []
             for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(asset_lons, asset_lats, transect_numbers)):
                 # Filter transects with matching profile and valid SL, DT, DC points
-                candidates = [(s, seg, p) for (s, seg, p) in valid_transects if p == transect_num]
+                candidates = [(s, seg, p) for (s, seg, p) in valid_transects]
                 if not candidates:
                     print(f"No valid transect for profile {transect_num}")
                     continue
