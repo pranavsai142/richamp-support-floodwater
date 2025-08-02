@@ -24,9 +24,9 @@ class GetObsElevation:
         temp_directory = OBS_ASSET_DATA_FILE[0:OBS_ASSET_DATA_FILE.rfind("/") + 1]
         BATHYMETRY_FILE = os.path.join(temp_directory, "bathymetry.txt")
 
-        # Coordinate transformation (UTM Zone 19N, NAD83 to WGS84 for plotting, WGS84 to UTM for interpolation)
-        utm_to_wgs84 = Transformer.from_crs("EPSG:26919", "EPSG:4326", always_xy=True)  # UTM Zone 19N to WGS84 (easting, northing -> lon, lat)
-        wgs84_to_utm = Transformer.from_crs("EPSG:4326", "EPSG:26919", always_xy=True)  # WGS84 to UTM Zone 19N (lon, lat -> easting, northing)
+        # Coordinate transformation (UTM Zone 18N, NAD83 to WGS84 for plotting, WGS84 to UTM for interpolation)
+        utm_to_wgs84 = Transformer.from_crs("EPSG:26918", "EPSG:4326", always_xy=True)  # UTM Zone 18N to WGS84 (easting, northing -> lon, lat)
+        wgs84_to_utm = Transformer.from_crs("EPSG:4326", "EPSG:26918", always_xy=True)  # WGS84 to UTM Zone 18N (lon, lat -> easting, northing)
 
         # Load stations data
         with open(STATIONS_FILE) as stations_file:
@@ -135,7 +135,7 @@ class GetObsElevation:
             - Output is elevation (positive upward) for JSON compatibility.
             """
             if np.isnan(depth):
-                print(f"Station {key}: Depth is NaN")
+                print(f"Station {station_key}: Depth is NaN")
                 return np.nan
             if depth < -100:
                 print(f"Station {station_key}: Depth {depth:.3f} m set to NaN (below -100 m)")
