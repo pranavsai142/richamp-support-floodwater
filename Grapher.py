@@ -1461,6 +1461,8 @@ class Grapher:
         
             # Get transect numbers from assetLabels (assuming 5 transects)
             transect_numbers = []
+            asset_lons = []
+            asset_lats = []
             for assetIndex, assetLabel in enumerate(self.assetLabels):  # Limit to 5 transects
                 if "m" == assetLabel[-1]:
                     if assetLabel[assetLabel.index(" ") + 1] == "0":
