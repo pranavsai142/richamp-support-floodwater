@@ -1394,11 +1394,7 @@ class Grapher:
                 colors = original_cmap(np.linspace(0, 1, 256))
                 colors[:, -1] = alpha  # Set alpha for all colors
                 return plt.cm.colors.ListedColormap(colors)
-            
-            if len(self.mapElevation) == 0:
-                print("No elevation data to plot.")
-                return
-        
+
             vmin = -15
             vmax = 10
             levels = 100
@@ -1446,13 +1442,17 @@ class Grapher:
                 print(f"Error reading {self.USGS_BEACH_PROFILE_FILE}: {e}")
                 return
         
-            # Filter valid transects within plotAxis
-#                 plotAxis = self.plotAxis  # [min_lon, max_lon, min_lat, max_lat]
-            valid_profiles = df[
-                (df['lon'] != 999) & (df['lat'] != 999) &
-                (df['lon'] >= plotAxis[0]) & (df['lon'] <= plotAxis[1]) &
-                (df['lat'] >= plotAxis[2]) & (df['lat'] <= plotAxis[3])
-            ]['profile'].unique()
+            # Filter valid transects within plotAxis with all SL, DT, DC points
+            valid_profiles = []
+            for profile in df['profile'].unique():
+                profile_data = df[(df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
+                if (len(profile_data[profile_data['feature_type'] == 'DC']) == 1 and
+                    len(profile_data[profile_data['feature_type'] == 'DT']) == 1 and
+                    len(profile_data[profile_data['feature_type'] == 'SL']) == 1 and
+                    all(profile_data['lon'].between(plotAxis[0], plotAxis[1])) and
+                    all(profile_data['lat'].between(plotAxis[2], plotAxis[3]))):
+                    valid_profiles.append(profile)
+            print(f"Valid transects with SL, DT, DC: {valid_profiles}")
         
             # Initialize transect lists
             MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
@@ -1468,16 +1468,19 @@ class Grapher:
                 except (ValueError, IndexError):
                     print(f"Warning: Could not parse transect number from {assetLabel}")
                     continue
+            print(f"Transect numbers from assetLabels: {transect_numbers}")
         
-            # Find closest transects and plot all transects
+            # Find closest transects
             closest_profiles = []
             for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(
                 self.assetLongitudes[:5], self.assetLatitudes[:5], transect_numbers
             )):
-                # Filter profiles with valid points
+                # Filter profiles with valid SL, DT, DC points
                 profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
-                if profile_data.empty:
-                    print(f"No valid data for transect {transect_num}")
+                if (len(profile_data[profile_data['feature_type'] == 'DC']) != 1 or
+                    len(profile_data[profile_data['feature_type'] == 'DT']) != 1 or
+                    len(profile_data[profile_data['feature_type'] == 'SL']) != 1):
+                    print(f"No complete data for transect {transect_num}")
                     continue
         
                 # Compute distance to asset coordinates
@@ -1495,56 +1498,51 @@ class Grapher:
                 dc_data = profile_data[profile_data['feature_type'] == 'DC']
                 dt_data = profile_data[profile_data['feature_type'] == 'DT']
                 sl_data = profile_data[profile_data['feature_type'] == 'SL']
-                if not dc_data.empty:
-                    DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
-                if not dt_data.empty:
-                    DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
-                if not sl_data.empty:
-                    MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
+                DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
+                DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
+                MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
+        
+            print(f"Closest transects: {closest_profiles}")
         
             # Plot all valid transects
             for profile in valid_profiles:
                 profile_data = df[(df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
-                if len(profile_data) < 2:
-                    continue  # Need at least 2 points to plot a line
-        
-                # Get DC, DT, SL points in order
                 dc_data = profile_data[profile_data['feature_type'] == 'DC']
                 dt_data = profile_data[profile_data['feature_type'] == 'DT']
                 sl_data = profile_data[profile_data['feature_type'] == 'SL']
         
+                # Ensure all three points exist
+                if (len(dc_data) != 1 or len(dt_data) != 1 or len(sl_data) != 1):
+                    continue
+        
                 # Collect points in order: DC -> DT -> SL
-                points = []
-                if not dc_data.empty:
-                    points.append((dc_data['lon'].iloc[0], dc_data['lat'].iloc[0]))
-                if not dt_data.empty:
-                    points.append((dt_data['lon'].iloc[0], dt_data['lat'].iloc[0]))
-                if not sl_data.empty:
-                    points.append((sl_data['lon'].iloc[0], sl_data['lat'].iloc[0]))
-        
-                if len(points) < 2:
-                    continue  # Need at least 2 points to plot
-        
-                lons, lats = zip(*points)  # Unpack lon/lat
+                points = [
+                    (dc_data['lon'].iloc[0], dc_data['lat'].iloc[0]),
+                    (dt_data['lon'].iloc[0], dt_data['lat'].iloc[0]),
+                    (sl_data['lon'].iloc[0], sl_data['lat'].iloc[0])
+                ]
+                lons, lats = zip(*points)
         
                 # Plot transect line
                 is_highlighted = profile in closest_profiles
                 line_color = 'k' if is_highlighted else 'gray'
-                line_width = 2.0 if is_highlighted else 1.0
-                line_alpha = 0.7 if is_highlighted else 0.3
+                line_width = 2.5 if is_highlighted else 1.5
+                line_alpha = 0.9 if is_highlighted else 0.5
                 ax.plot(lons, lats, color=line_color, linewidth=line_width, alpha=line_alpha, zorder=3)
         
-                # Add arrow at SL (last point)
-                if len(points) >= 2:  # Need at least 2 points for direction
-                    # Use direction from second-to-last to last point (DT -> SL or DC -> SL/DT)
-                    x1, y1 = points[-2]  # Second-to-last point
-                    x2, y2 = points[-1]  # SL point
-                    dx = x2 - x1
-                    dy = y2 - y1
-                    arrow_length = 0.0005  # Small arrow in degrees
+                # Add arrow at SL, extending slightly beyond
+                x1, y1 = points[-2]  # DT
+                x2, y2 = points[-1]  # SL
+                dx = x2 - x1
+                dy = y2 - y1
+                arrow_length = 1.5  # Extend 1.5x the DT -> SL segment
+                segment_length = np.sqrt(dx**2 + dy**2)
+                if segment_length > 0:
+                    dx_scaled = dx / segment_length * 0.0007  # Base length in degrees
+                    dy_scaled = dy / segment_length * 0.0007
                     ax.arrow(
-                        x2 - dx * 0.1, y2 - dy * 0.1,  # Start slightly back from SL
-                        dx * arrow_length, dy * arrow_length,  # Arrow direction
+                        x2, y2,  # Start at SL
+                        dx_scaled * arrow_length, dy_scaled * arrow_length,  # Extend beyond SL
                         color=line_color,
                         alpha=line_alpha,
                         width=0.0001,
