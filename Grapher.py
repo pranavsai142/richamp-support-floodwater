@@ -3379,6 +3379,11 @@ class Grapher:
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
                 if str(transect) in stationName[0:stationName.index(" ")]:
+                
+                    dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
+                    dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
+                    obs_dune_elev_ref = self.datapointsDuneHeights[index][-1]
+
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
                         if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
                             assetLabel[assetLabel.index(" ") - 1] == str(transect)):
@@ -3407,14 +3412,11 @@ class Grapher:
                     profileDemElevations[np.isnan(profileDemElevations)] = 0.0
         
             # Plot elevation lines
-            ax.plot(profileDistances, profileElevations, label="Mesh", color='red')
-            ax.plot(profileDistances, profileDemElevations, label="DEM", color='black', linestyle="-")
+            ax.plot(profileDistances, profileElevations, label="Mesh", color='black')
+            ax.plot(profileDistances, profileDemElevations, label="DEM", color='grey', linestyle="-")
         
             # Define reference elevations
-            dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
-            dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
-            obs_dune_elev_ref = self.datapointsDuneHeights[index][-1]
         
             # Find intersection for MHWL
             def find_intersection(distances, elevations, target_elev):
@@ -3443,7 +3445,7 @@ class Grapher:
             # Draw subtle horizontal lines for dune crest and dune toe
             ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='orange', label='Dune Crest TWL&CC')
             ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
-            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="pink", label='Dune Height Obs')
+            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="red", label='Dune Height Obs')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
 #             duneHeightPlotted = False
@@ -3498,7 +3500,7 @@ class Grapher:
                     # Plot total water level (maximum value as horizontal line)
                     total_water = np.array(self.datapointsRunupHolmanMid[index])
                     max_total_value = np.nanmax(total_water)
-                    ax.axhline(y=max_total_value, color='blue', linestyle='-', label='TWL' if transect == 1 else "")
+                    ax.axhline(y=max_total_value, color='purple', linestyle='-', label='TWL' if transect == 1 else "")
                     # Shade underneath total water with pastel red, avoiding terrain
                     ax.fill_between(profileDistances, np.full_like(profileDistances, max_total_value), elevation_y_min, 
                                     where=(max_total_value > profileElevations) & (max_total_value < elevation_y_max), 
@@ -3507,11 +3509,11 @@ class Grapher:
 
 #                     ax.axhline(y=np.nanmax(np.array(self.datapointsSwashHolmanHigh[index])), linestyle='--', color='orange', alpha=0.5, label='TWL&CC TWL' if transect == 1 else "")
 
-                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='black', alpha=0.7, label='η TWL&CC' if transect == 1 else "")
+                    ax.axhline(y=np.nanmax(np.array(self.datapointsRunupStockdonLow[index])), linestyle='--', color='blue', alpha=0.7, label='η TWL&CC' if transect == 1 else "")
 
                     # Plot the horizontal line at the maximum value
                     max_value = np.nanmax(np.array(self.datapointsSwashHolmanHigh[index]))
-                    ax.axhline(y=max_value, linestyle='--', color='blue', alpha=0.7, label='TWL TWL&CC' if transect == 1 else "")
+                    ax.axhline(y=max_value, linestyle='--', color='purple', alpha=0.7, label='TWL TWL&CC' if transect == 1 else "")
                     
                     # Calculate the error distances for asymmetric error bars
                     yerr_lower = np.array(self.datapointsSwashHolmanHigh[index]) - np.array(self.datapointsSwashHolmanMid[index])  # Distance from central to 5% (lower bound)
@@ -3527,7 +3529,7 @@ class Grapher:
                     # Replace x_mid with your time series x-values if available, or a reasonable point
                     
                     # Plot the error bar as a single point
-                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='blue', alpha=0.7, capsize=5)
+                    ax.errorbar(0, max_value, yerr=[[yerr_lower_max], [yerr_upper_max]], fmt='none', ecolor='purple', alpha=0.7, capsize=5)
 
 
             # Shade terrain underneath elevation curve
