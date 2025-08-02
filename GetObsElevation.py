@@ -8,6 +8,7 @@ import threading
 import sys
 import itertools
 import matplotlib.pyplot as plt
+from pyproj import Transformer
 
 # Define topography file
 TOPOGRAPHY_FILE = "topography.txt"
@@ -22,6 +23,9 @@ class GetObsElevation:
         BASE_URL = "https://portal.opentopography.org/API/globaldem"
         temp_directory = OBS_ASSET_DATA_FILE[0:OBS_ASSET_DATA_FILE.rfind("/") + 1]
         BATHYMETRY_FILE = os.path.join(temp_directory, "bathymetry.txt")
+
+        # Coordinate transformation (assuming UTM Zone 13N for topography; adjust if needed)
+        transformer = Transformer.from_crs("EPSG:4326", "EPSG:32613", always_xy=True)  # WGS84 to UTM Zone 13N
 
         # Load stations data
         with open(STATIONS_FILE) as stations_file:
@@ -82,8 +86,8 @@ class GetObsElevation:
                             return None, None, None, None, None, None, None
                         values.append(data)
                     values = np.array(values)
-                    # Negate values for bathymetry to convert negative depths to positive depths
-                    if is_bathymetry:
+                    # Negate topography values to treat as negative depth; bathymetry is already positive depth
+                    if not is_bathymetry:
                         values = -values
                     # Mask NODATA values
                     values = np.ma.masked_equal(values, noDataValue)
@@ -103,7 +107,7 @@ class GetObsElevation:
             return (min_lon - tolerance <= lon <= max_lon + tolerance and
                     min_lat - tolerance <= lat <= max_lat + tolerance)
 
-        # Interpolate elevation at a point
+        # Interpolate depth at a point
         def InterpolatePoint(grid, Y, X, point, method='linear'):
             if grid is None or grid.size == 0:
                 print(f"Interpolation failed for point {point}: Empty grid")
@@ -111,30 +115,32 @@ class GetObsElevation:
             grid = np.ma.masked_invalid(grid) if not np.ma.is_masked(grid) else grid
             try:
                 interpolator = RegularGridInterpolator((Y, X), grid, method=method, bounds_error=False, fill_value=np.nan)
-                value = interpolator(point)  # Use (lat, lon) order directly
+                value = interpolator(point)  # Use (northing, easting) or (lat, lon) based on grid
                 value_float = float(value) if not np.ma.is_masked(value) and not np.isnan(value) else np.nan
-                print(f"Interpolated {'depth' if grid is bathymetryValues else 'elevation'} at {point}: {value_float:.3f} m" if not np.isnan(value_float) else f"Interpolated {'depth' if grid is bathymetryValues else 'elevation'} at {point}: NaN")
+                print(f"Interpolated {'depth (bathymetry)' if grid is bathymetryValues else 'depth (topography)'} at {point}: {value_float:.3f} m" if not np.isnan(value_float) else f"Interpolated {'depth (bathymetry)' if grid is bathymetryValues else 'depth (topography)'} at {point}: NaN")
                 return value_float
             except ValueError as e:
                 print(f"Interpolation error at point {point}: {e}")
                 return np.nan
 
-        # Filter elevation values
-        def filterElevation(elevation, station_key):
+        # Filter depth values
+        def filterElevation(depth, station_key):
             """
-            Filter elevation values to handle outliers:
+            Filter depth values to handle outliers:
             - Depths below -100 meters or heights above 1000 meters are set to NaN.
-            - Keep NaN for invalid elevations.
+            - Keep NaN for invalid depths.
+            - Output is elevation (positive upward) for JSON compatibility.
             """
-            if np.isnan(elevation):
-                print(f"Station {station_key}: Elevation is NaN")
+            if np.isnan(depth):
+                print(f"Station {station_key}: Depth is NaN")
                 return np.nan
-            if elevation < -100:
-                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (below -100 m)")
+            if depth < -100:
+                print(f"Station {station_key}: Depth {depth:.3f} m set to NaN (below -100 m)")
                 return np.nan
-            if elevation > 1000:
-                print(f"Station {station_key}: Elevation {elevation:.3f} m set to NaN (above 1000 m)")
+            if depth > 1000:
+                print(f"Station {station_key}: Depth {depth:.3f} m set to NaN (above 1000 m)")
                 return np.nan
+            elevation = -depth  # Convert negative depth to positive elevation for JSON
             print(f"Station {station_key}: Final elevation {elevation:.3f} m")
             return float(elevation)
 
@@ -192,21 +198,21 @@ class GetObsElevation:
                 stop_event.set()
                 animation_thread.join()
 
-        # Plot heatmap of elevation/depth data
-        def plot_heatmap(values, latitudes, longitudes, title, filename):
+        # Plot heatmap of depth data
+        def plot_heatmap(values, latitudes, longitudes, title, filename, is_projected=False):
             if values is None or np.all(values.mask):
                 print(f"Cannot plot {filename}: No valid data available.")
                 return
-            plt.figure(figsize=(10, 8))
+            plt.figure(figsize=(10, 8), dpi=300)
             # Create meshgrid for plotting
             lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
             # Plot heatmap
             plt.pcolormesh(lon_grid, lat_grid, values, cmap='terrain', shading='auto')
-            plt.colorbar(label='Elevation/Depth (m)')
+            plt.colorbar(label='Depth (m, negative downward)')
             plt.title(title)
-            plt.xlabel('Longitude')
-            plt.ylabel('Latitude')
-            plt.savefig(filename)
+            plt.xlabel('Easting (m)' if is_projected else 'Longitude (degrees)')
+            plt.ylabel('Northing (m)' if is_projected else 'Latitude (degrees)')
+            plt.savefig(filename, bbox_inches='tight')
             print(f"Saved plot: {filename}")
             plt.close()
 
@@ -281,26 +287,28 @@ class GetObsElevation:
                 elevationDict[key] = {"elevation": np.nan}
                 continue
 
-            elevation = np.nan
+            depth = np.nan
 
-            # Try topography data first if within bounds and data is available
-            if topo_success and topographyValues is not None and is_within_bounds(lon, lat, topo_min_lon, topo_max_lon, topo_min_lat, topo_max_lat):
-                elevation = InterpolatePoint(topographyValues, topo_latitudes, topo_longitudes, (lat, lon))
-                if not np.isnan(elevation):
-                    print(f"Station {key}: Using topography elevation {elevation:.3f} m")
+            # Convert station coordinates to UTM for topography interpolation
+            if topo_success and topographyValues is not None:
+                easting, northing = transformer.transform(lon, lat)
+                if is_within_bounds(easting, northing, topo_min_lon, topo_max_lon, topo_min_lat, topo_max_lat):
+                    depth = InterpolatePoint(topographyValues, topo_latitudes, topo_longitudes, (northing, easting))
+                    if not np.isnan(depth):
+                        print(f"Station {key}: Using topography depth {depth:.3f} m")
+                    else:
+                        print(f"Station {key}: Topography depth is NaN or invalid, trying bathymetry")
                 else:
-                    print(f"Station {key}: Topography elevation is NaN or invalid, trying bathymetry")
-            else:
-                print(f"Station {key}: Outside topography bounds or data unavailable, trying bathymetry")
+                    print(f"Station {key}: Outside topography bounds (easting={easting:.2f}, northing={northing:.2f}), trying bathymetry")
 
-            # Fall back to bathymetry data if topography elevation is NaN or point is outside topography bounds
-            if np.isnan(elevation) and bathy_success and bathymetryValues is not None and is_within_bounds(lon, lat, bathy_min_lon, bathy_max_lon, bathy_min_lat, bathy_max_lat):
-                elevation = -InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lat, lon))
-                if not np.isnan(elevation):
-                    print(f"Station {key}: Using bathymetry elevation {elevation:.3f} m")
+            # Fall back to bathymetry data if topography depth is NaN or point is outside topography bounds
+            if np.isnan(depth) and bathy_success and bathymetryValues is not None and is_within_bounds(lon, lat, bathy_min_lon, bathy_max_lon, bathy_min_lat, bathy_max_lat):
+                depth = InterpolatePoint(bathymetryValues, bathy_latitudes, bathy_longitudes, (lat, lon))
+                if not np.isnan(depth):
+                    print(f"Station {key}: Using bathymetry depth {depth:.3f} m")
 
-            # Apply elevation filter
-            elevationDict[key] = {"elevation": filterElevation(elevation, key)}
+            # Apply elevation filter (converts depth to elevation for JSON)
+            elevationDict[key] = {"elevation": filterElevation(depth, key)}
 
         # Log performance metrics
         print(f"\nCompleted processing in {time.time() - start_time:.2f} seconds. Made 0 topography API calls, {'1' if bathy_called else '0'} bathymetry API call for {len(stationsDict['ASSET'])} stations.")
@@ -311,12 +319,12 @@ class GetObsElevation:
 
         # Generate and save heatmap plots
         if topo_success and topographyValues is not None:
-            plot_heatmap(topographyValues, topo_latitudes, topo_longitudes, "Topography Elevation", "obs_topo_debug.png")
+            plot_heatmap(topographyValues, topo_latitudes, topo_longitudes, "Topography Depth", "obs_topo_debug.png", is_projected=True)
         else:
             print("Skipping topography plot: No valid topography data available.")
 
         if bathy_success and bathymetryValues is not None:
-            plot_heatmap(bathymetryValues, bathy_latitudes, bathy_longitudes, "Bathymetry Depth", "obs_bathy_debug.png")
+            plot_heatmap(bathymetryValues, bathy_latitudes, bathy_longitudes, "Bathymetry Depth", "obs_bathy_debug.png", is_projected=False)
         else:
             print("Skipping bathymetry plot: No valid bathymetry data available.")
 
