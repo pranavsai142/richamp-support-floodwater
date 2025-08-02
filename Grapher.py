@@ -1482,13 +1482,13 @@ class Grapher:
                 asset_lons, asset_lats, transect_numbers
             )):
                 # Filter profiles with valid SL, DT, DC points
-                profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
-                if (len(profile_data[profile_data['feature_type'] == 'DC']) != 1 or
-                    len(profile_data[profile_data['feature_type'] == 'DT']) != 1 or
-                    len(profile_data[profile_data['feature_type'] == 'SL']) != 1):
-                    print(f"No complete data for transect {transect_num}")
-                    continue
-        
+#                 profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
+#                 if (len(profile_data[profile_data['feature_type'] == 'DC']) != 1 or
+#                     len(profile_data[profile_data['feature_type'] == 'DT']) != 1 or
+#                     len(profile_data[profile_data['feature_type'] == 'SL']) != 1):
+#                     print(f"No complete data for transect {transect_num}")
+#                     continue
+#         
                 # Compute distance to asset coordinates
                 distances = np.sqrt(
                     (profile_data['lon'] - asset_lon)**2 +
