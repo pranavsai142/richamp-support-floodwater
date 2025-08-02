@@ -92,7 +92,7 @@ class GetObsElevation:
                     # Flip topography data to align with bathymetry and negate to treat as negative depth
                     if not is_bathymetry:
                         values = np.flipud(values)  # Flip vertically to align orientation
-#                         values = -values  # Convert positive elevation to negative depth
+                        values = -values  # Convert positive elevation to negative depth
                     # Bathymetry is already positive depth (negative downward)
                     # Mask NODATA values
                     values = np.ma.masked_values(values, noDataValue, copy=False)
@@ -213,6 +213,7 @@ class GetObsElevation:
             if is_projected:
                 lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
                 lon_grid, lat_grid = utm_to_wgs84.transform(lon_grid, lat_grid)  # easting, northing -> lon, lat
+                values = -values  # Convert positive elevation to negative depth
             else:
                 lon_grid, lat_grid = np.meshgrid(longitudes, latitudes)
             # Mask NODATA values explicitly for plotting
