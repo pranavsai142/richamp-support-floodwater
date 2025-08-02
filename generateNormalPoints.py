@@ -17,6 +17,9 @@ DEEPLINE_DISTANCES = [
     37500, 39500, 41500
 ]
 
+USGS_DUNE_CREST_COORDINATES_FILE = "usgs_dune_crest_coordinates.txt"
+
+
 # Station-specific deepline distances with depths
 DEEPLINE_DISTANCES_1 = [
     {"distance": 705, "depth": "7m"},   # Napatree1 (runup_id: 10)
@@ -43,6 +46,24 @@ DEEPLINE_DISTANCES_5 = [
     {"distance": 2175, "depth": "20m"},
     {"distance": 9000, "depth": "40m"}
 ]
+
+
+# Add a new function to process USGS dune crest coordinates and add to ASSET
+def add_usgs_alongshore_points(json_data):
+    with open(USGS_DUNE_CREST_COORDINATES_FILE, 'r') as file:
+        coordinates = [line.strip().split(',') for line in file if line.strip()]
+    
+    for i, coord in enumerate(coordinates, 1):
+        point = {
+            "id": "USGS",
+            "source": "USGS",
+            "name": f"Napatree Alongshore {i}",
+            "latitude": coord[0],
+            "longitude": coord[1]
+        }
+        key = f"alongshore_{i}"
+        json_data['ASSET'][key] = point
+
 
 
 def generate_deepline_distances(max_distance, spacing, initial_distance=75, num_stations=5):
@@ -119,7 +140,7 @@ if(GENERATE_TRANSECT_POINTS):
 # New GENERATE_PROFILE_POINTS block
 if(GENERATE_PROFILE_POINTS):
     max_distance = 250    # Maximum distance in meters (forward and backward)
-    spacing = 10           # Spacing between points in meters
+    spacing = 1           # Spacing between points in meters
     PROFILE_POINTS_MAP = generate_profile_points_map(max_distance, spacing)
 
 # if(True):
@@ -984,6 +1005,7 @@ generate_deepline_points(data_normal)
 generate_profile_points(data_normal)
 generate_slopeline_points(data_normal, distance=MAX_SLOPELINE_DISTANCE)
 generate_tangent_points(data_normal)
+add_usgs_alongshore_points(data_normal)
 with open('NAPATREE_NORMAL_STATIONS.json', 'w') as file:
     json.dump(data_normal, file, indent=2)
 

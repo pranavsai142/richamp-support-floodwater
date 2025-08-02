@@ -1471,9 +1471,6 @@ class Grapher:
                         ALL_DUNE_CREST_TRANSECTS.append(float(dc_data['z'].iloc[0]))
                         ALL_LONGITUDES_TRANSECTS.append(float(dc_data['lon'].iloc[0]))
                         ALL_LATITUDES_TRANSECTS.append(float(dc_data['lat'].iloc[0]))
-                        with open("usgs_dune_crest_coordiantes.txt", "w") as f:
-                            for index in range(len(ALL_LONGITUDES_TRANSECTS)):
-                                f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]) + "\n")
                         for twlccPoint in TWLCC_FORECAST_POINTS_IDENTIFIERS:
                             if state == twlccPoint[0] and segment == twlccPoint[1] and profile == twlccPoint[2]:
                                 TWLCC_FORECAST_POINTS_LATITUDES.append(float(dc_data['lat'].iloc[0]))
@@ -1483,7 +1480,10 @@ class Grapher:
                 else:
                     print(f"Transect {state}-{segment}-{profile} excluded: Missing SL, DT, or DC (DC: {len(dc_data)}, DT: {len(dt_data)}, SL: {len(sl_data)})")
             print(f"Valid transects with SL, DT, DC: {valid_transects}")
-        
+            
+            with open("usgs_dune_crest_coordinates.txt", "w") as f:
+                for index in range(len(ALL_LONGITUDES_TRANSECTS)):
+                    f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]) + "\n")
             # Initialize transect lists
             MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
             DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
