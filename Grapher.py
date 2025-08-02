@@ -1479,7 +1479,7 @@ class Grapher:
                 if "m" == assetLabel[-1]:
                     if assetLabel[assetLabel.index(" ") + 1] == "0":
                         try:
-                            transect_num = int(assetLabel[:assetLabel.index(" ")])
+                            transect_num = int(assetLabel[:assetLabel.index(" ") - 1])
                             transect_numbers.append(transect_num)
                             asset_lons.append(self.assetLongitudes[assetIndex])
                             asset_lats.append(self.assetLatitudes[assetIndex])
