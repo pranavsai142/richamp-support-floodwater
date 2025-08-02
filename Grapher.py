@@ -1387,8 +1387,7 @@ class Grapher:
         if(len(self.mapElevation) > 0):
             
             # Assuming this is part of a larger class with existing attributes
-            # USGS_BEACH_PROFILE_FILE is defined as a variable (e.g., "beach_profiles.csv")
-            # graph_directory is defined for saving plots
+            # USGS_BEACH_PROFILE_FILE, graph_directory, plotAxis, img, aspectRatio are defined
             
             def create_blended_cmap(original_cmap, alpha=0.5):
                 # Create a blended colormap with specified alpha
@@ -1396,192 +1395,223 @@ class Grapher:
                 colors[:, -1] = alpha  # Set alpha for all colors
                 return plt.cm.colors.ListedColormap(colors)
             
-            if len(self.mapElevation) == 0:
-                print("No elevation data to plot.")
-                return
-        
-            vmin = -15
-            vmax = 10
-            levels = 100
-            levelBoundaries = np.linspace(vmin, vmax, levels + 1)
-            elevationTriangulation = Triangulation(
-                self.mapElevationPointsLongitudes,
-                self.mapElevationPointsLatitudes,
-                triangles=self.mapElevationTriangles,
-                mask=self.mapElevationMaskedTriangles
-            )
-        
-            fig, ax = plt.subplots(figsize=(18, 18))
-        
-            # Get the original colormap
-            original_cmap = plt.cm.get_cmap('jet')
-        
-            # Create the blended colormap for the colorbar
-            blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
-        
-            # Plot background image and elevation triangulation
-            plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
-            contourset = ax.tripcolor(
-                elevationTriangulation,
-                self.mapElevation,
-                shading='gouraud',
-                cmap=original_cmap,
-                vmin=vmin,
-                vmax=vmax,
-                zorder=1
-            )
-            ax.scatter(
-                self.mapElevationPointsLongitudes,
-                self.mapElevationPointsLatitudes,
-                alpha=0.5,
-                marker=".",
-                s=15,
-                zorder=4,
-                color="purple"
-            )
-        
-            # Query and plot transects from USGS_BEACH_PROFILE_FILE
-            # Load the beach profile data
-            try:
-                df = pd.read_csv(self.USGS_BEACH_PROFILE_FILE)
-            except Exception as e:
-                print(f"Error reading {self.USGS_BEACH_PROFILE_FILE}: {e}")
-                return
-        
-            # Filter valid transects within plotAxis
-            plotAxis = plotAxis  # [min_lon, max_lon, min_lat, max_lat]
-            valid_profiles = df[
-                (df['lon'] != 999) & (df['lat'] != 999) &
-                (df['lon'] >= plotAxis[0]) & (df['lon'] <= plotAxis[1]) &
-                (df['lat'] >= plotAxis[2]) & (df['lat'] <= plotAxis[3])
-            ]['profile'].unique()
-        
-            # Initialize transect lists
-            MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
-            DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
-            DUNE_CREST_TRANSECTS = [None] * 5  # Dune Crest (DC)
-        
-            # Get transect numbers from assetLabels (assuming 5 transects)
-            transect_numbers = []
-            for assetLabel in self.assetLabels[:5]:  # Limit to 5 transects
+            def plot_elevation_map(self):
+                if len(self.mapElevation) == 0:
+                    print("No elevation data to plot.")
+                    return
+            
+                vmin = -15
+                vmax = 10
+                levels = 100
+                levelBoundaries = np.linspace(vmin, vmax, levels + 1)
+                elevationTriangulation = Triangulation(
+                    self.mapElevationPointsLongitudes,
+                    self.mapElevationPointsLatitudes,
+                    triangles=self.mapElevationTriangles,
+                    mask=self.mapElevationMaskedTriangles
+                )
+            
+                fig, ax = plt.subplots(figsize=(18, 18))
+            
+                # Get the original colormap
+                original_cmap = plt.cm.get_cmap('jet')
+            
+                # Create the blended colormap for the colorbar
+                blended_cmap = create_blended_cmap(original_cmap, alpha=0.5)
+            
+                # Plot background image and elevation triangulation
+                plt.imshow(img, alpha=0.5, extent=self.backgroundAxis, aspect=aspectRatio, zorder=2)
+                contourset = ax.tripcolor(
+                    elevationTriangulation,
+                    self.mapElevation,
+                    shading='gouraud',
+                    cmap=original_cmap,
+                    vmin=vmin,
+                    vmax=vmax,
+                    zorder=1
+                )
+                ax.scatter(
+                    self.mapElevationPointsLongitudes,
+                    self.mapElevationPointsLatitudes,
+                    alpha=0.5,
+                    marker=".",
+                    s=15,
+                    zorder=4,
+                    color="purple"
+                )
+            
+                # Query and plot transects from USGS_BEACH_PROFILE_FILE
                 try:
-                    transect_num = int(assetLabel[:assetLabel.index(" ")])
-                    transect_numbers.append(transect_num)
-                except (ValueError, IndexError):
-                    print(f"Warning: Could not parse transect number from {assetLabel}")
-                    continue
-        
-            # Find closest transects and plot all transects
-            closest_profiles = []
-            for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(
-                self.assetLongitudes[:5], self.assetLatitudes[:5], transect_numbers
-            )):
-                # Filter profiles with valid points
-                profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
-                if profile_data.empty:
-                    print(f"No valid data for transect {transect_num}")
-                    continue
-        
-                # Compute distance to asset coordinates
-                distances = np.sqrt(
-                    (profile_data['lon'] - asset_lon)**2 +
-                    (profile_data['lat'] - asset_lat)**2
+                    df = pd.read_csv(self.USGS_BEACH_PROFILE_FILE)
+                except Exception as e:
+                    print(f"Error reading {self.USGS_BEACH_PROFILE_FILE}: {e}")
+                    return
+            
+                # Filter valid transects within plotAxis
+#                 plotAxis = self.plotAxis  # [min_lon, max_lon, min_lat, max_lat]
+                valid_profiles = df[
+                    (df['lon'] != 999) & (df['lat'] != 999) &
+                    (df['lon'] >= plotAxis[0]) & (df['lon'] <= plotAxis[1]) &
+                    (df['lat'] >= plotAxis[2]) & (df['lat'] <= plotAxis[3])
+                ]['profile'].unique()
+            
+                # Initialize transect lists
+                MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
+                DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
+                DUNE_CREST_TRANSECTS = [None] * 5  # Dune Crest (DC)
+            
+                # Get transect numbers from assetLabels (assuming 5 transects)
+                transect_numbers = []
+                for assetLabel in self.assetLabels[:5]:  # Limit to 5 transects
+                    try:
+                        transect_num = int(assetLabel[:assetLabel.index(" ")])
+                        transect_numbers.append(transect_num)
+                    except (ValueError, IndexError):
+                        print(f"Warning: Could not parse transect number from {assetLabel}")
+                        continue
+            
+                # Find closest transects and plot all transects
+                closest_profiles = []
+                for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(
+                    self.assetLongitudes[:5], self.assetLatitudes[:5], transect_numbers
+                )):
+                    # Filter profiles with valid points
+                    profile_data = df[(df['profile'] == transect_num) & (df['lon'] != 999) & (df['lat'] != 999)]
+                    if profile_data.empty:
+                        print(f"No valid data for transect {transect_num}")
+                        continue
+            
+                    # Compute distance to asset coordinates
+                    distances = np.sqrt(
+                        (profile_data['lon'] - asset_lon)**2 +
+                        (profile_data['lat'] - asset_lat)**2
+                    )
+                    if distances.min() > 0.1:  # Threshold to avoid far matches
+                        print(f"No close match for transect {transect_num}")
+                        continue
+            
+                    closest_profiles.append(transect_num)
+            
+                    # Save z values for DC, DT, SL
+                    dc_data = profile_data[profile_data['feature_type'] == 'DC']
+                    dt_data = profile_data[profile_data['feature_type'] == 'DT']
+                    sl_data = profile_data[profile_data['feature_type'] == 'SL']
+                    if not dc_data.empty:
+                        DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
+                    if not dt_data.empty:
+                        DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
+                    if not sl_data.empty:
+                        MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
+            
+                # Plot all valid transects
+                for profile in valid_profiles:
+                    profile_data = df[(df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
+                    if len(profile_data) < 2:
+                        continue  # Need at least 2 points to plot a line
+            
+                    # Get DC, DT, SL points in order
+                    dc_data = profile_data[profile_data['feature_type'] == 'DC']
+                    dt_data = profile_data[profile_data['feature_type'] == 'DT']
+                    sl_data = profile_data[profile_data['feature_type'] == 'SL']
+            
+                    # Collect points in order: DC -> DT -> SL
+                    points = []
+                    if not dc_data.empty:
+                        points.append((dc_data['lon'].iloc[0], dc_data['lat'].iloc[0]))
+                    if not dt_data.empty:
+                        points.append((dt_data['lon'].iloc[0], dt_data['lat'].iloc[0]))
+                    if not sl_data.empty:
+                        points.append((sl_data['lon'].iloc[0], sl_data['lat'].iloc[0]))
+            
+                    if len(points) < 2:
+                        continue  # Need at least 2 points to plot
+            
+                    lons, lats = zip(*points)  # Unpack lon/lat
+            
+                    # Plot transect line
+                    is_highlighted = profile in closest_profiles
+                    line_color = 'k' if is_highlighted else 'gray'
+                    line_width = 2.0 if is_highlighted else 1.0
+                    line_alpha = 0.7 if is_highlighted else 0.3
+                    ax.plot(lons, lats, color=line_color, linewidth=line_width, alpha=line_alpha, zorder=3)
+            
+                    # Add arrow at SL (last point)
+                    if len(points) >= 2:  # Need at least 2 points for direction
+                        # Use direction from second-to-last to last point (DT -> SL or DC -> SL/DT)
+                        x1, y1 = points[-2]  # Second-to-last point
+                        x2, y2 = points[-1]  # SL point
+                        dx = x2 - x1
+                        dy = y2 - y1
+                        arrow_length = 0.0005  # Small arrow in degrees
+                        ax.arrow(
+                            x2 - dx * 0.1, y2 - dy * 0.1,  # Start slightly back from SL
+                            dx * arrow_length, dy * arrow_length,  # Arrow direction
+                            color=line_color,
+                            alpha=line_alpha,
+                            width=0.0001,
+                            head_width=0.0003,
+                            head_length=0.0003,
+                            zorder=3
+                        )
+            
+                # Plot asset points
+                for assetIndex, assetLabel in enumerate(self.assetLabels):
+                    if "m" == assetLabel[-1]:
+                        if "Waves" in assetLabel:
+                            ax.scatter(
+                                self.assetLongitudes[assetIndex],
+                                self.assetLatitudes[assetIndex],
+                                zorder=3,
+                                alpha=0.7,
+                                marker="x",
+                                s=60,
+                                color="black"
+                            )
+                            ax.annotate(
+                                assetLabel[:assetLabel.index(" ")],
+                                (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]),
+                                fontsize=22
+                            )
+                        else:
+                            ax.scatter(
+                                self.assetLongitudes[assetIndex],
+                                self.assetLatitudes[assetIndex],
+                                zorder=3,
+                                alpha=0.7,
+                                marker=".",
+                                s=30,
+                                color="black"
+                            )
+            
+                plt.axis(plotAxis)
+                plt.title("Elevation Map", fontsize=30)
+            
+                # Create the colorbar and set font properties
+                cbar = plt.colorbar(
+                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
+                    ticks=range(vmin, vmax + 5, 10),
+                    boundaries=levelBoundaries,
+                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                    ax=plt.gca()
                 )
-                if distances.min() > 0.1:  # Arbitrary threshold to avoid far matches
-                    print(f"No close match for transect {transect_num}")
-                    continue
-        
-                closest_profiles.append(transect_num)
-        
-                # Save z values for DC, DT, SL
-                dc_data = profile_data[profile_data['feature_type'] == 'DC']
-                dt_data = profile_data[profile_data['feature_type'] == 'DT']
-                sl_data = profile_data[profile_data['feature_type'] == 'SL']
-                if not dc_data.empty:
-                    DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
-                if not dt_data.empty:
-                    DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
-                if not sl_data.empty:
-                    MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
-        
-            # Plot all valid transects
-            for profile in valid_profiles:
-                profile_data = df[(df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
-                if len(profile_data) < 2:
-                    continue  # Need at least 2 points to plot a line
-        
-                # Sort points by feature_type order: DC -> DT -> SL
-                feature_order = {'DC': 0, 'DT': 1, 'SL': 2}
-                profile_data = profile_data.sort_values(
-                    by='feature_type',
-                    key=lambda x: x.map(feature_order)
-                )
-                lons = profile_data['lon'].values
-                lats = profile_data['lat'].values
-        
-                # Plot transect line (subtle)
-                line_style = 'k-' if profile in closest_profiles else 'k-'
-                line_width = 2.0 if profile in closest_profiles else 1.0
-                ax.plot(lons, lats, line_style, alpha=0.3, linewidth=line_width, zorder=3)
-        
-            # Plot asset points
-            for assetIndex, assetLabel in enumerate(self.assetLabels):
-                if "m" == assetLabel[-1]:
-                    if "Waves" in assetLabel:
-                        ax.scatter(
-                            self.assetLongitudes[assetIndex],
-                            self.assetLatitudes[assetIndex],
-                            zorder=3,
-                            alpha=0.7,
-                            marker="x",
-                            s=60,
-                            color="black"
-                        )
-                        ax.annotate(
-                            assetLabel[:assetLabel.index(" ")],
-                            (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]),
-                            fontsize=22
-                        )
-                    else:
-                        ax.scatter(
-                            self.assetLongitudes[assetIndex],
-                            self.assetLatitudes[assetIndex],
-                            zorder=3,
-                            alpha=0.7,
-                            marker=".",
-                            s=30,
-                            color="black"
-                        )
-        
-            plt.axis(plotAxis)
-            plt.title("Elevation Map", fontsize=30)
-        
-            # Create the colorbar and set font properties
-            cbar = plt.colorbar(
-                ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
-                ticks=range(vmin, vmax + 5, 10),
-                boundaries=levelBoundaries,
-                values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                ax=plt.gca()
-            )
-            cbar.ax.tick_params(labelsize=28)
-            cbar.set_label("Meters", fontsize=28)
-        
-            # Set axis tick label font sizes
-            plt.xticks(fontsize=22)
-            plt.yticks(fontsize=22)
-        
-            plt.savefig(graph_directory + 'map_elevation.png', dpi=300)
-            plt.close()
-            gc.collect()
-        
-            # Save transect data
-            with open(os.path.join(graph_directory, 'transect_data.json'), 'w') as f:
-                json.dump({
-                    'MHWL_TRANSECTS': MHWL_TRANSECTS,
-                    'DUNE_TOE_TRANSECTS': DUNE_TOE_TRANSECTS,
-                    'DUNE_CREST_TRANSECTS': DUNE_CREST_TRANSECTS
-                }, f, indent=4)
+                cbar.ax.tick_params(labelsize=28)
+                cbar.set_label("Meters", fontsize=28)
+            
+                # Set axis tick label font sizes
+                plt.xticks(fontsize=22)
+                plt.yticks(fontsize=22)
+            
+                plt.savefig(os.path.join(graph_directory, 'map_elevation.png'), dpi=300)
+                plt.close()
+                gc.collect()
+            
+                # Save transect data
+                with open(os.path.join(graph_directory, 'transect_data.json'), 'w') as f:
+                    json.dump({
+                        'MHWL_TRANSECTS': MHWL_TRANSECTS,
+                        'DUNE_TOE_TRANSECTS': DUNE_TOE_TRANSECTS,
+                        'DUNE_CREST_TRANSECTS': DUNE_CREST_TRANSECTS
+                    }, f, indent=4)
 #             vmin = -15
 #             vmax = 10
 #             levels = 100
