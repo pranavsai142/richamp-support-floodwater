@@ -47,7 +47,15 @@ FORESHORE_BEACH_SLOPE_OBS = [0.13, 0.11, 0.08, 0.07, 0.07]
 
 MHWL_TRANSECTS = []
 DUNE_TOE_TRANSECTS = []
-DUNE_CREST_TRANSECTS = []           
+DUNE_CREST_TRANSECTS = []  
+BEACH_SLOPES_TRANSECTS = []  
+ALL_LONGITUDES_TRANSECTS = []
+ALL_LATITUDES_TRANSECTS = []
+ALL_DUNE_CREST_TRANSECTS = []    
+
+TWLCC_FORECAST_POINTS_IDENTIFIERS [[17, 3, 3], [17, 3, 47]]
+TWLCC_FORECAST_POINTS_LATITUDES = []
+TWLCC_FORECAST_POINTS_LONGITUDES = []
 
 # Search for below to find where to make changes when running runup graphs for 2022 vs 2023
 #             CHANGE HERE WHEN DOING 2022 VS 2023 NOREASTER
@@ -1460,6 +1468,16 @@ class Grapher:
                         (group_lats.between(plotAxis[2], plotAxis[3]))
                     ):
                         valid_transects.append((state, segment, profile))
+                        ALL_DUNE_CREST_TRANSECTS.append(float(dc_data['z'].iloc[0]))
+                        ALL_LONGITUDES_TRANSECTS.append(float(dc_data['lon'].iloc[0]))
+                        ALL_LATITUDES_TRANSECTS.append(float(dc_data['lat'].iloc[0]))
+                        with open("usgs_dune_crest_coordiantes.txt", "w") as f:
+                            for index in range(len(ALL_LONGITUDE_TRANSECTS)):
+                                f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]))
+                        for twlccPoint in TWLCC_FORECAST_POINTS_IDENTIFIERS:
+                        if state == twlccPoint[0] and segment == twlccPoint[1] and profile = twlccPoint[2]:
+                            TWLCC_FORECAST_POINTS_LATITUDES.append(float(dc_data['lat'].iloc[0]))
+                            TWLCC_FORECAST_POINTS_LONGITUDES.append(float(dc_data['lon'].iloc[0]))
                     else:
                         print(f"Transect {state}-{segment}-{profile} excluded: No points within plotAxis {plotAxis}")
                 else:
@@ -1470,6 +1488,7 @@ class Grapher:
             MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
             DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
             DUNE_CREST_TRANSECTS = [None] * 5  # Dune Crest (DC)
+            BEACH_SLOPE_TRANSECTS = [None] * 5
         
             # Get transect numbers from assetLabels (using your modified logic)
             transect_numbers = []
@@ -1524,6 +1543,7 @@ class Grapher:
                 DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
                 DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
                 MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
+                BEACH_SLOPES_TRANSECTS[i] = float(sl_data['slope'].iloc[0])
         
             print(f"Closest transects: {closest_transects}")
         
@@ -1602,6 +1622,22 @@ class Grapher:
                             s=30,
                             color="black"
                         )
+                        
+            for twlccIndex in range(len(TWLCC_FORECAST_POINTS_IDENTIFIERS)):
+                ax.scatter(
+                    TWLCC_FORECAST_POINTS_LONGITUDES[twlccIndex],
+                    TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex],
+                    zorder=3,
+                    alpha=0.7,
+                    marker="7",
+                    s=30,
+                    color="green"
+                )
+                ax.annotate(
+                    "TWL&CC Site",
+                    TWLCC_FORECAST_POINTS_LONGITUDES[twlccIndex], TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex]),
+                    fontsize=16
+                )
         
             plt.axis(plotAxis)
             plt.title("Elevation Map", fontsize=30)
@@ -2564,6 +2600,7 @@ class Grapher:
 #                 ax.plot(self.runupTimes, self.datapointsSetupAdcirc[index], label="ADCIRC+SWAN setup+storm surge")
                 ax.plot(self.runupTimes, self.datapointsSetupStockdonLow[index], label=r"SWAN $\eta_{setup}$")
                 
+                
                 ax.plot(self.datapointsSetupHolmanHigh[index], self.datapointsSwashHolmanInfragravity[index], label=r"TWL&CC $\langle \eta \rangle$")
 #                 ax.plot(self.runupTimes, self.datapointsRunupHolmanHigh[index], label="ADCIRC+SWAN storm surge")
 
@@ -2894,7 +2931,7 @@ class Grapher:
                     continue
                 if '7m Depth Waves' in station_name:
                     ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f}}$", color='blue', linestyle='-')
-                    ax.axhline(y=max(self.datapointsRunupObsBeachSlope[index]), color='green', linestyle='--', label=r"$\beta_{{f}}$ TWL&CC")
+                    ax.axhline(y=BEACH_SLOPE_TRANSECTS[transect - 1], color='green', linestyle='--', label=r"$\beta_{{f}}$ TWL&CC")
                     ax.axhline(y=FORESHORE_BEACH_SLOPE_OBS[transect - 1], color='red', linestyle='--', label=r"$\beta_{{f}}$ Obs")
                     base_name = ' '.join(station_name.split()[:-1]) if station_name.endswith(('_true', '_false')) else station_name
                     if base_name not in slopes_by_name:
@@ -3608,6 +3645,102 @@ class Grapher:
         plt.tight_layout()
         plt.savefig(graph_directory + 'Napatree_all_elevation_profiles.png', dpi=300)
         plt.close()
+        
+        
+        
+# alongshore innundation plot
+
+        # --- Combined Elevation Profiles for All Transects ---
+        # Collect all elevation data for consistent y-axis, excluding NaN
+        all_elevations = []
+        all_dem_elevations = []
+        for transect in range(1, 6):
+            for index in range(numberOfRunupDatapoints):
+                stationName = self.runupLabels[index]
+                if str(transect) in stationName[0:stationName.index(" ")]:
+                    if stationName in self.assetLabels:
+                        elevationIndex = self.assetLabels.index(stationName)
+                        elev = self.datapointsElevation[elevationIndex]
+                        dem_elev = self.assetDatapointsElevation[elevationIndex]
+                        if not np.isnan(elev):
+                            all_elevations.append(elev)
+                        if not np.isnan(dem_elev):
+                            all_dem_elevations.append(dem_elev)
+        
+        # Compute global y-axis limits, handling empty lists
+        elevation_min = min(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else -30.0
+        elevation_max = max(all_elevations + all_dem_elevations) if all_elevations or all_dem_elevations else 10.0
+        elevation_padding = (elevation_max - elevation_min) * 0.1 if elevation_max != elevation_min else 1.0
+        elevation_y_min = elevation_min - elevation_padding
+        elevation_y_max = elevation_max + elevation_padding
+        
+        fig, axes = plt.subplots(1, 1, figsize=(16, 9), sharex=True)
+        for transect in range(1, 1):
+            ax = axes[transect - 1]
+        
+            alongshoreLongitudes = []
+            alongshoreElevations = []
+            alongshoreDemElevations = []
+            alongshoreTwlccElevations = []
+        
+            transectsIndex = 0
+            for elevationIndex, assetLabel in enumerate(self.assetLabels):
+                if (assetLabel[assetLabel.index(" ") + 1] == "A"):
+                    elev = self.datapointsElevation[elevationIndex]
+                    dem_elev = self.assetDatapointsElevation[elevationIndex]
+                    longitude = self.assetLongitudes[elevationIndex]
+                    twlcc_elev = ALL_DUNE_CREST_TRANSECTS[transectsIndex]
+                    if not np.isnan(elev):
+                        alongshoreElevations.append(elev)
+                    if not np.isnan(dem_elev):
+                        alongshoreDemElevations.append(dem_elev)
+                    alongshoreLongitudes.append(longitude)
+                    alongshoreTwlccElevations.append(twlcc_elev)
+
+            # Convert to numpy arrays and sort by distance
+            alongshoreLongitudes = np.array(alongshoreLongitudes)
+            alongshoreElevations = np.array(alongshoreElevations)
+            alongshoreDemElevations = np.array(alongshoreDemElevations)
+            sorted_indices = np.argsort(alongshoreLongitudes)
+            alongshoreLongitudes = alongshoreLongitudes[sorted_indices]
+            alongshoreElevations = alongshoreElevations[sorted_indices]
+            alongshoreDemElevations = alongshoreDemElevations[sorted_indices]
+        
+            # Interpolate NaN values in deeplineDemElevations
+            if np.any(np.isnan(alongshoreDemElevations)):
+                valid_mask = ~np.isnan(alongshoreDemElevations)
+                if np.sum(valid_mask) >= 2:  # Need at least 2 valid points for interpolation
+                    alongshoreDemElevations = np.interp(
+                        alongshoreLongitudes,
+                        alongshoreLongitudes[valid_mask],
+                        alongshoreDemElevations[valid_mask]
+                    )
+                else:
+                    print(f"Warning: Insufficient valid DEM elevation data for interpolation in transect {transect}")
+                    alongshoreDemElevations[np.isnan(alongshoreDemElevations)] = 0.0  # Fallback: replace NaN with 0
+        
+            # Plot elevation lines
+#             Change to plotting latitude x axis elevation y axis
+            ax.plot(alongshoreLongitudes, alongshoreElevations, label="Mesh", color='red', linestyle="--")
+            ax.plot(alongshoreLongitudes, alongshoreDemElevations, label="USGS DEM", color='black', linestyle="-")
+            ax.plot(alongshoreLongitudes, alongshoreTwlccElevations, label="TWL&CC Profiles", color='green', linestyle="-")
+        
+            # Customize axes
+            ax.set_ylabel("Elevation (meters)", fontsize=12)
+            ax.tick_params(axis='both', labelsize=12)
+            ax.set_title(f"{self.titlePrefix}Napatree Alongshore Profile", fontsize=16)
+            ax.set_ylim(elevation_y_min, elevation_y_max)  # Consistent y-axis limits
+        
+            # Add legend
+            ax.legend(loc="upper right", fontsize=10)
+        
+            # Set x-axis label on the bottom subplot
+            ax.set_xlabel("Longitude", fontsize=14)
+        
+        plt.tight_layout()
+        plt.savefig(graph_directory + 'Napatree_alongshore_elevation_profiles.png', dpi=300)
+        plt.close()
+
 
         # --- Combined Elevation Profiles for All Transects ---
         # Collect all elevation data for consistent y-axis, excluding NaN
@@ -3651,7 +3784,8 @@ class Grapher:
                     dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
                     obs_dune_elev_ref = self.datapointsDuneHeights[index][-1]
                     average_slopes = self.runupAverageSlopes[index]
-                    average_obs_slope = -self.datapointsRunupObsBeachSlope[index][-1]
+#                     average_obs_slope = -self.datapointsRunupObsBeachSlope[index][-1]
+                    average_obs_slope = BEACH_SLOPE_TRANSECTS[transect - 1]
                     print("BEACH PROFILE DATA", MHWL_TRANSECTS, DUNE_TOE_TRANSECTS, DUNE_CREST_TRANSECTS)
                     mhwl_elev = MHWL_TRANSECTS[transect-1]
                     dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect-1]
@@ -3686,7 +3820,7 @@ class Grapher:
         
             # Plot elevation lines
             ax.plot(profileDistances, profileElevations, label="Mesh", color='black')
-            ax.plot(profileDistances, profileDemElevations, label="USGS 1m DEM", color='lightgrey', linestyle="-")
+            ax.plot(profileDistances, profileDemElevations, label="USGS 1m DEM", color='brown', linestyle="-")
         
             # Define reference elevations
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
