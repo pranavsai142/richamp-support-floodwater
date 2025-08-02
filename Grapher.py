@@ -3637,9 +3637,9 @@ class Grapher:
         
             # Define reference elevations
             mhwl_elev = MHW_ELEVATION_RELATIVE_TO_NAVD88  # Hardcoded MHWL elevation
-            mhwl_elev = MHWL_TRANSECTS[transect]
-            dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect]
-            dune_crest_elev_ref = DUNE_CREST_TRANSECTS[transect]
+            mhwl_elev = MHWL_TRANSECTS[transect-1]
+            dune_toe_elev_ref = DUNE_TOE_TRANSECTS[transect-1]
+            dune_crest_elev_ref = DUNE_CREST_TRANSECTS[transect-1]
         
             # Find intersection for MHWL
             def find_intersection(distances, elevations, target_elev):
