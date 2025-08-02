@@ -1477,7 +1477,7 @@ class Grapher:
             asset_lats = []
             for assetIndex, assetLabel in enumerate(self.assetLabels):  # Limit to 5 transects
                 if "m" == assetLabel[-1]:
-                    if assetLabel[assetLabel.index(" ") + 1] == "0.0":
+                    if assetLabel[assetLabel.index(" ") + 1] == "0":
                         try:
                             transect_num = int(assetLabel[assetLabel.index(" ") - 1])
                             transect_numbers.append(transect_num)
