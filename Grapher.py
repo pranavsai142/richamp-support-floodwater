@@ -1629,7 +1629,7 @@ class Grapher:
                     TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex],
                     zorder=3,
                     alpha=0.7,
-                    marker="7",
+                    marker="CARETDOWN",
                     s=30,
                     color="green"
                 )
