@@ -1439,7 +1439,7 @@ class WaveReader:
         timeSparseness = 1
         initializeClosestWaveNodes = True
         if(initializeClosestWaveNodes):
-            thresholdDistance = 5
+            thresholdDistance = 3
 #             thresholdDistance = 
             self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
         interpolateValues = True
