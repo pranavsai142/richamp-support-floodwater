@@ -1040,6 +1040,7 @@ class GetRunup:
 #             averageSlope = math.atan((shorelineElevation - surfElevation) / surfDistance)
             averageSlope = 0
             surfDistance = 0
+            offshoreDistance = 0
 #             print("shore to surf average slope", averageSlope)
 #             averageSlope = 0.025
 #             averageSlope = 
