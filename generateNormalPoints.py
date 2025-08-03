@@ -164,7 +164,7 @@ def generate_alongshore_runup_points(json_data):
             # Generate profile points using the helper function
             profile_points = generate_profile_points(dune_crest_lat, dune_crest_lon, bearing, 250, 1)
             for idx, point in enumerate(profile_points):
-                profile_key = f"{general_key}"
+                profile_key = f"{general_key}pp{idx}"
                 json_data['ASSET'][profile_key] = {
                     "id": "RUNUP",
                     "source": "RUNUP",
@@ -191,10 +191,10 @@ def generate_alongshore_runup_points(json_data):
             
             # Generate NORMAL points
             json_data['NORMAL'][general_key] = {}
-            for k in range(-HYPERPOINTS // 4, 3 * HYPERPOINTS // 4 + 1):
+            for distance_index, k in enumerate(range(-HYPERPOINTS // 4, 3 * HYPERPOINTS // 4 + 1)):
                 distance = k * HYPERRESOLUTION
                 normal_lat, normal_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, distance)
-                normal_key = f"{general_key}{abs(k):03d}"
+                normal_key = f"{general_key}{distance_index:03d}"
                 normal_point = {
                     "id": "RUNUP",
                     "source": "RUNUP",
@@ -209,17 +209,17 @@ def generate_alongshore_runup_points(json_data):
             
             # Generate TANGENT points
             json_data['TANGENT'][general_key] = {}
-            for k in range(-HYPERPOINTS // 4, 3 * HYPERPOINTS // 4 + 1):
+            for distance_index, k in enumerate(range(-HYPERPOINTS // 4, 3 * HYPERPOINTS // 4 + 1)):
                 distance = k * HYPERRESOLUTION
-                tangent_lat_calc, tangent_lon_calc = calculate_new_point(tangent_lat, tangent_lon, perp_bearing, distance)
-                tangent_key = f"{general_key}{abs(k):03d}"
+                normal_lat, normal_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, distance)
+                tangent_key = f"{general_key}{distance_index:03d}"
                 tangent_point = {
                     "id": "RUNUP",
                     "source": "RUNUP",
                     "distance": str(distance),
                     "name": f"Napatree{runup_counter} Tangent {distance:.3f} m",
-                    "latitude": f"{tangent_lat_calc:.6f}",
-                    "longitude": f"{tangent_lon_calc:.6f}"
+                    "latitude": f"{tangent_lat:.6f}",
+                    "longitude": f"{tangent_lon:.6f}"
                 }
                 json_data['TANGENT'][general_key][tangent_key] = tangent_point
             

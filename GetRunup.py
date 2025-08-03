@@ -743,6 +743,8 @@ class GetRunup:
                     if(not np.isnan(normalStationTidewaterValue)):
                         tidewaterLineKey = normalKey
                         break
+                        
+                
 #                 Now I have the waterline key
                 
 
