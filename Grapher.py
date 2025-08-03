@@ -1504,7 +1504,7 @@ class Grapher:
             asset_lats = []
             for assetIndex, assetLabel in enumerate(self.assetLabels):  # Limit to 5 transects
                 if "m" == assetLabel[-1]:
-                    if assetLabel[assetLabel.index(" ") + 1] == "0":
+                    if assetLabel[assetLabel.index(" ") + 1] == "0" and int(assetLabel[8:assetLabel.index(" ")]) <= 5:
                         try:
                             transect_num = int(assetLabel[assetLabel.index(" ") - 1])
                             transect_numbers.append(transect_num)
@@ -1613,7 +1613,7 @@ class Grapher:
                             alpha=0.7,
                             marker="x",
                             s=60,
-                            color="red"
+                            color="black"
                         )
                         ax.annotate(
                             assetLabel[:assetLabel.index(" ")],
@@ -1628,7 +1628,7 @@ class Grapher:
                             alpha=0.7,
                             marker=".",
                             s=30,
-                            color="black"
+                            color="red"
                         )
                         
             for twlccIndex in range(len(TWLCC_FORECAST_POINTS_IDENTIFIERS)):
@@ -2935,7 +2935,7 @@ class Grapher:
             # Find one station per transect (7m depth)
             slopes_by_name = {}
             for index, station_name in enumerate(self.runupLabels):
-                if str(transect) not in station_name[0:station_name.index(" ")]:
+                if str(transect) != station_name[8:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
                     ax.plot(self.runupTimes, self.runupAverageSlopes[index], label=r"$\beta_{{f}}$", color='blue', linestyle='-')
@@ -2993,7 +2993,7 @@ class Grapher:
             
             # Find one station per transect (7m depth)
             for index, station_name in enumerate(self.runupLabels):
-                if str(transect) not in station_name[0:station_name.index(" ")]:
+                if str(transect) != station_name[8:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
                     # Plot setup time series
@@ -3049,7 +3049,7 @@ class Grapher:
             
             # Find one station per transect (7m depth)
             for index, station_name in enumerate(self.runupLabels):
-                if str(transect) not in station_name[0:station_name.index(" ")]:
+                if str(transect) != station_name[8:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
                     # Calculate total swash
@@ -3114,7 +3114,7 @@ class Grapher:
             
             # Find one station per transect (7m depth)
             for index, station_name in enumerate(self.runupLabels):
-                if str(transect) not in station_name[0:station_name.index(" ")]:
+                if str(transect) != station_name[8:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
                     # Plot water elevation
@@ -3181,7 +3181,7 @@ class Grapher:
             
             # Find one station per transect (7m depth)
             for index, station_name in enumerate(self.runupLabels):
-                if str(transect) not in station_name[0:station_name.index(" ")]:
+                if str(transect) != station_name[8:station_name.index(" ")]:
                     continue
                 if '7m Depth Waves' in station_name:
                     # Plot Iribarren number
@@ -3226,7 +3226,7 @@ class Grapher:
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     all_y_values.extend([x for x in self.datapointsRunupHolmanMid[index] if not np.isnan(x)])
                     all_y_values.extend([x for x in self.datapointsDuneHeights[index] if not np.isnan(x)])
                     # Capture the first valid η dataset
@@ -3249,7 +3249,7 @@ class Grapher:
             max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     depth, distance = parse_station_label(stationName)
                     if depth == "7m":
                         max_7m = round(np.nanmax(self.datapointsRunupHolmanMid[index]), 2) if len(self.datapointsRunupHolmanMid[index]) > 0 else "-"
@@ -3318,7 +3318,7 @@ class Grapher:
             max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     depth, distance = parse_station_label(stationName)
                     if depth == "7m":
                         max_7m = round(np.nanmax(self.datapointsRunupHolmanLow[index]), 2) if len(self.datapointsRunupHolmanLow[index]) > 0 else "-"
@@ -3363,7 +3363,7 @@ class Grapher:
             max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.buoyLabels:
                         swhIndex = self.buoyLabels.index(stationName)
                         depth, distance = parse_station_label(stationName)
@@ -3417,7 +3417,7 @@ class Grapher:
             max_7m = max_20m = max_9km = "-"
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.buoyLabels:
                         pwpIndex = self.buoyLabels.index(stationName)
                         depth, distance = parse_station_label(stationName)
@@ -3457,7 +3457,7 @@ class Grapher:
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.buoyLabels:
                         swhIndex = self.buoyLabels.index(stationName)
                         all_swh_metrics.append(np.max(self.datapointsSWH[swhIndex]))
@@ -3490,7 +3490,7 @@ class Grapher:
         
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.buoyLabels:
                         swhIndex = self.buoyLabels.index(stationName)
                         deeplineSWH.append(np.max(self.datapointsSWH[swhIndex]))
@@ -3575,7 +3575,7 @@ class Grapher:
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         elev = self.datapointsElevation[elevationIndex]
@@ -3603,7 +3603,7 @@ class Grapher:
             # Collect data for the transect
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         deeplineElevations.append(self.datapointsElevation[elevationIndex])
@@ -3665,7 +3665,7 @@ class Grapher:
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     if stationName in self.assetLabels:
                         elevationIndex = self.assetLabels.index(stationName)
                         elev = self.datapointsElevation[elevationIndex]
@@ -3756,10 +3756,10 @@ class Grapher:
         for transect in range(1, 6):
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
                         if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
-                            assetLabel[assetLabel.index(" ") - 1] == str(transect)):
+                            assetLabel[8:assetLabel.index(" ")] == str(transect)):
                             elev = self.datapointsElevation[elevationIndex]
                             dem_elev = self.assetDatapointsElevation[elevationIndex]
                             if not np.isnan(elev):
@@ -3785,7 +3785,7 @@ class Grapher:
             # Collect data for the transect
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")]:
+                if str(transect) == stationName[8:stationName.index(" ")]:
                 
                     dune_toe_elev_ref = self.datapointsSetupHolmanMid[index][-1]  # Reference elevation
                     dune_crest_elev_ref = self.datapointsSetupHolmanLow[index][-1]  # Reference elevation
@@ -3800,7 +3800,7 @@ class Grapher:
 
                     for elevationIndex, assetLabel in enumerate(self.assetLabels):
                         if (assetLabel[assetLabel.index(" ") + 1] == "P" and 
-                            assetLabel[assetLabel.index(" ") - 1] == str(transect)):
+                            assetLabel[8:assetLabel.index(" ")] == str(transect)):
                             profileElevations.append(self.datapointsElevation[elevationIndex])
                             profileDemElevations.append(self.assetDatapointsElevation[elevationIndex])
                             distance_str = assetLabel[assetLabel.rindex(" ") + 1:-1]
@@ -3901,7 +3901,7 @@ class Grapher:
             # Water lines and total water lines
             for index in range(numberOfRunupDatapoints):
                 stationName = self.runupLabels[index]
-                if str(transect) in stationName[0:stationName.index(" ")] and "Waves" in stationName and "4" in stationName[stationName.index(" ") + 1]:
+                if str(transect) == stationName[8:stationName.index(" ")] and "Waves" in stationName and "4" in stationName[stationName.index(" ") + 1]:
                     # Plot η line (maximum value as horizontal line)
                     if len(self.datapointsSwashStockdonLow[index]) > 0:
                         eta = np.array(self.datapointsSwashStockdonLow[index])

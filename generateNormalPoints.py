@@ -18,6 +18,212 @@ DEEPLINE_DISTANCES = [
 ]
 
 USGS_DUNE_CREST_COORDINATES_FILE = "usgs_dune_crest_coordinates.txt"
+ALONGSHORE_DEEPLINE_DISTANCES = [600, 2400, 9000]  # Hardcoded deepline distances for alongshore points
+
+# Add at the top of the script with other global variables
+USGS_DUNE_CREST_COORDINATES_FILE = "usgs_dune_crest_coordinates.txt"
+ALONGSHORE_DEEPLINE_DISTANCES = [600, 2400, 9000]  # Updated hardcoded deepline distances
+
+# Add a new function to process USGS dune crest coordinates and add to ASSET
+def add_usgs_alongshore_points(json_data):
+    with open(USGS_DUNE_CREST_COORDINATES_FILE, 'r') as file:
+        coordinates = [line.strip().split(',') for line in file if line.strip()]
+    
+    for i, coord in enumerate(coordinates, 1):
+        point = {
+            "id": "USGS",
+            "source": "USGS",
+            "name": f"Napatree Alongshore {i}",
+            "latitude": coord[0],
+            "longitude": coord[1]
+        }
+        key = f"alongshore_{i}"
+        json_data['ASSET'][key] = point
+
+# Helper function to generate profile points (mirroring generate_profile_points_map)
+def generate_profile_points(start_lat, start_lon, bearing, max_distance, spacing):
+    distances = []
+    current_distance = -max_distance
+    while current_distance <= max_distance:
+        new_lat, new_lon = calculate_new_point(start_lat, start_lon, bearing, current_distance)
+        distances.append({
+            "distance": current_distance,
+            "depth": f"{abs(current_distance)}m",
+            "latitude": f"{new_lat:.6f}",
+            "longitude": f"{new_lon:.6f}"
+        })
+        current_distance += spacing
+    return distances
+
+# Add a new function to generate alongshore RUNUP points and associated data
+def generate_alongshore_runup_points(json_data):
+    with open(USGS_DUNE_CREST_COORDINATES_FILE, 'r') as file:
+        beach_profiles = [line.strip().split(',') for line in file if line.strip()]
+    
+    runup_counter = 60  # Starting general key for alongshore RUNUP entries
+    depth_dist_map = {600: "7m", 2400: "20m", 9000: "40m"}  # Mapping distances to depths
+    for i, profile in enumerate(beach_profiles):
+        dune_crest_lat, dune_crest_lon, shoreline_lat, shoreline_lon, beach_slope = map(float, profile)
+        
+        # Generate RUNUP key (e.g., "60d1", "60d2", ..., "110d2")
+        for j, deepline_dist in enumerate(ALONGSHORE_DEEPLINE_DISTANCES):
+            runup_key = f"{runup_counter}d{j+1}"
+            general_key = str(runup_counter)
+            
+            # Calculate bearing for the line (dune crest to shoreline)
+            bearing = calculate_bearing(dune_crest_lat, dune_crest_lon, shoreline_lat, shoreline_lon)
+            
+            # Calculate deepline point
+            deepline_lat, deepline_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, deepline_dist)
+            deepline_key = f"{general_key}d{j+1}"
+            
+            # Determine tangent point from neighboring profile (use previous/next if available)
+            tangent_lat, tangent_lon = shoreline_lat, shoreline_lon  # Default to shoreline if no neighbor
+            if i > 0:
+                prev_shoreline_lat = float(beach_profiles[i-1][2])
+                prev_shoreline_lon = float(beach_profiles[i-1][3])
+                tangent_lat, tangent_lon = prev_shoreline_lat, prev_shoreline_lon
+            elif i < len(beach_profiles) - 1:
+                next_shoreline_lat = float(beach_profiles[i+1][2])
+                next_shoreline_lon = float(beach_profiles[i+1][3])
+                tangent_lat, tangent_lon = next_shoreline_lat, next_shoreline_lon
+            
+            # Calculate perpendicular bearing for tangent line
+            perp_bearing = bearing + math.pi / 2
+            if perp_bearing > 2 * math.pi:
+                perp_bearing -= 2 * math.pi
+            
+            # Generate RUNUP entry with updated naming
+            depth = depth_dist_map[deepline_dist]
+            runup_entry = {
+                "id": "RUNUP",
+                "source": "RUNUP",
+                "surfKey": f"{general_key}s",
+                "offshoreKey": f"{general_key}o",
+                "deeplineKey": deepline_key,
+                "name": f"Napatree{runup_counter}{j+1} {depth} Depth Waves {deepline_dist}m",
+                "latitude": f"{dune_crest_lat:.6f}",
+                "longitude": f"{dune_crest_lon:.6f}",
+                "tangentLatitude": f"{tangent_lat:.6f}",
+                "tangentLongitude": f"{tangent_lon:.6f}",
+                "surfLatitude": "",  # To be filled by surf point calculation
+                "surfLongitude": "",
+                "offshoreLatitude": "",  # To be filled by offshore point calculation
+                "offshoreLongitude": "",
+                "deeplineLatitude": f"{deepline_lat:.6f}",
+                "deeplineLongitude": f"{deepline_lon:.6f}",
+                "duneHeights": [],
+                "calculateDailyAverageSlope": True,
+                "beachSlope": beach_slope,
+                "profileKey": f"{general_key}p",
+                "slopelineKey": f"{general_key}s"
+            }
+            json_data['RUNUP'][runup_key] = runup_entry
+            
+            # Generate deepline point and add to ASSET, NDBC, NOS
+            deepline_point = {
+                "id": "RUNUP",
+                "source": "RUNUP",
+                "name": f"Napatree{runup_counter}{j+1} {depth} Depth Waves",
+                "latitude": f"{deepline_lat:.6f}",
+                "longitude": f"{deepline_lon:.6f}"
+            }
+            for section in ['ASSET', 'NDBC', 'NOS']:
+                json_data[section][deepline_key] = deepline_point
+            
+            # Generate surf point (arbitrary distance, e.g., 100m along bearing)
+            surf_lat, surf_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, 100)
+            surf_key = f"{general_key}s"
+            surf_point = {
+                "id": "RUNUP",
+                "source": "RUNUP",
+                "name": f"Napatree{runup_counter}{j+1} Surf",
+                "latitude": f"{surf_lat:.6f}",
+                "longitude": f"{surf_lon:.6f}"
+            }
+            for section in ['ASSET', 'NOS', 'NDBC']:
+                json_data[section][surf_key] = surf_point
+            runup_entry["surfLatitude"] = f"{surf_lat:.6f}"
+            runup_entry["surfLongitude"] = f"{surf_lon:.6f}"
+            
+            # Generate offshore point (arbitrary distance, e.g., 5000m along bearing)
+            offshore_lat, offshore_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, 5000)
+            offshore_key = f"{general_key}o"
+            offshore_point = {
+                "id": "RUNUP",
+                "source": "RUNUP",
+                "name": f"Napatree{runup_counter}{j+1} Offshore",
+                "latitude": f"{offshore_lat:.6f}",
+                "longitude": f"{offshore_lon:.6f}"
+            }
+            for section in ['ASSET', 'NOS', 'NDBC']:
+                json_data[section][offshore_key] = offshore_point
+            runup_entry["offshoreLatitude"] = f"{offshore_lat:.6f}"
+            runup_entry["offshoreLongitude"] = f"{offshore_lon:.6f}"
+            
+            # Generate profile points using the helper function
+            profile_points = generate_profile_points(dune_crest_lat, dune_crest_lon, bearing, 250, 1)
+            for idx, point in enumerate(profile_points):
+                profile_key = f"{general_key}p{idx}"
+                json_data['ASSET'][profile_key] = {
+                    "id": "RUNUP",
+                    "source": "RUNUP",
+                    "name": f"Napatree{runup_counter}{j+1} Profile {point['distance']}m",
+                    "latitude": point['latitude'],
+                    "longitude": point['longitude']
+                }
+            runup_entry["profileLatitude"] = profile_points[0]['latitude']  # First point as reference
+            runup_entry["profileLongitude"] = profile_points[0]['longitude']
+            
+            # Generate slopeline point (arbitrary distance, e.g., 1000m along bearing)
+            slopeline_lat, slopeline_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, 1000)
+            slopeline_key = f"{general_key}s"
+            slopeline_point = {
+                "id": "RUNUP",
+                "source": "RUNUP",
+                "name": f"Napatree{runup_counter}{j+1} Slopeline",
+                "latitude": f"{slopeline_lat:.6f}",
+                "longitude": f"{slopeline_lon:.6f}"
+            }
+            json_data['ASSET'][slopeline_key] = slopeline_point
+            runup_entry["slopelineLatitude"] = f"{slopeline_lat:.6f}"
+            runup_entry["slopelineLongitude"] = f"{slopeline_lon:.6f}"
+            
+            # Generate NORMAL points
+            json_data['NORMAL'][general_key] = {}
+            for k in range(-HYPERPOINTS // 4, 3 * HYPERPOINTS // 4 + 1):
+                distance = k * HYPERRESOLUTION
+                normal_lat, normal_lon = calculate_new_point(dune_crest_lat, dune_crest_lon, bearing, distance)
+                normal_key = f"{general_key}{abs(k):03d}"
+                normal_point = {
+                    "id": "RUNUP",
+                    "source": "RUNUP",
+                    "distance": str(distance),
+                    "name": f"Napatree{runup_counter}{j+1} {distance:.3f} m",
+                    "latitude": f"{normal_lat:.6f}",
+                    "longitude": f"{normal_lon:.6f}"
+                }
+                json_data['NORMAL'][general_key][normal_key] = normal_point
+                for section in ['ASSET', 'NOS']:
+                    json_data[section][normal_key] = normal_point
+            
+            # Generate TANGENT points
+            json_data['TANGENT'][general_key] = {}
+            for k in range(-HYPERPOINTS // 4, 3 * HYPERPOINTS // 4 + 1):
+                distance = k * HYPERRESOLUTION
+                tangent_lat_calc, tangent_lon_calc = calculate_new_point(tangent_lat, tangent_lon, perp_bearing, distance)
+                tangent_key = f"{general_key}{abs(k):03d}"
+                tangent_point = {
+                    "id": "RUNUP",
+                    "source": "RUNUP",
+                    "distance": str(distance),
+                    "name": f"Napatree{runup_counter}{j+1} Tangent {distance:.3f} m",
+                    "latitude": f"{tangent_lat_calc:.6f}",
+                    "longitude": f"{tangent_lon_calc:.6f}"
+                }
+                json_data['TANGENT'][general_key][tangent_key] = tangent_point
+            
+        runup_counter += 1  # Increment for next beach profile
 
 
 # Station-specific deepline distances with depths
@@ -946,7 +1152,7 @@ def generate_tangent_points(json_data, resolution=HYPERRESOLUTION, points_count=
             point_counter += 1
 
 # New function to generate profile points using PROFILE_POINTS_MAP
-def generate_profile_points(json_data):
+def generate_profile_points_orig(json_data):
     new_runup = {}
     
     # Remove plain deepline keys from ASSET, NDBC, NOS (consistent with generate_deepline_points)
@@ -1002,10 +1208,11 @@ with open('RUNUP_NAPATREE_STATIONS.json', 'r') as file:
     data_normal = json.load(file)
 generate_points_along_line(data_normal)
 generate_deepline_points(data_normal)
-generate_profile_points(data_normal)
+generate_profile_points_orig(data_normal)
 generate_slopeline_points(data_normal, distance=MAX_SLOPELINE_DISTANCE)
 generate_tangent_points(data_normal)
 add_usgs_alongshore_points(data_normal)
+generate_alongshore_runup_points(data_normal)
 with open('NAPATREE_NORMAL_STATIONS.json', 'w') as file:
     json.dump(data_normal, file, indent=2)
 
