@@ -623,6 +623,7 @@ class GetRunup:
 #                Find the waterline key
                 for normalKey in normalDict:
                     normalStationWaterValue = waterDict[normalKey]["water"][index]
+                    print("water value", normalKey, normalStationWaterValue)
 #                     normalStationStillwaterValue = stillwaterDict[normalKey]["water"][index]
 #                     print("normalStationWaterValue, index", index, normalStationWaterValue)
 #                     if(not np.isnan(normalStationStillwaterValue)):
