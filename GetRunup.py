@@ -636,7 +636,7 @@ class GetRunup:
                 else:
                     print("DID NOT FIND WATERLINE! Appending previous waterline key.")
                     print("If no previous key exists, will error out.")
-                    waterlineKeys.append(waterlineKey[-1])
+                    waterlineKeys.append(waterlineKeys[-1])
                     
 #                 Find the stillwater line, so we can pull SWL data without any gaps
                 for normalKey in normalDict:
