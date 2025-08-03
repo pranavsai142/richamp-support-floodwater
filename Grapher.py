@@ -3858,9 +3858,9 @@ class Grapher:
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='orange', label='Dune Crest TWL&CC')
-            ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
-            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="red", label='Dune Height Obs')
+            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Crest TWL&CC')
+#             ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
+            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="orange", label='Dune Height Obs')
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
 #             duneHeightPlotted = False
@@ -3906,7 +3906,7 @@ class Grapher:
                     if len(self.datapointsSwashStockdonLow[index]) > 0:
                         eta = np.array(self.datapointsSwashStockdonLow[index])
                         max_eta_value = np.nanmax(eta)
-                        ax.axhline(y=max_eta_value, color='black', linestyle='-', label='η' if transect == 1 else "")
+                        ax.axhline(y=max_eta_value, color='blue', linestyle='-', label='η' if transect == 1 else "")
                         # Shade underneath η with pastel blue, avoiding terrain
                         ax.fill_between(profileDistances, np.full_like(profileDistances, max_eta_value), elevation_y_min, 
                                         where=(max_eta_value > profileElevations) & (max_eta_value < elevation_y_max), 
