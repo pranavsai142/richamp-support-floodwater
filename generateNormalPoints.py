@@ -60,15 +60,15 @@ def generate_alongshore_runup_points(json_data):
     with open(USGS_DUNE_CREST_COORDINATES_FILE, 'r') as file:
         beach_profiles = [line.strip().split(',') for line in file if line.strip()]
     
-    runup_counter = 60  # Starting general key for alongshore RUNUP entries
+    runup_counter = 6  # Starting general key for alongshore RUNUP entries
     depth_dist_map = {600: "7m", 2400: "20m", 9000: "40m"}  # Mapping distances to depths
     for i, profile in enumerate(beach_profiles):
         dune_crest_lat, dune_crest_lon, shoreline_lat, shoreline_lon, beach_slope = map(float, profile)
         
         # Generate RUNUP key (e.g., "60d1", "60d2", ..., "110d2")
         for j, deepline_dist in enumerate(ALONGSHORE_DEEPLINE_DISTANCES):
-            runup_key = f"{runup_counter}d{j+1}"
-            general_key = str(runup_counter)
+            runup_key = f"{runup_counter}0d{j+1}"
+            general_key = f"{runup_counter}0"
             
             # Calculate bearing for the line (dune crest to shoreline)
             bearing = calculate_bearing(dune_crest_lat, dune_crest_lon, shoreline_lat, shoreline_lon)
@@ -101,7 +101,7 @@ def generate_alongshore_runup_points(json_data):
                 "surfKey": f"{general_key}s",
                 "offshoreKey": f"{general_key}o",
                 "deeplineKey": deepline_key,
-                "name": f"Napatree{runup_counter}{j+1} {depth} Depth Waves {deepline_dist}m",
+                "name": f"Napatree{runup_counter} {depth} Depth Waves {deepline_dist}m",
                 "latitude": f"{dune_crest_lat:.6f}",
                 "longitude": f"{dune_crest_lon:.6f}",
                 "tangentLatitude": f"{tangent_lat:.6f}",
@@ -124,7 +124,7 @@ def generate_alongshore_runup_points(json_data):
             deepline_point = {
                 "id": "RUNUP",
                 "source": "RUNUP",
-                "name": f"Napatree{runup_counter}{j+1} {depth} Depth Waves",
+                "name": f"Napatree{runup_counter} {depth} Depth Waves {deepline_dist}m",
                 "latitude": f"{deepline_lat:.6f}",
                 "longitude": f"{deepline_lon:.6f}"
             }
@@ -137,7 +137,7 @@ def generate_alongshore_runup_points(json_data):
             surf_point = {
                 "id": "RUNUP",
                 "source": "RUNUP",
-                "name": f"Napatree{runup_counter}{j+1} Surf",
+                "name": f"Napatree{runup_counter} Surf",
                 "latitude": f"{surf_lat:.6f}",
                 "longitude": f"{surf_lon:.6f}"
             }
@@ -152,7 +152,7 @@ def generate_alongshore_runup_points(json_data):
             offshore_point = {
                 "id": "RUNUP",
                 "source": "RUNUP",
-                "name": f"Napatree{runup_counter}{j+1} Offshore",
+                "name": f"Napatree{runup_counter} Offshore",
                 "latitude": f"{offshore_lat:.6f}",
                 "longitude": f"{offshore_lon:.6f}"
             }
@@ -164,11 +164,11 @@ def generate_alongshore_runup_points(json_data):
             # Generate profile points using the helper function
             profile_points = generate_profile_points(dune_crest_lat, dune_crest_lon, bearing, 250, 1)
             for idx, point in enumerate(profile_points):
-                profile_key = f"{general_key}p{idx}"
+                profile_key = f"{general_key}"
                 json_data['ASSET'][profile_key] = {
                     "id": "RUNUP",
                     "source": "RUNUP",
-                    "name": f"Napatree{runup_counter}{j+1} Profile {point['distance']}m",
+                    "name": f"Napatree{runup_counter} Profile {point['distance']}m",
                     "latitude": point['latitude'],
                     "longitude": point['longitude']
                 }
@@ -181,7 +181,7 @@ def generate_alongshore_runup_points(json_data):
             slopeline_point = {
                 "id": "RUNUP",
                 "source": "RUNUP",
-                "name": f"Napatree{runup_counter}{j+1} Slopeline",
+                "name": f"Napatree{runup_counter} Slopeline",
                 "latitude": f"{slopeline_lat:.6f}",
                 "longitude": f"{slopeline_lon:.6f}"
             }
@@ -199,7 +199,7 @@ def generate_alongshore_runup_points(json_data):
                     "id": "RUNUP",
                     "source": "RUNUP",
                     "distance": str(distance),
-                    "name": f"Napatree{runup_counter}{j+1} {distance:.3f} m",
+                    "name": f"Napatree{runup_counter} {distance:.3f} m",
                     "latitude": f"{normal_lat:.6f}",
                     "longitude": f"{normal_lon:.6f}"
                 }
@@ -217,7 +217,7 @@ def generate_alongshore_runup_points(json_data):
                     "id": "RUNUP",
                     "source": "RUNUP",
                     "distance": str(distance),
-                    "name": f"Napatree{runup_counter}{j+1} Tangent {distance:.3f} m",
+                    "name": f"Napatree{runup_counter} Tangent {distance:.3f} m",
                     "latitude": f"{tangent_lat_calc:.6f}",
                     "longitude": f"{tangent_lon_calc:.6f}"
                 }

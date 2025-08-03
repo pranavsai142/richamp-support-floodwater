@@ -530,8 +530,8 @@ class GetRunup:
             print("deepline SWH Max: ", np.max(offshoreSwh))
             print("deepline PWP Max: ", np.max(offshorePwp))
 
-            shorelineElevation = float(meshDict[generalKey]["elevation"])
-            surfElevation = float(meshDict[surfKey]["elevation"])
+#             shorelineElevation = float(meshDict[generalKey]["elevation"])
+#             surfElevation = float(meshDict[surfKey]["elevation"])
             
 #             offshoreElevation = float(meshDict[offshoreKey]["elevation"])
             offshoreElevation = float(meshDict[deeplineKey]["elevation"])
@@ -1025,17 +1025,22 @@ class GetRunup:
 #             print("max time, water, swg, mwd, mwp, and elevation shoreline offshore", max(offshoreWater), max(offshoreSwh), max(offshoreMwd), max(offshoreMwp), shorelineElevation, offshoreElevation)
     #                             distance and threshold in kilometers
 #             print("shorelineElevation, surfElevation, offshoreElevation", shorelineElevation, surfElevation, offshoreElevation)
-            surfDistance = haversine.haversine(surfCoordinates, shorelineCoordinates) * 1000
-            offshoreDistance = haversine.haversine(offshoreCoordinates, shorelineCoordinates) * 1000
+#             surfDistance = haversine.haversine(surfCoordinates, shorelineCoordinates) * 1000
+#             offshoreDistance = haversine.haversine(offshoreCoordinates, shorelineCoordinates) * 1000
 #             print("surfDistance, offshoreDistance", surfDistance, offshoreDistance)
 #             print("distance between offshore and shoreline", distance)
 #             Calculate average slope in radians
 #              hardcode the average slope
 #             distance = 50
 #             offshoreElevation = 5
-            averageSlope = math.atan((shorelineElevation - surfElevation) / surfDistance)
+
+
+#             surfDistance = haversine.haversine(surfCoordinates, shorelineCoordinates) * 1000
+#             offshoreDistance = haversine.haversine(offshoreCoordinates, shorelineCoordinates) * 1000
+#             averageSlope = math.atan((shorelineElevation - surfElevation) / surfDistance)
+#             averageSlope = 0
 #             print("shore to surf average slope", averageSlope)
-#             averageSlope = 0.025
+            averageSlope = 0.025
 #             averageSlope = 
 
 #             Convert mean wave period to deepwater wavelength
