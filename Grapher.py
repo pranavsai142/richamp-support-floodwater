@@ -3692,7 +3692,7 @@ class Grapher:
                 dem_elev = self.assetDatapointsElevation[elevationIndex]
                 longitude = self.assetLongitudes[elevationIndex]
                 twlcc_elev = ALL_DUNE_CREST_TRANSECTS[transectsIndex]
-                transectsIndex++
+                transectsIndex = transectsIndex + 1
                 if not np.isnan(elev):
                     alongshoreElevations.append(elev)
                 if not np.isnan(dem_elev):
