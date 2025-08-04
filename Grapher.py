@@ -43,7 +43,9 @@ BYPASS_WATER_TIMESERIES_PLOTS = True
 
 MHW_ELEVATION_RELATIVE_TO_NAVD88 = 0.646
 
-FORESHORE_BEACH_SLOPE_OBS = [0.13, 0.11, 0.08, 0.07, 0.07]     
+FORESHORE_BEACH_SLOPE_OBS = [0.13, 0.11, 0.08, 0.07, 0.07]  
+
+GRAPH_2022 = True   
 
 MHWL_TRANSECTS = []
 DUNE_TOE_TRANSECTS = []
@@ -3282,10 +3284,16 @@ class Grapher:
             # Plot horizontal lines for dune heights
 #             CHANGE HERE WHEN DOING 2022 VS 2023 NOREASTER
             for height in unique_heights:
-                if (transect >= 2):  # 2 For 2023, 5 for 2022, also change below from Dune Height to Runup Height depending on data
-                    ax.axhline(y=height, linestyle='--', color='red', label=f'Dune Height {height:.2f}m' if height == list(unique_heights)[0] else None)
+                if GRAPH_2022:
+                    if (transect >= 5):  # 2 For 2023, 5 for 2022, also change below from Dune Height to Runup Height depending on data
+                        ax.axhline(y=height, linestyle='--', color='red', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
+                    else:
+                        ax.axhline(y=height, linestyle='--', color='grey', label=f'Runup Height {height:.2f}m' if height == list(unique_heights)[0] else None)
                 else:
-                    ax.axhline(y=height, linestyle='--', color='grey', label=f'Dune Height {height:.2f}m' if height == list(unique_heights)[0] else None)
+                    if (transect >= 2):  # 2 For 2023, 5 for 2022, also change below from Dune Height to Runup Height depending on data
+                        ax.axhline(y=height, linestyle='--', color='red', label=f'Dune Height {height:.2f}m' if height == list(unique_heights)[0] else None)
+                    else:
+                        ax.axhline(y=height, linestyle='--', color='grey', label=f'Dune Height {height:.2f}m' if height == list(unique_heights)[0] else None)
         
             ax.legend(loc="upper left", fontsize=10)
             ax.format_xdata = mdates.DateFormatter('%d')
@@ -3860,7 +3868,11 @@ class Grapher:
             # Draw subtle horizontal lines for dune crest and dune toe
             ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Crest TWL&CC')
 #             ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
-            ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="orange", label='Dune Height Obs')
+            if(GRAPH_2022):
+                ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="orange", label='Runup Height Obs')
+            else:
+                ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="orange", label='Dune Height Obs')
+
         
             # Plot additional horizontal lines using unique non-NaN values from self.datapointsDuneHeights
 #             duneHeightPlotted = False
