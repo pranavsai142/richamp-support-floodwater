@@ -505,7 +505,7 @@ def main():
 
         ADCIRC_MESH_DATA_FILE = water_temp_directory + "adcirc_elevation_data_file" + ".json"
 
-        Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
+#         Fort14Reader(ADCIRC_MESH_FILE=ADCIRC_MESH_FILE, STATIONS_FILE=STATIONS_FILE, ADCIRC_MESH_DATA_FILE=ADCIRC_MESH_DATA_FILE, BACKGROUND_AXIS=backgroundAxis).generateMeshDataForStations()
 #         waterStartDateObject = datetime.datetime(year=2018, month=2, day=28, hour=5)
 #         waterEndDateObject = datetime.datetime(year=2018, month=3, day=4, hour=5)
         dataToGraph["MESH"] = ADCIRC_MESH_DATA_FILE
@@ -590,7 +590,7 @@ def main():
         if(args.wavesExists and args.meshExists):
             print("Calling get observational elevation data", flush=True)
             OBS_ASSET_DATA_FILE = wind_temp_directory + "obs_elevation_data_file" + ".json"
-#             GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
+            GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
             dataToGraph["ASSET"] = OBS_ASSET_DATA_FILE
             RUNUP_DATA_FILE = wind_temp_directory + "runup_data_file.json"
             GetRunup(
