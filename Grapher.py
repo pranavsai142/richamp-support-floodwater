@@ -1557,6 +1557,35 @@ class Grapher:
         
             print(f"Closest transects: {closest_transects}")
         
+            # Plot asset points
+            for assetIndex, assetLabel in enumerate(self.assetLabels):
+                if "m" == assetLabel[-1]:
+                    if "Waves" in assetLabel:
+                        ax.scatter(
+                            self.assetLongitudes[assetIndex],
+                            self.assetLatitudes[assetIndex],
+                            zorder=3,
+                            alpha=0.7,
+                            marker="x",
+                            s=60,
+                            color="black"
+                        )
+                        ax.annotate(
+                            assetLabel[:assetLabel.index(" ")],
+                            (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]),
+                            fontsize=22
+                        )
+                    else:
+                        ax.scatter(
+                            self.assetLongitudes[assetIndex],
+                            self.assetLatitudes[assetIndex],
+                            zorder=3,
+                            alpha=0.7,
+                            marker=".",
+                            s=30,
+                            color="red"
+                        )
+                        
             # Plot all valid transects
             for (state, segment, profile) in valid_transects:
                 group = df[(df['state'] == state) & (df['segment'] == segment) & (df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
@@ -1604,34 +1633,6 @@ class Grapher:
                         zorder=3
                     )
         
-            # Plot asset points
-            for assetIndex, assetLabel in enumerate(self.assetLabels):
-                if "m" == assetLabel[-1]:
-                    if "Waves" in assetLabel:
-                        ax.scatter(
-                            self.assetLongitudes[assetIndex],
-                            self.assetLatitudes[assetIndex],
-                            zorder=3,
-                            alpha=0.7,
-                            marker="x",
-                            s=60,
-                            color="black"
-                        )
-                        ax.annotate(
-                            assetLabel[:assetLabel.index(" ")],
-                            (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]),
-                            fontsize=22
-                        )
-                    else:
-                        ax.scatter(
-                            self.assetLongitudes[assetIndex],
-                            self.assetLatitudes[assetIndex],
-                            zorder=3,
-                            alpha=0.7,
-                            marker=".",
-                            s=30,
-                            color="red"
-                        )
                         
             for twlccIndex in range(len(TWLCC_FORECAST_POINTS_IDENTIFIERS)):
                 ax.scatter(

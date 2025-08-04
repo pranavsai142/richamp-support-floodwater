@@ -904,6 +904,8 @@ class GetRunup:
                 site_ids=[1403]
             elif("5" in generalKey):
                 site_ids=[1403]
+            else:
+                site_ids=[1403]
 #                 This isint working                     
 
 # forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
