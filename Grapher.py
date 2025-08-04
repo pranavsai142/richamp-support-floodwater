@@ -3745,7 +3745,7 @@ class Grapher:
         ax.set_ylabel("Elevation (meters)", fontsize=12)
         ax.tick_params(axis='both', labelsize=12)
         ax.set_title(f"{self.titlePrefix}Napatree Alongshore Profile", fontsize=16)
-        ax.set_ylim(elevation_y_min, elevation_y_max)  # Consistent y-axis limits
+        ax.set_ylim(0, 10)  # Consistent y-axis limits
     
         # Add legend
         ax.legend(loc="upper right", fontsize=10)

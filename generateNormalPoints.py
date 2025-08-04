@@ -18,11 +18,11 @@ DEEPLINE_DISTANCES = [
 ]
 
 USGS_DUNE_CREST_COORDINATES_FILE = "usgs_dune_crest_coordinates.txt"
-ALONGSHORE_DEEPLINE_DISTANCES = [600, 2400, 9000]  # Hardcoded deepline distances for alongshore points
+ALONGSHORE_DEEPLINE_DISTANCES = [600]  # Hardcoded deepline distances for alongshore points
 
 # Add at the top of the script with other global variables
-USGS_DUNE_CREST_COORDINATES_FILE = "usgs_dune_crest_coordinates.txt"
-ALONGSHORE_DEEPLINE_DISTANCES = [600, 2400, 9000]  # Updated hardcoded deepline distances
+# USGS_DUNE_CREST_COORDINATES_FILE = "usgs_dune_crest_coordinates.txt"
+# ALONGSHORE_DEEPLINE_DISTANCES = [600, 2400, 9000]  # Updated hardcoded deepline distances
 
 # Add a new function to process USGS dune crest coordinates and add to ASSET
 def add_usgs_alongshore_points(json_data):
@@ -61,7 +61,9 @@ def generate_alongshore_runup_points(json_data):
         beach_profiles = [line.strip().split(',') for line in file if line.strip()]
     
     runup_counter = 6  # Starting general key for alongshore RUNUP entries
-    depth_dist_map = {600: "7m", 2400: "20m", 9000: "40m"}  # Mapping distances to depths
+#     depth_dist_map = {600: "7m", 2400: "20m", 9000: "40m"}  # Mapping distances to depths
+    depth_dist_map = {600: "7m"}  # Mapping distances to depths
+
     for i, profile in enumerate(beach_profiles):
         dune_crest_lat, dune_crest_lon, shoreline_lat, shoreline_lon, beach_slope = map(float, profile)
         
