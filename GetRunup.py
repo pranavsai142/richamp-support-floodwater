@@ -3,6 +3,8 @@ import os
 from typing import List, Dict, Optional
 from datetime import datetime
 
+GRAPH_2022 = False
+
 fields = [
     "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
     "tideWindSetup", "swash", "incSwash", "infragSwash", "hs", "pp", "predictedImpact"
@@ -910,9 +912,13 @@ class GetRunup:
 
 # forecast_dates: List[str] = ["2022-12-20", "2023-12-15"],
 #                 print("site_ids", site_ids)
+            if GRAPH_2022:
+                forecast_dates = ["2022-12-20"]
+            else:
+                forecast_dates = ["2023-12-15"]
             water_level_data = fetch_water_levels(
                 site_ids=site_ids,
-                forecast_dates = ["2022-12-20"],
+                forecast_dates = forecast_dates,
                 fields=fields,
                 base_dir="."
             )
