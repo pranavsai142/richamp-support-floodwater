@@ -36,10 +36,10 @@ DEPTH_LINE_7M = -7.0
 DEPTH_LINE_20M = -20.0
 DISTANCE_LINE_9000M = 9000.0
 
-GRAPH_SWASH = True
-GRAPH_MULTIPANEL = False
+GRAPH_SWASH = False
+GRAPH_MULTIPANEL = True
 
-BYPASS_WATER_TIMESERIES_PLOTS = True
+BYPASS_WATER_TIMESERIES_PLOTS = False
 
 MHW_ELEVATION_RELATIVE_TO_NAVD88 = 0.646
 
@@ -3867,7 +3867,7 @@ class Grapher:
                             ha='left', va='bottom', fontsize=10, color='blue', bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         
             # Draw subtle horizontal lines for dune crest and dune toe
-            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Crest TWL&CC')
+            ax.axhline(y=dune_crest_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Height TWL&CC')
 #             ax.axhline(y=dune_toe_elev_ref, linewidth=1, alpha=0.7, color='green', label='Dune Toe TWL&CC')
             if(GRAPH_2022):
                 ax.axhline(y=obs_dune_elev_ref, linewidth=1, alpha=0.7, color="orange", label='Runup Height Obs')
@@ -3905,7 +3905,7 @@ class Grapher:
                 ax.plot([], [], color='purple', linestyle='--', linewidth=1, alpha=0.5, label=r'$\beta_{{f,obs}} = {:.2f}$'.format(abs(beta_obs)))
         
                 # β_f,avg from mean of runupAverageSlopes
-                beta_avg = -np.nanmean(average_slopes)  # Negative slope for inward direction
+                beta_avg = -np.max(average_slopes)  # Negative slope for inward direction
                 y_start_avg = mhwl_elev
                 y_end_avg = y_start_avg + beta_avg * (x_end - x_start)
                 ax.plot([x_start, x_end], [y_start_avg, y_end_avg], color='magenta', linestyle='--', linewidth=1, alpha=0.6)
@@ -3970,7 +3970,7 @@ class Grapher:
             ax.set_title(f"{self.titlePrefix}Napatree{transect} Elevation Profile", fontsize=16)
             ax.set_ylim(-2, 6.15)
 #             ax.set_xlim(min(profileDistances), max(profileDistances))
-            ax.set_xlim(-175, 50)
+            ax.set_xlim(-170, 50)
             ax.grid(False)
         
             # Update legend

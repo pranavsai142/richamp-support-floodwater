@@ -36,10 +36,16 @@ from Encoders import NumpyEncoder
 # NOS_ADCIRC_NODES_WIND_DATA_FILE_NAME = "NOS_Floodwater_Nodes_Wind_Data.json"
 
 
-MIN_SEARCH_LONGITUDE = -71.95
-MAX_SEARCH_LONGITUDE = -71.75
-MIN_SEARCH_LATITUDE = 40.5
-MAX_SEARCH_LATITUDE = 41.3125
+# Napatree Runup Bounds
+# MIN_SEARCH_LONGITUDE = -71.95
+# MAX_SEARCH_LONGITUDE = -71.75
+# MIN_SEARCH_LATITUDE = 40.5
+# MAX_SEARCH_LATITUDE = 41.3125
+
+MIN_SEARCH_LONGITUDE = -999
+MAX_SEARCH_LONGITUDE = 999
+MIN_SEARCH_LATITUDE = -999
+MAX_SEARCH_LATITUDE = 999
 
 class Reader:
     def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", BACKGROUND_AXIS=[], format=""):
@@ -966,8 +972,8 @@ class Reader:
             stationsDict = json.load(stations_file)
             
         data = {}
-#         if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "post" or dataType == "rain"):
-        if(False):
+        if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "post" or dataType == "rain"):
+#         if(False):
             data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
                 
         print("Interpolating", dataType, flush=True)
