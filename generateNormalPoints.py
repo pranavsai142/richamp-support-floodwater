@@ -1217,7 +1217,7 @@ generate_profile_points_orig(data_normal)
 generate_slopeline_points(data_normal, distance=MAX_SLOPELINE_DISTANCE)
 generate_tangent_points(data_normal)
 add_usgs_alongshore_points(data_normal)
-generate_alongshore_runup_points(data_normal)
+# generate_alongshore_runup_points(data_normal)
 with open('NAPATREE_NORMAL_STATIONS.json', 'w') as file:
     json.dump(data_normal, file, indent=2)
 
