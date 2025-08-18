@@ -88,6 +88,71 @@
       "longitude": "-72.095000",
       "altitude": "2\n"
     },
+    "105": {
+     "id": "8779749",
+      "source": "CO-OPS_8779749_met.csv",
+      "name": "South Padre Island, TX",
+      "latitude": "26.066667",
+      "longitude": "-97.155000",
+      "altitude": "2\n"
+    },
+    "106": {
+     "id": "8775241",
+      "source": "CO-OPS_8775241_met.csv",
+      "name": "Aransas, TX",
+      "latitude": "27.836667",
+      "longitude": "-97.038333",
+      "altitude": "2\n"
+    },
+    "107": {
+     "id": "8654467",
+      "source": "CO-OPS_8654467_met.csv",
+      "name": "Hatteras, NC",
+      "latitude": "35.208333",
+      "longitude": "-75.705000",
+      "altitude": "2\n"
+    },
+    "108": {
+     "id": "8726724",
+      "source": "CO-OPS_8726724_met.csv",
+      "name": "Clearwater Beach, FL",
+      "latitude": "27.978333",
+      "longitude": "-82.831667",
+      "altitude": "2\n"
+    },
+    "109": {
+     "id": "8722670",
+      "source": "CO-OPS_8726724_met.csv",
+      "name": "West Palm Beach, FL",
+      "latitude": "26.613333",
+      "longitude": "-80.033333",
+      "altitude": "2\n"
+    },
+    "110": {
+     "id": "8724580",
+      "source": "CO-OPS_8726724_met.csv",
+      "name": "Key West, FL",
+      "latitude": "24.555000",
+      "longitude": "-81.808333",
+      "altitude": "2\n"
+    },
+    "111": {
+     "id": "8721604",
+      "source": "CO-OPS_8721604_met.csv",
+      "name": "Port Canaveral, FL",
+      "latitude": "28.415000",
+      "longitude": "-80.593333",
+      "altitude": "2\n"
+    },
+    "112": {
+     "id": "8725520",
+      "source": "CO-OPS_8721604_met.csv",
+      "name": "Fort Myers, FL",
+      "latitude": "26.648333",
+      "longitude": "-81.871667",
+      "altitude": "2\n"
+    },
+    
     "104": {
      "id": "411838071513000",
       "source": "USGS",
