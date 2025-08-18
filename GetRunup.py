@@ -915,7 +915,7 @@ class GetRunup:
 #                 print("site_ids", site_ids)
             if GRAPH_2022:
                 forecast_dates = ["2022-12-20"]
-            else if GRAPH_ERIN:
+            elif GRAPH_ERIN:
                 forecast_dates = ["2025-08-18"]
             else:
                 forecast_dates = ["2023-12-15"]
