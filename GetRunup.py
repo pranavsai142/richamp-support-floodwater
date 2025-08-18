@@ -123,9 +123,14 @@ def fetch_water_levels(
     for site_id in site_ids:
         for forecast_date in forecast_dates:
             # Construct paths to water levels and site JSON files
-            folder = f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_json"
-            water_levels_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_waterLevels.json")
-            site_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_site.json")
+            if GRAPH_ERIN:
+                folder = f"twlForecast_OKX_{site_id}_{forecast_date} 12-00-00_json"
+                water_levels_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 12-00-00_waterLevels.json")
+                site_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 12-00-00_site.json")
+            else:
+                folder = f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_json"
+                water_levels_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_waterLevels.json")
+                site_path = os.path.join(base_dir, folder, f"twlForecast_OKX_{site_id}_{forecast_date} 00-00-00_site.json")
             
             # Read site data
             site_data = read_site_json(site_path)
