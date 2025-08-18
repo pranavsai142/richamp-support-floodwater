@@ -4,6 +4,7 @@ from typing import List, Dict, Optional
 from datetime import datetime
 
 GRAPH_2022 = False
+GRAPH_ERIN = True
 
 fields = [
     "dateTime", "twl", "twl05", "twl95", "setup", "runup", "runup05", "runup95",
@@ -914,6 +915,8 @@ class GetRunup:
 #                 print("site_ids", site_ids)
             if GRAPH_2022:
                 forecast_dates = ["2022-12-20"]
+            else if GRAPH_ERIN:
+                forecast_dates = ["2025-08-18"]
             else:
                 forecast_dates = ["2023-12-15"]
             water_level_data = fetch_water_levels(
