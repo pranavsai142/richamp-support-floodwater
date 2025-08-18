@@ -290,9 +290,9 @@
 # ERIN
 
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_1612.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWind1612/
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_1700.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWindVeerLeft1700/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_1700.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWindVeerLeft1700/
 
-python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory Erin1700UTCObsWater/
+# python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory Erin1700UTCObsWater/
 # 
 #  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
 # --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/rads.64.nc \
@@ -302,13 +302,13 @@ python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water
 # --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TPS.63.nc \
 #  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinAdv21ObsWaves/
 
- python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
---waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/rads.64.nc \
---waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_HS.63.nc \
---wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_DIR.63.nc \
---wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_TMM10.63.nc \
---wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory Erin1700UTCObsWaves/
+#  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/rads.64.nc \
+# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_HS.63.nc \
+# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_DIR.63.nc \
+# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_TMM10.63.nc \
+# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/swan_TPS.63.nc \
+#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory Erin1700UTCObsWaves/
 
 python generateGraphs.py --stations NAPATREE_NORMAL_STATIONS.json \
 --wavesExists true \
