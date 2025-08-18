@@ -53,6 +53,77 @@
       "name": "Nantucket Island, MA",
       "latitude": "41.285",
       "longitude": "-70.096"
+    },
+    "15": {
+      "id": "44008",
+      "source": "NDBC",
+      "name": "SE Nantucket, MA",
+      "latitude": "40.500",
+      "longitude": "-69.254"
+    },
+    "16": {
+      "id": "41047",
+      "source": "NDBC",
+      "name": "Nassau, Bahamas",
+      "latitude": "27.557",
+      "longitude": "-71.48"
+    },
+    "17": {
+      "id": "41047",
+      "source": "NDBC",
+      "name": "NE Bahamas",
+      "latitude": "27.557",
+      "longitude": "-71.48"
+    },
+    "18": {
+      "id": "SPGF1",
+      "source": "NDBC",
+      "name": "Settlement Point, Bahamas",
+      "latitude": "26.704",
+      "longitude": "-78.995"
+    },
+    "19": {
+      "id": "41004",
+      "source": "NDBC",
+      "name": "Charleston, SC",
+      "latitude": "32.502",
+      "longitude": "-79.099"
+    },
+    "20": {
+      "id": "41002",
+      "source": "NDBC",
+      "name": "South Hatteras",
+      "latitude": "31.743",
+      "longitude": "-74.955"
+    },
+    "21": {
+      "id": "41001",
+      "source": "NDBC",
+      "name": "East Hatteras",
+      "latitude": "34.791",
+      "longitude": "-72.42"
+    },
+    
+    "22": {
+      "id": "41120",
+      "source": "NDBC",
+      "name": "Cape Hatteras",
+      "latitude": "35.258",
+      "longitude": "-75.285"
+    },
+    "23": {
+      "id": "44402",
+      "source": "NDBC",
+      "name": "Block Canyon, NY",
+      "latitude": "39.314",
+      "longitude": "-70.717"
+    },
+    "24": {
+      "id": "41009",
+      "source": "NDBC",
+      "name": "Cape Caneveral, FL",
+      "latitude": "28.508",
+      "longitude": "-80.185"
     }
   },
   "NOS": {
