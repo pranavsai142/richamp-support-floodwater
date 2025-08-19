@@ -37,15 +37,15 @@ from Encoders import NumpyEncoder
 
 
 # Napatree Runup Bounds
-MIN_SEARCH_LONGITUDE = -71.95
-MAX_SEARCH_LONGITUDE = -71.75
-MIN_SEARCH_LATITUDE = 40.5
-MAX_SEARCH_LATITUDE = 41.3125
+# MIN_SEARCH_LONGITUDE = -71.95
+# MAX_SEARCH_LONGITUDE = -71.75
+# MIN_SEARCH_LATITUDE = 40.5
+# MAX_SEARCH_LATITUDE = 41.3125
 
-# MIN_SEARCH_LONGITUDE = -999
-# MAX_SEARCH_LONGITUDE = 999
-# MIN_SEARCH_LATITUDE = -999
-# MAX_SEARCH_LATITUDE = 999
+MIN_SEARCH_LONGITUDE = -999
+MAX_SEARCH_LONGITUDE = 999
+MIN_SEARCH_LATITUDE = -999
+MAX_SEARCH_LATITUDE = 999
 
 class Reader:
     def __init__(self, STATIONS_FILE="", STATION_TO_NODE_DISTANCES_FILE="", NODES_FILE="", BACKGROUND_AXIS=[], format=""):
@@ -1446,7 +1446,7 @@ class WaveReader:
         timeSparseness = 1
         initializeClosestWaveNodes = True
         if(initializeClosestWaveNodes):
-            thresholdDistance = 3
+            thresholdDistance = 7
 #             thresholdDistance = 
             self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")
         interpolateValues = True
