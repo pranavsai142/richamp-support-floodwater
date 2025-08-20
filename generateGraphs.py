@@ -139,6 +139,12 @@ WINNAPAUG_MAP = "Winnapaug.png"
 WINNAPAUG_OUTLINE_MAP = "WinnapaugOutline.png"
 WINNAPAUG_AXIS = [-71.81074920654297, -71.75925079345703, 41.34433416895306, 41.30566009263403]
 
+NARRAGANSETT_MOUTH_MAP = "NarragansettMouth.png"
+NARRAGANSETT_MOUTH_OUTLINE_MAP = "NarragansettMouthOutline.png"
+NARRAGANSETT_MOUTH_MAP = "NarragansettMouthGreyscale.png"
+NARRAGANSETT_MOUTH_OUTLINE_MAP = "NarragansettMouthOutlineGreyscale.png"
+NARRAGANSETT_MOUTH_AXIS = [-71.52799682617189, -71.32200317382814, 41.50218339933836, 41.34772474532908]
+
 def main():
     p = argparse.ArgumentParser(description="Make a request to generate graphs")
     p.add_argument(
@@ -439,6 +445,12 @@ def main():
     elif(backgroundChoice == "WINNAPAUG_OUTLINE"):
         backgroundMap = WINNAPAUG_OUTLINE_MAP
         backgroundAxis = WINNAPAUG_AXIS
+    elif(backgroundChoice == "NARRAGANSETT_MOUTH"):
+        backgroundMap = NARRAGANSETT_MOUTH_MAP
+        backgroundAxis = NARRAGANSETT_MOUTH_AXIS
+    elif(backgroundChoice == "NARRAGANSETT_MOUTH_OUTLINE"):
+        backgroundMap = NARRAGANSETT_MOUTH_OUTLINE_MAP
+        backgroundAxis = NARRAGANSETT_MOUTH_AXIS
         
     print("args.adcircExists", args.adcircExists, flush=True)
     if(args.adcircExists):
@@ -532,19 +544,19 @@ def main():
         WAVE_PWP_DATA_FILE = wave_temp_directory + "wave_pwp_data_file" + ".json"
         WAVE_RAD_DATA_FILE = wave_temp_directory + "wave_rad_data_file" + ".json"
         STATIONS_FILE = args.stations
-#         (waveStartDateObject, waveEndDateObject) = WaveReader(
-#             WAVE_SWH_FILE=WAVE_SWH_FILE,
-# #             WAVE_MWD_FILE=WAVE_MWD_FILE,
-# #             WAVE_MWP_FILE=WAVE_MWP_FILE,
-#             WAVE_PWP_FILE=WAVE_PWP_FILE,
-# #             WAVE_RAD_FILE=WAVE_RAD_FILE,
-#             STATIONS_FILE=STATIONS_FILE, 
-#             WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
-# #             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
-# #             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
-#             WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
-# #             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
-#             BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
+        (waveStartDateObject, waveEndDateObject) = WaveReader(
+            WAVE_SWH_FILE=WAVE_SWH_FILE,
+#             WAVE_MWD_FILE=WAVE_MWD_FILE,
+#             WAVE_MWP_FILE=WAVE_MWP_FILE,
+            WAVE_PWP_FILE=WAVE_PWP_FILE,
+#             WAVE_RAD_FILE=WAVE_RAD_FILE,
+            STATIONS_FILE=STATIONS_FILE, 
+            WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
+#             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
+#             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
+            WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
+#             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
+            BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
         
 #         waveStartDateObject = datetime.datetime(year=2023, month=12, day=15, hour=0, tzinfo=datetime.timezone.utc)
 #         waveEndDateObject = datetime.datetime(year=2023, month=12, day=20, hour=0, tzinfo=datetime.timezone.utc)

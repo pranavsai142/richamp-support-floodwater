@@ -220,3 +220,13 @@ Winnapaug
 "lat long of center", "(41.325, -71.785)"
 "lat long of north east", "(41.34433416895306, -71.75925079345703)"
 "lat long of south west", "(41.30566009263403, -71.81074920654297)"
+
+###Jamestown
+
+"lat long of north east", "(41.54319831383463, -71.30416931152344)"
+"lat long of south west", "(41.446765794271144, -71.47583068847656)"
+
+Naragansett Mouth
+
+"lat long of north east", "(41.50218339933836, -71.32200317382814)"
+"lat long of south west", "(41.34772474532908, -71.52799682617189)"
