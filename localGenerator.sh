@@ -311,7 +311,7 @@
 --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_DIR.63.nc \
 --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TMM10.63.nc \
 --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice BLOCK_ISLAND_SOUND_OUTLINE --graphDirectory ErinAdv21ObsWaves/
+ --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP --graphDirectory ErinAdv21ObsWavesRhodeIslandChamp/
 
 #  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
 # --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/rads.64.nc \
