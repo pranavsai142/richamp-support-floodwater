@@ -1799,8 +1799,8 @@ class Grapher:
             gc.collect()
         if(len(self.mapWaterTimes) > 0):
             vmin = -1
-            vminSwath = 1
-            vmax = 2
+            vminSwath = 0.6
+            vmax = 1
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             levelBoundariesSwath = np.linspace(vminSwath, vmax, levels + 1)
@@ -1898,7 +1898,7 @@ class Grapher:
             # Use the blended colormap for the colorbar (alpha=0.5)
             cbar = plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=blended_cmap_swath),
-                ticks=np.arange(vminSwath, vmax + 0.5, 0.5),
+                ticks=np.arange(vminSwath, vmax + 0.2, 0.2),
                 boundaries=levelBoundariesSwath,
                 values=(levelBoundariesSwath[:-1] + levelBoundariesSwath[1:]) / 2,
                 ax=plt.gca()
@@ -2240,7 +2240,7 @@ class Grapher:
                             ax_swh.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], 
                                            label=f"Buoy {self.buoyLabels[index]}")
     
-            ax_swh.legend(loc="lower right", ncol=2, bbox_to_anchor=(1, 0))
+            ax_swh.legend(loc="lower right", ncol=3)
             ax_swh.set_title("Significant Wave Height Across All Stations")
             ax_swh.format_xdata = mdates.DateFormatter('%d')
             ax_swh.set_ylabel("SWH (meters)")
