@@ -292,18 +292,24 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_1612.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWind1612/
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_1700.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWindVeerLeft1700/
 # python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_1900.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWindVeerLeft1900/
-python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_2100.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWindVeerLeft2100/
+# python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --gfsExists true --wind /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/Erin_2100.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinObsParametricWindVeerLeft2100/
 
 
 # python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1900/fort.63.nc --stillwaterExists true --stillwater /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1900_wind/fort.63.nc --tidewaterExists true --tidewater /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1900_tides/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NAPATREE --graphDirectory Erin1900UTCObsWater/
 # 
- python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
---waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/rads.64.nc \
---waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_HS.63.nc \
---wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_DIR.63.nc \
---wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TMM10.63.nc \
---wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinAdv21ObsWaves/
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice SOUTHERN_RHODE_ISLAND --graphDirectory ErinWaterMapSouthernRhodeIsland/
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice ATLANTIC_BEACH_PARK_OUTLINE --graphDirectory ErinWaterMapAtlanticBeachParkOutline/
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice GALILEE_OUTLINE --graphDirectory ErinWaterMapGalileeOutline/
+python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP --graphDirectory ErinWaterMapRhodeIslandChamp/
+
+
+#  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/rads.64.nc \
+# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_HS.63.nc \
+# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_DIR.63.nc \
+# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TMM10.63.nc \
+# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TPS.63.nc \
+#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice EAST_COAST_OUTLINE --graphDirectory ErinAdv21ObsWaves/
 
 #  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
 # --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_1700/rads.64.nc \

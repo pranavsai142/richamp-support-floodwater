@@ -1812,6 +1812,7 @@ class Grapher:
             blended_cmap_swath = create_blended_cmap(original_cmap, alpha=0.5)      # For swath plot
         
             for index in range(len(self.mapWaterTimes)):
+            for index in range(0):
                 fig, ax = plt.subplots(figsize=(18,18))
                 plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
                 currentMaskedTriangles = self.mapWaterMaskedTriangles.copy()
