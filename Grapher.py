@@ -1917,7 +1917,7 @@ class Grapher:
         if(len(self.mapWaveTimes) > 0):
             vmin = 0
             vmax = math.ceil(self.maxSWH)
-            vmax = 10
+            vmax = 7
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
         
