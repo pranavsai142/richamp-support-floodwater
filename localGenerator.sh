@@ -305,21 +305,21 @@
 # python generateGraphs.py --stations OBS_STATIONS.json --waterExists true --water /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/fort.63.nc --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice RHODE_ISLAND_CHAMP --graphDirectory ErinWaterMapRhodeIslandChamp/
 
 
-#  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
-# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/rads.64.nc \
-# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_HS.63.nc \
-# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_DIR.63.nc \
-# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_TMM10.63.nc \
-# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_TPS.63.nc \
-#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NARRAGANSETT_MOUTH --graphDirectory ErinAdv35ObsWavesNarragansettMouth/
+ python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+--waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/rads.64.nc \
+--waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_HS.63.nc \
+--wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_DIR.63.nc \
+--wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_TMM10.63.nc \
+--wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_TPS.63.nc \
+ --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NARRAGANSETT_MOUTH --graphDirectory ErinAdv35ObsWavesNarragansettMouth/
 
-  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
---waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/rads.64.nc \
---waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_HS.63.nc \
---wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_DIR.63.nc \
---wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TMM10.63.nc \
---wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TPS.63.nc \
- --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NARRAGANSETT_MOUTH_OUTLINE --graphDirectory ErinAdv21ObsWavesNarragansettMouth/
+#   python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+# --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/rads.64.nc \
+# --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_HS.63.nc \
+# --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_DIR.63.nc \
+# --wavemwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TMM10.63.nc \
+# --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_clean/swan_TPS.63.nc \
+#  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NARRAGANSETT_MOUTH_OUTLINE --graphDirectory ErinAdv21ObsWavesNarragansettMouth/
  
  
 #   python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \

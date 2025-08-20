@@ -2240,7 +2240,7 @@ class Grapher:
                             ax_swh.scatter(self.buoyDatapointsTimes[index], self.buoyDatapointsSWH[index], 
                                            label=f"Buoy {self.buoyLabels[index]}")
     
-            ax_swh.legend(loc="lower right", ncol=3)
+            ax_swh.legend(loc="lower right", ncol=2, prop={'size': 11})
             ax_swh.set_title("Significant Wave Height Across All Stations")
             ax_swh.format_xdata = mdates.DateFormatter('%d')
             ax_swh.set_ylabel("SWH (meters)")
