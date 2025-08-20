@@ -1811,64 +1811,65 @@ class Grapher:
             blended_cmap_elevation = create_blended_cmap(original_cmap, alpha=0.6)  # For water elevation plots
             blended_cmap_swath = create_blended_cmap(original_cmap, alpha=0.5)      # For swath plot
         
-#             for index in range(len(self.mapWaterTimes)):
-            for index in range(0):
-                fig, ax = plt.subplots(figsize=(18,18))
-                plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
-                currentMaskedTriangles = self.mapWaterMaskedTriangles.copy()
-                for triangleIndex, triangle in enumerate(self.mapWaterTriangles):
-                    for pointIndex in triangle:
-                        water = self.mapWaters[index][pointIndex]
-                        if(water == -99999.0):
-                            currentMaskedTriangles[triangleIndex] = True
-                            break
-                waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=currentMaskedTriangles)
-        
-                contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
-        
-                # Plot points
-                if(self.meshExists):
-                    ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=3, alpha=0.7, marker=".", s=40, color="black")
-        
-                if(self.obsExists):
-                    ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Obs", zorder=3, alpha=0.7, marker=".", s=40, color="black")
-                    for tideIndex in range(len(self.tideLabels)):
-                        ax.annotate(self.tideLabels[tideIndex], (self.tideLongitudes[tideIndex], self.tideLatitudes[tideIndex]))
-        
-                if(self.runupExists):
-                    for runupIndex, runupLabel in enumerate(self.runupLabels):
-                        self.plotExtendedLines(ax, runupIndex, index, runupLabel)
-        
-                plt.axis(plotAxis)
-                plt.title(self.titlePrefix + "Water Elevation")
-                plt.xlabel(datetime.fromtimestamp(self.mapWaterTimes[index], timezone.utc))
-        
-                # Use the blended colormap for the colorbar (alpha=0.6)
-                plt.colorbar(
-                    ScalarMappable(norm=contourset.norm, cmap=blended_cmap_elevation),
-                    ticks=range(vmin, vmax+5, 2),
-                    boundaries=levelBoundaries,
-                    values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
-                    label="Meters",
-                    ax=plt.gca()
-                )
-                # Set axis tick label font sizes
-                plt.xticks(fontsize=22)
-                plt.yticks(fontsize=22)  # Corrected from duplicate xticks
-        
-                plt.savefig(graph_directory + 'map_water_' + str(index) + '.png', dpi=300)
-                plt.close()
-                gc.collect()
+            if(not BYPASS_WATER_TIMESERIES_PLOTS):
+                for index in range(len(self.mapWaterTimes)):
+    #             for index in range(0):
+                    fig, ax = plt.subplots(figsize=(18,18))
+                    plt.imshow(img, extent=self.backgroundAxis, alpha=0.6, aspect=aspectRatio, zorder=2)
+                    currentMaskedTriangles = self.mapWaterMaskedTriangles.copy()
+                    for triangleIndex, triangle in enumerate(self.mapWaterTriangles):
+                        for pointIndex in triangle:
+                            water = self.mapWaters[index][pointIndex]
+                            if(water == -99999.0):
+                                currentMaskedTriangles[triangleIndex] = True
+                                break
+                    waterTriangulation = Triangulation(self.mapWaterPointsLongitudes, self.mapWaterPointsLatitudes, triangles=self.mapWaterTriangles, mask=currentMaskedTriangles)
+            
+                    contourset = ax.tripcolor(waterTriangulation, self.mapWaters[index], shading='gouraud', cmap=original_cmap, vmin=vmin, vmax=vmax, zorder=1)
+            
+                    # Plot points
+                    if(self.meshExists):
+                        ax.scatter(self.assetLongitudes, self.assetLatitudes, label="Assets", zorder=3, alpha=0.7, marker=".", s=40, color="black")
+            
+                    if(self.obsExists):
+                        ax.scatter(self.tideLongitudes, self.tideLatitudes, label="Obs", zorder=3, alpha=0.7, marker=".", s=40, color="black")
+                        for tideIndex in range(len(self.tideLabels)):
+                            ax.annotate(self.tideLabels[tideIndex], (self.tideLongitudes[tideIndex], self.tideLatitudes[tideIndex]))
+            
+                    if(self.runupExists):
+                        for runupIndex, runupLabel in enumerate(self.runupLabels):
+                            self.plotExtendedLines(ax, runupIndex, index, runupLabel)
+            
+                    plt.axis(plotAxis)
+                    plt.title(self.titlePrefix + "Water Elevation")
+                    plt.xlabel(datetime.fromtimestamp(self.mapWaterTimes[index], timezone.utc))
+            
+                    # Use the blended colormap for the colorbar (alpha=0.6)
+                    plt.colorbar(
+                        ScalarMappable(norm=contourset.norm, cmap=blended_cmap_elevation),
+                        ticks=range(vmin, vmax+5, 2),
+                        boundaries=levelBoundaries,
+                        values=(levelBoundaries[:-1] + levelBoundaries[1:]) / 2,
+                        label="Meters",
+                        ax=plt.gca()
+                    )
+                    # Set axis tick label font sizes
+                    plt.xticks(fontsize=22)
+                    plt.yticks(fontsize=22)  # Corrected from duplicate xticks
+            
+                    plt.savefig(graph_directory + 'map_water_' + str(index) + '.png', dpi=300)
+                    plt.close()
+                    gc.collect()
         
             # Create GIF
-            with imageio.get_writer(graph_directory + 'water.gif', mode='I') as writer:
-                for index in range(len(self.mapWaterTimes)):
-                    filename = "map_water_" + str(index) + ".png"
-                    image = imageio.imread(graph_directory + filename)
-                    writer.append_data(image)
-                for index in range(len(self.mapWaterTimes)):
-                    filename = "map_water_" + str(index) + ".png"
-                    os.remove(graph_directory + filename)
+                with imageio.get_writer(graph_directory + 'water.gif', mode='I') as writer:
+                    for index in range(len(self.mapWaterTimes)):
+                        filename = "map_water_" + str(index) + ".png"
+                        image = imageio.imread(graph_directory + filename)
+                        writer.append_data(image)
+                    for index in range(len(self.mapWaterTimes)):
+                        filename = "map_water_" + str(index) + ".png"
+                        os.remove(graph_directory + filename)
         
             # Water Swath Plot
             swathWaters = np.max(self.mapWaters, axis=0)
