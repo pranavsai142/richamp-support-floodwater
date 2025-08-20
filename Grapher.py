@@ -40,6 +40,7 @@ GRAPH_SWASH = True
 GRAPH_MULTIPANEL = True
 
 BYPASS_WATER_TIMESERIES_PLOTS = False
+BYPASS_WATER_MAP_PLOTS = True
 
 MHW_ELEVATION_RELATIVE_TO_NAVD88 = 0.646
 
@@ -1811,7 +1812,7 @@ class Grapher:
             blended_cmap_elevation = create_blended_cmap(original_cmap, alpha=0.6)  # For water elevation plots
             blended_cmap_swath = create_blended_cmap(original_cmap, alpha=0.5)      # For swath plot
         
-            if(not BYPASS_WATER_TIMESERIES_PLOTS):
+            if(not BYPASS_WATER_MAP_PLOTS):
                 for index in range(len(self.mapWaterTimes)):
     #             for index in range(0):
                     fig, ax = plt.subplots(figsize=(18,18))
