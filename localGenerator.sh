@@ -313,7 +313,7 @@
 # --wavepwp /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_TPS.63.nc \
 #  --tempDir /scratch3/workspace/pranav_sai_uri_edu-runup/temp/ --backgroundChoice NARRAGANSETT_MOUTH_OUTLINE --graphDirectory ErinAdv35ObsWavesNarragansettMouth/
 #  
-  python generateGraphs.py --stations OBS_STATIONS.json --wavesExists true \
+  python generateGraphs.py --stations OBS_STATIONS.json --obsExists true --wavesExists true \
 --waverad /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/rads.64.nc \
 --waveswh /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_HS.63.nc \
 --wavemwd /scratch3/workspace/pranav_sai_uri_edu-runup/ErinRun/forecast_RI_track_2100_2500/swan_DIR.63.nc \

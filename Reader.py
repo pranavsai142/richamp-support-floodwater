@@ -973,8 +973,8 @@ class Reader:
             
         data = {}
 #         if(dataType == "gfs" or dataType == "post" or dataType == "rain"):
-#         if(False):
-        if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "post" or dataType == "rain"):
+        if(False):
+#         if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "post" or dataType == "rain"):
             data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
                 
         print("Interpolating", dataType, flush=True)
