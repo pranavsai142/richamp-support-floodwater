@@ -215,10 +215,19 @@ class GetBuoyWaves:
                 windDir = dataLine[5]
                 windSpeed = dataLine[6]
                 gust = dataLine[7]
-                significantWaveHeight = float(dataLine[8])
-                peakWavePeriod = float(dataLine[9])
-                meanWavePeriod = float(dataLine[10])
-                meanWaveDirection = float(dataLine[11])
+                try:
+                    significantWaveHeight = float(dataLine[8])
+                    peakWavePeriod = float(dataLine[9])
+                    meanWavePeriod = float(dataLine[10])
+                    meanWaveDirection = float(dataLine[11])
+                except ValueError:
+                    print("Bad Wave Data! Defaulting to 0")
+                    significantWaveHeight = 0
+                    peakWavePeriod = 0
+                    meanWavePeriod = 0
+                    meanWaveDirection = 0
+                
+                    
 #                 Add conditional to match direction that adcirc comes in
 #                 if(meanWaveDirection < 180.0):
 #                     meanWaveDirection = 180.0 + (180.0 - meanWaveDirection)
