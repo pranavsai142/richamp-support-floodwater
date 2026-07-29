@@ -8,6 +8,7 @@ import argparse
 import concurrent.futures
 import datetime
 import math
+import re
 import netCDF4
 import numpy
 import pandas
@@ -403,9 +404,19 @@ class GenericNetcdf:
     def __init__(self, filename):
         self.__nc = netCDF4.Dataset(filename, "r")
         self.__grid = self.__get_grid()
+        # Units like "minutes since 1990-01-01 00:00:00 Z" (owi2wind) or ISO variants.
+        # Old slice [14:24]+[25:] broke on trailing " Z" / non-ISO hours.
         datasetTimeDescription = self.__nc.variables["time"].units
-        coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
-        coldStartDate = datetime.datetime.fromisoformat(coldStartDateText)
+        m = re.search(
+            r"since\s+(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2}):(\d{2})",
+            datasetTimeDescription,
+        )
+        if not m:
+            raise ValueError(f"Cannot parse time units: {datasetTimeDescription!r}")
+        ymd, hh, mm, ss = m.group(1), int(m.group(2)), int(m.group(3)), int(m.group(4))
+        coldStartDate = datetime.datetime.fromisoformat(
+            f"{ymd}T{hh:02d}:{mm:02d}:{ss:02d}"
+        )
         print("coldStartDate", coldStartDate)
         self.base_date = coldStartDate
 
@@ -576,7 +587,7 @@ def generate_directional_z0_interpolant(lon_grid, lat_grid, z0_hr_hr_grid, sigma
     for k in range(n_z0):
         in_cone_if_in_grid[:, :, k] = numpy.logical_and(distance <= radius, angle_diff(direction, cone_ctr_angle[k]) <= half_cone_width)
         in_cone_if_in_grid[n_fwd_back, n_fwd_back, k] = True  # the point of interest must be in every cone
-        full_cone_weight[k] = sum(weight[in_cone_if_in_grid[:, :, k]])
+        full_cone_weight[k] = numpy.sum(weight[in_cone_if_in_grid[:, :, k]])
     # Calculate z0 for each cone at each point
     old_pct_complete = 0
     for i in range(n_lat):
@@ -594,15 +605,20 @@ def generate_directional_z0_interpolant(lon_grid, lat_grid, z0_hr_hr_grid, sigma
             lon_start = max(0, j - n_fwd_back)
             lon_end = min(n_lon, j + n_fwd_back + 1)
             # Only recalculate weight sums near the edge of the domain (where some cones are cut off)
+            # NOTE: use numpy.sum — Python sum() on ndarray slices is orders of magnitude slower
+            # (scalar loop); sample showed 100% time in builtin_sum / double_add.
             if local_lon_start != 0 or local_lat_start != 0 or local_lon_end != full_end or local_lat_end != full_end:
                 for k in range(n_z0):
-                    z0_directional[i, j, k] = sum(weight[local_lat_start:local_lat_end, local_lon_start:local_lon_end][in_cone_if_in_grid[local_lat_start:local_lat_end, local_lon_start:local_lon_end, k]]
-                                                  * z0_hr_hr_grid[lat_start:lat_end, lon_start:lon_end][in_cone_if_in_grid[local_lat_start:local_lat_end, local_lon_start:local_lon_end, k]]) \
-                        / sum(weight[local_lat_start:local_lat_end, local_lon_start:local_lon_end][in_cone_if_in_grid[local_lat_start:local_lat_end, local_lon_start:local_lon_end, k]])
+                    wmask = in_cone_if_in_grid[local_lat_start:local_lat_end, local_lon_start:local_lon_end, k]
+                    w = weight[local_lat_start:local_lat_end, local_lon_start:local_lon_end][wmask]
+                    z = z0_hr_hr_grid[lat_start:lat_end, lon_start:lon_end][wmask]
+                    z0_directional[i, j, k] = numpy.sum(w * z) / numpy.sum(w)
             else:  # Otherwise, use full_cone_weight
                 for k in range(n_z0):
-                    z0_directional[i, j, k] = sum(weight[in_cone_if_in_grid[:, :, k]] * z0_hr_hr_grid[lat_start:lat_end,
-                                                  lon_start:lon_end][in_cone_if_in_grid[:, :, k]]) / full_cone_weight[k]
+                    wmask = in_cone_if_in_grid[:, :, k]
+                    z0_directional[i, j, k] = numpy.sum(
+                        weight[wmask] * z0_hr_hr_grid[lat_start:lat_end, lon_start:lon_end][wmask]
+                    ) / full_cone_weight[k]
     z0_directional[:, :, n_z0] = z0_directional[:, :, 0]  # 360 degrees and 0 degrees are the same
     # Create interpolant
     z0_directional_interpolant = scipy.interpolate.RegularGridInterpolator(

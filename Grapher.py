@@ -41,6 +41,9 @@ GRAPH_MULTIPANEL = True
 
 BYPASS_WATER_TIMESERIES_PLOTS = False
 BYPASS_WATER_MAP_PLOTS = True
+# USGS beach-profile / dune / Napatree transect overlays are runup-thesis only.
+# Default off for generic ADCIRC water+mesh+obs post.
+BYPASS_RUNUP_TRANSECT_OVERLAYS = True
 
 MHW_ELEVATION_RELATIVE_TO_NAVD88 = 0.646
 
@@ -1136,7 +1139,73 @@ class Grapher:
                 self.datapointsRunupObsBeachSlope.append(datapointRunupObsBeachSlope)
                 
 
-                
+    def _plot_runup_transect_overlays(self, ax, plotAxis):
+        """USGS beach-profile / Napatree transect overlays (runup thesis path only)."""
+        global MHWL_TRANSECTS, DUNE_TOE_TRANSECTS, DUNE_CREST_TRANSECTS, BEACH_SLOPES_TRANSECTS
+        global ALL_LONGITUDES_TRANSECTS, ALL_LATITUDES_TRANSECTS
+        global ALL_SHORELINE_LONGITUDES_TRANSECTS, ALL_SHORELINE_LATITUDES_TRANSECTS, ALL_BEACH_SLOPES_TRANSECTS
+        global ALL_DUNE_CREST_TRANSECTS, TWLCC_FORECAST_POINTS_LATITUDES, TWLCC_FORECAST_POINTS_LONGITUDES
+
+        df = pd.read_csv(self.USGS_BEACH_PROFILE_FILE)
+        valid_transects = []
+        grouped = df.groupby(['state', 'segment', 'profile'])
+        for (state, segment, profile), group in grouped:
+            group_valid = group[(group['lon'] != 999) & (group['lat'] != 999)]
+            dc_data = group_valid[group_valid['feature_type'] == 'DC']
+            dt_data = group_valid[group_valid['feature_type'] == 'DT']
+            sl_data = group_valid[group_valid['feature_type'] == 'SL']
+            if len(dc_data) == 1 and len(dt_data) == 1 and len(sl_data) == 1:
+                group_lons = group_valid['lon']
+                group_lats = group_valid['lat']
+                if any(
+                    (group_lons.between(plotAxis[0], plotAxis[1])) &
+                    (group_lats.between(plotAxis[2], plotAxis[3]))
+                ):
+                    valid_transects.append((state, segment, profile))
+                    ALL_DUNE_CREST_TRANSECTS.append(float(dc_data['z'].iloc[0]))
+                    ALL_LONGITUDES_TRANSECTS.append(float(dc_data['lon'].iloc[0]))
+                    ALL_LATITUDES_TRANSECTS.append(float(dc_data['lat'].iloc[0]))
+                    ALL_SHORELINE_LONGITUDES_TRANSECTS.append(float(sl_data['lon'].iloc[0]))
+                    ALL_SHORELINE_LATITUDES_TRANSECTS.append(float(sl_data['lat'].iloc[0]))
+                    ALL_BEACH_SLOPES_TRANSECTS.append(float(sl_data['slope'].iloc[0]))
+                    for twlccPoint in TWLCC_FORECAST_POINTS_IDENTIFIERS:
+                        if state == twlccPoint[0] and segment == twlccPoint[1] and profile == twlccPoint[2]:
+                            TWLCC_FORECAST_POINTS_LATITUDES.append(float(dc_data['lat'].iloc[0]))
+                            TWLCC_FORECAST_POINTS_LONGITUDES.append(float(dc_data['lon'].iloc[0]))
+
+        print(f"Valid runup transects in map window: {len(valid_transects)}", flush=True)
+
+        for (state, segment, profile) in valid_transects:
+            group = df[(df['state'] == state) & (df['segment'] == segment) & (df['profile'] == profile)
+                       & (df['lon'] != 999) & (df['lat'] != 999)]
+            dc_data = group[group['feature_type'] == 'DC']
+            dt_data = group[group['feature_type'] == 'DT']
+            sl_data = group[group['feature_type'] == 'SL']
+            if len(dc_data) != 1 or len(dt_data) != 1 or len(sl_data) != 1:
+                continue
+            points = [
+                (dc_data['lon'].iloc[0], dc_data['lat'].iloc[0]),
+                (dt_data['lon'].iloc[0], dt_data['lat'].iloc[0]),
+                (sl_data['lon'].iloc[0], sl_data['lat'].iloc[0]),
+            ]
+            lons, lats = zip(*points)
+            ax.plot(lons, lats, color='gray', linewidth=1.5, alpha=0.5, zorder=3)
+
+        for assetIndex, assetLabel in enumerate(self.assetLabels):
+            ax.scatter(
+                self.assetLongitudes[assetIndex],
+                self.assetLatitudes[assetIndex],
+                zorder=3, alpha=0.7, marker=".", s=30, color="red",
+            )
+
+        graph_directory = self.GRAPH_DIRECTORY
+        with open(os.path.join(graph_directory, 'transect_data.json'), 'w') as f:
+            json.dump({
+                'MHWL_TRANSECTS': MHWL_TRANSECTS,
+                'DUNE_TOE_TRANSECTS': DUNE_TOE_TRANSECTS,
+                'DUNE_CREST_TRANSECTS': DUNE_CREST_TRANSECTS,
+                'n_valid_transects': len(valid_transects),
+            }, f, indent=4)
 
     def generateGraphs(self):
         graph_directory = self.GRAPH_DIRECTORY
@@ -1254,7 +1323,10 @@ class Grapher:
             
         if(len(self.mapWindTimes) > 0):
             vmin = 0
+            # Station-era default was 20 m/s; parametric TC / basin maps need a higher cap.
             vmax = 20
+            if self.maxWind and self.maxWind > 20:
+                vmax = int(min(60, max(25, np.ceil(self.maxWind / 5.0) * 5)))
             levels = 100
             levelBoundaries = np.linspace(vmin, vmax, levels + 1)
             
@@ -1450,210 +1522,26 @@ class Grapher:
                 zorder=4,
                 color="purple"
             )
-        
-            # Query and plot transects from USGS_BEACH_PROFILE_FILE
-            try:
-                df = pd.read_csv(self.USGS_BEACH_PROFILE_FILE)
-            except Exception as e:
-                print(f"Error reading {self.USGS_BEACH_PROFILE_FILE}: {e}")
-                return
-        
-            # Filter valid transects with all SL, DT, DC points
-            valid_transects = []
-            # Group by state, segment, profile
-            grouped = df.groupby(['state', 'segment', 'profile'])
-            for (state, segment, profile), group in grouped:
-                group_valid = group[(group['lon'] != 999) & (group['lat'] != 999)]
-                dc_data = group_valid[group_valid['feature_type'] == 'DC']
-                dt_data = group_valid[group_valid['feature_type'] == 'DT']
-                sl_data = group_valid[group_valid['feature_type'] == 'SL']
-                # Check for exactly one SL, DT, DC and at least one point in plotAxis
-                if (len(dc_data) == 1 and len(dt_data) == 1 and len(sl_data) == 1):
-                    group_lons = group_valid['lon']
-                    group_lats = group_valid['lat']
-                    if any(
-                        (group_lons.between(plotAxis[0], plotAxis[1])) &
-                        (group_lats.between(plotAxis[2], plotAxis[3]))
-                    ):
-                        valid_transects.append((state, segment, profile))
-                        ALL_DUNE_CREST_TRANSECTS.append(float(dc_data['z'].iloc[0]))
-                        ALL_LONGITUDES_TRANSECTS.append(float(dc_data['lon'].iloc[0]))
-                        ALL_LATITUDES_TRANSECTS.append(float(dc_data['lat'].iloc[0]))
-                        ALL_SHORELINE_LONGITUDES_TRANSECTS.append(float(sl_data['lon'].iloc[0]))
-                        ALL_SHORELINE_LATITUDES_TRANSECTS.append(float(sl_data['lat'].iloc[0]))
-                        ALL_BEACH_SLOPES_TRANSECTS.append(float(sl_data['slope'].iloc[0]))
-                        for twlccPoint in TWLCC_FORECAST_POINTS_IDENTIFIERS:
-                            if state == twlccPoint[0] and segment == twlccPoint[1] and profile == twlccPoint[2]:
-                                TWLCC_FORECAST_POINTS_LATITUDES.append(float(dc_data['lat'].iloc[0]))
-                                TWLCC_FORECAST_POINTS_LONGITUDES.append(float(dc_data['lon'].iloc[0]))
-                    else:
-                        print(f"Transect {state}-{segment}-{profile} excluded: No points within plotAxis {plotAxis}")
-                else:
-                    print(f"Transect {state}-{segment}-{profile} excluded: Missing SL, DT, or DC (DC: {len(dc_data)}, DT: {len(dt_data)}, SL: {len(sl_data)})")
-            print(f"Valid transects with SL, DT, DC: {valid_transects}")
-            
-            with open("usgs_dune_crest_coordinates.txt", "w") as f:
-                for index in range(len(ALL_LONGITUDES_TRANSECTS)):
-                    f.write(str(ALL_LATITUDES_TRANSECTS[index]) + "," +  str(ALL_LONGITUDES_TRANSECTS[index]) + "," + str(ALL_SHORELINE_LATITUDES_TRANSECTS[index]) + "," + str(ALL_SHORELINE_LONGITUDES_TRANSECTS[index]) + "," + str(ALL_BEACH_SLOPES_TRANSECTS[index]) + "\n")
-            # Initialize transect lists
-            MHWL_TRANSECTS = [None] * 5  # Shoreline (SL)
-            DUNE_TOE_TRANSECTS = [None] * 5  # Dune Toe (DT)
-            DUNE_CREST_TRANSECTS = [None] * 5  # Dune Crest (DC)
-            BEACH_SLOPES_TRANSECTS = [None] * 5
-        
-            # Get transect numbers from assetLabels (using your modified logic)
-            transect_numbers = []
-            asset_lons = []
-            asset_lats = []
-            for assetIndex, assetLabel in enumerate(self.assetLabels):  # Limit to 5 transects
-                if "m" == assetLabel[-1]:
-                    if assetLabel[assetLabel.index(" ") + 1] == "0" and int(assetLabel[8:assetLabel.index(" ")]) <= 5:
-                        try:
-                            transect_num = int(assetLabel[assetLabel.index(" ") - 1])
-                            transect_numbers.append(transect_num)
-                            asset_lons.append(self.assetLongitudes[assetIndex])
-                            asset_lats.append(self.assetLatitudes[assetIndex])
-                        except (ValueError, IndexError):
-                            print(f"Warning: Could not parse transect number from {assetLabel}")
-                            continue
-            print(f"Transect numbers from assetLabels: {transect_numbers}")
-        
-            # Find closest transects
-            closest_transects = []
-            for i, (asset_lon, asset_lat, transect_num) in enumerate(zip(asset_lons, asset_lats, transect_numbers)):
-                # Filter transects with matching profile and valid SL, DT, DC points
-                candidates = [(s, seg, p) for (s, seg, p) in valid_transects]
-                if not candidates:
-                    print(f"No valid transect for profile {transect_num}")
-                    continue
-        
-                # Find closest transect by minimum distance
-                min_distance = float('inf')
-                closest_transect = None
-                for (state, segment, profile) in candidates:
-                    group = df[(df['state'] == state) & (df['segment'] == segment) & (df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
-                    distances = np.sqrt(
-                        (group['lon'] - asset_lon)**2 +
-                        (group['lat'] - asset_lat)**2
-                    )
-                    if distances.min() < min_distance:
-                        min_distance = distances.min()
-                        closest_transect = (state, segment, profile)
-        
-                if min_distance > 0.1:  # Threshold to avoid far matches
-                    print(f"No close match for transect {transect_num} (min distance: {min_distance})")
-                    continue
-        
-                closest_transects.append(closest_transect)
-        
-                # Save z values for DC, DT, SL
-                group = df[(df['state'] == closest_transect[0]) & (df['segment'] == closest_transect[1]) & (df['profile'] == closest_transect[2])]
-                dc_data = group[group['feature_type'] == 'DC']
-                dt_data = group[group['feature_type'] == 'DT']
-                sl_data = group[group['feature_type'] == 'SL']
-                DUNE_CREST_TRANSECTS[i] = float(dc_data['z'].iloc[0])
-                DUNE_TOE_TRANSECTS[i] = float(dt_data['z'].iloc[0])
-                MHWL_TRANSECTS[i] = float(sl_data['z'].iloc[0])
-                BEACH_SLOPES_TRANSECTS[i] = float(sl_data['slope'].iloc[0])
-        
-            print(f"Closest transects: {closest_transects}")
-        
-            # Plot asset points
-            for assetIndex, assetLabel in enumerate(self.assetLabels):
-                if "m" == assetLabel[-1]:
-                    if "Waves" in assetLabel:
-                        ax.scatter(
-                            self.assetLongitudes[assetIndex],
-                            self.assetLatitudes[assetIndex],
-                            zorder=3,
-                            alpha=0.7,
-                            marker="x",
-                            s=60,
-                            color="black"
-                        )
-                        ax.annotate(
-                            assetLabel[:assetLabel.index(" ")],
-                            (self.assetLongitudes[assetIndex], self.assetLatitudes[assetIndex]),
-                            fontsize=22
-                        )
-                    else:
-                        ax.scatter(
-                            self.assetLongitudes[assetIndex],
-                            self.assetLatitudes[assetIndex],
-                            zorder=3,
-                            alpha=0.7,
-                            marker=".",
-                            s=30,
-                            color="red"
-                        )
-                        
-            # Plot all valid transects
-            for (state, segment, profile) in valid_transects:
-                group = df[(df['state'] == state) & (df['segment'] == segment) & (df['profile'] == profile) & (df['lon'] != 999) & (df['lat'] != 999)]
-                dc_data = group[group['feature_type'] == 'DC']
-                dt_data = group[group['feature_type'] == 'DT']
-                sl_data = group[group['feature_type'] == 'SL']
-        
-                # Ensure all three points exist
-                if len(dc_data) != 1 or len(dt_data) != 1 or len(sl_data) != 1:
-                    continue
-        
-                # Collect points in order: DC -> DT -> SL
-                points = [
-                    (dc_data['lon'].iloc[0], dc_data['lat'].iloc[0]),
-                    (dt_data['lon'].iloc[0], dt_data['lat'].iloc[0]),
-                    (sl_data['lon'].iloc[0], sl_data['lat'].iloc[0])
-                ]
-                lons, lats = zip(*points)
-        
-                # Plot transect line
-                is_highlighted = (state, segment, profile) in closest_transects
-                line_color = 'k' if is_highlighted else 'gray'
-                line_width = 2.5 if is_highlighted else 1.5
-                line_alpha = 0.9 if is_highlighted else 0.5
-                ax.plot(lons, lats, color=line_color, linewidth=line_width, alpha=line_alpha, zorder=3)
-        
-                # Add arrow at SL, extending slightly beyond
-                x1, y1 = points[-2]  # DT
-                x2, y2 = points[-1]  # SL
-                dx = x2 - x1
-                dy = y2 - y1
-                arrow_length = 2.0  # Extend 2x the DT -> SL segment
-                segment_length = np.sqrt(dx**2 + dy**2)
-                if segment_length > 0:
-                    dx_scaled = dx / segment_length * 0.001  # Base length in degrees
-                    dy_scaled = dy / segment_length * 0.001
-                    ax.arrow(
-                        x2, y2,  # Start at SL
-                        dx_scaled * arrow_length, dy_scaled * arrow_length,  # Extend beyond SL
-                        color=line_color,
-                        alpha=line_alpha,
-                        width=0.0001,
-                        head_width=0.0003,
-                        head_length=0.0003,
-                        zorder=3
-                    )
-        
-                        
-            for twlccIndex in range(len(TWLCC_FORECAST_POINTS_IDENTIFIERS)):
-                ax.scatter(
-                    TWLCC_FORECAST_POINTS_LONGITUDES[twlccIndex],
-                    TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex],
-                    zorder=3,
-                    alpha=0.7,
-                    marker="v",
-                    s=30,
-                    color="green"
-                )
-                ax.annotate(
-                    "TWL&CC Site",
-                    (TWLCC_FORECAST_POINTS_LONGITUDES[twlccIndex], TWLCC_FORECAST_POINTS_LATITUDES[twlccIndex]),
-                    fontsize=16
-                )
-        
+
+            # Optional runup overlays (USGS beach profiles / dune crest-toe-shoreline).
+            # Generic ADCIRC post skips this entirely.
+            do_runup_transects = (
+                (not BYPASS_RUNUP_TRANSECT_OVERLAYS)
+                or self.runupExists
+                or self.assetExists
+            )
+            if do_runup_transects:
+                print("Runup transect overlays enabled", flush=True)
+                try:
+                    self._plot_runup_transect_overlays(ax, plotAxis)
+                except Exception as e:
+                    print(f"Runup transect overlays failed (continuing): {e}", flush=True)
+            else:
+                print("Skipping USGS beach-profile / transect overlays (generic ADCIRC post)", flush=True)
+
             plt.axis(plotAxis)
             plt.title("Elevation Map", fontsize=30)
-        
+
             # Create the colorbar and set font properties
             cbar = plt.colorbar(
                 ScalarMappable(norm=contourset.norm, cmap=blended_cmap),
@@ -1664,22 +1552,15 @@ class Grapher:
             )
             cbar.ax.tick_params(labelsize=28)
             cbar.set_label("Meters", fontsize=28)
-        
+
             # Set axis tick label font sizes
             plt.xticks(fontsize=22)
             plt.yticks(fontsize=22)
-        
+
             plt.savefig(os.path.join(graph_directory, 'map_elevation.png'), dpi=300)
             plt.close()
             gc.collect()
-        
-            # Save transect data
-            with open(os.path.join(graph_directory, 'transect_data.json'), 'w') as f:
-                json.dump({
-                    'MHWL_TRANSECTS': MHWL_TRANSECTS,
-                    'DUNE_TOE_TRANSECTS': DUNE_TOE_TRANSECTS,
-                    'DUNE_CREST_TRANSECTS': DUNE_CREST_TRANSECTS
-                }, f, indent=4)
+
 #             vmin = -15
 #             vmax = 10
 #             levels = 100
@@ -2908,6 +2789,11 @@ class Grapher:
                 plt.savefig(graph_directory + stationName + '_slope.png', dpi=300)
                 plt.close()
 
+
+        # Combined Napatree multipanel figures below require runup station data.
+        # Water/wind/rain-only postprocess should exit cleanly without them.
+        if numberOfRunupDatapoints == 0:
+            return
 
         # Function to parse depth and distance from station label
         def parse_station_label(stationName):

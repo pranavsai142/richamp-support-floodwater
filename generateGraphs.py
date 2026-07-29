@@ -533,11 +533,12 @@ def main():
             os.makedirs(wave_temp_directory)
         
         print("Loading NetCDF file!", flush=True)
-        WAVE_SWH_FILE = args.waveswh 
-        WAVE_MWD_FILE = args.wavemwd
-        WAVE_MWP_FILE = args.wavemwp
-        WAVE_PWP_FILE = args.wavepwp
-        WAVE_RAD_FILE = args.waverad
+        # Optional paths: empty/None skips that param (WaveReader treats "" as absent).
+        WAVE_SWH_FILE = args.waveswh or ""
+        WAVE_MWD_FILE = args.wavemwd or ""
+        WAVE_MWP_FILE = args.wavemwp or ""
+        WAVE_PWP_FILE = args.wavepwp or ""
+        WAVE_RAD_FILE = args.waverad or ""
         WAVE_SWH_DATA_FILE = wave_temp_directory + "wave_swh_data_file" + ".json"
         WAVE_MWD_DATA_FILE = wave_temp_directory + "wave_mwd_data_file" + ".json"
         WAVE_MWP_DATA_FILE = wave_temp_directory + "wave_mwp_data_file" + ".json"
@@ -546,25 +547,30 @@ def main():
         STATIONS_FILE = args.stations
         (waveStartDateObject, waveEndDateObject) = WaveReader(
             WAVE_SWH_FILE=WAVE_SWH_FILE,
-#             WAVE_MWD_FILE=WAVE_MWD_FILE,
-#             WAVE_MWP_FILE=WAVE_MWP_FILE,
+            WAVE_MWD_FILE=WAVE_MWD_FILE,
+            WAVE_MWP_FILE=WAVE_MWP_FILE,
             WAVE_PWP_FILE=WAVE_PWP_FILE,
-#             WAVE_RAD_FILE=WAVE_RAD_FILE,
+            WAVE_RAD_FILE=WAVE_RAD_FILE,
             STATIONS_FILE=STATIONS_FILE, 
             WAVE_SWH_DATA_FILE=WAVE_SWH_DATA_FILE,
-#             WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
-#             WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
+            WAVE_MWD_DATA_FILE=WAVE_MWD_DATA_FILE,
+            WAVE_MWP_DATA_FILE=WAVE_MWP_DATA_FILE,
             WAVE_PWP_DATA_FILE=WAVE_PWP_DATA_FILE,
-#             WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
+            WAVE_RAD_DATA_FILE=WAVE_RAD_DATA_FILE,
             BACKGROUND_AXIS=backgroundAxis).generateWaveDataForStations()
         
 #         waveStartDateObject = datetime.datetime(year=2023, month=12, day=15, hour=0, tzinfo=datetime.timezone.utc)
 #         waveEndDateObject = datetime.datetime(year=2023, month=12, day=20, hour=0, tzinfo=datetime.timezone.utc)
-        dataToGraph["SWH"] = WAVE_SWH_DATA_FILE
-#         dataToGraph["MWD"] = WAVE_MWD_DATA_FILE
-#         dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
-        dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
-#         dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
+        if WAVE_SWH_FILE:
+            dataToGraph["SWH"] = WAVE_SWH_DATA_FILE
+        if WAVE_MWD_FILE:
+            dataToGraph["MWD"] = WAVE_MWD_DATA_FILE
+        if WAVE_MWP_FILE:
+            dataToGraph["MWP"] = WAVE_MWP_DATA_FILE
+        if WAVE_PWP_FILE:
+            dataToGraph["PWP"] = WAVE_PWP_DATA_FILE
+        if WAVE_RAD_FILE:
+            dataToGraph["RAD"] = WAVE_RAD_DATA_FILE
         
     print("args.obsExists", args.obsExists, flush=True)
     if(args.obsExists):
@@ -585,11 +591,8 @@ def main():
             OBS_WATER_DATA_FILE = wind_temp_directory + "obs_water_data_file" + ".json"
             GetBuoyWater(STATIONS_FILE=STATIONS_FILE, OBS_WATER_DATA_FILE=OBS_WATER_DATA_FILE, startDateObject=waterStartDateObject, endDateObject=waterEndDateObject)
             dataToGraph["TIDE"] = OBS_WATER_DATA_FILE
-        if(args.meshExists):
-            print("Calling get observational elevation data", flush=True)
-            OBS_ASSET_DATA_FILE = wind_temp_directory + "obs_elevation_data_file" + ".json"
-            GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
-            dataToGraph["ASSET"] = OBS_ASSET_DATA_FILE
+        # NOTE: meshExists alone is for fort.14 station maps / mesh elevation — NOT runup ASSET bathy.
+        # GetObsElevation (opentopography/bathy for ASSET/transects) is runup-only; see generateRunup.
         if(args.wavesExists):
             print("Parsed start and end date from netCDF, ", waveStartDateObject, waveEndDateObject, flush=True)
             OBS_WAVE_DATA_FILE = wind_temp_directory + "obs_wave_data_file" + ".json"
@@ -600,7 +603,7 @@ def main():
             
     if(args.generateRunup):
         if(args.wavesExists and args.meshExists):
-            print("Calling get observational elevation data", flush=True)
+            print("Calling get observational elevation data (runup path)", flush=True)
             OBS_ASSET_DATA_FILE = wind_temp_directory + "obs_elevation_data_file" + ".json"
             GetObsElevation(STATIONS_FILE=STATIONS_FILE, OBS_ASSET_DATA_FILE=OBS_ASSET_DATA_FILE)
             dataToGraph["ASSET"] = OBS_ASSET_DATA_FILE

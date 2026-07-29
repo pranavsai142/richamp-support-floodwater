@@ -54,6 +54,36 @@ class Reader:
         self.NODES_FILE = NODES_FILE
         self.format = format
         self.BACKGROUND_AXIS = BACKGROUND_AXIS
+
+    def _parseColdStartDate(self, timeUnits):
+        """Parse ADCIRC/CF time units: 'seconds since <date>' / 'minutes since <date>'.
+
+        Handles production fort.15 base_date quirks like '2018-02-23 0Z'.
+        """
+        import re
+        units = (timeUnits or "").strip()
+        if "since" not in units.lower():
+            raise ValueError(f"Unrecognized time units (no 'since'): {timeUnits!r}")
+        after = re.split(r"since", units, maxsplit=1, flags=re.IGNORECASE)[1].strip()
+        # "2018-02-23 0Z" / "2018-02-23 0:0:0Z" → normalize hour-only + trailing Z
+        after = re.sub(r"\s+(\d{1,2})Z\s*$", lambda m: f" {int(m.group(1)):02d}:00:00", after)
+        after = after.rstrip("Z").strip()
+        after = re.sub(r"\s+", " ", after)
+        for fmt in (
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d %H:%M",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%dT%H:%M",
+            "%Y-%m-%d",
+        ):
+            try:
+                return datetime.strptime(after, fmt).replace(tzinfo=timezone.utc)
+            except ValueError:
+                continue
+        # last resort: ISO with T separator
+        iso = after.replace(" ", "T", 1) if "T" not in after else after
+        return datetime.fromisoformat(iso).replace(tzinfo=timezone.utc)
+
     def extractLatitudeIndex(self, nodeIndex):
         return int(nodeIndex[1: nodeIndex.find(",")])
     def extractLongitudeIndex(self, nodeIndex):
@@ -90,33 +120,30 @@ class Reader:
             return(valueX, valueY)
         
     def getValuesForPoints(self, nodesIndex, dataType, dataset):
-        if(dataType == "post"):
-            pointsValuesX = []
-            pointsValuesY = []
-            dataX = dataset.variables["spd"][::]
-            dataY = dataset.variables["dir"][::]
-            for nodeIndex in nodesIndex:
-                valuesX = []
-                valuesY = []
-                for index in range(len(dataX)):
-                    valuesX.append(dataX[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                    valuesY.append(dataY[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                pointsValuesX.append(valuesX)
-                pointsValuesY.append(valuesY)
-            return (pointsValuesX, pointsValuesY)
-        if(dataType == "gfs"):
-            pointsValuesX = []
-            pointsValuesY = []
-            dataX = dataset.variables["wind_u"][::]
-            dataY = dataset.variables["wind_v"][::]
-            for nodeIndex in nodesIndex:
-                valuesX = []
-                valuesY = []
-                for index in range(len(dataX)):
-                    valuesX.append(dataX[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                    valuesY.append(dataY[index][self.extractLatitudeIndex(nodeIndex)][self.extractLongitudeIndex(nodeIndex)])
-                pointsValuesX.append(valuesX)
-                pointsValuesY.append(valuesY)
+        if(dataType == "post" or dataType == "gfs"):
+            # Do NOT load full field cubes. Cache unique cells only (time series
+            # per point). A single bbox over all RI stations spans ~full NLCD and
+            # reloads multi-GB; per-cell reads stay O(n_support × n_times).
+            if dataType == "post":
+                varX = dataset.variables["spd"]
+                varY = dataset.variables["dir"]
+            else:
+                varX = dataset.variables["wind_u"]
+                varY = dataset.variables["wind_v"]
+            pairs = [(self.extractLatitudeIndex(n), self.extractLongitudeIndex(n)) for n in nodesIndex]
+            if not pairs:
+                return ([], [])
+            unique = list(dict.fromkeys(pairs))
+            print(f"  loading {len(unique)} unique cell time-series ({len(pairs)} support slots)", flush=True)
+            cacheX = {}
+            cacheY = {}
+            for k, (ilat, ilon) in enumerate(unique):
+                cacheX[(ilat, ilon)] = np.asarray(varX[:, ilat, ilon], dtype=float)
+                cacheY[(ilat, ilon)] = np.asarray(varY[:, ilat, ilon], dtype=float)
+                if (k + 1) % 10 == 0 or (k + 1) == len(unique):
+                    print(f"    cell {k+1}/{len(unique)}", flush=True)
+            pointsValuesX = [cacheX[p].tolist() for p in pairs]
+            pointsValuesY = [cacheY[p].tolist() for p in pairs]
             return (pointsValuesX, pointsValuesY)
         if(dataType == "fort"):
             pointsValuesX = []
@@ -223,8 +250,14 @@ class Reader:
                 valuesY.append(lineY)   
             return (valuesX, valuesY)
         elif(dataType == "gfs"):
-            dataX = dataset.variables["wind_u"][::][::][::]
-            dataY = dataset.variables["wind_v"][::][::][::]
+            # Keep 2D lat/lon structure for pcolormesh map frames (wind.gif).
+            # Apply sparseness so full-basin PWM (565×625×N) does not explode memory/JSON.
+            dataX = np.array(
+                dataset.variables["wind_u"][::timeSparseness, ::spaceSparseness, ::spaceSparseness]
+            )
+            dataY = np.array(
+                dataset.variables["wind_v"][::timeSparseness, ::spaceSparseness, ::spaceSparseness]
+            )
             return (dataX, dataY)
         elif(dataType == "rain"):
             data = dataset.variables["precipitation"][::][::][::]
@@ -540,12 +573,9 @@ class Reader:
 #         quit()
 
         datasetTimeDescription = dataset.variables["time"].units
-#         Add UTC time marker if not existing in cold start date
-        if(not ("Z" in datasetTimeDescription)):
-            coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:] + "Z"
-        else:
-            coldStartDateText = datasetTimeDescription[14: 24] + "T" + datasetTimeDescription[25:]
-        coldStartDate = datetime.fromisoformat(coldStartDateText)
+        # Parse CF/ADCIRC "seconds since <date>" robustly.
+        # ADCIRC often writes base_date like "2018-02-23 0Z" (not ISO hour).
+        coldStartDate = self._parseColdStartDate(datasetTimeDescription)
 #         coldStartDate = datetime(year=2018, month=2, day=23, hour=5)
         print("coldStartDate", coldStartDate, flush=True)
 
@@ -628,36 +658,41 @@ class Reader:
             numberOfNodes = dataset.variables["x"].shape[0]
 
 #         print("number of nodes", numberOfNodes)
+
+        # Debug sample node: ricv1-scale meshes have >>200k nodes; ec95d has ~31k.
+        # Indexing a fixed 200000 OOBs on coarse meshes and aborts post.
+        _nnodes = int(dataset.variables["x"].shape[0]) if "x" in dataset.variables else 0
+        _dbg_node = min(200000, max(0, _nnodes - 1))
         
         if (dataType == "swh"):
-            print("significant wave height at node200000", flush=True)
+            print(f"significant wave height at node{_dbg_node}", flush=True)
         
-            swhX0 = dataset.variables["swan_HS"][0][200000]
+            swhX0 = dataset.variables["swan_HS"][0][_dbg_node]
 
             print("swhX0", swhX0, flush=True)
         elif (dataType == "mwd"):
-            print("mean wave direction at node200000", flush=True)
+            print(f"mean wave direction at node{_dbg_node}", flush=True)
         
-            mwdX0 = dataset.variables["swan_DIR"][0][200000]
+            mwdX0 = dataset.variables["swan_DIR"][0][_dbg_node]
 
             print("mwdX0", mwdX0, flush=True)
         elif (dataType == "mwp"):
-            print("mean wave period at node200000", flush=True)
+            print(f"mean wave period at node{_dbg_node}", flush=True)
         
-            mwpX0 = dataset.variables["swan_TMM10"][0][200000]
+            mwpX0 = dataset.variables["swan_TMM10"][0][_dbg_node]
 
             print("mwpX0", mwpX0, flush=True)
         elif (dataType == "pwp"):
-            print("peak wave period at node200000", flush=True)
+            print(f"peak wave period at node{_dbg_node}", flush=True)
         
-            tpsX0 = dataset.variables["swan_TPS"][0][200000]
+            tpsX0 = dataset.variables["swan_TPS"][0][_dbg_node]
 
             print("tpsX0", tpsX0, flush=True)
         elif (dataType == "rad"):
-            print("radiation stress gradient at node200000", flush=True)
+            print(f"radiation stress gradient at node{_dbg_node}", flush=True)
         
-            radX0 = dataset.variables["radstress_x"][0][200000]
-            radY0 = dataset.variables["radstress_y"][0][200000]
+            radX0 = dataset.variables["radstress_x"][0][_dbg_node]
+            radY0 = dataset.variables["radstress_y"][0][_dbg_node]
 
             print("radX0", radX0, flush=True)
             print("radY0", radY0, flush=True)
@@ -784,14 +819,90 @@ class Reader:
         stationToNodeDistancesDict = {}
         if(dataType == "rain"):
             stationKeys = stationsDict["USGS"].keys()
+            stationGroup = "USGS"
         elif(dataType in ["swh", "mwd", "mwp", "pwp", "rad"]):
             stationKeys = stationsDict["NDBC"].keys()
+            stationGroup = "NDBC"
             print(stationKeys)
         else:
             stationKeys = stationsDict["NOS"].keys()
+            stationGroup = "NOS"
         for stationKey in stationKeys:
             stationToNodeDistancesDict[stationKey] = {}
-        # recreate station to node distances calculations dictionary
+
+        # Fast path: regular lat/lon grids (GFS / RICHAMP post). Full scan of NLCD
+        # (~7e6 cells × N stations × haversine) is multi-hour; use local windows.
+        if self.format in ("GFS", "POST"):
+            print("retreving coordinates (regular-grid fast path)", flush=True)
+            lats = np.asarray(dataset.variables["lat"][:], dtype=float).ravel()
+            lons = np.asarray(dataset.variables["lon"][:], dtype=float).ravel()
+            # pad threshold window in degrees (~1° lat ≈ 111 km)
+            pad_km = max(float(thresholdDistance), 0.15)  # at least ~150 m for dense grids
+            for stationKey in stationKeys:
+                stationDict = stationsDict[stationGroup][stationKey]
+                slat = float(stationDict["latitude"])
+                slon = float(stationDict["longitude"])
+                dlat = pad_km / 111.0
+                coslat = max(0.2, abs(np.cos(np.deg2rad(slat))))
+                dlon = pad_km / (111.0 * coslat)
+                ilat0 = int(np.searchsorted(lats, slat - dlat))
+                ilat1 = int(np.searchsorted(lats, slat + dlat))
+                ilon0 = int(np.searchsorted(lons, slon - dlon))
+                ilon1 = int(np.searchsorted(lons, slon + dlon))
+                ilat0 = max(0, ilat0 - 1)
+                ilon0 = max(0, ilon0 - 1)
+                ilat1 = min(len(lats), ilat1 + 1)
+                ilon1 = min(len(lons), ilon1 + 1)
+                # if station outside grid, still take nearest cell as nodeIndex
+                i_near = int(np.argmin(np.abs(lats - slat)))
+                j_near = int(np.argmin(np.abs(lons - slon)))
+                best_d = haversine.haversine((slat, slon), (float(lats[i_near]), float(lons[j_near])))
+                best_idx = str((i_near, j_near))
+                # collect (distance, idx) then keep only the nearest few — enough for
+                # LinearND, avoids 80× stencil reads on multi-GB RICHAMP files
+                candidates = []
+                thr = max(float(thresholdDistance), 0.15)
+                for i in range(ilat0, ilat1):
+                    for j in range(ilon0, ilon1):
+                        node = (float(lats[i]), float(lons[j]))
+                        d = haversine.haversine((slat, slon), node)
+                        idx = str((i, j))
+                        if d < best_d:
+                            best_d = d
+                            best_idx = idx
+                        if d < thr:
+                            candidates.append((d, idx))
+                candidates.sort(key=lambda t: t[0])
+                max_stencil = 9
+                closest = [idx for _, idx in candidates[:max_stencil]]
+                if not closest:
+                    closest = [best_idx]
+                stationToNodeDistancesDict[stationKey] = {
+                    "nodeIndex": best_idx,
+                    "distance": best_d,
+                    "closestNodes": closest,
+                }
+                print(
+                    f"  station {stationKey}: nearest={best_idx} d={best_d:.3f}km n_close={len(closest)}",
+                    flush=True,
+                )
+            with open(self.STATION_TO_NODE_DISTANCES_FILE, "w") as outfile:
+                json.dump(stationToNodeDistancesDict, outfile)
+            nodes = {"NOS": {}}
+            for stationKey in stationToNodeDistancesDict.keys():
+                rec = stationToNodeDistancesDict[stationKey]
+                nodeIndex = rec["nodeIndex"]
+                nodes["NOS"][stationKey] = {
+                    "closestNodes": rec["closestNodes"],
+                    "nodeIndex": nodeIndex,
+                    "latitude": float(lats[self.extractLatitudeIndex(nodeIndex)]),
+                    "longitude": float(lons[self.extractLongitudeIndex(nodeIndex)]),
+                }
+            with open(self.NODES_FILE, "w") as outfile:
+                json.dump(nodes, outfile)
+            return
+
+        # recreate station to node distances calculations dictionary (unstructured / fort mesh)
         print("retreving coordinates for all nodes", flush=True)
         (nodesLatitudes, nodesLongitudes), nodesIndex = self.getCoordinates(1, dataset)
         for index in range(len(nodesIndex)):
@@ -940,13 +1051,26 @@ class Reader:
             values = []
             valuesX = []
             valuesY = []
-            for index in range(len(times)):
-                value = self.getValue(index, closestNode, dataType, dataset)
-                if(type(value) is float):
-                    values.append(value)
-                else:
-                    valuesX.append(value[0])
-                    valuesY.append(value[1])
+            # Bulk time-series read for gridded wind (avoid 265 separate netCDF gets)
+            if dataType == "post" and self.format == "POST":
+                ilat = self.extractLatitudeIndex(nodeIndex)
+                ilon = self.extractLongitudeIndex(nodeIndex)
+                print(f"  station {stationKey} cell ({ilat},{ilon})", flush=True)
+                valuesX = np.asarray(dataset.variables["spd"][:, ilat, ilon], dtype=float).tolist()
+                valuesY = np.asarray(dataset.variables["dir"][:, ilat, ilon], dtype=float).tolist()
+            elif dataType == "gfs" and self.format == "GFS":
+                ilat = self.extractLatitudeIndex(nodeIndex)
+                ilon = self.extractLongitudeIndex(nodeIndex)
+                valuesX = np.asarray(dataset.variables["wind_u"][:, ilat, ilon], dtype=float).tolist()
+                valuesY = np.asarray(dataset.variables["wind_v"][:, ilat, ilon], dtype=float).tolist()
+            else:
+                for index in range(len(times)):
+                    value = self.getValue(index, nodeIndex, dataType, dataset)
+                    if(type(value) is float):
+                        values.append(value)
+                    else:
+                        valuesX.append(value[0])
+                        valuesY.append(value[1])
 
 #           Write values
             if(dataType == "rad"):
@@ -972,21 +1096,60 @@ class Reader:
             stationsDict = json.load(stations_file)
             
         data = {}
-#         if(dataType == "gfs" or dataType == "post" or dataType == "rain"):
-        if(False):
-#         if(dataType == "water" or dataType == "swh" or dataType == "gfs" or dataType == "post" or dataType == "rain"):
-            data = self.getMap(dataset, dataType, times, spaceSparseness, timeSparseness, data)
-                
+        # Map frames → Grapher wind.gif / rain.gif / swath. Was hard-disabled (if False)
+        # which left only station series. Re-enable for field maps; sparsify large GFS/PWM.
+        if dataType in ("gfs", "post", "rain"):
+            map_space = spaceSparseness
+            map_time = timeSparseness
+            if dataType == "gfs":
+                # Full Atlantic PWM basin ~565×625; 3-hourly, every 3rd cell is enough for GIF
+                map_space = max(spaceSparseness, 3)
+                map_time = max(timeSparseness, 3)
+            data = self.getMap(dataset, dataType, times, map_space, map_time, data)
+
         print("Interpolating", dataType, flush=True)
         nodesIndex = []
         points = []
         pointsValues = []
         pointsValuesX = []
         pointsValuesY = []
+        # Optional distances (regular-grid path writes them) — skip far stations'
+        # edge cells so a shared support cloud stays local (RICHAMP is RI-only).
+        station_distances = {}
+        try:
+            with open(self.STATION_TO_NODE_DISTANCES_FILE) as _df:
+                _dd = json.load(_df)
+            for _sk, _rec in _dd.items():
+                if isinstance(_rec, dict) and "distance" in _rec:
+                    station_distances[_sk] = float(_rec["distance"])
+        except (OSError, json.JSONDecodeError, TypeError, ValueError):
+            pass
+        # RICHAMP post grid is fine (RI); GFS 0.25° nearest cell can be ~10–20 km away.
+        # Using 5 km for GFS zeroed the support cloud and crashed Interp (0 unique points).
+        if dataType == "gfs":
+            MAX_STATION_GRID_KM = 50.0
+        elif dataType == "post":
+            MAX_STATION_GRID_KM = 5.0  # RI-only product: keep stencil local
+        else:
+            MAX_STATION_GRID_KM = 25.0
         for stationKey in nodes["NOS"].keys():
             print("Getting coordinates for closest nodes around station",  stationKey, flush=True)
 #                 print("getting wind data for node", nodeIndex)
-            for closestNode in nodes["NOS"][stationKey]["closestNodes"]:
+            # Coarse meshes (e.g. ec95d) often leave closestNodes empty while
+            # nodeIndex is still set — fall back so interpolation has support.
+            stencil = list(nodes["NOS"][stationKey].get("closestNodes") or [])
+            if not stencil and nodes["NOS"][stationKey].get("nodeIndex") is not None:
+                stencil = [nodes["NOS"][stationKey]["nodeIndex"]]
+            d_station = station_distances.get(stationKey)
+            if d_station is not None and d_station > MAX_STATION_GRID_KM:
+                # Outside product domain (e.g. TX station on RI RICHAMP grid):
+                # keep a single nearest for that station later, not global support.
+                print(
+                    f"  skip station {stationKey} for global stencil (d={d_station:.1f}km > {MAX_STATION_GRID_KM})",
+                    flush=True,
+                )
+                continue
+            for closestNode in stencil:
                 nodesIndex.append(closestNode)
                 x = 0.0
                 y = 0.0
@@ -1018,11 +1181,40 @@ class Reader:
 #                 pointsValuesY.append(valuesY)
 #             Interpolate values
         print("initializing interpolator", flush=True)
-        if(dataType == "rad" or dataType == "gfs" or dataType == "fort" or dataType == "post"):
-            interpolatorX = scipy.interpolate.LinearNDInterpolator(points, pointsValuesX)
-            interpolatorY = scipy.interpolate.LinearNDInterpolator(points, pointsValuesY)
+        # LinearND needs >= 3 unique points (4 with Qhull); use nearest otherwise.
+        # LinearND also returns NaN *outside the convex hull* even with many points —
+        # e.g. Providence (lat 41.81) north of northernmost stencil cell (41.75), or
+        # Aransas outside the sparse TX edge. Always keep Nearest as fill for those.
+        n_unique = len(set(points))
+        use_nearest = n_unique < 4
+        if use_nearest:
+            print(f"Only {n_unique} unique support points; using NearestNDInterpolator", flush=True)
+            Interp = scipy.interpolate.NearestNDInterpolator
         else:
-            interpolator = scipy.interpolate.LinearNDInterpolator(points, pointsValues)
+            Interp = scipy.interpolate.LinearNDInterpolator
+        vector_field = dataType in ("rad", "gfs", "fort", "post")
+        if vector_field:
+            interpolatorX = Interp(points, pointsValuesX)
+            interpolatorY = Interp(points, pointsValuesY)
+            nearestX = None if use_nearest else scipy.interpolate.NearestNDInterpolator(points, pointsValuesX)
+            nearestY = None if use_nearest else scipy.interpolate.NearestNDInterpolator(points, pointsValuesY)
+        else:
+            interpolator = Interp(points, pointsValues)
+            nearest = None if use_nearest else scipy.interpolate.NearestNDInterpolator(points, pointsValues)
+
+        def _fill_outside_hull(primary, backup):
+            """Replace LinearND outside-hull NaNs with nearest-neighbor values."""
+            if backup is None:
+                return primary
+            arr = np.asarray(primary, dtype=float)
+            if not np.any(np.isnan(arr)):
+                return primary
+            fill = np.asarray(backup, dtype=float)
+            out = np.where(np.isnan(arr), fill, arr)
+            n_filled = int(np.isnan(arr).sum())
+            print(f"  filled {n_filled} outside-hull NaN(s) with nearest", flush=True)
+            return out
+
         for stationKey in nodes["NOS"].keys():
             nodeIndex = nodes["NOS"][stationKey]["nodeIndex"]
             data[stationKey] = {}
@@ -1048,11 +1240,22 @@ class Reader:
             stationLongitude = float(stationDict["longitude"])
             stationCoordinates = (stationLongitude, stationLatitude)
             print("interpolating data for station", stationKey, "at", stationCoordinates, flush=True)
-            if(dataType == "rad" or dataType == "gfs" or dataType == "fort" or dataType == "post"):
+            if vector_field:
                 interpolatedValuesX = interpolatorX(stationLongitude, stationLatitude)
                 interpolatedValuesY = interpolatorY(stationLongitude, stationLatitude)
+                if nearestX is not None:
+                    interpolatedValuesX = _fill_outside_hull(
+                        interpolatedValuesX, nearestX(stationLongitude, stationLatitude)
+                    )
+                    interpolatedValuesY = _fill_outside_hull(
+                        interpolatedValuesY, nearestY(stationLongitude, stationLatitude)
+                    )
             else:
                 interpolatedValues = interpolator(stationLongitude, stationLatitude)
+                if nearest is not None:
+                    interpolatedValues = _fill_outside_hull(
+                        interpolatedValues, nearest(stationLongitude, stationLatitude)
+                    )
             if(dataType == "rad"):
                 data[stationKey]["radstressX"] = interpolatedValuesX
                 data[stationKey]["radstressY"] = interpolatedValuesY
@@ -1086,7 +1289,10 @@ class Reader:
         for stationKey in nodes["NOS"].keys():
             print("Getting coordinates for closest nodes around station",  stationKey, flush=True)
 #                 print("getting wind data for node", nodeIndex)
-            for closestNode in nodes["NOS"][stationKey]["closestNodes"]:
+            stencil = list(nodes["NOS"][stationKey].get("closestNodes") or [])
+            if not stencil and nodes["NOS"][stationKey].get("nodeIndex") is not None:
+                stencil = [nodes["NOS"][stationKey]["nodeIndex"]]
+            for closestNode in stencil:
                 nodesIndex.append(closestNode)
                 x = 0.0
                 y = 0.0
@@ -1110,7 +1316,12 @@ class Reader:
 #                 pointsValuesY.append(valuesY)
 #             Interpolate values
         print("initializing interpolator", flush=True)
-        interpolator = scipy.interpolate.LinearNDInterpolator(closestPoints, pointsValues)
+        n_unique = len(set(closestPoints))
+        if n_unique < 4:
+            print(f"Only {n_unique} unique support points; using NearestNDInterpolator", flush=True)
+            interpolator = scipy.interpolate.NearestNDInterpolator(closestPoints, pointsValues)
+        else:
+            interpolator = scipy.interpolate.LinearNDInterpolator(closestPoints, pointsValues)
         for stationKey in nodes["NOS"].keys():
             nodeIndex = nodes["NOS"][stationKey]["nodeIndex"]
             data[stationKey] = {}
@@ -1250,6 +1461,10 @@ class Fort63Reader:
         initializeClosestWaterNodes = True
         if(initializeClosestWaterNodes):
 #             thresholdDistance = 10
+            # Mesh-density dependent (degrees-ish search radius for neighbor nodes):
+            #   ricv1 dense coastal → small (0.1–0.25); v18 medium; ec95d coarse → larger
+            #   or stations get few neighbors. ec95d graphs still not science-grade (mesh).
+            # See run-adcirc skill S9d / research foundations §F.
             thresholdDistance = 0.25
             self.reader.initializeClosestNodes(waterDataset, thresholdDistance, "water")
         spaceSparseness = 1
@@ -1280,12 +1495,16 @@ class PostWindReader:
         windDataset, timesWind = self.reader.getNetcdfProperties(self.POST_WIND_FILE, "post")
         initializeClosestWindNodes = True
         if(initializeClosestWindNodes):
-            thresholdDistance = 0.05
+            # km — NLCD RICHAMP ~30 m. Nearest cell is enough (d~0.02 km); multi-cell
+            # LinearND forces multi-GB slab reads because RICHAMP.nc is time-chunked.
+            thresholdDistance = 0.15
             #If working with post low res high altitude, the threshold distance needs to be increased
             #Because there is no longer a high density of points in the post wind
 #             thresholdDistance = 20
             self.reader.initializeClosestNodes(windDataset, thresholdDistance, "post")
-        interpolateValues = True
+        # Nearest-node series only (not LinearND). 30 m grid + d≈0.02 km is denser
+        # than GFS; avoid multi-point load of time-chunked 5+ GB files.
+        interpolateValues = False
         spaceSparseness = 10
 #         Uncomment for low res wind post generation
 #         spaceSparseness = 1
@@ -1446,6 +1665,11 @@ class WaveReader:
         timeSparseness = 1
         initializeClosestWaveNodes = True
         if(initializeClosestWaveNodes):
+            # Mesh-density dependent — larger than water default so coarse meshes still
+            # find neighbors. ricv1 should use a *small* value; v18 medium; ec95d large.
+            # Water Fort63Reader often uses ~0.25 while waves use 7 → different node sets.
+            # ec95d: post "works" but station series can look bad (resolution, not only thr).
+            # See run-adcirc skill S9d / research foundations §F.
             thresholdDistance = 7
 #             thresholdDistance = 
             self.reader.initializeClosestNodes(swhDataset, thresholdDistance, "swh")

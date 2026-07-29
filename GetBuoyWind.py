@@ -1,113 +1,113 @@
-# Queries NOAA NOS buoys and saves the data
-# Pranav 9/25/2023
+# Queries NOAA CO-OPS wind and saves the data
+# Pranav 9/25/2023; product API 2026-07-25 (ERDDAP .mat dead)
 # Fuck matlab
 
-import scipy.io
-from urllib.request import urlretrieve
 from urllib.error import HTTPError
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 import json
+import os
 from Encoders import NumpyEncoder
-        
+import numpy as np
+
+
 class GetBuoyWind:
     def __init__(self, STATIONS_FILE="", OBS_WIND_DATA_FILE="", startDateObject="", endDateObject=""):
-        temp_directory = OBS_WIND_DATA_FILE[0:OBS_WIND_DATA_FILE.rfind("/") + 1]
+        temp_directory = OBS_WIND_DATA_FILE[0 : OBS_WIND_DATA_FILE.rfind("/") + 1]
+        if temp_directory and not os.path.isdir(temp_directory):
+            os.makedirs(temp_directory, exist_ok=True)
+
         print(type(startDateObject), flush=True)
         print(startDateObject, flush=True)
         with open(STATIONS_FILE) as stations_file:
             stationsDict = json.load(stations_file)
 
-        # stationIds = [8413320, 8443970, 8447435, 8449130, 8447930, 8452660, 8510560, 8418150, 8419870, 8454049, 8454000, 8461490, 8411060, 8531680, 8534720, 8452944]
-        # stationNames = ['Bar Harbor', 'Boston', 'Chatham', 'Nantucket', 'Woods Hole', 'Newport', 'Montauk', 'Portland', 'Seavey Island, ME', 'Quonset Point', 'Providence', 'New London', 'Cutler Faris Wharf', 'Sandy Hook', 'Altlantic City', 'Conimicut Light'] 
-        stationIds = [8413320, 8447435, 8449130, 8452660, 8418150, 8454049, 8454000, 8411060, 8531680, 8452944]
-        stationNames = ['Bar Harbor', 'Chatham', 'Nantucket', 'Newport', 'Portland', 'Quonset Point', 'Providence', 'Cutler Faris Wharf', 'Sandy Hook', 'Conimicut Light'] 
+        # Normalize window to UTC-aware
+        if startDateObject.tzinfo is None:
+            startDateObject = startDateObject.replace(tzinfo=timezone.utc)
+        if endDateObject.tzinfo is None:
+            endDateObject = endDateObject.replace(tzinfo=timezone.utc)
 
-        startDate = startDateObject.strftime("%Y%m%d")
-        endDate = endDateObject.strftime("%Y%m%d")
-        startDateFormat = startDateObject.strftime("%Y-%m-%d")
-        endDateFormat = endDateObject.strftime("%Y-%m-%d")
+        begin = startDateObject.strftime("%Y%m%d")
+        end = endDateObject.strftime("%Y%m%d")
+        # CO-OPS datagetter max span is ~31 days for 6-min wind; chunk if needed
+        base = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
 
-        heightStartDate = startDateObject.strftime("%Y-%m-%dT%H:%M:%SZ")
-        heightEndDate = endDateObject.strftime("%Y-%m-%dT%H:%M:%SZ")
-
-        # Noreaster 12/23 festivus  storm 22, 23
-        # startDate = "20221220"
-        # endDate = "20221224"
-        # dateStartFormat = "2022-12-20"
-        # 
-        # heightStartDate = "2022-12-20T00:00:00Z"
-        # heightEndDate = "2022-12-24T23:59:59Z"
-    
         badStations = []
         windDict = {}
         for key in stationsDict["NOS"].keys():
             stationDict = stationsDict["NOS"][key]
             stationId = stationDict["id"]
             stationName = stationDict["name"]
-            url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Wind.mat?STATION_ID%2Ctime%2CWind_Speed%2CWind_Direction%2CWind_Gust&STATION_ID%3E=%22" + stationId + "%22&BEGIN_DATE%3E=%22" + startDate + "%22&END_DATE%3E=%22" + endDate + "%22&time%3E=" + startDateFormat + "T00%3A00%3A00Z"
-            print("querying url: ", url)
-            heightURL = "https://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetObservation&version=1.0.0&observedProperty=water_surface_height_above_reference_datum&offering=urn:ioos:station:NOAA.NOS.CO-OPS:" + stationId + "&responseFormat=text/csv&eventTime=" + heightStartDate + "/" + heightEndDate + "&unit=Meters"
-        #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
-            matFilename = temp_directory + stationDict["id"] + ".mat"
-            heightFilename = temp_directory + stationDict["id"] + "_height.csv"
-        #     sensorFilename = stationDict["id"] + "_sensor"
             try:
-        #     Once mat files are downloaded once, comment out this line to stop querying the API
-                urlretrieve(url, matFilename)
-                urlretrieve(heightURL, heightFilename)
-        #         urlretrieve(sensorURL, sensorFilename)
-                data = scipy.io.loadmat(matFilename)
-                unixTimes = data["IOOS_Wind"]["time"][0][0].flatten()
-                windDirections = data["IOOS_Wind"]["Wind_Direction"][0][0].flatten()
-                windSpeeds = data["IOOS_Wind"]["Wind_Speed"][0][0].flatten()
-                windGusts = data["IOOS_Wind"]["Wind_Gust"][0][0].flatten()
-                
-                windDirections = (windDirections + 90) % 360
-                windDict[key] = {}
-                windDict[key]["times"] = unixTimes
-                windDict[key]["directions"] = windDirections
-                windDict[key]["speeds"] = windSpeeds
-                windDict[key]["gusts"] = windGusts
-        
-        
-                file = open(heightFilename)
-                csvHeightTimes = []
-                csvHeightValues = []
-                skipHeader = True
-                for line in file:
-                    if(skipHeader):
-                        skipHeader = False
-                    else:
-                        data = line.split(",")
-        #                 print(data)
-                        heightFormattedTime = data[4]
-                        year = int(heightFormattedTime[0:4])
-                        month = int(heightFormattedTime[5:7])
-                        day = int(heightFormattedTime[8:10])
-                        hour = int(heightFormattedTime[11:13])
-                        minute = int(heightFormattedTime[14:16])
-                        second = int(heightFormattedTime[17:19])
-                
-                        heightTime = datetime(year=year, month=month, day=day, hour=hour, minute=minute, second=second)
-                
-                        heightValue = float(data[5])
-                        csvHeightTimes.append(datetime.timestamp(heightTime))
-                        csvHeightValues.append(heightValue)
-#                 print("CSV and .mat same length? " + stationName, len(csvHeightTimes) == len(unixTimes))
-#                 print("CSV height Times vs unixTimes len", len(csvHeightTimes), len(unixTimes))
-                heightTime = datetime.timestamp(datetime(year=3000, month=1, day=1))
-                csvHeightTimes.append(heightTime)
-                heightIndex = 0
-                heightValues = []
-                for unixTime in unixTimes:
-                    if(unixTime > csvHeightTimes[heightIndex + 1]):
-                        heightIndex += 1
-                    heightValues.append(csvHeightValues[heightIndex])
-                windDict[key]["heights"] = heightValues
-            except (HTTPError, FileNotFoundError):
-        #         print("oops bad url")
-                badStations.append(badStations.append(stationDict))
-        
-        # print(windDict)
+                import urllib.request
+
+                url = (
+                    f"{base}?product=wind&application=richamp-support"
+                    f"&begin_date={begin}&end_date={end}&station={stationId}"
+                    f"&time_zone=gmt&units=metric&format=json"
+                )
+                print(f"CO-OPS API wind station={stationId} ({stationName})", flush=True)
+                print("querying url: ", url, flush=True)
+                with urllib.request.urlopen(url, timeout=45) as resp:
+                    payload = json.loads(resp.read().decode("utf-8"))
+
+                unixTimes = []
+                speeds = []
+                directions = []
+                gusts = []
+                for row in payload.get("data") or []:
+                    try:
+                        t = datetime.strptime(row["t"], "%Y-%m-%d %H:%M").replace(
+                            tzinfo=timezone.utc
+                        )
+                        if t < startDateObject or t > endDateObject:
+                            continue
+                        s = row.get("s")
+                        d = row.get("d")
+                        g = row.get("g")
+                        if s is None or s == "" or d is None or d == "":
+                            continue
+                        unixTimes.append(int(t.timestamp()))
+                        speeds.append(float(s))
+                        # Match legacy ERDDAP path: met "from" dir + 90 aligns with
+                        # Grapher.vectorDirection(atan2(-v, u)) used for model UV.
+                        directions.append((float(d) + 90.0) % 360.0)
+                        if g is None or g == "":
+                            gusts.append(float("nan"))
+                        else:
+                            gusts.append(float(g))
+                    except (KeyError, ValueError, TypeError):
+                        continue
+
+                # heights were sea-surface height matched for dual-axis plots; optional zeros
+                heights = [0.0] * len(unixTimes)
+                windDict[key] = {
+                    "times": np.array(unixTimes, dtype=np.int64),
+                    "directions": np.array(directions, dtype=np.float64),
+                    "speeds": np.array(speeds, dtype=np.float64),
+                    "gusts": np.array(gusts, dtype=np.float64),
+                    "heights": np.array(heights, dtype=np.float64),
+                }
+                print(
+                    f"station {stationId}: n_obs={len(unixTimes)}",
+                    flush=True,
+                )
+                if not unixTimes:
+                    badStations.append(stationDict)
+            except Exception as e:
+                print(f"CO-OPS wind API fail station {stationId}: {e}", flush=True)
+                badStations.append(stationDict)
+                windDict[key] = {
+                    "times": np.array([], dtype=np.int64),
+                    "directions": np.array([], dtype=np.float64),
+                    "speeds": np.array([], dtype=np.float64),
+                    "gusts": np.array([], dtype=np.float64),
+                    "heights": np.array([], dtype=np.float64),
+                }
+
+        print(
+            f"GetBuoyWind: wrote {len(windDict)} stations; bad={len(badStations)}",
+            flush=True,
+        )
         with open(OBS_WIND_DATA_FILE, "w") as outfile:
             json.dump(windDict, outfile, cls=NumpyEncoder)

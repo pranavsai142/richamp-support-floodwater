@@ -7,9 +7,10 @@ name = "pypi"
 requests = "*"
 utm = "*"
 netcdf4 = "*"
-haversine = "*"
 imageio = "*"
 geographiclib = "*"
+pyproj = "*"
+haversine = "*"
 
 [dev-packages]
 

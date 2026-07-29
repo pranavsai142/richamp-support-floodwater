@@ -62,8 +62,9 @@ class GetBuoyWater:
 
         startDate = startDateObject.strftime("%Y%m%d")
         endDate = endDateObject.strftime("%Y%m%d")
-        startDateFormat = startDateObject.strftime("%Y%m%d")
-        endDateFormat = endDateObject.strftime("%Y%m%d")
+        # ERDDAP BEGIN_DATE/END_DATE expect YYYY-MM-DD
+        startDateFormat = startDateObject.strftime("%Y-%m-%d")
+        endDateFormat = endDateObject.strftime("%Y-%m-%d")
 
         heightStartDate = startDateObject.strftime("%Y-%m-%dT%H:%M:%SZ")
         heightEndDate = endDateObject.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -142,7 +143,7 @@ class GetBuoyWater:
                 waterDict[key]["prediction_water"] = []
                 
                 
-            if ".csv" in stationSource:
+            if ".csv" in stationSource and os.path.isfile(stationSource):
                 print("Pulling Data from Tides and Currents Station File")
     
                 # Path to the CSV file
@@ -177,24 +178,27 @@ class GetBuoyWater:
         
 #                     # Add MOORING_LENGTH to waters
 #                     waters = waters + MOORING_LENGTH
+                    # Step 7: Populate waterDict
+                    waterDict[key] = {}
+                    waterDict[key]["times"] = unixTimes
+                    waterDict[key]["water"] = waters
+                    waterDict[key]["prediction_times"] = []
+                    waterDict[key]["prediction_water"] = []
                 else:
-                    # Handle empty filtered data
-                    unixTimes = np.array([], dtype=np.int64)
-                    waters = np.array([], dtype=np.float64)
-                    prediction_waters = np.array([], dtype=np.float64)
-    
-                # Step 6: Get station elevation
-#                 stationElevation = meshDict[key]["elevation"]
-#                 print("station elevation", key, stationElevation)
-    
-                # Step 7: Populate waterDict
-                waterDict[key] = {}
-                waterDict[key]["times"] = unixTimes
-                waterDict[key]["water"] = waters
-                waterDict[key]["prediction_times"] = []  # Same timestamps for predictions
-                waterDict[key]["prediction_water"] = []
+                    # Local CSV exists but does not cover the run window — fall through to live CO-OPS API
+                    print(f"Local CSV {file_path} has no data in window; falling back to CO-OPS API for {stationId}")
+                    stationSource = "COOPS_API"
 
-            elif "USGS" in stationSource:
+            if ".csv" in stationSource and not os.path.isfile(stationSource) and stationSource != "COOPS_API":
+                # Listed as a CSV in OBS_STATIONS but file not on disk — live API instead of hard fail
+                print(f"Local CSV missing ({stationSource}); falling back to CO-OPS API for {stationId}")
+                stationSource = "COOPS_API"
+
+            # Already filled from local txt/csv covering the window? skip live fetch
+            if key in waterDict:
+                continue
+
+            if "USGS" in stationSource:
                 print("Pulling Data from USGS Station")
             
                 # Step 1: Construct the USGS URL dynamically
@@ -268,58 +272,85 @@ class GetBuoyWater:
                     print(f"Error processing USGS data for URL {url}: {str(e)}")
                     badStations.append(stationDict)
             else:
-    # https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.htmlTable?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%228452660%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%222024-07-29%22&END_DATE%3E=%222024-08-10%22
-                url = "https://opendap.co-ops.nos.noaa.gov/erddap/tabledap/IOOS_Hourly_Height_Verified_Water_Level.mat?STATION_ID%2CDATUM%2CBEGIN_DATE%2CEND_DATE%2Ctime%2CWL_VALUE%2CSIGMA&STATION_ID=%22"  + stationId + "%22&DATUM%3E=%22MSL%22&BEGIN_DATE%3E=%22" + startDateFormat + "%22&END_DATE%3E=%22" + endDateFormat + "%22"
-                
-                predictionTimes = []
-                predictionWaters = []
-                for year in predictionYears:
-                    try:
-                        predictionUrl = "https://tidesandcurrents.noaa.gov/cgi-bin/predictiondownload.cgi?&stnid=" + stationId +  "&threshold=&thresholdDirection=greaterThan&bdate=" + str(year) + "&timezone=GMT&datum=NAVD&clock=24hour&type=txt&annual=true"
-                        print("predictionUrl", predictionUrl)
-                        predictionFilename = temp_directory + stationDict["id"] + str(year) + "_TidePrediction.mat"
-                        safe_urlretrieve(predictionUrl, predictionFilename)
-                        with open(predictionFilename) as file:
-                            lines = file.readlines()
-                            if(len(lines) > 0):
-                                for line in lines[14::]:
-                                    data = line.split("\t")
-    #                                 https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
-                                    time = datetime.strptime(data[0] + data[2] + "GMT", "%Y/%m/%d%H:%M%Z")
-                                    time = time.replace(tzinfo=timezone.utc)
-                                    if(time >= startDateObject and time <= endDateObject):
-                                        print(time)
-                                        predictionTimes.append(datetime.timestamp(time))
-                                        predictionWater = float(data[5]) / 100.0
-                                        predictionWaters.append(predictionWater)
-    #                             predictionLines.append(lines[15::])
-                    except (HTTPError, FileNotFoundError):
-                        print("Bad prdiction url: ", predictionUrl)
-                        badStations.append(badStations.append(stationDict))
-    #             print(predictionLines)
-    
-    #             print(url)
-            #     sensorURL = 'https://ioos-dif-sos-prod.co-ops-aws-east1.net/ioos-dif-sos/SOS?service=SOS&request=DescribeSensor&version=1.0.0&outputFormat=text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"&procedure=urn:ioos:station:NOAA.NOS.CO-OPS:8454000'
-                matFilename = temp_directory + stationDict["id"] + ".mat"
-            #     sensorFilename = stationDict["id"] + "_sensor"
+                # Live CO-OPS product API (preferred). Old ERDDAP .mat endpoint is dead/unreliable.
+                # Docs: https://api.tidesandcurrents.noaa.gov/api/prod/
                 try:
-                    print("mat url", url)
-            #     Once mat files are downloaded once, comment out this line to stop querying the API
-                    safe_urlretrieve(url, matFilename)
-            #         urlretrieve(sensorURL, sensorFilename)
-                    data = scipy.io.loadmat(matFilename)
-                    unixTimes = data["IOOS_Hourly_Height_Verified_Wat"]["time"][0][0].flatten()
-                    waters = data["IOOS_Hourly_Height_Verified_Wat"]["WL_VALUE"][0][0].flatten()
-                    waterDict[key] = {}
-                    waterDict[key]["times"] = unixTimes
-                    waterDict[key]["water"] = waters
-                    waterDict[key]["prediction_times"] = predictionTimes
-                    waterDict[key]["prediction_water"] = predictionWaters
-            
-                except (HTTPError, FileNotFoundError):
-                    print("bad mat url: ", url)
-                    badStations.append(badStations.append(stationDict))
+                    import urllib.request
+                    begin = startDateObject.strftime("%Y%m%d")
+                    end = endDateObject.strftime("%Y%m%d")
+                    # water_level = verified 6-min; falls back to predictions if empty
+                    base = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+                    wl_url = (
+                        f"{base}?product=water_level&application=richamp-support"
+                        f"&begin_date={begin}&end_date={end}&station={stationId}"
+                        f"&time_zone=gmt&units=metric&datum=MSL&format=json"
+                    )
+                    print(f"CO-OPS API water_level station={stationId}", flush=True)
+                    with urllib.request.urlopen(wl_url, timeout=30) as resp:
+                        payload = json.loads(resp.read().decode("utf-8"))
+                    unixTimes = []
+                    waters = []
+                    for row in payload.get("data") or []:
+                        try:
+                            t = datetime.strptime(row["t"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+                            if t < startDateObject or t > endDateObject:
+                                continue
+                            v = row.get("v")
+                            if v is None or v == "":
+                                continue
+                            unixTimes.append(int(t.timestamp()))
+                            waters.append(float(v))
+                        except (KeyError, ValueError, TypeError):
+                            continue
+
+                    pred_times = []
+                    pred_waters = []
+                    pred_url = (
+                        f"{base}?product=predictions&application=richamp-support"
+                        f"&begin_date={begin}&end_date={end}&station={stationId}"
+                        f"&time_zone=gmt&units=metric&datum=MSL&interval=h&format=json"
+                    )
+                    try:
+                        with urllib.request.urlopen(pred_url, timeout=30) as resp:
+                            pred_payload = json.loads(resp.read().decode("utf-8"))
+                        for row in pred_payload.get("predictions") or []:
+                            try:
+                                t = datetime.strptime(row["t"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+                                if t < startDateObject or t > endDateObject:
+                                    continue
+                                pred_times.append(int(t.timestamp()))
+                                pred_waters.append(float(row["v"]))
+                            except (KeyError, ValueError, TypeError):
+                                continue
+                    except Exception as pe:
+                        print(f"CO-OPS predictions optional fail {stationId}: {pe}", flush=True)
+
+                    if not unixTimes and pred_times:
+                        # No verified water yet (e.g. future forecast window) — use tidal predictions as obs proxy
+                        print(f"station {stationId}: no verified water_level; using predictions", flush=True)
+                        unixTimes = pred_times
+                        waters = pred_waters
+
+                    waterDict[key] = {
+                        "times": np.array(unixTimes, dtype=np.int64),
+                        "water": np.array(waters, dtype=np.float64),
+                        "prediction_times": pred_times,
+                        "prediction_water": pred_waters,
+                    }
+                    print(f"station {stationId}: n_obs={len(unixTimes)} n_pred={len(pred_times)}", flush=True)
+                    if not unixTimes and not pred_times:
+                        badStations.append(stationDict)
+                except Exception as e:
+                    print(f"CO-OPS API fail station {stationId}: {e}", flush=True)
+                    badStations.append(stationDict)
+                    waterDict[key] = {
+                        "times": np.array([], dtype=np.int64),
+                        "water": np.array([], dtype=np.float64),
+                        "prediction_times": [],
+                        "prediction_water": [],
+                    }
         
         # print(windDict)
+        print(f"GetBuoyWater: wrote {len(waterDict)} stations; bad={len(badStations)}")
         with open(OBS_WATER_DATA_FILE, "w") as outfile:
             json.dump(waterDict, outfile, cls=NumpyEncoder)

@@ -420,10 +420,11 @@ def main():
     num_files = len(file_list)
     if num_files == 0:
         raise RuntimeError("No files found for conversion")
-    if ["Inp" in file_list[1]]:
+    # Detect 306 (fort.22 + Wind_Inp.txt). Was wrongly always-true: `if ["Inp" in …]` is a non-empty list.
+    if num_files >= 2 and "Inp" in file_list[1]:
         is306 = True
-    if num_files - 2 > 0:
-        raise RuntimeError("Must specify exactly one 306 type file or two files with the ""pre"" file listed first")
+    if num_files != 2:
+        raise RuntimeError("Must specify exactly one 306 type file pair or two files with the ""pre"" file listed first")
 
     if args.b:
         bounds = [float(args.b[0]),float(args.b[1]),float(args.b[2]),

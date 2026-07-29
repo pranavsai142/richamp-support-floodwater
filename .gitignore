@@ -1,7 +1,8 @@
 graphs
 wind_temp
 wave_temp
-__pycache__
+__pycache__/
+*.py[cod]
 *_OUT
 metget.debug
 *.pickle
@@ -26,3 +27,24 @@ track.richamp
 TrackRMW.txt
 Wind_Inp.txt
 /properties
+
+# Large local / generated data (not source of truth)
+thesis/
+assignment/
+test/
+post_forecast/
+tempadcirc_elevation_data_file.json
+tempobs_elevation_data_file.json
+topography.txt
+bathymetry.txt
+ADCIRC_Nodes.json
+ADCIRC_Station_To_Node_Distances.json
+obs_bathy_debug.png
+obs_topo_debug.png
+
+# Compiled native binaries (keep tide_fac.f source)
+/tide_fac
+*.a.out
+
+# Empty / local stubs
+GetObsRunup.py
