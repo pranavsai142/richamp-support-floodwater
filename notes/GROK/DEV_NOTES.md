@@ -53,15 +53,16 @@ Drivers: this file · `SOUL_DRIVER.md` · latest `notes/GROK/handoffs/*`
 
 ## Next Focus
 
-1. **Mac mini always-on host — KIT STAGED, BOOTSTRAP PENDING** (`2026-07-28-macmini-adcirc-always-on-handoff.md`).  
-   Host: `pranavs-mac-mini.tail7f4d6b.ts.net` — **Intel i7-8700B x86_64**, 64 GB, SSD `/Volumes/ssd` (~1.3 TiB free).  
-   Kit: `"/Volumes/Pranav's Hard Drive/macmini-adcirc-kit/"` (~1.6 GiB) — ADCIRC **source**, this repo (ops), ricv1/ec95d/v18 seeds, MetGet secret, `scripts/bootstrap-macmini.sh`.  
-   **Do not copy arm64 padcirc from M3** — rebuild on mini (`/usr/local` brew). Transfer → bootstrap → ec95d smoke → `ec95d latest gfs`.
-2. **richamp-support-web / house viz — ORDER 0–11 DONE** (`2026-07-25-richamp-support-web-orders-complete-handoff.md`). Suite shell + coastal fieldpack + wind bridge shipped.
-3. **Parametric Lee dual campaign COMPLETE** + **house integration totality DONE** (`2026-07-28-house-integration-totality-done-handoff.md`). Golden: `?preset=lee-met-family`.
-4. **Open gaps** (honest): residual ops beyond sub/abs_sub; residual fieldpack export; atmos `meta.roles`; Lee rain time-axis; wave spatial on older goldens; 2D basemap orientation; mini skill path aliases for kit meshes.
-5. Continuous analysis (½ h hotstart chain) after durable fort.68 — **prefer on mini** once green.
-6. v18 multi-day when kit/meshes on mini.
+1. **vadcirc — ADCIRC(+SWAN) on VRAM, identity-first** (`2026-08-06-vadcirc-full-project-handoff.md`).  
+   **MVP:** hello-world compile + run + **identical** GPU vs CPU (not ricv1/fieldpack).  
+   Then port more physics to VRAM carefully (SpMV→JCG→assemble→wet/dry→momentum→…→SWAN).  
+   Efficiency = residency/bandwidth after identity. padcirc remains ops oracle.  
+   **Next code:** `vadcirc-HW-identity` (HW0–HW2). Mini padcirc MPI: `btl self,sm` only.
+2. **Live mini ricv1** `adcirc-local-smoke/ricv1_gfs_1d1d_2026072900` — analysis OK; forecast mid-chain (independent of vadcirc).
+3. **Mac mini always-on** — bootstrap largely done on host; keep padcirc production chains healthy (`2026-07-28-macmini-adcirc-always-on-handoff.md`).
+4. **House / fieldpack** — ORDER 0–11 + Lee dual + multi-scenario compare done; open gaps: residual ops, atmos roles, etc.
+5. Continuous analysis (½ h hotstart) after durable fort.68.
+6. v18 multi-day when needed.
 7. Runup offline only until later handoff.
 
 ---
